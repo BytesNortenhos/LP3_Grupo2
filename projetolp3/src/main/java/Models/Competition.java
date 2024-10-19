@@ -1,7 +1,6 @@
 package Models;
 
 import java.util.List;
-import java.util.ArrayList;
 
 public class Competition {
     private String type;
@@ -11,12 +10,12 @@ public class Competition {
     private int minParticipants;
     private String scoringMeasure;
     private String oneGame;
-    private Record olympicRecord;
-    private Record winnerOlympic;
+    private java.lang.Record olympicRecord;
+    private java.lang.Record winnerOlympic;
     private List<String> rules;
 
     public Competition(String type, String genre, String name, String description, int minParticipants,
-                       String scoringMeasure, String oneGame, Record olympicRecord, Record winnerOlympic,
+                       String scoringMeasure, String oneGame, java.lang.Record olympicRecord, java.lang.Record winnerOlympic,
                        List<String> rules) {
         this.type = type;
         this.genre = genre;
@@ -87,19 +86,19 @@ public class Competition {
         this.oneGame = oneGame;
     }
 
-    public Record getOlympicRecord() {
+    public java.lang.Record getOlympicRecord() {
         return olympicRecord;
     }
 
-    public void setOlympicRecord(Record olympicRecord) {
+    public void setOlympicRecord(java.lang.Record olympicRecord) {
         this.olympicRecord = olympicRecord;
     }
 
-    public Record getWinnerOlympic() {
+    public java.lang.Record getWinnerOlympic() {
         return winnerOlympic;
     }
 
-    public void setWinnerOlympic(Record winnerOlympic) {
+    public void setWinnerOlympic(java.lang.Record winnerOlympic) {
         this.winnerOlympic = winnerOlympic;
     }
 

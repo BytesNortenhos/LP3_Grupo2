@@ -1,28 +1,14 @@
-package bytesnortenhos.projetolp2;
-import Dao.ClientesDao;
-import Utils.ConnectionsUtlis;
-import controllers.*;
+package bytesnortenhos.projetolp3;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import models.Funcionario;
-import models.Stand;
-
-
-import javax.sql.rowset.CachedRowSet;
-import java.net.URL;
 
 import java.io.IOException;
+import java.net.URL;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 public class Main extends Application {
     private static final String LOGIN_VIEW_FXML = "LoginView.fxml";
@@ -34,8 +20,9 @@ public class Main extends Application {
         try {
             FXMLLoader loader = new FXMLLoader(Main.class.getResource(LOGIN_VIEW_FXML));
             URL cssStyles = this.getClass().getResource("css/main.css");
-
+            Parent loginView = loader.load();
             if (cssStyles != null) {
+
                 String css = ((URL) cssStyles).toExternalForm();
                 Scene scene = createScene(loginView);
                 scene.getStylesheets().add(css);
@@ -65,6 +52,6 @@ public class Main extends Application {
 
 
 
-       launch();
+        launch();
     }
 }
