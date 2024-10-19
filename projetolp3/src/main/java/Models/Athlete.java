@@ -1,19 +1,19 @@
 package Models;
 
+import java.util.Date;
 import java.util.List;
 
-public class Athlete {
+public class Athlete extends Person {
     private String name;
     private String country;
     private String genre;
     private int height;
     private float weight;
-    private String dateOfBirth;
+    private Date dateOfBirth;
     private List<Participation> olympicParticipations;
-    private String accountID;
 
-
-    public Athlete(String name, String country, String genre, int height, float weight, String dateOfBirth, List<Participation> olympicParticipations) {
+    public Athlete(int id, String password, String name, String country, String genre, int height, float weight, Date dateOfBirth, List<Participation> olympicParticipations) {
+        super(id, password);
         this.name = name;
         this.country = country;
         this.genre = genre;
@@ -22,7 +22,6 @@ public class Athlete {
         this.dateOfBirth = dateOfBirth;
         this.olympicParticipations = olympicParticipations;
     }
-
 
     public String getName() {
         return name;
@@ -64,11 +63,11 @@ public class Athlete {
         this.weight = weight;
     }
 
-    public String getDateOfBirth() {
+    public Date getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(String dateOfBirth) {
+    public void setDateOfBirth(Date dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 

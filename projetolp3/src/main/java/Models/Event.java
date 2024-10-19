@@ -1,15 +1,19 @@
 package Models;
 
+import java.util.List;
+
 public class Event {
 
     private int year;
     private String country;
     private String logo;
+    private List<Place> place;
 
-    public Event(int year, String country, String logo){
+    public Event(int year, String country, String logo, List<Place> place) {
         this.year = year;
         this.country = country;
         this.logo = logo;
+        this.place = place;
     }
 
     public int getYear() {
@@ -34,5 +38,13 @@ public class Event {
 
     public void setLogo(String logo) {
         this.logo = logo;
+    }
+
+    public List<Place> getPlace() {
+        return place;
+    }
+
+    public void setPlace(List<Place> place) {
+        this.place = place;
     }
 }
