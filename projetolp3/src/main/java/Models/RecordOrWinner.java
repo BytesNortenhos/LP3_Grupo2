@@ -1,22 +1,12 @@
 package Models;
 
-public class Record {
-    private String time;
+public class RecordOrWinner {
     private int year;
     private String holder;
 
-    public Record(String time, int year, String holder) {
-        this.time = time;
+    public RecordOrWinner(int year, String holder) {
         this.year = year;
         this.holder = holder;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
     }
 
     public int getYear() {

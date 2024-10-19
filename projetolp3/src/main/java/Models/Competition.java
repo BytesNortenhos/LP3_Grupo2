@@ -10,12 +10,12 @@ public class Competition {
     private int minParticipants;
     private String scoringMeasure;
     private String oneGame;
-    private java.lang.Record olympicRecord;
-    private java.lang.Record winnerOlympic;
+    private OlympicRecord olympicRecord;
+    private List<WinnerOlympic> winnerOlympic;
     private List<String> rules;
 
     public Competition(String type, String genre, String name, String description, int minParticipants,
-                       String scoringMeasure, String oneGame, java.lang.Record olympicRecord, java.lang.Record winnerOlympic,
+                       String scoringMeasure, String oneGame, OlympicRecord olympicRecord, List<WinnerOlympic> winnerOlympic,
                        List<String> rules) {
         this.type = type;
         this.genre = genre;
@@ -86,19 +86,19 @@ public class Competition {
         this.oneGame = oneGame;
     }
 
-    public java.lang.Record getOlympicRecord() {
+    public OlympicRecord getOlympicRecord() {
         return olympicRecord;
     }
 
-    public void setOlympicRecord(java.lang.Record olympicRecord) {
+    public void setOlympicRecord(OlympicRecord olympicRecord) {
         this.olympicRecord = olympicRecord;
     }
 
-    public java.lang.Record getWinnerOlympic() {
+    public List<WinnerOlympic> getWinnerOlympic() {
         return winnerOlympic;
     }
 
-    public void setWinnerOlympic(java.lang.Record winnerOlympic) {
+    public void setWinnerOlympic(List <WinnerOlympic> winnerOlympic) {
         this.winnerOlympic = winnerOlympic;
     }
 
