@@ -11,7 +11,13 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 
-public class Main extends Application {
+public class Main {
+    public static void main(String[] args) throws SQLException, ClassNotFoundException {
+        AthleteDao.getAthletes();
+    }
+}
+
+/*public class Main extends Application {
     private static final String LOGIN_VIEW_FXML = "LoginView.fxml";
 
     @Override
@@ -48,4 +54,4 @@ public class Main extends Application {
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
         launch();
     }
-}
+}*/
