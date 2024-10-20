@@ -6,8 +6,11 @@
       <sourceFolder url="file://$MODULE_DIR$/ProjetoLP3_Grupo2/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/ProjetoLP3_Grupo2/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/ProjetoLP3_Grupo2/src/main/resources" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/projetolp3/src/main/java" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" exported="" name="javafx-swt" level="application" />
+    <orderEntry type="library" exported="" name="microsoft.sqlserver.mssql.jdbc" level="application" />
   </component>
 </module>

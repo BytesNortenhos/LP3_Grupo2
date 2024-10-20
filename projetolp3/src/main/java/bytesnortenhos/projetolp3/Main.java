@@ -1,5 +1,6 @@
 package bytesnortenhos.projetolp3;
 
+import Dao.AthleteDao;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -15,8 +16,6 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws SQLException, ClassNotFoundException {
-
-
         try {
             FXMLLoader loader = new FXMLLoader(Main.class.getResource(LOGIN_VIEW_FXML));
             URL cssStyles = this.getClass().getResource("css/main.css");
@@ -38,6 +37,7 @@ public class Main extends Application {
         } catch (IOException e) {
             System.err.println("Error loading FXML file: " + e.getMessage());
         }
+        AthleteDao.getAthletes();
     }
 
     private Scene createScene(Parent root) {
@@ -46,12 +46,6 @@ public class Main extends Application {
 
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
-
-
-
-
-
-
         launch();
     }
 }
