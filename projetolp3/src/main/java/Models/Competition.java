@@ -28,6 +28,9 @@ public class Competition {
         this.winnerOlympic = winnerOlympic;
         this.rules = rules;
     }
+    public Competition() {
+
+    }
 
     // Getters e Setters
     public String getType() {

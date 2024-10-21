@@ -14,7 +14,9 @@ public class Place {
         this.capacity = capacity;
         this.constructionYear = constructionYear;
     }
+    public Place() {
 
+    }
     public String getAddress() {
         return address;
     }

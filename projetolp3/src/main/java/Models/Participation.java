@@ -15,6 +15,10 @@ public class Participation {
         this.certificate = certificate;
     }
 
+    public Participation() {
+
+    }
+
     public int getYear() {
         return year;
     }

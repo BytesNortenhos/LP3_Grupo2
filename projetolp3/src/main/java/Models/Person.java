@@ -9,6 +9,9 @@ public class Person {
         this.password = password;
     }
 
+    public Person() {
+    }
+
     public int getId() {
         return id;
     }
