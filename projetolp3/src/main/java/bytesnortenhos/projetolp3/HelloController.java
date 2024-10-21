@@ -1,4 +1,4 @@
-package com.projetolp3.projetolp3_grupo2;
+package bytesnortenhos.projetolp3;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
