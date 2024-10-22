@@ -8,4 +8,5 @@ module bytesnortenhos.projetolp3 {
     opens bytesnortenhos.projetolp3 to javafx.fxml;
     exports bytesnortenhos.projetolp3;
     exports controllers;
+    opens controllers to javafx.fxml;
 }

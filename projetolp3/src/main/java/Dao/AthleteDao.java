@@ -9,10 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AthleteDao {
-    /**
-     * Print atlhetes from database
-     * @throws SQLException
-     */
     public static void getAthletes() throws SQLException {
 
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT * FROM teste;");
