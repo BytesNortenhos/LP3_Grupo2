@@ -3,6 +3,7 @@ package Models;
 import java.util.List;
 
 public class Competition {
+    private int id;
     private String type;
     private String genre;
     private String name;
@@ -15,7 +16,8 @@ public class Competition {
     private List<String> rules;
 
     /**
-     * Constructor of competition
+     * Constructor of competitio
+     * @param id {int} ID
      * @param type {String} Type
      * @param genre {String} Genre
      * @param name {String} Name
@@ -27,9 +29,10 @@ public class Competition {
      * @param winnerOlympic {List<WinnerOlympic>} List of olympic winners
      * @param rules {List<String>} List of rules
      */
-    public Competition(String type, String genre, String name, String description, int minParticipants,
+    public Competition(int id, String type, String genre, String name, String description, int minParticipants,
                        String scoringMeasure, String oneGame, OlympicRecord olympicRecord, List<WinnerOlympic> winnerOlympic,
                        List<String> rules) {
+        this.id = id;
         this.type = type;
         this.genre = genre;
         this.name = name;
@@ -41,8 +44,22 @@ public class Competition {
         this.winnerOlympic = winnerOlympic;
         this.rules = rules;
     }
-    public Competition() {
+    public Competition() {}
 
+    /**
+     * Get ID
+     * @return int
+     */
+    public int getId() {
+        return id;
+    }
+
+    /**
+     * Set ID
+     * @param id {int} ID
+     */
+    public void setId(int id) {
+        this.id = id;
     }
 
     /**

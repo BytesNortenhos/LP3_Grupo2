@@ -6,13 +6,14 @@ public class OlympicRecord extends RecordOrWinner {
 
     /**
      * Constructor of OlympicRecord
+     * @param id {int} ID
      * @param year {int} Year
      * @param holder {String} Holder
      * @param timeMS {int} Time in ms
      * @param medals {int} Number of medals
      */
-    public OlympicRecord(int year, String holder, int timeMS, int medals) {
-        super(year, holder);
+    public OlympicRecord(int id, int year, String holder, int timeMS, int medals) {
+        super(id, year, holder);
         this.timeMS = timeMS;
         this.medals = medals;
     }

@@ -3,23 +3,42 @@ package Models;
 import java.util.List;
 
 public class Event {
+    private int id;
     private int year;
-    private String country;
+    private Country country;
     private String logo;
-    private List<Place> place;
+    private List<Place> places;
 
     /**
      * Constructor of Event
+     * @param id {int} ID
      * @param year {int} Year
-     * @param country {String} Country
+     * @param country {Country} Country
      * @param logo {String} Logo
-     * @param place {List<Place>} List of Places
+     * @param places {List<Place>} List of Places
      */
-    public Event(int year, String country, String logo, List<Place> place) {
+    public Event(int id, int year, Country country, String logo, List<Place> places) {
+        this.id = id;
         this.year = year;
         this.country = country;
         this.logo = logo;
-        this.place = place;
+        this.places = places;
+    }
+
+    /**
+     * Get ID
+     * @return int
+     */
+    public int getId() {
+        return id;
+    }
+
+    /**
+     * Set ID
+     * @param id {int} ID
+     */
+    public void setId(int id) {
+        this.id = id;
     }
 
     /**
@@ -32,9 +51,9 @@ public class Event {
 
     /**
      * Get country
-     * @return String
+     * @return Country
      */
-    public String getCountry() {
+    public Country getCountry() {
         return country;
     }
 
@@ -56,9 +75,9 @@ public class Event {
 
     /**
      * Get country
-     * @param country {String} Country
+     * @param country {Country} Country
      */
-    public void setCountry(String country) {
+    public void setCountry(Country country) {
         this.country = country;
     }
 
@@ -74,15 +93,15 @@ public class Event {
      * Get places
      * @return List<Place>
      */
-    public List<Place> getPlace() {
-        return place;
+    public List<Place> getPlaces() {
+        return places;
     }
 
     /**
      * Set places
-     * @param place {List<Place>} Places
+     * @param places {List<Place>} Places
      */
-    public void setPlace(List<Place> place) {
-        this.place = place;
+    public void setPlaces(List<Place> places) {
+        this.places = places;
     }
 }

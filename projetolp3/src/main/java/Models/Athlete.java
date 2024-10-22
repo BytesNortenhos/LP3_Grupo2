@@ -10,7 +10,6 @@ public class Athlete extends Person {
     private int height;
     private float weight;
     private Date dateOfBirth;
-    private List<Participation> olympicParticipations;
 
     /**
      * Constructor of Athlete
@@ -22,9 +21,8 @@ public class Athlete extends Person {
      * @param height {int} Height
      * @param weight {float} Weight
      * @param dateOfBirth {Date} Date of birth
-     * @param olympicParticipations {List<Participation>} List of olympic participations
      */
-    public Athlete(int id, String password, String name, String country, String genre, int height, float weight, Date dateOfBirth, List<Participation> olympicParticipations) {
+    public Athlete(int id, String password, String name, String country, String genre, int height, float weight, Date dateOfBirth) {
         super(id, password);
         this.name = name;
         this.country = country;
@@ -32,7 +30,6 @@ public class Athlete extends Person {
         this.height = height;
         this.weight = weight;
         this.dateOfBirth = dateOfBirth;
-        this.olympicParticipations = olympicParticipations;
     }
 
     /**
@@ -129,21 +126,5 @@ public class Athlete extends Person {
      */
     public void setDateOfBirth(Date dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
-    }
-
-    /**
-     * Get olympic participations
-     * @return List<Participation>
-     */
-    public List<Participation> getOlympicParticipations() {
-        return olympicParticipations;
-    }
-
-    /**
-     * Set olympic participations
-     * @param olympicParticipations {List<Participation>} List of Olympic Participations
-     */
-    public void setOlympicParticipations(List<Participation> olympicParticipations) {
-        this.olympicParticipations = olympicParticipations;
     }
 }
