@@ -26,12 +26,13 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws SQLException, ClassNotFoundException {
         try {
             FXMLLoader loader = new FXMLLoader(Main.class.getResource(LOGIN_VIEW_FXML));
-            URL cssStyles = this.getClass().getResource("css/main.css");
+            URL cssStyles = this.getClass().getResource("css/dark.css");
             Parent loginView = loader.load();
             if (cssStyles != null) {
                 Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
                 String css = ((URL) cssStyles).toExternalForm();
                 Scene scene = new Scene(loginView, screenSize.getWidth(), screenSize.getHeight());
+                System.out.println(css);
                 scene.getStylesheets().add(css);
 
                 primaryStage.setTitle("Olimpiadas");

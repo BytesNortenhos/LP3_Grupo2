@@ -1,0 +1,24 @@
+.background {
+    -fx-background-color: #F7EED8;
+}
+.buttons{
+    -fx-background-color: transparent;
+    -fx-border-color: #1E1E1E;
+    -fx-text-fill: #1E1E1E;
+}
+.loginText{
+    -fx-text-fill: #1E1E1E;
+    -fx-font-size: 55px;
+    -fx-translate-y: -200px;
+    -fx-font-family: "Oxanium", sans-serif;
+    -fx-font-weight: 500;
+}
+.userNameText{
+    -fx-translate-y: -100px;
+    -fx-text-fill: #1E1E1E;
+    -fx-background-color: #F7EED8;
+    -fx-control-inner-background: #F7EED8; /* Makes the inner part transparent */
+    -fx-prompt-text-fill: #1E1E1E; /* If you have a prompt text, adjust its color */
+    -fx-border-color: #1E1E1E; /* Optionally set a border color */
+    -fx-background-radius: 0; /* Adjust border radius if needed */
+}

@@ -1,0 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Oxanium:wght@200..800&display=swap');
+.background {
+    -fx-background-color: #1E1E1E;
+}
+.buttons{
+    -fx-background-color: transparent;
+    -fx-border-color: #F7EED8;
+    -fx-text-fill: #F7EED8;
+}
+.loginText{
+    -fx-text-fill: #F7EED8;
+    -fx-font-size: 55px;
+    -fx-translate-y: -200px;
+    -fx-font-family: "Oxanium", sans-serif;
+    -fx-font-weight: 500;
+}
+.userNameText{
+    -fx-translate-y: -100px;
+    -fx-text-fill: #F7EED8;
+    -fx-background-color: #1E1E1E;
+    -fx-control-inner-background: #1E1E1E; /* Makes the inner part transparent */
+    -fx-prompt-text-fill: #F7EED8; /* If you have a prompt text, adjust its color */
+    -fx-border-color: #F7EED8; /* Optionally set a border color */
+    -fx-background-radius: 0; /* Adjust border radius if needed */
+}
