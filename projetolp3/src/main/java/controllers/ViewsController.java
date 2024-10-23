@@ -7,6 +7,8 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -16,7 +18,10 @@ import java.net.URL;
 import java.util.Objects;
 
 public class ViewsController {
-
+    @FXML
+    private ImageView iconOlympic;
+    @FXML
+    private ImageView iconMode;
     private Stage stage;
     private Scene scene;
     @FXML
@@ -26,6 +31,19 @@ public class ViewsController {
     URL cssLightURL = Main.class.getResource("css/light.css");
     String cssDark = ((URL) cssDarkURL).toExternalForm();
     String cssLight = ((URL) cssLightURL).toExternalForm();
+
+
+
+    public void initialize() {
+        URL iconOlympicURL = Main.class.getResource("img/iconOlympic.png");
+        String iconOlympicStr = ((URL) iconOlympicURL).toExternalForm();
+        Image image = new Image(iconOlympicStr);
+        iconOlympic.setImage(image);
+        URL iconMoonURL = Main.class.getResource("img/iconMoonLight.png");
+        String iconMoonStr = ((URL) iconMoonURL).toExternalForm();
+        image = new Image(iconMoonStr);
+        iconMode.setImage(image);
+    }
     public void SwitchLoginToMenu(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
         Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/home.fxml")));
@@ -47,9 +65,17 @@ public class ViewsController {
     public void setLightMode(){
         parent.getStylesheets().remove(cssDark);
         parent.getStylesheets().add(cssLight);
+        URL iconMoonURL = Main.class.getResource("img/iconMoon.png");
+        String iconMoonStr = ((URL) iconMoonURL).toExternalForm();
+        Image image = new Image(iconMoonStr);
+        iconMode.setImage(image);
     }
     public void setDarkMode(){
         parent.getStylesheets().remove(String.valueOf(cssLight));
         parent.getStylesheets().add(String.valueOf(cssDark));
+        URL iconMoonURL = Main.class.getResource("img/iconMoonLight.png");
+        String iconMoonStr = ((URL) iconMoonURL).toExternalForm();
+        Image image = new Image(iconMoonStr);
+        iconMode.setImage(image);
     }
 }

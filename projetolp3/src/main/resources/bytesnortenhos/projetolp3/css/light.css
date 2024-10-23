@@ -8,17 +8,52 @@
 }
 .loginText{
     -fx-text-fill: #1E1E1E;
-    -fx-font-size: 55px;
-    -fx-translate-y: -200px;
-    -fx-font-family: "Oxanium", sans-serif;
-    -fx-font-weight: 500;
+    -fx-font-size: 72px;
+    -fx-translate-y: -70px;
+    font-family: "Inter";
+    font-weight: 700;
+    font-style: normal;
+    -fx-spacing: -0,03em;
+}
+.iconOlympic{
+    -fx-translate-y: -100px;
+}
+.iconMoon{
+    -fx-cursor: hand;
+    -fx-border-color: transparent;
+    -fx-background-color: transparent;
 }
 .userNameText{
-    -fx-translate-y: -100px;
+    -fx-translate-y: -80px;
+    -fx-font-size: 20px;
     -fx-text-fill: #1E1E1E;
-    -fx-background-color: #F7EED8;
-    -fx-control-inner-background: #F7EED8; /* Makes the inner part transparent */
-    -fx-prompt-text-fill: #1E1E1E; /* If you have a prompt text, adjust its color */
-    -fx-border-color: #1E1E1E; /* Optionally set a border color */
-    -fx-background-radius: 0; /* Adjust border radius if needed */
+    -fx-background-color: #D5D1C7;
+    -fx-control-inner-background: #1E1E1E;
+    -fx-prompt-text-fill: #1E1E1E;
+    -fx-border-color: #9B9898;
+    -fx-background-radius: 20px;
+    -fx-border-radius: 20px;
+    -fx-border-width: 2px;
+    -fx-max-height: 20px;
+    -fx-max-width: 300px;
+}
+.buttonEntrar{
+    -fx-min-height:20px;
+    -fx-font-size: 20px;
+    -fx-min-width: 150px;
+    -fx-text-fill: #1E1E1E;
+    -fx-background-color: #D5D1C7;
+    -fx-control-inner-background: #1E1E1E;
+    -fx-prompt-text-fill: #1E1E1E;
+    -fx-border-color: #9B9898;
+    -fx-background-radius: 20px;
+    -fx-border-radius: 20px;
+    -fx-border-width: 2px;
+}
+.buttonEntrar:hover{
+    -fx-text-fill: #F7EED8;
+    -fx-background-color: #3A3A38;
+    -fx-control-inner-background: #1E1E1E;
+    -fx-prompt-text-fill: #F7EED8;
+    -fx-border-color: #9B9898;
 }

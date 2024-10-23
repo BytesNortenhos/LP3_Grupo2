@@ -2,10 +2,12 @@ package bytesnortenhos.projetolp3;
 
 import Dao.AthleteDao;
 import javafx.application.Application;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.ImageView;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
@@ -21,7 +23,6 @@ import java.sql.SQLException;
 
 public class Main extends Application {
     private static final String LOGIN_VIEW_FXML = "loginView.fxml";
-
     @Override
     public void start(Stage primaryStage) throws SQLException, ClassNotFoundException {
         try {
@@ -32,7 +33,6 @@ public class Main extends Application {
                 Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
                 String css = ((URL) cssStyles).toExternalForm();
                 Scene scene = new Scene(loginView, screenSize.getWidth(), screenSize.getHeight());
-                System.out.println(css);
                 scene.getStylesheets().add(css);
 
                 primaryStage.setTitle("Olimpiadas");
