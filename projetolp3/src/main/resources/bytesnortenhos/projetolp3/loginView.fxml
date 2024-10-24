@@ -27,9 +27,9 @@
         <VBox alignment="CENTER">
             <Label styleClass="loginText" text="LOGIN" />
             <ImageView fx:id="iconOlympic" styleClass="iconOlympic" fitWidth="96" fitHeight="96" preserveRatio="true" />
-            <TextField styleClass="userNameText" promptText="Nome de utilizador" />
-            <PasswordField styleClass="userNameText" style="-fx-translate-y: -50px" promptText="Palavra-passe" />
-            <Button styleClass="buttonEntrar">Entrar</Button>
+            <TextField styleClass="userNameText" fx:id="userNameText" promptText="Nome de utilizador" />
+            <PasswordField styleClass="userNameText" fx:id="passwordText" style="-fx-translate-y: -50px" promptText="Palavra-passe" />
+            <Button styleClass="buttonEntrar" onAction="#handleEntrarButtonAction">Entrar</Button>
         </VBox>
     </center>
 </BorderPane>
