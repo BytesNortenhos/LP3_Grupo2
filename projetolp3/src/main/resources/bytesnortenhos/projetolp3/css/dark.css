@@ -7,6 +7,10 @@
     -fx-border-color: #F7EED8;
     -fx-text-fill: #F7EED8;
 }
+.navBar{
+    -fx-background-color: #F7EED8;
+    -fx-alignment: center;
+}
 .loginText{
 
     -fx-text-fill: #F7EED8;
@@ -20,10 +24,13 @@
 .iconOlympic{
     -fx-translate-y: -100px;
 }
-.iconMoon{
+.iconMoon, .iconMoonNav, .iconHomeNav{
     -fx-cursor: hand;
     -fx-border-color: transparent;
     -fx-background-color: transparent;
+}
+.iconHomeNav{
+    -fx-translate-x: -1000px;
 }
 .userNameText{
     -fx-translate-y: -80px;
@@ -60,4 +67,13 @@
     -fx-prompt-text-fill: #1E1E1E;
     -fx-border-color: #9B9898;
 }
-
+.buttonReg{
+    -fx-min-height: 65px;
+    -fx-background-color: transparent;
+    -fx-font-size: 18px;
+    -fx-font-weight: 600;
+    -fx-cursor: hand;
+}
+.buttonReg:hover, .iconMoonNav:hover, .iconHomeNav:hover{
+    -fx-background-color: #9B9898;
+}
