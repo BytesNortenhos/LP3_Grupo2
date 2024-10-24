@@ -29,9 +29,9 @@
     -fx-border-color: transparent;
     -fx-background-color: transparent;
 }
-.iconHomeNav{
-    -fx-translate-x: -1000px;
-}
+/*.iconHomeNav{*/
+/*    -fx-translate-x: -1000px;*/
+/*}*/
 .userNameText{
     -fx-translate-y: -80px;
     -fx-font-size: 20px;
