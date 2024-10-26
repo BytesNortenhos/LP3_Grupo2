@@ -13,6 +13,7 @@
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.control.ScrollPane?>
 <BorderPane fx:id="parent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="background" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.HomeController">
   <top>
     <HBox styleClass="navBar" prefHeight="40.0" prefWidth="400.0">
@@ -23,7 +24,7 @@
       </Button>
       <Pane HBox.hgrow="ALWAYS" />
       <Button styleClass="buttonReg" onAction="#mostrarRegistar">
-        Registar membro
+        Gerir Atleta
       </Button>
       <Button mnemonicParsing="false" onAction="#changeMode" styleClass="iconMoonNav">
         <graphic>
@@ -33,8 +34,17 @@
     </HBox>
   </top>
   <center>
-    <VBox alignment="CENTER">
-
+    <VBox>
+      <Label styleClass="labelHome">Inicio</Label>
+      <Label styleClass="textWelcome">Lista de membros com aprovação pendente para inscrição em modalidades</Label>
+      <ScrollPane fitToWidth="true" pannable="true" styleClass="scrollStyle">
+        <VBox fx:id="mainContainer" alignment="CENTER" spacing="20" xmlns:fx="http://javafx.com/fxml">
+          <Label fx:id="noRequestsLabel" text="Não existem pedidos pendentes" visible="false" />
+          <VBox fx:id="requestsContainer" spacing="10">
+            <!-- Requests will be dynamically added here -->
+          </VBox>
+        </VBox>
+      </ScrollPane>
     </VBox>
   </center>
 </BorderPane>
