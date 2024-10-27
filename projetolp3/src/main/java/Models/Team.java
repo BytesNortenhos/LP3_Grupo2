@@ -3,29 +3,45 @@ package Models;
 import java.util.List;
 
 public class Team {
+    private int idTeam;
     private String name;
-    private String country;
-    private String genre;
-    private String sport;
-    private int foundationYear;
-    private List<Participation> olympicParticipations;
+    private Country country;
+    private Gender genre;
+    private int idSport;
+    private int yearFounded;
 
     /**
      * Constructor of Team
+     * @param idTeam {int} Team ID
      * @param name {String} Name
-     * @param country {String} Country
-     * @param genre {String} Genre
-     * @param sport {String} Sport
-     * @param foundationYear {int} Year of foundation
-     * @param olympicParticipations {List<Participation>} List of participations
+     * @param country {Country} Country
+     * @param genre {Gender} Genre
+     * @param idSport {int} Sport
+     * @param yearFounded {int} Year of foundation
      */
-    public Team(String name, String country, String genre, String sport, int foundationYear, List<Participation> olympicParticipations) {
+    public Team(int idTeam, String name, Country country, Gender genre, int idSport, int yearFounded) {
+        this.idTeam = idTeam;
         this.name = name;
         this.country = country;
         this.genre = genre;
-        this.sport = sport;
-        this.foundationYear = foundationYear;
-        this.olympicParticipations = olympicParticipations;
+        this.idSport = idSport;
+        this.yearFounded = yearFounded;
+    }
+
+    /**
+     * Get Team ID
+     * @return int
+     */
+    public int getIdTeam() {
+        return idTeam;
+    }
+
+    /**
+     * Set Team ID
+     * @param idTeam {int} Team ID
+     */
+    public void setIdTeam(int idTeam) {
+        this.idTeam = idTeam;
     }
 
     /**
@@ -48,7 +64,7 @@ public class Team {
      * Get country
      * @return String
      */
-    public String getCountry() {
+    public Country getCountry() {
         return country;
     }
 
@@ -56,71 +72,55 @@ public class Team {
      * Set country
      * @param country {String} Country
      */
-    public void setCountry(String country) {
+    public void setCountry(Country country) {
         this.country = country;
     }
 
     /**
      * Get genre
-     * @return String
+     * @return Gender
      */
-    public String getGenre() {
+    public Gender getGenre() {
         return genre;
     }
 
     /**
      * Set genre
-     * @param genre {String} Genre
+     * @param genre {Gender} Genre
      */
-    public void setGenre(String genre) {
+    public void setGenre(Gender genre) {
         this.genre = genre;
     }
 
     /**
-     * Get sport
-     * @return String
+     * Get Sport ID
+     * @return int
      */
-    public String getSport() {
-        return sport;
+    public int getIdSport() {
+        return idSport;
     }
 
     /**
      * Set sport
-     * @param sport {String} Sport
+     * @param idSport {int} Sport DI
      */
-    public void setSport(String sport) {
-        this.sport = sport;
+    public void setIdSport(int idSport) {
+        this.idSport = idSport;
     }
 
     /**
      * Get year of foundation
      * @return int
      */
-    public int getFoundationYear() {
-        return foundationYear;
+    public int getYearFounded() {
+        return yearFounded;
     }
 
     /**
      * Set year of foundation
-     * @param foundationYear {int} Year of foundation
+     * @param yearFounded {int} Year of foundation
      */
-    public void setFoundationYear(int foundationYear) {
-        this.foundationYear = foundationYear;
-    }
-
-    /**
-     * Get olympic participationa
-     * @return List<Participation>
-     */
-    public List<Participation> getOlympicParticipations() {
-        return olympicParticipations;
-    }
-
-    /**
-     * Set olympic participations
-     * @param olympicParticipations {List<Participation>} Olympic participations
-     */
-    public void setOlympicParticipations(List<Participation> olympicParticipations) {
-        this.olympicParticipations = olympicParticipations;
+    public void setYearFounded(int yearFounded) {
+        this.yearFounded = yearFounded;
     }
 }

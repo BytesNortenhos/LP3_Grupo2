@@ -3,42 +3,39 @@ package Models;
 import java.util.List;
 
 public class Event {
-    private int id;
+    private int idEvent;
     private int year;
     private Country country;
     private String logo;
-    private List<Place> places;
 
     /**
      * Constructor of Event
-     * @param id {int} ID
+     * @param idEvent {int} Event ID
      * @param year {int} Year
      * @param country {Country} Country
      * @param logo {String} Logo
-     * @param places {List<Place>} List of Places
      */
-    public Event(int id, int year, Country country, String logo, List<Place> places) {
-        this.id = id;
+    public Event(int idEvent, int year, Country country, String logo) {
+        this.idEvent = idEvent;
         this.year = year;
         this.country = country;
         this.logo = logo;
-        this.places = places;
     }
 
     /**
-     * Get ID
+     * Get Event ID
      * @return int
      */
-    public int getId() {
-        return id;
+    public int getIdEvent() {
+        return idEvent;
     }
 
     /**
-     * Set ID
-     * @param id {int} ID
+     * Set Event ID
+     * @param idEvent {int} Event ID
      */
-    public void setId(int id) {
-        this.id = id;
+    public void setIdEvent(int idEvent) {
+        this.idEvent = idEvent;
     }
 
     /**
@@ -87,21 +84,5 @@ public class Event {
      */
     public void setLogo(String logo) {
         this.logo = logo;
-    }
-
-    /**
-     * Get places
-     * @return List<Place>
-     */
-    public List<Place> getPlaces() {
-        return places;
-    }
-
-    /**
-     * Set places
-     * @param places {List<Place>} Places
-     */
-    public void setPlaces(List<Place> places) {
-        this.places = places;
     }
 }

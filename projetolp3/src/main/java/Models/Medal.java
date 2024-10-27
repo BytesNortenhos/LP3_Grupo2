@@ -1,39 +1,26 @@
 package Models;
 
-public class Medal extends MedalType {
+public class Medal {
     private int idMedal;
     private int idAthlete = 0;
     private int idTeam = 0;
     private int year;
+    private MedalType medalType;
 
     /**
      * Constructor of Medal for Athlete
-     * @param idMedalType {int} Medal Type ID
-     * @param descMedalType {String} Medal Type Desc
      * @param idMedal {int} Medal ID
      * @param idAthlete {int} Athlete ID
+     * @param idTeam {int} Team ID
      * @param year {int} Year
+     * @param medalType {MedalType} MedalType
      */
-    public Medal(int idMedalType, String descMedalType, int idMedal, int idAthlete, int year) {
-        super(idMedalType, descMedalType);
+    public Medal(int idMedal, int idAthlete, int idTeam, int year, MedalType medalType) {
         this.idMedal = idMedal;
         this.idAthlete = idAthlete;
-        this.year = year;
-    }
-
-    /**
-     * Constructor of Medal for Team
-     * @param idMedalType {int} Medal Type ID
-     * @param descMedalType {String} Medal Type Desc
-     * @param idMedal {int} Medal ID
-     * @param idTeam {int} Athlete ID
-     * @param year {int} Year
-     */
-    public Medal(int idMedal, int idTeam, int year, int idMedalType, String descMedalType) {
-        super(idMedalType, descMedalType);
-        this.idMedal = idMedal;
         this.idTeam = idTeam;
         this.year = year;
+        this.medalType = medalType;
     }
 
     /**
@@ -98,5 +85,21 @@ public class Medal extends MedalType {
      */
     public void setYear(int year) {
         this.year = year;
+    }
+
+    /**
+     * Get MedalType
+     * @return MedalType
+     */
+    public MedalType getMedalType() {
+        return medalType;
+    }
+
+    /**
+     * Set MedalType
+     * @param medalType {MedalType}
+     */
+    public void setMedalType(MedalType medalType) {
+        this.medalType = medalType;
     }
 }

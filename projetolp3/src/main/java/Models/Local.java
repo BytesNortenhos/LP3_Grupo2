@@ -1,9 +1,7 @@
 package Models;
 
-import java.time.Year;
-
-public class Place {
-    private int id;
+public class Local {
+    private int idLocal;
     private String name;
     private String type;
     private String address;
@@ -12,16 +10,16 @@ public class Place {
     private int constructionYear;
 
     /**
-     * Constructor of place
-     * @param id {int} ID
+     * Constructor of Local
+     * @param idLocal {int} Local ID
      * @param name {String} Name
      * @param address {String} Address
      * @param city {String} City
      * @param capacity {int} Capacity
      * @param constructionYear {int} Year of construction
      */
-    public Place(int id, String name, String type, String address, String city, int capacity, int constructionYear) {
-        this.id = id;
+    public Local(int idLocal, String name, String type, String address, String city, int capacity, int constructionYear) {
+        this.idLocal = idLocal;
         this.name = name;
         this.type = type;
         this.address = address;
@@ -30,22 +28,22 @@ public class Place {
         this.constructionYear = constructionYear;
     }
 
-    public Place() {}
+    public Local() {}
 
     /**
-     * Get ID
+     * Get Local ID
      * @return int
      */
-    public int getId() {
-        return id;
+    public int getIdLocal() {
+        return idLocal;
     }
 
     /**
-     * Set ID
-     * @param id {int} ID
+     * Set Local ID
+     * @param idLocal {int} ID
      */
-    public void setId(int id) {
-        this.id = id;
+    public void setIdLocal(int idLocal) {
+        this.idLocal = idLocal;
     }
 
     /**

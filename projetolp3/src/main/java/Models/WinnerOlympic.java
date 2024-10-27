@@ -2,18 +2,19 @@ package Models;
 
 public class WinnerOlympic extends RecordOrWinner {
     private int timeMS;
-    private String medal;
+    private Medal medal;
 
     /**
      * Constructor of WinnerOlympic
-     * @param id {int} ID
+     * @param idSport {int} Sport ID
      * @param year {int} Year
-     * @param holder {String} Holder
+     * @param idAthlete {int} Athlete ID
+     * @param idTeam {int} Team ID
      * @param timeMS {int} Time in ms
-     * @param medal {String} Medal
+     * @param medal {Medal} Medal
      */
-    public WinnerOlympic(int id, int year, String holder, int timeMS, String medal) {
-        super(id, year, holder);
+    public WinnerOlympic(int idSport, int year, int idAthlete, int idTeam, int timeMS, Medal medal) {
+        super(idSport, year, idAthlete, idTeam);
         this.timeMS = timeMS;
         this.medal = medal;
     }
@@ -36,17 +37,17 @@ public class WinnerOlympic extends RecordOrWinner {
 
     /**
      * Get medal
-     * @return String
+     * @return Medal
      */
-    public String getMedal() {
+    public Medal getMedal() {
         return medal;
     }
 
     /**
      * Set medal
-     * @param medal {String} Medal
+     * @param medal {Medal} Medal
      */
-    public void setMedal(String medal) {
+    public void setMedal(Medal medal) {
         this.medal = medal;
     }
 }
