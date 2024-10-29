@@ -2,11 +2,12 @@ package Models;
 
 import java.util.List;
 
-public class Competition {
+public class Sport {
+    private int idSport;
     private String type;
-    private String genre;
+    private Gender genre;
     private String name;
-    private String description;
+    private String desc;
     private int minParticipants;
     private String scoringMeasure;
     private String oneGame;
@@ -15,11 +16,12 @@ public class Competition {
     private List<String> rules;
 
     /**
-     * Constructor of competition
+     * Constructor of Sport
+     * @param idSport {int} Sport ID
      * @param type {String} Type
-     * @param genre {String} Genre
+     * @param genre {Gender} Genre
      * @param name {String} Name
-     * @param description {String} Description
+     * @param desc {String} Description
      * @param minParticipants {int} Number minimum of participants
      * @param scoringMeasure {String} Measure of scoring
      * @param oneGame {String} "One Game"
@@ -27,13 +29,14 @@ public class Competition {
      * @param winnerOlympic {List<WinnerOlympic>} List of olympic winners
      * @param rules {List<String>} List of rules
      */
-    public Competition(String type, String genre, String name, String description, int minParticipants,
-                       String scoringMeasure, String oneGame, OlympicRecord olympicRecord, List<WinnerOlympic> winnerOlympic,
-                       List<String> rules) {
+    public Sport(int idSport, String type, Gender genre, String name, String desc, int minParticipants,
+                 String scoringMeasure, String oneGame, OlympicRecord olympicRecord, List<WinnerOlympic> winnerOlympic,
+                 List<String> rules) {
+        this.idSport = idSport;
         this.type = type;
         this.genre = genre;
         this.name = name;
-        this.description = description;
+        this.desc = desc;
         this.minParticipants = minParticipants;
         this.scoringMeasure = scoringMeasure;
         this.oneGame = oneGame;
@@ -41,8 +44,22 @@ public class Competition {
         this.winnerOlympic = winnerOlympic;
         this.rules = rules;
     }
-    public Competition() {
+    public Sport() {}
 
+    /**
+     * Get Sport ID
+     * @return int
+     */
+    public int getIdSport() {
+        return idSport;
+    }
+
+    /**
+     * Set Sport ID
+     * @param idSport {int} Sport ID
+     */
+    public void setIdSport(int idSport) {
+        this.idSport = idSport;
     }
 
     /**
@@ -63,17 +80,17 @@ public class Competition {
 
     /**
      * Get genre
-     * @return String
+     * @return Gender
      */
-    public String getGenre() {
+    public Gender getGenre() {
         return genre;
     }
 
     /**
      * Set genre
-     * @param genre {String} Gênero
+     * @param genre {Gender} Gênero
      */
-    public void setGenre(String genre) {
+    public void setGenre(Gender genre) {
         this.genre = genre;
     }
 
@@ -97,16 +114,16 @@ public class Competition {
      * Get description
      * @return String
      */
-    public String getDescription() {
-        return description;
+    public String getDesc() {
+        return desc;
     }
 
     /**
      * Set description
-     * @param description {String} Descrição
+     * @param desc {String} Descrição
      */
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 
     /**

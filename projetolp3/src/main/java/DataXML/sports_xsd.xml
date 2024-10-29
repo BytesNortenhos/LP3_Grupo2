@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<!-- Root element Sports -->
+	<xs:element name="sports">
+		<xs:complexType>
+			<xs:sequence>
+				<!-- Sport element can appear multiple times -->
+				<xs:element name="sport" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<!-- Type of sport: Individual or Collective -->
+							<xs:element name="type">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:enumeration value="Individual"/>
+										<xs:enumeration value="Collective"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- Genre: Men or Women -->
+							<xs:element name="genre">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:enumeration value="Men"/>
+										<xs:enumeration value="Women"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- Name of the sport -->
+							<xs:element name="name" type="xs:string"/>
+							<!-- Description of the sport -->
+							<xs:element name="description" type="xs:string"/>
+							<!-- Minimum number of participants or teams required -->
+							<xs:element name="minParticipants" type="xs:int"/>
+							<!-- Scoring measure: Time or Points or Distance -->
+							<xs:element name="scoringMeasure">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:enumeration value="Time"/>
+										<xs:enumeration value="Points"/>
+										<xs:enumeration value="Distance"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- Whether it is a one-game or multiple-game sport -->
+							<xs:element name="oneGame">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:enumeration value="One"/>
+										<xs:enumeration value="Multiple"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- Olympic record information -->
+							<xs:element name="olympicRecord">
+								<xs:complexType>
+									<xs:sequence>
+										<!-- Record time -->
+										<xs:element name="time" type="xs:time" minOccurs="0"/>
+										<!-- Year when the record was set -->
+										<xs:element name="year" type="xs:int"/>
+										<!-- Record holder's name or team -->
+										<xs:element name="holder" type="xs:string"/>
+										<!-- Record medals -->
+										<xs:element name="medals" type="xs:int" minOccurs="0"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<!-- Olympic winner information -->
+							<xs:element name="winnerOlympic">
+								<xs:complexType>
+									<xs:sequence>
+										<!-- Time -->
+										<xs:element name="time" type="xs:time" minOccurs="0"/>
+										<!-- Year of the winning Olympic event -->
+										<xs:element name="year" type="xs:int"/>
+										<!-- Name or team of the holder  -->
+										<xs:element name="holder" type="xs:string"/>
+										<!-- Record medals -->
+										<xs:element name="medal" type="xs:string" minOccurs="0"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<!-- Rules of the sport -->
+							<xs:element name="rules">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="rule" type="xs:string" maxOccurs="unbounded"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

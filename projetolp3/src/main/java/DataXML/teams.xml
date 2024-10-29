@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<teams>
+    <team>
+        <name>USA Men's Basketball Team</name>
+        <country>USA</country>
+		<genre>Men</genre>
+        <sport>Basketball</sport>
+        <foundationYear>1936</foundationYear>
+        <olympicParticipations>
+            <participation>
+                <year>2020</year>
+                <result>Gold</result>
+            </participation>
+            <participation>
+                <year>2016</year>
+                <result>Gold</result>
+            </participation>
+            <participation>
+                <year>2012</year>
+                <result>Gold</result>
+            </participation>
+        </olympicParticipations>
+    </team>
+	<team>
+        <name>USA Women's Basketball Team</name>
+        <country>USA</country>
+		<genre>Women</genre>
+        <sport>Basketball</sport>
+        <foundationYear>1976</foundationYear>
+        <olympicParticipations>
+            <participation>
+                <year>2020</year>
+                <result>Gold</result>
+            </participation>
+            <participation>
+                <year>2016</year>
+                <result>Gold</result>
+            </participation>
+            <participation>
+                <year>2012</year>
+                <result>Gold</result>
+            </participation>
+        </olympicParticipations>
+    </team>
+    <team>
+        <name>Australia Women's 4x100m Freestyle Relay Team</name>
+        <country>AUS</country>
+		<genre>Women</genre>
+        <sport>4x100m Freestyle Relay</sport>
+        <foundationYear>1956</foundationYear>
+        <olympicParticipations>
+            <participation>
+                <year>2020</year>
+                <result>Gold</result>
+            </participation>
+            <participation>
+                <year>2016</year>
+                <result>Gold</result>
+            </participation>
+            <participation>
+                <year>2012</year>
+                <result>Silver</result>
+            </participation>
+        </olympicParticipations>
+    </team>
+    <team>
+        <name>Brazil Men's Football Team</name>
+        <country>BRA</country>
+		<genre>Men</genre>
+        <sport>Football</sport>
+        <foundationYear>1952</foundationYear>
+        <olympicParticipations>
+            <participation>
+                <year>2020</year>
+                <result>Gold</result>
+            </participation>
+            <participation>
+                <year>2016</year>
+                <result>Gold</result>
+            </participation>
+            <participation>
+                <year>2012</year>
+                <result>Diploma</result>
+            </participation>
+        </olympicParticipations>
+    </team>
+	<team>
+        <name>USA Men's 4x100m Medley Relay Team</name>
+        <country>USA</country>
+		<genre>Men</genre>
+        <sport>4x100m Medley Relay</sport>
+        <foundationYear>1960</foundationYear>
+        <olympicParticipations>
+            <participation>
+                <year>2020</year>
+                <result>Gold</result>
+            </participation>
+            <participation>
+                <year>2016</year>
+                <result>Gold</result>
+            </participation>
+            <participation>
+                <year>2012</year>
+                <result>Gold</result>
+            </participation>
+        </olympicParticipations>
+    </team>
+	<team>
+        <name>Jamaica Women's 4x100m Relay Team</name>
+        <country>JAM</country>
+		<genre>Women</genre>
+        <sport>4x100m Relay</sport>
+        <foundationYear>1952</foundationYear>
+        <olympicParticipations>
+            <participation>
+                <year>2020</year>
+                <result>Gold</result>
+            </participation>
+            <participation>
+                <year>2016</year>
+                <result>Silver</result>
+            </participation>
+            <participation>
+                <year>2012</year>
+                <result>Silver</result>
+            </participation>
+        </olympicParticipations>
+    </team>
+	<team>
+        <name>USA Men's 4x100m Relay Team</name>
+        <country>USA</country>
+		<genre>Men</genre>
+        <sport>4x100m Relay</sport>
+        <foundationYear>1920</foundationYear>
+        <olympicParticipations>
+            <participation>
+                <year>2020</year>
+                <result>Diploma</result>
+            </participation>
+            <participation>
+                <year>2016</year>
+                <result>Diploma</result>
+            </participation>
+            <participation>
+                <year>2012</year>
+                <result>Silver</result>
+            </participation>
+        </olympicParticipations>
+    </team>
+</teams>
