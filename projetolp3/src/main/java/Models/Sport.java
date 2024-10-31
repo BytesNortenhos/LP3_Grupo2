@@ -13,7 +13,7 @@ public class Sport {
     private String oneGame;
     private OlympicRecord olympicRecord;
     private List<WinnerOlympic> winnerOlympic;
-    private List<String> rules;
+    private List<Rule> rules;
 
     /**
      * Constructor of Sport
@@ -27,11 +27,11 @@ public class Sport {
      * @param oneGame {String} "One Game"
      * @param olympicRecord {OlympicRecord} Olympic record
      * @param winnerOlympic {List<WinnerOlympic>} List of olympic winners
-     * @param rules {List<String>} List of rules
+     * @param rules {List<Rule>} List of rules
      */
     public Sport(int idSport, String type, Gender genre, String name, String desc, int minParticipants,
                  String scoringMeasure, String oneGame, OlympicRecord olympicRecord, List<WinnerOlympic> winnerOlympic,
-                 List<String> rules) {
+                 List<Rule> rules) {
         this.idSport = idSport;
         this.type = type;
         this.genre = genre;
@@ -208,17 +208,17 @@ public class Sport {
 
     /**
      * Get rules
-     * @return List<String>
+     * @return List<Rule>
      */
-    public List<String> getRules() {
+    public List<Rule> getRules() {
         return rules;
     }
 
     /**
      * Set rules
-     * @param rules {List<String>} List of rules
+     * @param rules {List<Rule>} List of rules
      */
-    public void setRules(List<String> rules) {
+    public void setRules(List<Rule> rules) {
         this.rules = rules;
     }
 }
