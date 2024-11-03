@@ -5,7 +5,16 @@ import javax.sql.rowset.RowSetProvider;
 import java.sql.*;
 
 public class ConnectionsUtlis{
-    private static final String connStr = "jdbc:sqlserver://ctespbd.dei.isep.ipp.pt;databaseName=2024_LP3_G2_FEIRA;user=2024_LP3_G2_FEIRA;password=LP3g2!2024;encryption=true;trustServerCertificate=true;";
+
+    static String serverName = "ctespbd.dei.isep.ipp.pt";
+    static String databaseName = "2024_LP3_G2_FEIRA";
+    static String user = "2024_LP3_G2_FEIRA";
+    static String password = "LP3g2!2024";
+    private static final String connStr = "jdbc:sqlserver://" + serverName +
+            ";databaseName=" + databaseName +
+            ";user=" + user +
+            ";password=" + password +
+            ";encryption=true;trustServerCertificate=true;";
     private static Connection conn = null;
 
     /**
