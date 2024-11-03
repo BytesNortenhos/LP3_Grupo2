@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sports>
+	<sport>
+		<type>Individual</type>
+		<genre>Men</genre>
+		<name>100m Sprint</name>
+		<description>The 100m sprint is a short-distance race in which athletes run as fast as possible over a straight 100-meter track.</description>
+		<minParticipants>8</minParticipants>
+		<scoringMeasure>Time</scoringMeasure>
+		<oneGame>One</oneGame>
+		<olympicRecord>
+			<time>00:00:09.63</time>
+			<year>2012</year>
+			<holder>Usain Bolt</holder>
+		</olympicRecord>
+		<winnerOlympic>
+			<time>00:00:09.80</time>
+			<year>2020</year>
+			<holder>Lamont Marcell Jacobs</holder>
+		</winnerOlympic>
+		<rules>
+			<rule>Each race consists of eight lanes, and each athlete must remain in their lane.</rule>
+			<rule>False starts result in automatic disqualification.</rule>
+			<rule>The winner is the athlete who crosses the finish line first.</rule>
+		</rules>
+	</sport>
+	<sport>
+		<type>Individual</type>
+		<genre>Women</genre>
+		<name>100m Sprint</name>
+		<description>The 100m sprint is a short-distance race in which athletes run as fast as possible over a straight 100-meter track.</description>
+		<minParticipants>8</minParticipants>
+		<scoringMeasure>Time</scoringMeasure>
+		<oneGame>One</oneGame>
+		<olympicRecord>
+			<time>00:00:10.49</time>
+			<year>1988</year>
+			<holder>Florence Griffith-Joyner</holder>
+		</olympicRecord>
+		<winnerOlympic>
+			<time>00:00:10.54</time>
+			<year>2020</year>
+			<holder>Elaine Thompson-Herah</holder>
+		</winnerOlympic>
+		<rules>
+			<rule>Each race consists of eight lanes, and each athlete must remain in their lane.</rule>
+			<rule>False starts result in automatic disqualification.</rule>
+			<rule>The winner is the athlete who crosses the finish line first.</rule>
+		</rules>
+	</sport>
+	<sport>
+		<type>Individual</type>
+		<genre>Men</genre>
+		<name>Marathon</name>
+		<description>The marathon is a long-distance race with an official distance of 42.195 kilometers, usually run as a road race.</description>
+		<minParticipants>5</minParticipants>
+		<scoringMeasure>Time</scoringMeasure>
+		<oneGame>One</oneGame>
+		<olympicRecord>
+			<time>02:06:32</time>
+			<year>2008</year>
+			<holder>Samuel Wanjiru</holder>
+		</olympicRecord>
+		<winnerOlympic>
+			<time>02:08:38</time>
+			<year>2020</year>
+			<holder>Eliud Kipchoge</holder>
+		</winnerOlympic>
+		<rules>
+			<rule>The marathon is run on roads but can finish on a track or stadium.</rule>
+			<rule>Competitors must cover the entire distance by running or walking.</rule>
+			<rule>The winner is the first runner to cross the finish line after completing the full distance.</rule>
+		</rules>
+	</sport>
+	<sport>
+		<type>Collective</type>
+		<genre>Men</genre>
+		<name>Basketball</name>
+		<description>Basketball is a team sport where two teams of five players try to score by shooting a ball into the opposing team’s hoop.</description>
+		<minParticipants>4</minParticipants>
+		<scoringMeasure>Points</scoringMeasure>
+		<oneGame>Multiple</oneGame>
+		<olympicRecord>
+			<year>2020</year>
+			<holder>United States of America</holder>
+			<medals>19</medals>
+		</olympicRecord>
+		<winnerOlympic>
+			<year>2020</year>
+			<holder>United States of America</holder>
+			<medal>Gold</medal>
+		</winnerOlympic>
+		<rules>
+			<rule>Each team consists of five players on the court.</rule>
+			<rule>Games are played in four quarters, each lasting 10 minutes.</rule>
+			<rule>Fouls and violations result in free throws or ball possession changes.</rule>
+		</rules>
+	</sport>
+	<sport>
+		<type>Individual</type>
+		<genre>Men</genre>
+		<name>100m Freestyle</name>
+		<description>The 100m freestyle is a swimming race where athletes swim two lengths of a 50-meter pool using any stroke, but the front crawl is the fastest and most common stroke.</description>
+		<minParticipants>4</minParticipants>
+		<scoringMeasure>Time</scoringMeasure>
+		<oneGame>One</oneGame>
+		<olympicRecord>
+			<time>00:00:47.02</time>
+			<year>2008</year>
+			<holder>Eamon Sullivan</holder>
+		</olympicRecord>
+		<winnerOlympic>
+			<time>00:00:47.02</time>
+			<year>2020</year>
+			<holder>Caeleb Dressel</holder>
+		</winnerOlympic>
+		<rules>
+			<rule>Swimmers must touch the wall at the end of each lap.</rule>
+			<rule>The start is from a diving platform, and false starts result in disqualification.</rule>
+			<rule>The winner is the swimmer who touches the wall first at the end of the race.</rule>
+		</rules>
+	</sport>
+	<sport>
+		<type>Collective</type>
+		<genre>Men</genre>
+		<name>4x100m Medley Relay</name>
+		<description>The 4x100m medley relay is a team swimming event where each of four swimmers performs a different stroke: backstroke, breaststroke, butterfly, and freestyle, in that order.</description>
+		<minParticipants>5</minParticipants>
+		<scoringMeasure>Time</scoringMeasure>
+		<oneGame>One</oneGame>
+		<olympicRecord>
+			<time>00:03:26.78</time>
+			<year>2008</year>
+			<holder>United States of America</holder>
+		</olympicRecord>
+		<winnerOlympic>
+			<time>00:03:26.78</time>
+			<year>2020</year>
+			<holder>United States of America</holder>
+		</winnerOlympic>
+		<rules>
+			<rule>Each swimmer must complete their stroke before the next swimmer dives in.</rule>
+			<rule>Backstroke starts in the water, while other strokes begin from the platform.</rule>
+			<rule>False starts or stroke infractions lead to disqualification.</rule>
+		</rules>
+	</sport>
+	<sport>
+		<type>Individual</type>
+		<genre>Women</genre>
+		<name>100m Freestyle</name>
+		<description>The 100m freestyle for swimmers is a short-distance race where athletes swim two lengths of a 50-meter pool as fast as possible, typically using the front crawl stroke.</description>
+		<minParticipants>4</minParticipants>
+		<scoringMeasure>Time</scoringMeasure>
+		<oneGame>One</oneGame>
+		<olympicRecord>
+			<time>00:00:52.62</time>
+			<year>2016</year>
+			<holder>Pernille Blume</holder>
+		</olympicRecord>
+		<winnerOlympic>
+			<time>00:00:51.96</time>
+			<year>2020</year>
+			<holder>Emma McKeon</holder>
+		</winnerOlympic>
+		<rules>
+			<rule>Swimmers must touch the wall at the end of each lap.</rule>
+			<rule>The start is from a diving platform, and false starts result in disqualification.</rule>
+			<rule>The winner is the swimmer who touches the wall first at the end of the race.</rule>
+		</rules>
+	</sport>
+	<sport>
+		<type>Collective</type>
+		<genre>Women</genre>
+		<name>4x100m Freestyle Relay</name>
+		<description>The 4x100m freestyle relay for swimmers is a team event where each of the four swimmers swims 100 meters using the freestyle stroke, with a focus on speed and teamwork.</description>
+		<minParticipants>4</minParticipants>
+		<scoringMeasure>Time</scoringMeasure>
+		<oneGame>One</oneGame>
+		<olympicRecord>
+			<time>00:03:29.69</time>
+			<year>2020</year>
+			<holder>Australia</holder>
+		</olympicRecord>
+		<winnerOlympic>
+			<time>00:03:29.69</time>
+			<year>2020</year>
+			<holder>Australia</holder>
+		</winnerOlympic>
+		<rules>
+			<rule>Each swimmer must touch the wall before the next swimmer begins.</rule>
+			<rule>False starts or infractions on the changeover lead to disqualification.</rule>
+			<rule>The winning team is the first to complete all four legs of the race.</rule>
+		</rules>
+	</sport>
+	<sport>
+		<type>Individual</type>
+		<genre>Women</genre>
+		<name>200m Butterfly</name>
+		<description>The 200m butterfly is a race where swimmers swim four lengths of a 50-meter pool using the butterfly stroke.</description>
+		<minParticipants>2</minParticipants>
+		<scoringMeasure>Time</scoringMeasure>
+		<oneGame>One</oneGame>
+		<olympicRecord>
+			<time>00:02:03.86</time>
+			<year>2008</year>
+			<holder>Liu Zige</holder>
+		</olympicRecord>
+		<winnerOlympic>
+			<time>00:02:03.86</time>
+			<year>2020</year>
+			<holder>Zhang Yufei</holder>
+		</winnerOlympic>
+		<rules>
+			<rule>The butterfly stroke must be used throughout the race.</rule>
+			<rule>Swimmers must touch the wall with both hands at each turn and at the finish.</rule>
+			<rule>The winner is determined by the fastest time.</rule>
+		</rules>
+	</sport>
+	<sport>
+		<type>Collective</type>
+		<genre>Men</genre>
+		<name>Football</name>
+		<description>A popular team sport played with a spherical ball between two teams of 11 players.</description>
+		<minParticipants>4</minParticipants>
+		<scoringMeasure>Points</scoringMeasure>
+		<oneGame>Multiple</oneGame>
+		<olympicRecord>
+			<year>2020</year>
+			<holder>Brazil</holder>
+			<medals>7</medals>
+		</olympicRecord>
+		<winnerOlympic>
+			<year>2020</year>
+			<holder>Brazil</holder>
+			<medal>Gold</medal>
+		</winnerOlympic>
+		<rules>
+			<rule>FIFA Laws of the Game</rule>
+		</rules>
+	</sport>
+	<sport>
+		<type>Collective</type>
+		<genre>Men</genre>
+		<name>4x100m Relay</name>
+		<description>A track and field event where teams of four runners each complete a 100-meter leg, passing a baton between each leg.</description>
+		<minParticipants>4</minParticipants>
+		<scoringMeasure>Time</scoringMeasure>
+		<oneGame>One</oneGame>
+		<olympicRecord>
+			<time>00:00:36.84</time>
+			<year>2012</year>
+			<holder>Jamaica</holder>
+		</olympicRecord>
+		<winnerOlympic>
+			<time>00:03:26.78</time>
+			<year>2020</year>
+			<holder>United States of America</holder>
+		</winnerOlympic>
+		<rules>
+			<rule>Relay baton must be passed within the 20-meter exchange zone.</rule>
+		</rules>
+	</sport>
+	<sport>
+		<type>Collective</type>
+		<genre>Women</genre>
+		<name>4x100m Relay</name>
+		<description>A track and field event for women, where four runners each complete a 100-meter leg, passing a baton between each leg.</description>
+		<minParticipants>4</minParticipants>
+		<scoringMeasure>Time</scoringMeasure>
+		<oneGame>One</oneGame>
+		<olympicRecord>
+			<time>00:00:40.82</time>
+			<year>2012</year>
+			<holder>United States of America</holder>
+		</olympicRecord>
+		<winnerOlympic>
+			<time>00:03:51.60</time>
+			<year>2020</year>
+			<holder>Australia</holder>
+		</winnerOlympic>
+		<rules>
+			<rule>Relay baton must be passed within the 20-meter exchange zone.</rule>
+		</rules>
+	</sport>
+	<sport>
+		<type>Collective</type>
+		<genre>Men</genre>
+		<name>4x100m Freestyle Relay</name>
+		<description>A swimming event where teams of four men swim 100 meters freestyle each, passing off the race to the next swimmer in the relay.</description>
+		<minParticipants>4</minParticipants>
+		<scoringMeasure>Time</scoringMeasure>
+		<oneGame>One</oneGame>
+		<olympicRecord>
+			<time>00:03:08.24</time>
+			<year>2008</year>
+			<holder>United States of America</holder>
+		</olympicRecord>
+		<winnerOlympic>
+			<time>00:03:08.97</time>
+			<year>2020</year>
+			<holder>United States of America</holder>
+		</winnerOlympic>
+		<rules>
+			<rule>Each swimmer must touch the wall before the next swimmer begins.</rule>
+		</rules>
+	</sport>
+</sports>

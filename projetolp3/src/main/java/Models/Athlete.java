@@ -5,26 +5,24 @@ import java.util.List;
 
 public class Athlete extends Person {
     private String name;
-    private String country;
-    private String genre;
+    private Country country;
+    private Gender genre;
     private int height;
     private float weight;
     private Date dateOfBirth;
-    private List<Participation> olympicParticipations;
 
     /**
      * Constructor of Athlete
      * @param id {int} ID
      * @param password {String} Password
      * @param name {String} Name
-     * @param country {String} Country
-     * @param genre {String} Genre
+     * @param country {Country} Country
+     * @param genre {Gender} Genre
      * @param height {int} Height
      * @param weight {float} Weight
      * @param dateOfBirth {Date} Date of birth
-     * @param olympicParticipations {List<Participation>} List of olympic participations
      */
-    public Athlete(int id, String password, String name, String country, String genre, int height, float weight, Date dateOfBirth, List<Participation> olympicParticipations) {
+    public Athlete(int id, String password, String name, Country country, Gender genre, int height, float weight, Date dateOfBirth) {
         super(id, password);
         this.name = name;
         this.country = country;
@@ -32,7 +30,6 @@ public class Athlete extends Person {
         this.height = height;
         this.weight = weight;
         this.dateOfBirth = dateOfBirth;
-        this.olympicParticipations = olympicParticipations;
     }
 
     /**
@@ -53,17 +50,17 @@ public class Athlete extends Person {
 
     /**
      * Get country
-     * @return String
+     * @return Country
      */
-    public String getCountry() {
+    public Country getCountry() {
         return country;
     }
 
     /**
      * Set country
-     * @param country {String} Country
+     * @param country {Country} Country
      */
-    public void setCountry(String country) {
+    public void setCountry(Country country) {
         this.country = country;
     }
 
@@ -71,7 +68,7 @@ public class Athlete extends Person {
      * Get genre
      * @return String
      */
-    public String getGenre() {
+    public Gender getGenre() {
         return genre;
     }
 
@@ -79,7 +76,7 @@ public class Athlete extends Person {
      * Set genre
      * @param genre {String} Genre
      */
-    public void setGenre(String genre) {
+    public void setGenre(Gender genre) {
         this.genre = genre;
     }
 
@@ -129,21 +126,5 @@ public class Athlete extends Person {
      */
     public void setDateOfBirth(Date dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
-    }
-
-    /**
-     * Get olympic participations
-     * @return List<Participation>
-     */
-    public List<Participation> getOlympicParticipations() {
-        return olympicParticipations;
-    }
-
-    /**
-     * Set olympic participations
-     * @param olympicParticipations {List<Participation>} List of Olympic Participations
-     */
-    public void setOlympicParticipations(List<Participation> olympicParticipations) {
-        this.olympicParticipations = olympicParticipations;
     }
 }
