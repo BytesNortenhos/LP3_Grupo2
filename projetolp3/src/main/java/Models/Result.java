@@ -7,7 +7,7 @@ public class Result {
     private int idSport;
     private int idAthlete = 0;
     private int idTeam = 0;
-    private Date date;
+    private java.sql.Date date;
     private String result;
     private Local local;
 
@@ -26,7 +26,7 @@ public class Result {
         this.idSport = idSport;
         this.idAthlete = idAthlete;
         this.idTeam = idTeam;
-        this.date = date;
+        this.date = (java.sql.Date) date;
         this.result = result;
         this.local = local;
     }
@@ -97,9 +97,10 @@ public class Result {
 
     /**
      * Get Date
+     *
      * @return Date
      */
-    public Date getDate() {
+    public java.sql.Date getDate() {
         return date;
     }
 
@@ -108,7 +109,7 @@ public class Result {
      * @param date {Date} Date
      */
     public void setDate(Date date) {
-        this.date = date;
+        this.date = (java.sql.Date) date;
     }
 
     /**

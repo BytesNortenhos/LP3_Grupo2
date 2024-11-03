@@ -1,7 +1,7 @@
 package Dao;
 
 import Utils.ConnectionsUtlis;
-import models.Rule;
+import Models.Rule;
 
 import javax.sql.rowset.CachedRowSet;
 import java.sql.Connection;
@@ -38,7 +38,7 @@ public class RuleDao {
             stmt = conn.prepareStatement(query);
 
             stmt.setInt(1, rule.getIdSport());
-            stmt.setString(2, rule.getDescription());
+            stmt.setString(2, rule.getDesc());
             stmt.executeUpdate();
         } finally {
             if (stmt != null) {
@@ -78,7 +78,7 @@ public class RuleDao {
             stmt = conn.prepareStatement(query);
 
             stmt.setInt(1, rule.getIdSport());
-            stmt.setString(2, rule.getDescription());
+            stmt.setString(2, rule.getDesc());
             stmt.setInt(3, rule.getIdRule());
             stmt.executeUpdate();
         } finally {

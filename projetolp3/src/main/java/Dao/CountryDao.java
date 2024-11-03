@@ -1,7 +1,7 @@
 package Dao;
 
 import Utils.ConnectionsUtlis;
-import models.Country;
+import Models.Country;
 
 import javax.sql.rowset.CachedRowSet;
 import java.sql.Connection;

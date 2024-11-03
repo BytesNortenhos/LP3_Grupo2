@@ -1,7 +1,9 @@
 package Dao;
 
+import Models.Country;
+import Models.Gender;
 import Utils.ConnectionsUtlis;
-import models.Athlete;
+import Models.Athlete;
 
 import javax.sql.rowset.CachedRowSet;
 import java.sql.Connection;
@@ -14,19 +16,23 @@ public class AthleteDao {
 
     public static List<Athlete> getAthletes() throws SQLException {
         List<Athlete> athletes = new ArrayList<>();
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT * FROM tblAthlete;");
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(
+                "SELECT a.idAthlete, a.password, a.name, c.idCountry, c.name AS countryName, c.continent, " +
+                        "g.idGender, g.description AS genderDescription, a.height, a.weight, a.dateOfBirth " +
+                        "FROM tblAthlete a " +
+                        "INNER JOIN tblCountry c ON a.idCountry = c.idCountry " +
+                        "INNER JOIN tblGender g ON a.idGender = g.idGender;");
         if (rs != null) {
             while (rs.next()) {
                 int idAthlete = rs.getInt("idAthlete");
                 String password = rs.getString("password");
                 String name = rs.getString("name");
-                int idCountry = rs.getInt("idCountry");
-                int idGender = rs.getInt("idGender");
+                Country country = new Country(rs.getInt("idCountry"), rs.getString("countryName"), rs.getString("continent"));
+                Gender gender = new Gender(rs.getInt("idGender"), rs.getString("genderDescription"));
                 int height = rs.getInt("height");
                 float weight = rs.getFloat("weight");
                 java.sql.Date dateOfBirth = rs.getDate("dateOfBirth");
-
-                Athlete athlete = new Athlete(idAthlete, password, name, idCountry, idGender, height, weight, dateOfBirth);
+                Athlete athlete = new Athlete(idAthlete, password, name, country, gender, height, weight, dateOfBirth);
                 athletes.add(athlete);
             }
         } else {
@@ -45,8 +51,8 @@ public class AthleteDao {
 
             stmt.setString(1, athlete.getPassword());
             stmt.setString(2, athlete.getName());
-            stmt.setInt(3, athlete.getIdCountry());
-            stmt.setInt(4, athlete.getIdGender());
+            stmt.setInt(3, athlete.getCountry().getIdCountry());
+            stmt.setInt(4, athlete.getGender().getIdGender());
             stmt.setInt(5, athlete.getHeight());
             stmt.setFloat(6, athlete.getWeight());
             stmt.setDate(7, athlete.getDateOfBirth());
@@ -90,8 +96,8 @@ public class AthleteDao {
 
             stmt.setString(1, athlete.getPassword());
             stmt.setString(2, athlete.getName());
-            stmt.setInt(3, athlete.getIdCountry());
-            stmt.setInt(4, athlete.getIdGender());
+            stmt.setInt(3, athlete.getCountry().getIdCountry());
+            stmt.setInt(4, athlete.getGender().getIdGender());
             stmt.setInt(5, athlete.getHeight());
             stmt.setFloat(6, athlete.getWeight());
             stmt.setDate(7, athlete.getDateOfBirth());
@@ -108,17 +114,24 @@ public class AthleteDao {
     }
 
     public static Athlete getAthleteById(int idAthlete) throws SQLException {
-        String query = "SELECT * FROM tblAthlete WHERE idAthlete = ?";
+        String query = "SELECT a.idAthlete, a.password, a.name, " +
+                "c.idCountry, c.name AS countryName, c.continent, " +
+                "g.idGender, g.description AS genderDescription, " +
+                "a.height, a.weight, a.dateOfBirth " +
+                "FROM tblAthlete a " +
+                "INNER JOIN tblCountry c ON a.idCountry = c.idCountry " +
+                "INNER JOIN tblGender g ON a.idGender = g.idGender " +
+                "WHERE a.idAthlete = ?";
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idAthlete);
         if (rs != null && rs.next()) {
             String password = rs.getString("password");
             String name = rs.getString("name");
-            int idCountry = rs.getInt("idCountry");
-            int idGender = rs.getInt("idGender");
+            Country country = new Country(rs.getInt("idCountry"), rs.getString("countryName"), rs.getString("continent"));
+            Gender gender = new Gender(rs.getInt("idGender"), rs.getString("genderDescription"));
             int height = rs.getInt("height");
             float weight = rs.getFloat("weight");
             java.sql.Date dateOfBirth = rs.getDate("dateOfBirth");
-            return new Athlete(idAthlete, password, name, idCountry, idGender, height, weight, dateOfBirth);
+            return new Athlete(idAthlete, password, name, country, gender, height, weight, dateOfBirth);
         }
         return null;
     }

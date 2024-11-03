@@ -1,12 +1,11 @@
 package Models;
 
 import java.util.Date;
-import java.util.List;
 
 public class Athlete extends Person {
     private String name;
     private Country country;
-    private Gender genre;
+    private Gender gender;
     private int height;
     private float weight;
     private Date dateOfBirth;
@@ -17,19 +16,23 @@ public class Athlete extends Person {
      * @param password {String} Password
      * @param name {String} Name
      * @param country {Country} Country
-     * @param genre {Gender} Genre
+     * @param gender {Gender} Gender
      * @param height {int} Height
      * @param weight {float} Weight
      * @param dateOfBirth {Date} Date of birth
      */
-    public Athlete(int id, String password, String name, Country country, Gender genre, int height, float weight, Date dateOfBirth) {
+    public Athlete(int id, String password, String name, Country country, Gender gender, int height, float weight, Date dateOfBirth) {
         super(id, password);
         this.name = name;
         this.country = country;
-        this.genre = genre;
+        this.gender = gender;
         this.height = height;
         this.weight = weight;
         this.dateOfBirth = dateOfBirth;
+    }
+
+    public int getIdAthlete() {
+        return super.getId();
     }
 
     /**
@@ -65,19 +68,19 @@ public class Athlete extends Person {
     }
 
     /**
-     * Get genre
+     * Get gender
      * @return String
      */
-    public Gender getGenre() {
-        return genre;
+    public Gender getGender() {
+        return gender;
     }
 
     /**
-     * Set genre
-     * @param genre {String} Genre
+     * Set gender
+     * @param gender {String} Gender
      */
-    public void setGenre(Gender genre) {
-        this.genre = genre;
+    public void setGender(Gender gender) {
+        this.gender = gender;
     }
 
     /**
@@ -114,10 +117,11 @@ public class Athlete extends Person {
 
     /**
      * Get date of birth
+     *
      * @return Date
      */
-    public Date getDateOfBirth() {
-        return dateOfBirth;
+    public java.sql.Date getDateOfBirth() {
+        return (java.sql.Date) dateOfBirth;
     }
 
     /**
@@ -127,4 +131,5 @@ public class Athlete extends Person {
     public void setDateOfBirth(Date dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
+
 }

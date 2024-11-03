@@ -1,7 +1,7 @@
 package Dao;
 
 import Utils.ConnectionsUtlis;
-import models.Gender;
+import Models.Gender;
 
 import javax.sql.rowset.CachedRowSet;
 import java.sql.Connection;
@@ -36,7 +36,7 @@ public class GenderDao {
             conn = ConnectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
-            stmt.setString(1, gender.getDescription());
+            stmt.setString(1, gender.getDesc());
             stmt.executeUpdate();
         } finally {
             if (stmt != null) {
@@ -75,7 +75,7 @@ public class GenderDao {
             conn = ConnectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
-            stmt.setString(1, gender.getDescription());
+            stmt.setString(1, gender.getDesc());
             stmt.setInt(2, gender.getIdGender());
             stmt.executeUpdate();
         } finally {

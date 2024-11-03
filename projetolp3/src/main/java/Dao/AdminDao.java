@@ -1,7 +1,7 @@
 package Dao;
 
 import Utils.ConnectionsUtlis;
-import models.Admin;
+import Models.Admin;
 
 import javax.sql.rowset.CachedRowSet;
 import java.sql.Connection;

@@ -1,7 +1,7 @@
 package Dao;
 
 import Utils.ConnectionsUtlis;
-import models.MedalType;
+import Models.MedalType;
 
 import javax.sql.rowset.CachedRowSet;
 import java.sql.Connection;
@@ -76,7 +76,7 @@ public class MedalTypeDao {
             stmt = conn.prepareStatement(query);
 
             stmt.setString(1, medalType.getDescMedalType());
-            stmt.setInt(2, medalType.getIdMedalType());
+            stmt.setInt(2, medalType.getId());
             stmt.executeUpdate();
         } finally {
             if (stmt != null) {

@@ -1,7 +1,7 @@
 package Dao;
 
 import Utils.ConnectionsUtlis;
-import models.RegistrationStatus;
+import Models.RegistrationStatus;
 
 import javax.sql.rowset.CachedRowSet;
 import java.sql.Connection;
@@ -36,7 +36,7 @@ public class RegistrationStatusDao {
             conn = ConnectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
-            stmt.setString(1, status.getDescription());
+            stmt.setString(1, status.getDesc());
             stmt.executeUpdate();
         } finally {
             if (stmt != null) {
@@ -75,7 +75,7 @@ public class RegistrationStatusDao {
             conn = ConnectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
-            stmt.setString(1, status.getDescription());
+            stmt.setString(1, status.getDesc());
             stmt.setInt(2, status.getIdStatus());
             stmt.executeUpdate();
         } finally {

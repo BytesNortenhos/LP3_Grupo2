@@ -1,7 +1,7 @@
 package Dao;
 
 import Utils.ConnectionsUtlis;
-import models.OlympicRecord;
+import Models.OlympicRecord;
 
 import javax.sql.rowset.CachedRowSet;
 import java.sql.Connection;

@@ -1,7 +1,8 @@
 package Dao;
 
+import Models.MedalType;
 import Utils.ConnectionsUtlis;
-import models.Medal;
+import Models.Medal;
 
 import javax.sql.rowset.CachedRowSet;
 import java.sql.Connection;
@@ -13,16 +14,19 @@ import java.util.List;
 public class MedalDao {
     public static List<Medal> getMedals() throws SQLException {
         List<Medal> medals = new ArrayList<>();
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT * FROM tblMedal;");
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(
+                "SELECT m.idMedal, m.idAthlete, m.idTeam, m.year, " +
+                        "mt.idMedalType, mt.description AS medalTypeDescription " +
+                        "FROM tblMedal m " +
+                        "INNER JOIN tblMedalType mt ON m.idMedalType = mt.idMedalType;");
         if (rs != null) {
             while (rs.next()) {
                 int idMedal = rs.getInt("idMedal");
                 int idAthlete = rs.getInt("idAthlete");
                 int idTeam = rs.getInt("idTeam");
                 int year = rs.getInt("year");
-                int idMedalType = rs.getInt("idMedalType");
-
-                Medal medal = new Medal(idMedal, idAthlete, idTeam, year, idMedalType);
+                MedalType medalType = new MedalType(rs.getInt("idMedalType"), rs.getString("medalTypeDescription"));
+                Medal medal = new Medal(idMedal, idAthlete, idTeam, year, medalType);
                 medals.add(medal);
             }
         } else {
@@ -42,7 +46,7 @@ public class MedalDao {
             stmt.setInt(1, medal.getIdAthlete());
             stmt.setInt(2, medal.getIdTeam());
             stmt.setInt(3, medal.getYear());
-            stmt.setInt(4, medal.getIdMedalType());
+            stmt.setInt(4, medal.getMedalType().getId());
             stmt.executeUpdate();
         } finally {
             if (stmt != null) {
@@ -84,7 +88,7 @@ public class MedalDao {
             stmt.setInt(1, medal.getIdAthlete());
             stmt.setInt(2, medal.getIdTeam());
             stmt.setInt(3, medal.getYear());
-            stmt.setInt(4, medal.getIdMedalType());
+            stmt.setInt(4, medal.getMedalType().getId());
             stmt.setInt(5, medal.getIdMedal());
             stmt.executeUpdate();
         } finally {
@@ -98,14 +102,19 @@ public class MedalDao {
     }
 
     public static Medal getMedalById(int idMedal) throws SQLException {
-        String query = "SELECT * FROM tblMedal WHERE idMedal = ?";
+        String query = "SELECT m.idMedal, m.idAthlete, m.idTeam, m.year, " +
+                "mt.idMedalType, mt.description AS medalTypeDescription " +
+                "FROM tblMedal m " +
+                "INNER JOIN tblMedalType mt ON m.idMedalType = mt.idMedalType " +
+                "WHERE m.idMedal = ?";
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idMedal);
         if (rs != null && rs.next()) {
             int idAthlete = rs.getInt("idAthlete");
             int idTeam = rs.getInt("idTeam");
             int year = rs.getInt("year");
             int idMedalType = rs.getInt("idMedalType");
-            return new Medal(idMedal, idAthlete, idTeam, year, idMedalType);
+            MedalType medalType = new MedalType(rs.getInt("idMedalType"), rs.getString("medalTypeDescription"));
+            return new Medal(idMedal, idAthlete, idTeam, year, medalType);
         }
         return null;
     }

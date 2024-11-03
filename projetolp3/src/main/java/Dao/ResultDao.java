@@ -1,7 +1,8 @@
 package Dao;
 
+import Models.Local;
 import Utils.ConnectionsUtlis;
-import models.Result;
+import Models.Result;
 
 import javax.sql.rowset.CachedRowSet;
 import java.sql.Connection;
@@ -20,11 +21,12 @@ public class ResultDao {
                 int idSport = rs.getInt("idSport");
                 int idAthlete = rs.getInt("idAthlete");
                 int idTeam = rs.getInt("idTeam");
-                String date = rs.getString("date");
+                java.sql.Date date = rs.getDate("date");
                 String resultValue = rs.getString("result");
                 int idLocal = rs.getInt("idLocal");
+                Local local = LocalDao.getLocalById(idLocal);
 
-                Result result = new Result(idResult, idSport, idAthlete, idTeam, date, resultValue, idLocal);
+                Result result = new Result(idResult, idSport, idAthlete, idTeam, date, resultValue, local);
                 results.add(result);
             }
         } else {
@@ -44,9 +46,9 @@ public class ResultDao {
             stmt.setInt(1, result.getIdSport());
             stmt.setInt(2, result.getIdAthlete());
             stmt.setInt(3, result.getIdTeam());
-            stmt.setString(4, result.getDate());
-            stmt.setString(5, result.getResultValue());
-            stmt.setInt(6, result.getIdLocal());
+            stmt.setDate(4, result.getDate());
+            stmt.setString(5, result.getResult());
+            stmt.setInt(6, result.getLocal().getIdLocal());
             stmt.executeUpdate();
         } finally {
             if (stmt != null) {
@@ -88,9 +90,9 @@ public class ResultDao {
             stmt.setInt(1, result.getIdSport());
             stmt.setInt(2, result.getIdAthlete());
             stmt.setInt(3, result.getIdTeam());
-            stmt.setString(4, result.getDate());
-            stmt.setString(5, result.getResultValue());
-            stmt.setInt(6, result.getIdLocal());
+            stmt.setDate(4, result.getDate());
+            stmt.setString(5, result.getResult());
+            stmt.setInt(6, result.getLocal().getIdLocal());
             stmt.setInt(7, result.getIdResult());
             stmt.executeUpdate();
         } finally {
@@ -110,10 +112,11 @@ public class ResultDao {
             int idSport = rs.getInt("idSport");
             int idAthlete = rs.getInt("idAthlete");
             int idTeam = rs.getInt("idTeam");
-            String date = rs.getString("date");
+            java.sql.Date date = rs.getDate("date");
             String resultValue = rs.getString("result");
             int idLocal = rs.getInt("idLocal");
-            return new Result(idResult, idSport, idAthlete, idTeam, date, resultValue, idLocal);
+            Local local = LocalDao.getLocalById(idLocal);
+            return new Result(idResult, idSport, idAthlete, idTeam, date, resultValue, local);
         }
         return null;
     }

@@ -1,7 +1,7 @@
 package Dao;
 
+import Models.*;
 import Utils.ConnectionsUtlis;
-import models.Sport;
 
 import javax.sql.rowset.CachedRowSet;
 import java.sql.Connection;
@@ -13,7 +13,22 @@ import java.util.List;
 public class SportDao {
     public static List<Sport> getSports() throws SQLException {
         List<Sport> sports = new ArrayList<>();
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT * FROM tblSport;");
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT s.idSport, s.type, s.idGender, s.name, s.description, s.minParticipants," +
+                "s.scoringMeasure, s.oneGame," +
+                "g.description AS genderDescription," +
+                "orc.year AS olympicYear, orc.idAthlete AS olympicAthlete," +
+                "orc.idTeam AS olympicTeam, orc.timeMS AS olympicTime, orc.medals AS olympicMedals," +
+                "w.year AS winnerYear, w.idAthlete AS winnerAthlete," +
+                "w.idTeam AS winnerTeam, w.timeMS AS winnerTime, w.idMedal AS winnerMedal," +
+                "mt.descMedalType AS medalTypeDescription," +
+                "r.idRule, r.description AS ruleDescription" +
+                "FROM tblSport s" +
+                "LEFT JOIN tblGender g ON s.idGender = g.idGender" +
+                "LEFT JOIN tblOlympicRecord orc ON s.idSport = orc.idSport" +
+                "LEFT JOIN tblWinnerOlympic w ON s.idSport = w.idSport" +
+                "LEFT JOIN tblMedal m ON w.idMedal = m.idMedal" +
+                "LEFT JOIN tblMedalType mt ON m.idMedalType = mt.idMedalType" +
+                "LEFT JOIN tblRule r ON s.idSport = r.idSport;");
         if (rs != null) {
             while (rs.next()) {
                 int idSport = rs.getInt("idSport");
@@ -24,8 +39,28 @@ public class SportDao {
                 int minParticipants = rs.getInt("minParticipants");
                 String scoringMeasure = rs.getString("scoringMeasure");
                 String oneGame = rs.getString("oneGame");
+                String genderDescription = rs.getString("genderDescription");
+                Gender gender = new Gender(idGender, genderDescription);
 
-                Sport sport = new Sport(idSport, type, idGender, name, description, minParticipants, scoringMeasure, oneGame);
+                OlympicRecord olympicRecord = new OlympicRecord(idSport, rs.getInt("olympicYear"),
+                        rs.getInt("olympicAthlete"), rs.getInt("olympicTeam"), rs.getInt("olympicTime"), rs.getInt("olympicMedals"));
+
+                List<WinnerOlympic> winnerOlympic = new ArrayList<>();
+                do {
+                    int winnerMedalId = rs.getInt("winnerMedal");
+                    String medalTypeDescription = rs.getString("medalTypeDescription");
+                    MedalType medalType = new MedalType(winnerMedalId, medalTypeDescription);
+                    winnerOlympic.add(new WinnerOlympic(idSport, rs.getInt("winnerYear"), rs.getInt("winnerAthlete"),
+                            rs.getInt("winnerTeam"), rs.getInt("winnerTime"), new Medal(rs.getInt("winnerMedal"),
+                            rs.getInt("winnerAthlete"), rs.getInt("winnerTeam"), rs.getInt("winnerYear"), medalType)));
+                } while (rs.next() && rs.getInt("idSport") == idSport);
+
+                List<Rule> rules = new ArrayList<>();
+                do {
+                    rules.add(new Rule(rs.getInt("idRule"), idSport, rs.getString("ruleDescription")));
+                } while (rs.next() && rs.getInt("idSport") == idSport);
+
+                Sport sport = new Sport(idSport, type, gender, name, description, minParticipants, scoringMeasure, oneGame, olympicRecord, winnerOlympic, rules);
                 sports.add(sport);
             }
         } else {
@@ -43,9 +78,9 @@ public class SportDao {
             stmt = conn.prepareStatement(query);
 
             stmt.setString(1, sport.getType());
-            stmt.setInt(2, sport.getIdGender());
+            stmt.setInt(2, sport.getGenre().getIdGender());
             stmt.setString(3, sport.getName());
-            stmt.setString(4, sport.getDescription());
+            stmt.setString(4, sport.getDesc());
             stmt.setInt(5, sport.getMinParticipants());
             stmt.setString(6, sport.getScoringMeasure());
             stmt.setString(7, sport.getOneGame());
@@ -88,9 +123,9 @@ public class SportDao {
             stmt = conn.prepareStatement(query);
 
             stmt.setString(1, sport.getType());
-            stmt.setInt(2, sport.getIdGender());
+            stmt.setInt(2, sport.getGenre().getIdGender());
             stmt.setString(3, sport.getName());
-            stmt.setString(4, sport.getDescription());
+            stmt.setString(4, sport.getDesc());
             stmt.setInt(5, sport.getMinParticipants());
             stmt.setString(6, sport.getScoringMeasure());
             stmt.setString(7, sport.getOneGame());
@@ -107,7 +142,22 @@ public class SportDao {
     }
 
     public static Sport getSportById(int idSport) throws SQLException {
-        String query = "SELECT * FROM tblSport WHERE idSport = ?";
+        String query = "SELECT s.type, s.idGender, s.name, s.description, s.minParticipants, s.scoringMeasure, s.oneGame," +
+                "g.description AS genderDescription," +
+                "orc.year AS olympicYear, orc.idAthlete AS olympicAthlete," +
+                "orc.idTeam AS olympicTeam, orc.timeMS AS olympicTime, orc.medals AS olympicMedals," +
+                "w.year AS winnerYear, w.idAthlete AS winnerAthlete," +
+                "w.idTeam AS winnerTeam, w.timeMS AS winnerTime, w.idMedal AS winnerMedal," +
+                "mt.descMedalType AS medalTypeDescription," +
+                "r.idRule, r.description AS ruleDescription" +
+                "FROM tblSport s" +
+                "LEFT JOIN tblGender g ON s.idGender = g.idGender" +
+                "LEFT JOIN tblOlympicRecord orc ON s.idSport = orc.idSport" +
+                "LEFT JOIN tblWinnerOlympic w ON s.idSport = w.idSport" +
+                "LEFT JOIN tblMedal m ON w.idMedal = m.idMedal" +
+                "LEFT JOIN tblMedalType mt ON m.idMedalType = mt.idMedalType" +
+                "LEFT JOIN tblRule r ON s.idSport = r.idSport" +
+                "WHERE s.idSport = ?";
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport);
         if (rs != null && rs.next()) {
             String type = rs.getString("type");
@@ -117,7 +167,27 @@ public class SportDao {
             int minParticipants = rs.getInt("minParticipants");
             String scoringMeasure = rs.getString("scoringMeasure");
             String oneGame = rs.getString("oneGame");
-            return new Sport(idSport, type, idGender, name, description, minParticipants, scoringMeasure, oneGame);
+            String genderDescription = rs.getString("genderDescription");
+            Gender gender = new Gender(idGender, genderDescription);
+            OlympicRecord olympicRecord = new OlympicRecord(idSport, rs.getInt("olympicYear"), rs.getInt("olympicAthlete"),
+                    rs.getInt("olympicTeam"), rs.getInt("olympicTime"), rs.getInt("olympicMedals"));
+
+            List<WinnerOlympic> winnerOlympic = new ArrayList<>();
+            do {
+                int winnerMedalId = rs.getInt("winnerMedal");
+                String medalTypeDescription = rs.getString("medalTypeDescription");
+                MedalType medalType = new MedalType(winnerMedalId, medalTypeDescription);
+                winnerOlympic.add(new WinnerOlympic(idSport, rs.getInt("winnerYear"), rs.getInt("winnerAthlete"),
+                        rs.getInt("winnerTeam"), rs.getInt("winnerTime"), new Medal(winnerMedalId, rs.getInt("winnerAthlete"),
+                        rs.getInt("winnerTeam"), rs.getInt("winnerYear"), medalType)));
+            } while (rs.next() && rs.getInt("idSport") == idSport);
+
+            List<Rule> rules = new ArrayList<>();
+            do {
+                rules.add(new Rule(rs.getInt("idRule"), idSport, rs.getString("ruleDescription")));
+            } while (rs.next() && rs.getInt("idSport") == idSport);
+
+            return new Sport(idSport, type, gender, name, description, minParticipants, scoringMeasure, oneGame, olympicRecord, winnerOlympic, rules);
         }
         return null;
     }

@@ -1,7 +1,8 @@
 package Dao;
 
+import Models.Country;
 import Utils.ConnectionsUtlis;
-import models.Event;
+import Models.Event;
 
 import javax.sql.rowset.CachedRowSet;
 import java.sql.Connection;
@@ -13,14 +14,17 @@ import java.util.List;
 public class EventDao {
     public static List<Event> getEvents() throws SQLException {
         List<Event> events = new ArrayList<>();
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT * FROM tblEvent;");
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT e.year, e.logo, " +
+                "c.idCountry, c.name AS countryName, c.continent " +
+                "FROM tblEvent e " +
+                "INNER JOIN tblCountry c ON e.idCountry = c.idCountry;");
         if (rs != null) {
             while (rs.next()) {
                 int year = rs.getInt("year");
-                int idCountry = rs.getInt("idCountry");
+                Country country = new Country(rs.getInt("idCountry"), rs.getString("countryName"), rs.getString("continent"));
                 String logo = rs.getString("Logo");
 
-                Event event = new Event(year, idCountry, logo);
+                Event event = new Event(year, country, logo);
                 events.add(event);
             }
         } else {
@@ -38,7 +42,7 @@ public class EventDao {
             stmt = conn.prepareStatement(query);
 
             stmt.setInt(1, event.getYear());
-            stmt.setInt(2, event.getIdCountry());
+            stmt.setInt(2, event.getCountry().getIdCountry());
             stmt.setString(3, event.getLogo());
             stmt.executeUpdate();
         } finally {
@@ -79,7 +83,7 @@ public class EventDao {
             conn = ConnectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
-            stmt.setInt(1, event.getIdCountry());
+            stmt.setInt(1, event.getCountry().getIdCountry());
             stmt.setString(2, event.getLogo());
             stmt.setInt(3, event.getYear());
             stmt.executeUpdate();
@@ -94,12 +98,16 @@ public class EventDao {
     }
 
     public static Event getEventByYear(int year) throws SQLException {
-        String query = "SELECT * FROM tblEvent WHERE year = ?";
+        String query = "SELECT e.year, e.logo, " +
+                "c.idCountry, c.name AS countryName, c.continent " +
+                "FROM tblEvent e " +
+                "INNER JOIN tblCountry c ON e.idCountry = c.idCountry " +
+                "WHERE e.year = ?;";
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, year);
         if (rs != null && rs.next()) {
-            int idCountry = rs.getInt("idCountry");
+            Country country = new Country(rs.getInt("idCountry"), rs.getString("countryName"), rs.getString("continent"));
             String logo = rs.getString("Logo");
-            return new Event(year, idCountry, logo);
+            return new Event(year, country, logo);
         }
         return null;
     }

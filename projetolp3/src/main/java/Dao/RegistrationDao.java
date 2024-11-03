@@ -1,7 +1,8 @@
 package Dao;
 
+import Models.RegistrationStatus;
 import Utils.ConnectionsUtlis;
-import models.Registration;
+import Models.Registration;
 
 import javax.sql.rowset.CachedRowSet;
 import java.sql.Connection;
@@ -21,8 +22,9 @@ public class RegistrationDao {
                 int idTeam = rs.getInt("idTeam");
                 int idSport = rs.getInt("idSport");
                 int idStatus = rs.getInt("idStatus");
+                RegistrationStatus status = RegistrationStatusDao.getRegistrationStatusById(idStatus);
 
-                Registration registration = new Registration(idRegistration, idAthlete, idTeam, idSport, idStatus);
+                Registration registration = new Registration(idRegistration, idAthlete, idTeam, idSport, status);
                 registrations.add(registration);
             }
         } else {
@@ -42,7 +44,7 @@ public class RegistrationDao {
             stmt.setInt(1, registration.getIdAthlete());
             stmt.setInt(2, registration.getIdTeam());
             stmt.setInt(3, registration.getIdSport());
-            stmt.setInt(4, registration.getIdStatus());
+            stmt.setInt(4, registration.getStatus().getIdStatus());
             stmt.executeUpdate();
         } finally {
             if (stmt != null) {
@@ -84,7 +86,7 @@ public class RegistrationDao {
             stmt.setInt(1, registration.getIdAthlete());
             stmt.setInt(2, registration.getIdTeam());
             stmt.setInt(3, registration.getIdSport());
-            stmt.setInt(4, registration.getIdStatus());
+            stmt.setInt(4, registration.getStatus().getIdStatus());
             stmt.setInt(5, registration.getIdRegistration());
             stmt.executeUpdate();
         } finally {
@@ -105,7 +107,8 @@ public class RegistrationDao {
             int idTeam = rs.getInt("idTeam");
             int idSport = rs.getInt("idSport");
             int idStatus = rs.getInt("idStatus");
-            return new Registration(idRegistration, idAthlete, idTeam, idSport, idStatus);
+            RegistrationStatus status = RegistrationStatusDao.getRegistrationStatusById(idStatus);
+            return new Registration(idRegistration, idAthlete, idTeam, idSport, status);
         }
         return null;
     }
