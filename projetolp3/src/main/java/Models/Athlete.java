@@ -23,6 +23,16 @@ public class Athlete extends Person {
         this.olympicParticipations = olympicParticipations;
     }
 
+    public Athlete(int id, String password, String name, Country country, Gender genre, int height, float weight, Date dateOfBirth) {
+        super(id, password);
+        this.name = name;
+        this.country = country;
+        this.genre = genre;
+        this.height = height;
+        this.weight = weight;
+        this.dateOfBirth = dateOfBirth;
+    }
+
     public int getIdAthlete() {
         return super.getId();
     }
