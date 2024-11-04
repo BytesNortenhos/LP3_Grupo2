@@ -34,7 +34,7 @@
 /*}*/
 .userNameText{
     -fx-translate-y: -80px;
-    -fx-font-size: 20px;
+    -fx-font-size: 17px;
     -fx-text-fill: #F7EED8;
     -fx-background-color: #3A3A38;
     -fx-control-inner-background: #1E1E1E;
@@ -43,8 +43,7 @@
     -fx-background-radius: 20px;
     -fx-border-radius: 20px;
     -fx-border-width: 2px;
-    -fx-max-height: 20px;
-    -fx-max-width: 300px;
+    -fx-max-width: 350px;
 }
 .buttonEntrar{
     -fx-cursor: hand;
@@ -66,13 +65,6 @@
     -fx-control-inner-background: #1E1E1E;
     -fx-prompt-text-fill: #1E1E1E;
     -fx-border-color: #9B9898;
-}
-.buttonReg{
-    -fx-min-height: 65px;
-    -fx-background-color: transparent;
-    -fx-font-size: 18px;
-    -fx-font-weight: 600;
-    -fx-cursor: hand;
 }
 .buttonReg:hover, .iconMoonNav:hover, .iconHomeNav:hover, #buttonRegSelect{
     -fx-background-color: #9B9898;
@@ -162,6 +154,160 @@
 .scroll-pane .scroll-bar:vertical .thumb{
     -fx-background-color: #F7EED8;
 }
+.dropdownButton {
+    -fx-min-width: 200px;
+    -fx-font-size: 22px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #1E1E1E;
+    -fx-cursor: hand;
+    -fx-background-color: transparent;
+}
+/* Background for the SplitMenuButton */
+.dropdownButton .split-menu-button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+.dropdownButton:hover .split-menu-button {
+    -fx-background-color: #1E1E1E;
+    -fx-border-color: #1E1E1E;
+}
+/* Target the label/text part */
+.dropdownButton .label, .dropdownButton .arrow-button {
+    -fx-background-color: transparent;
+}
+/*.dropdownButton:hover .label, .dropdownButton:hover .arrow-button {*/
+/*    -fx-text-fill: #F7EED8;*/
+/*    -fx-background-color: #1E1E1E;*/
+/*}*/
+
+.dropdownButton:hover .label{
+    -fx-text-fill: #1E1E1E;
+}
+.dropdownButton .context-menu {
+    -fx-background-color: #F7EED8; /* Change this color as needed */
+}
+
+/* Style each individual menu item in the dropdown */
+.dropdownButton .menu-item {
+    -fx-background-color: #F7EED8; /* Change this color as needed */
+    -fx-text-fill: #1E1E1E; /* Text color */
+}
+
+.dropdownButton .menu-item:hover  {
+    -fx-background-color: #1E1E1E; /* Background color on hover */
+}
+.dropdownButton .menu-item:hover .label{
+    -fx-text-fill: #F7EED8;
+}
 
 
+.registerDrop {
+    -fx-background-color: #3A3A38; /* Dark background color */
+    -fx-min-width: 170px;
+    -fx-max-width: 170px;
+    -fx-background-radius: 20; /* Rounded corners */
+    -fx-border-radius: 20;
+    -fx-border-color: gray; /* Border color */
+    -fx-border-width: 2px;
+    -fx-padding: 0 10 0 10;
+    -fx-font-size: 16px;
+}
 
+/* Text color and style for ComboBox */
+.registerDrop .list-cell {
+    -fx-text-fill: #F7EED8; /* Light text color */
+    -fx-background-color: #3A3A38;
+}
+.registerDrop .list-cell:hover {
+    -fx-text-fill: #3A3A38; /* Light text color */
+    -fx-background-color: #F7EED8;
+}
+
+/* Styling the ComboBox arrow */
+.registerDrop .arrow-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0 5 0 5;
+}
+
+.registerDrop .arrow {
+    -fx-background-color: #F7EED8; /* Color of the dropdown arrow */
+}
+
+/* Hover effect on the ComboBox */
+.registerDrop:hover {
+    -fx-border-color: lightgray; /* Change border color on hover */
+}
+
+.registerTextSmall{
+    -fx-font-size: 17px;
+    -fx-text-fill: #F7EED8;
+    -fx-background-color: #3A3A38;
+    -fx-control-inner-background: #1E1E1E;
+    -fx-prompt-text-fill: #F7EED8;
+    -fx-border-color: #9B9898;
+    -fx-background-radius: 20px;
+    -fx-border-radius: 20px;
+    -fx-border-width: 2px;
+    -fx-max-width: 170px;
+}
+.datePickerRegister {
+    -fx-font-size: 17px;
+    -fx-min-width: 350px;
+    -fx-max-width: 350px;
+    -fx-background-radius: 20px;
+    -fx-border-width: 2px;
+    -fx-background-color: transparent !important;
+    -fx-border-color: #9B9898;
+    -fx-border-radius: 20;
+    -fx-prompt-text-fill: #F7EED8;
+}
+
+.datePickerRegister .text-field {
+    -fx-control-inner-background: #3A3A38 ;
+    -fx-text-fill: #F7EED8;
+    -fx-border-radius: 20;
+    -fx-background-radius: 20 0 0 20;
+    -fx-prompt-text-fill: #F7EED8;
+}
+.datePickerRegister .arrow-button {
+    -fx-cursor: hand;
+    -fx-background-color: #3A3A38;
+    -fx-background-radius: 0 20 20 0;
+}
+
+.datePickerRegister .arrow-button:hover {
+    -fx-border-radius: 20;
+    -fx-background-radius: 0 20 20 0;
+    -fx-background-color: #F7EED8;
+}
+.datePickerRegister .date-picker-popup .month-year-pane {
+    -fx-background-color: #F7EED8;
+    -fx-text-fill: #1E1E1E;
+}
+
+.datePickerRegister .cell {
+    -fx-background-color: #1E1E1E;
+    -fx-text-fill: #F7EED8;
+}
+
+.datePickerRegister .cell:hover {
+    -fx-background-color: #F7EED8;
+    -fx-text-fill: #1E1E1E;
+}
+
+.datePickerRegister .cell:focused {
+    -fx-background-color: #F7EED8;
+    -fx-text-fill: #1E1E1E;
+}
+
+.datePickerRegister-popup  {
+    -fx-border-color: transparent;
+    -fx-background-color: #1E1E1E;
+}
+.datePickerRegister .week-number-cell,
+.datePickerRegister .week-number-cell:even,
+.datePickerRegister .week-number-cell:odd {
+    -fx-background-color: #F7EED8;
+    -fx-text-fill: #1E1E1E;
+    -fx-border-color: #F7EED8;
+}

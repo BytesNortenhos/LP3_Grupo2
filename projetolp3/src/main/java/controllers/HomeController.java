@@ -9,8 +9,7 @@ import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.Scene;
@@ -45,6 +44,10 @@ public class HomeController {
     URL cssLightURL = Main.class.getResource("css/light.css");
     String cssDark = ((URL) cssDarkURL).toExternalForm();
     String cssLight = ((URL) cssLightURL).toExternalForm();
+    @FXML
+    private SplitMenuButton splitMenuButton;
+    @FXML
+    private ComboBox<String> athleteDrop;
     public void initialize() {
         URL iconMoonNavURL = Main.class.getResource("img/iconMoon.png");
         String iconMoonNavStr = ((URL) iconMoonNavURL).toExternalForm();
@@ -61,6 +64,10 @@ public class HomeController {
         } else {
             displayRequests(requests);
         }
+        splitMenuButton.setOnMouseClicked(event -> {
+            // Open the dropdown menu when clicking on the button's text
+            splitMenuButton.show();
+        });
     }
     public class Request {
         private final String name;
@@ -196,7 +203,7 @@ public class HomeController {
     public void mostrarRegistar(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
         Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/register.fxml")));
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
         scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
         if(isDarkMode){
             scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
@@ -206,7 +213,7 @@ public class HomeController {
         stage.setScene(scene);
         stage.show();
     }
-    public void returnHomeMenu(ActionEvent event) throws IOException {
+    public static void returnHomeMenu(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
         Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/home.fxml")));
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
