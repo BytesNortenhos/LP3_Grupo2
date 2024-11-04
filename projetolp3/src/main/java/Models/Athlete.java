@@ -5,14 +5,14 @@ import java.util.List;
 
 public class Athlete extends Person {
     private String name;
-    private String country;
-    private String genre;
+    private Country country;
+    private Gender genre;
     private int height;
     private float weight;
     private Date dateOfBirth;
     private List<Participation> olympicParticipations;
 
-    public Athlete(int id, String password, String name, String country, String genre, int height, float weight, Date dateOfBirth, List<Participation> olympicParticipations) {
+    public Athlete(int id, String password, String name, Country country, Gender genre, int height, float weight, Date dateOfBirth, List<Participation> olympicParticipations) {
         super(id, password);
         this.name = name;
         this.country = country;
@@ -23,6 +23,14 @@ public class Athlete extends Person {
         this.olympicParticipations = olympicParticipations;
     }
 
+    public int getIdAthlete() {
+        return super.getId();
+    }
+
+    public void setIdAthlete(int id) {
+        super.setId(id);
+    }
+
     public String getName() {
         return name;
     }
@@ -31,19 +39,19 @@ public class Athlete extends Person {
         this.name = name;
     }
 
-    public String getCountry() {
+    public Country getCountry() {
         return country;
     }
 
-    public void setCountry(String country) {
+    public void setCountry(Country country) {
         this.country = country;
     }
 
-    public String getGenre() {
+    public Gender getGenre() {
         return genre;
     }
 
-    public void setGenre(String genre) {
+    public void setGenre(Gender genre) {
         this.genre = genre;
     }
 
@@ -63,8 +71,8 @@ public class Athlete extends Person {
         this.weight = weight;
     }
 
-    public Date getDateOfBirth() {
-        return dateOfBirth;
+    public java.sql.Date getDateOfBirth() {
+        return (java.sql.Date) dateOfBirth;
     }
 
     public void setDateOfBirth(Date dateOfBirth) {
