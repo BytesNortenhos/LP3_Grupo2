@@ -1,14 +1,29 @@
 package Models;
 
+import jakarta.xml.bind.annotation.*;
+
 import java.util.List;
 
+@XmlRootElement(name = "team")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Team {
     private int idTeam;
+    @XmlElement
     private String name;
+    @XmlElement(name = "country")
+    private String xmlCountry; // Needed for JAXB
+    @XmlElement(name = "genre")
+    private String xmlGenre;
+    @XmlElement(name = "sport")
+    private String xmlSport;
+    @XmlElement(name = "foundationYear")
+    private int yearFounded;
+    @XmlElementWrapper(name = "olympicParticipations")
+    @XmlElement(name = "participation")
+    private List<ParticipationTeamXML> olympicParticipations; // Needed for JAXB
     private Country country;
     private Gender genre;
     private int idSport;
-    private int yearFounded;
 
     /**
      * Constructor of Team
@@ -27,6 +42,11 @@ public class Team {
         this.idSport = idSport;
         this.yearFounded = yearFounded;
     }
+
+    /**
+     * Constructor of Team (without parameters)
+     */
+    public Team() {}
 
     /**
      * Get Team ID
@@ -122,5 +142,69 @@ public class Team {
      */
     public void setYearFounded(int yearFounded) {
         this.yearFounded = yearFounded;
+    }
+
+    /**
+     * Get XML country (used only for JAXB)
+     * @return String
+     */
+    public String getXmlCountry() {
+        return xmlCountry;
+    }
+
+    /**
+     * Set XML country (used only for JAXB)
+     * @param xmlCountry {String} Country
+     */
+    public void setXmlCountry(String xmlCountry) {
+        this.xmlCountry = xmlCountry;
+    }
+
+    /**
+     * Get XML genre (used only for JAXB)
+     * @return String
+     */
+    public String getXmlGenre() {
+        return xmlGenre;
+    }
+
+    /**
+     * Set XML genre (used only for JAXB)
+     * @param xmlGenre {String} Genre
+     */
+    public void setXmlGenre(String xmlGenre) {
+        this.xmlGenre = xmlGenre;
+    }
+
+    /**
+     * Get XML sport (used only for JAXB)
+     * @return String
+     */
+    public String getXmlSport() {
+        return xmlSport;
+    }
+
+    /**
+     * Set XML sport (used only for JAXB)
+     * @param xmlSport {String} Sport
+     */
+    public void setXmlSport(String xmlSport) {
+        this.xmlSport = xmlSport;
+    }
+
+    /**
+     * Get olympic participations (used only for JAXB)
+     * @return List<ParticipationTeam>
+     */
+    public List<ParticipationTeamXML> getOlympicParticipations() {
+        return olympicParticipations;
+    }
+
+    /**
+     * Set olympic participations (used only for JAXB)
+     * @param olympicParticipations {List<ParticipationTeam>} Olympic participations
+     */
+    public void setOlympicParticipations(List<ParticipationTeamXML> olympicParticipations) {
+        this.olympicParticipations = olympicParticipations;
     }
 }

@@ -9,6 +9,11 @@ public class MedalType {
         this.descMedalType = descMedalType;
     }
 
+    /**
+     * Constructor of MedalType (without parameters)
+     */
+    public MedalType() {}
+
     public int getId() {
         return idMedalType;
     }

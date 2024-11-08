@@ -24,6 +24,11 @@ public class Medal {
     }
 
     /**
+     * Constructor of Medal (without parameters)
+     */
+    public Medal() {}
+
+    /**
      * Get Medal ID
      * @return int
      */

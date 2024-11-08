@@ -20,6 +20,13 @@ public class OlympicRecord extends RecordOrWinner {
     }
 
     /**
+     * Constructor of OlympicRecord (without parameters)
+     */
+    public OlympicRecord() {
+        super();
+    }
+
+    /**
      * Get time in ms
      * @return int
      */

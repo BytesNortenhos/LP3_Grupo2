@@ -7,6 +7,9 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.*;
 
 import Models.*;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Unmarshaller;
 import org.xml.sax.SAXException;
 import java.io.File;
 import java.io.IOException;
@@ -57,100 +60,16 @@ public class XMLUtils {
      * @return boolean
      */
     public boolean validateXML(String xmlName) {
-        Source xmlFile = new StreamSource(new File(absolutePath + "/" + xmlName + ".xml"));
-        Source xsdFile = new StreamSource(new File(absolutePath + "/" + xmlName + "_xsd.xml"));
-        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-
         try {
-            Schema schema = schemaFactory.newSchema(xsdFile);
+            SchemaFactory factory = SchemaFactory.newInstance(javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            Schema schema = factory.newSchema(new File(absolutePath + "/" + xmlName + "_xsd.xml"));
+
             Validator validator = schema.newValidator();
-            validator.validate(xmlFile);
+            validator.validate(new StreamSource(new File(absolutePath + "/" + xmlName + ".xml")));
             return true;
-        } catch(SAXException | IOException e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             return false;
-        }
-    }
-
-    /**
-     * Guarda os dados do XML de Atletas na Base de Dados (falta obter o id do atleta para colocar na tabela de medalhas)
-     * @return void
-     */
-    public void getAthletesDataXML() {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            Document document = builder.parse(new File(absolutePath + "/athletes.xml"));
-
-            Element root = document.getDocumentElement();
-            NodeList sportsNode = root.getChildNodes();
-
-            for (int i = 0; i < sportsNode.getLength(); i++) {
-                ArrayList<String> tempArray = new ArrayList<>();
-                Node sportNode = sportsNode.item(i);
-                if (sportNode.getNodeType() == Node.ELEMENT_NODE) {
-                    NodeList sportPropertyList = sportNode.getChildNodes();
-                    for (int j = 0; j < sportPropertyList.getLength(); j++) {
-                        Node sportPropertyNode = sportPropertyList.item(j);
-                        if (sportPropertyNode.getNodeType() == Node.ELEMENT_NODE) {
-                            Element sportPropertyElement = (Element) sportPropertyNode;
-                            tempArray.add(sportPropertyElement.getTextContent().trim().replaceAll("\\s+", "/"));
-                        }
-                    }
-
-                    Athlete tempAthlete = new Athlete(
-                            0,
-                            "é preciso encriptar",
-                            tempArray.get(0),
-                            new Country(0, tempArray.get(1), ""),
-                            new Gender(((tempArray.get(2) == "Men") ? 1 : 2), ((tempArray.get(2) == "Men") ? "Male" : "Female")),
-                            Integer.parseInt(tempArray.get(3)),
-                            Float.parseFloat(tempArray.get(4)),
-                            formatter.parse(tempArray.get(5))
-                    );
-
-                    // OBTER O ID DO ATLETA INSERIDO!
-                    int tempAthleteId = 0;
-
-                    String[] tempOlympicParticipations = tempArray.get(6).split("/");
-                    for (int c = 0; c < tempOlympicParticipations.length; c = c + 4) {
-                        for (int g = 0; g < Integer.parseInt(tempOlympicParticipations[c + 1]); g++) {
-                            Medal tempMedal = new Medal(
-                                    0,
-                                    tempAthleteId,
-                                    0,
-                                    Integer.parseInt(tempOlympicParticipations[c]),
-                                    new MedalType(1, "Gold")
-                            );
-
-                            System.out.println(tempMedal.getMedalType().getDescMedalType());
-                        }
-
-                        for (int g = 0; g < Integer.parseInt(tempOlympicParticipations[c + 2]); g++) {
-                            Medal tempMedal = new Medal(
-                                    0,
-                                    tempAthleteId,
-                                    0,
-                                    Integer.parseInt(tempOlympicParticipations[c]),
-                                    new MedalType(2, "Silver")
-                            );
-                        }
-
-                        for (int g = 0; g < Integer.parseInt(tempOlympicParticipations[c + 3]); g++) {
-                            Medal tempMedal = new Medal(
-                                    0,
-                                    tempAthleteId,
-                                    0,
-                                    Integer.parseInt(tempOlympicParticipations[c]),
-                                    new MedalType(3, "Bronze")
-                            );
-                        }
-                    }
-                }
-            }
-        } catch (ParserConfigurationException | IOException | SAXException | ParseException e) {
-            System.out.println("Error: " + e.getMessage());
         }
     }
 
@@ -159,159 +78,61 @@ public class XMLUtils {
      * @return void
      */
     public void getSportsDataXML() {
+        String absolutePath = "src/main/java/DataXML";
+        String xmlName = "sports";
+        List<Sport> sportsList = new ArrayList<>();
+
         try {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            Document document = builder.parse(new File(absolutePath + "/sports.xml"));
+            JAXBContext jaxbContext = JAXBContext.newInstance(Sports.class, Sport.class, WinnerOlympicXML.class, OlympicRecordXML.class, RulesXML.class);
+            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 
-            Element root = document.getDocumentElement();
-            NodeList sportsNode = root.getChildNodes();
+            Sports sports = (Sports) unmarshaller.unmarshal(new File(absolutePath + "/" + xmlName + ".xml"));
 
-            for (int i = 0; i < sportsNode.getLength(); i++) {
-                ArrayList<String> tempArray = new ArrayList<>();
-                Node sportNode = sportsNode.item(i);
-                if (sportNode.getNodeType() == Node.ELEMENT_NODE) {
-                    NodeList sportPropertyList = sportNode.getChildNodes();
-                    for (int j = 0; j < sportPropertyList.getLength(); j++) {
-                        Node sportPropertyNode = sportPropertyList.item(j);
-                        if (sportPropertyNode.getNodeType() == Node.ELEMENT_NODE) {
-                            Element sportPropertyElement = (Element) sportPropertyNode;
-                            String tagName = sportPropertyElement.getTagName().trim();
-                            String textContent = sportPropertyElement.getTextContent().trim();
+            for (Sport sport : sports.getSportList()) {
+                System.out.println("Type: " + sport.getType());
+                System.out.println("Gender: " + sport.getXmlGenre());
+                System.out.println("Name: " + sport.getName());
+                System.out.println("Description: " + sport.getDesc());
+                System.out.println("Minimum Participants: " + sport.getMinParticipants());
+                System.out.println("Scoring Measure: " + sport.getScoringMeasure());
+                System.out.println("One Game: " + sport.getOneGame());
+                System.out.println("");
 
-                            if (
-                                    tagName.equals("type")
-                                            || tagName.equals("genre")
-                                            || tagName.equals("name")
-                                            || tagName.equals("description")
-                                            || tagName.equals("minParticipants")
-                                            || tagName.equals("scoringMeasure")
-                                            || tagName.equals("oneGame")
-                            ) {
-                                tempArray.add(textContent);
-                            }
-
-                            if (tagName.equals("olympicRecord")) {
-                                NodeList recordProperties = sportPropertyElement.getChildNodes();
-                                StringBuilder tempOlympicRecord = new StringBuilder();
-                                for (int k = 0; k < recordProperties.getLength(); k++) {
-                                    Node recordNode = recordProperties.item(k);
-                                    if (recordNode.getNodeType() == Node.ELEMENT_NODE) {
-                                        Element recordElement = (Element) recordNode;
-                                        String recordTag = recordElement.getTagName().trim();
-                                        String recordText = recordElement.getTextContent().trim();
-                                        tempOlympicRecord.append(recordText + "/");
-                                    }
-                                }
-
-                                tempArray.add(tempOlympicRecord.toString());
-                            }
-
-                            if (tagName.equals("winnerOlympic")) {
-                                NodeList recordProperties = sportPropertyElement.getChildNodes();
-                                StringBuilder tempWinnerOlympic = new StringBuilder();
-                                for (int k = 0; k < recordProperties.getLength(); k++) {
-                                    Node recordNode = recordProperties.item(k);
-                                    if (recordNode.getNodeType() == Node.ELEMENT_NODE) {
-                                        Element recordElement = (Element) recordNode;
-                                        String recordTag = recordElement.getTagName().trim();
-                                        String recordText = recordElement.getTextContent().trim();
-                                        tempWinnerOlympic.append(recordText + "/");
-                                    }
-                                }
-
-                                tempArray.add(tempWinnerOlympic.toString());
-                            }
-
-                            if (tagName.equals("rules")) {
-                                NodeList rulesList = sportPropertyElement.getElementsByTagName("rule");
-                                StringBuilder tempRules = new StringBuilder();
-                                for (int k = 0; k < rulesList.getLength(); k++) {
-                                    Element ruleElement = (Element) rulesList.item(k);
-                                    String ruleText = ruleElement.getTextContent().trim();
-                                    tempRules.append(ruleText).append("/");
-                                }
-
-                                tempArray.add(tempRules.toString());
-                            }
-                        }
+                if (sport.getXmlOlympicRecord() != null && !sport.getXmlOlympicRecord().isEmpty()) {
+                    for (OlympicRecordXML record : sport.getXmlOlympicRecord()) {
+                        System.out.println("Year: " + record.getYear());
+                        System.out.println("Holder: " + record.getHolder());
+                        System.out.println("Time: " + record.getTime());
+                        System.out.println("Medals: " + record.getMedals());
+                        System.out.println("---------------------------");
                     }
+                } else {
+                    System.out.println("Nenhum registro olímpico encontrado.");
+                }
 
-                    for (int c = 0; c < tempArray.size(); c++) {
-                        System.out.println(tempArray.get(c));
+                if (sport.getXmlWinnerOlympic() != null && !sport.getXmlWinnerOlympic().isEmpty()) {
+                    for (WinnerOlympicXML winner : sport.getXmlWinnerOlympic()) {
+                        System.out.println("Year: " + winner.getYear());
+                        System.out.println("Winner: " + winner.getHolder());
+                        System.out.println("Country: " + winner.getTime());
+                        System.out.println("Medal: " + winner.getMedal());
+                        System.out.println("---------------------------");
                     }
+                } else {
+                    System.out.println("Nenhum vencedor olímpico encontrado.");
+                }
 
-                    Sport tempSport = new Sport(
-                            0,
-                            tempArray.get(0),
-                            new Gender(((tempArray.get(1) == "Men") ? 1 : 2), ((tempArray.get(1) == "Men") ? "Male" : "Female")),
-                            tempArray.get(2),
-                            tempArray.get(3),
-                            Integer.parseInt(tempArray.get(4)),
-                            tempArray.get(5),
-                            tempArray.get(6),
-                            null,
-                            null,
-                            null
-                    );
-
-                    // OBTER O ID DO Sport INSERIDO!
-                    int tempSportId = 0;
-
-                    String[] tempOlympicRecordContent = tempArray.get(7).substring(0, tempArray.get(7).length() - 1).split("/");
-                    int tempORHolderId = 0; //Select BD (Name) > tempOlympicRecordContent[2]
-                    OlympicRecord tempOlympicRecord = new OlympicRecord(
-                            tempSportId,
-                            (tempArray.get(5).equals("Time") ? Integer.parseInt(tempOlympicRecordContent[1]) : Integer.parseInt(tempOlympicRecordContent[0])),
-                            (tempArray.get(0).equals("Individual") ? tempORHolderId : 0),
-                            (tempArray.get(0).equals("Collective") ? tempORHolderId : 0),
-                            (tempArray.get(5).equals("Time") ? convertToMS(tempOlympicRecordContent[0]) : 0),
-                            (tempArray.get(5).equals("Points") ? Integer.parseInt(tempOlympicRecordContent[2]) : 0)
-                    );
-                    // Adicionar à BD
-
-                    String[] tempWinnerOlympicContent = tempArray.get(8).substring(0, tempArray.get(7).length() - 1).split("/");
-                    int tempWOHolderId = 0; //Select BD (Name) > tempWinnerOlympicContent[2]
-                    String descMedalType = tempWinnerOlympicContent[2];
-                    MedalType tempMedalType = null;
-                    if (!descMedalType.equals("")) {
-                        //executar query BD para obter MedalType
-                        tempMedalType = (tempArray.get(5).equals("Points") ? new MedalType(1, "Teste") : new MedalType(0, null));
+                if (sport.getXmlRules() != null && !sport.getXmlRules().isEmpty()) {
+                    for (String rule : sport.getXmlRules()) {
+                        System.out.println("Rule: " + rule);
+                        System.out.println("---------------------------");
                     }
-                    WinnerOlympic tempWinnerOlympic = new WinnerOlympic(
-                            tempSportId,
-                            (tempArray.get(5).equals("Time") ? Integer.parseInt(tempOlympicRecordContent[1]) : Integer.parseInt(tempOlympicRecordContent[0])),
-                            (tempArray.get(0).equals("Individual") ? tempWOHolderId : 0),
-                            (tempArray.get(0).equals("Collective") ? tempWOHolderId : 0),
-                            (tempArray.get(5).equals("Time") ? convertToMS(tempWinnerOlympicContent[0]) : 0),
-                            (tempArray.get(5).equals("Points")
-                                    ? // TRUE:
-                                    new Medal(
-                                            0,
-                                            (tempArray.get(0).equals("Individual") ? tempORHolderId : 0),
-                                            (tempArray.get(0).equals("Collective") ? tempORHolderId : 0),
-                                            (tempArray.get(5).equals("Time") ? Integer.parseInt(tempOlympicRecordContent[1]) : Integer.parseInt(tempOlympicRecordContent[0])),
-                                            tempMedalType
-                                    )
-                                    : // FALSE:
-                                    null
-                            )
-                    );
-                    // Adicionar à BD
-
-                    String[] tempRules = tempArray.get(9).split("/");
-                    for (int r = 0; r < tempRules.length; r++) {
-                        Rule tempRule = new Rule(
-                                0,
-                                tempSportId,
-                                tempRules[r]
-                        );
-                        //Adicionar à BD
-                    }
+                } else {
+                    System.out.println("Nenhuma regra encontrada.");
                 }
             }
-        } catch (ParserConfigurationException | IOException | SAXException e) {
-            System.out.println("Error: " + e.getMessage());
+        } catch (JAXBException e) {
+            e.printStackTrace();
         }
     }
 
@@ -320,29 +141,76 @@ public class XMLUtils {
      * @return void
      */
     public void getTeamsDataXML() {
+        String absolutePath = "src/main/java/DataXML";
+        String xmlName = "teams";
+
         try {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            Document document = builder.parse(new File(absolutePath + "/teams.xml"));
+            JAXBContext jaxbContext = JAXBContext.newInstance(Teams.class, Team.class, ParticipationTeamXML.class);
+            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 
-            Element root = document.getDocumentElement();
-            NodeList sportsNode = root.getChildNodes();
+            Teams teams = (Teams) unmarshaller.unmarshal(new File(absolutePath + "/" + xmlName + ".xml"));
 
-            for (int i = 0; i < sportsNode.getLength(); i++) {
-                Node sportNode = sportsNode.item(i);
-                if (sportNode.getNodeType() == Node.ELEMENT_NODE) {
-                    NodeList sportPropertyList = sportNode.getChildNodes();
-                    for (int j = 0; j < sportPropertyList.getLength(); j++) {
-                        Node sportPropertyNode = sportPropertyList.item(j);
-                        if (sportPropertyNode.getNodeType() == Node.ELEMENT_NODE) {
-                            Element sportPropertyElement = (Element) sportPropertyNode;
-                            System.out.println(sportPropertyElement.getTagName().trim() + ": " + sportPropertyElement.getTextContent().trim());
-                        }
+            for (Team team : teams.getTeamList()) {
+                System.out.println("Name: " + team.getName());
+                System.out.println("Country: " + team.getXmlCountry());
+                System.out.println("Genre: " + team.getXmlGenre());
+                System.out.println("Sport: " + team.getXmlSport());
+                System.out.println("Foundation Year: " + team.getYearFounded());
+
+                if (team.getOlympicParticipations() != null && !team.getOlympicParticipations().isEmpty()) {
+                    for (ParticipationTeamXML participation : team.getOlympicParticipations()) {
+                        System.out.println("Year: " + participation.getYear());
+                        System.out.println("Result: " + participation.getResult());
+                        System.out.println("---------------------------");
                     }
+                } else {
+                    System.out.println("Nenhuma participação registrada.");
                 }
+                System.out.println();
             }
-        } catch (ParserConfigurationException | IOException | SAXException e) {
-            System.out.println("Error: " + e.getMessage());
+        } catch (JAXBException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Guarda os dados do XML de Atletas na Base de Dados (falta obter o id do atleta para colocar na tabela de medalhas)
+     * @return void
+     */
+    public void getAthletesDataXML() {
+        String absolutePath = "src/main/java/DataXML";
+        String xmlName = "athletes";
+
+        try {
+            JAXBContext jaxbContext = JAXBContext.newInstance(Athletes.class, Athlete.class, ParticipationAthleteXML.class);
+            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+
+            Athletes athletes = (Athletes) unmarshaller.unmarshal(new File(absolutePath + "/" + xmlName + ".xml"));
+
+            for (Athlete athlete : athletes.getAthleteList()) {
+                System.out.println("Name: " + athlete.getName());
+                System.out.println("Country: " + athlete.getXmlCountry());
+                System.out.println("Gender: " + athlete.getXmlGenre());
+                System.out.println("Height: " + athlete.getHeight());
+                System.out.println("Weight: " + athlete.getWeight());
+                System.out.println("Date of Birth: " + athlete.getDateOfBirth());
+
+                if (athlete.getOlympicParticipations() != null && !athlete.getOlympicParticipations().isEmpty()) {
+                    for (ParticipationAthleteXML participation : athlete.getOlympicParticipations()) {
+                        System.out.println("Year: " + participation.getYear());
+                        System.out.println("Gold: " + participation.getGold());
+                        System.out.println("Silver: " + participation.getSilver());
+                        System.out.println("Bronze: " + participation.getBronze());
+                        //System.out.println("Certificate: " + participation.getCertificate());
+                        System.out.println("---------------------------");
+                    }
+                } else {
+                    System.out.println("Nenhuma participação registrada.");
+                }
+                System.out.println();
+            }
+        } catch (JAXBException e) {
+            e.printStackTrace();
         }
     }
 
@@ -352,7 +220,6 @@ public class XMLUtils {
      * @return int
      */
     public static int convertToMS(String time) {
-        // Choose the appropriate pattern based on the input format
         DateTimeFormatter formatter;
         LocalTime parsedTime;
 

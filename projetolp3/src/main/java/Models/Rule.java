@@ -18,6 +18,11 @@ public class Rule {
     }
 
     /**
+     * Constructor of Rule (without parameters)
+     */
+    public Rule() {}
+
+    /**
      * Get Rule ID
      * @return int
      */

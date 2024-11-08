@@ -1,20 +1,26 @@
 package bytesnortenhos.projetolp3;
 
-import Dao.AthleteDao;
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
+import Models.*;
 
-import java.io.IOException;
-import java.net.URL;
 import java.sql.SQLException;
+
+import Utils.XMLUtils;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Unmarshaller;
+import java.io.File;
 
 public class Main {
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
-        TestXML.main();
+         //TestXML.main();
         //AthleteDao.getAthletes();
+        XMLUtils xmlUtils = new XMLUtils();
+        xmlUtils.getTeamsDataXML();
+        System.out.println("================");
+        xmlUtils.getSportsDataXML();
+        System.out.println("================");
+        xmlUtils.getAthletesDataXML();
+        System.out.println("================");
     }
 }
 

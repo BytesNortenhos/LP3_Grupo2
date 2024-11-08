@@ -21,6 +21,13 @@ public class RecordOrWinner {
     }
 
     /**
+     * Constructor of RecordOrWinner (without parameters)
+     */
+    public RecordOrWinner() {
+
+    }
+
+    /**
      * Get Sport ID
      * @return int
      */

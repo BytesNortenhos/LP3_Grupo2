@@ -18,6 +18,11 @@ public class Country {
     }
 
     /**
+     * Constructor of Country (without parameters)
+     */
+    public Country() {}
+
+    /**
      * Get id
      * @return int
      */

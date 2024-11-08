@@ -1,15 +1,30 @@
 package Models;
 
+import jakarta.xml.bind.annotation.*;
+
 import java.util.Date;
 import java.util.List;
 
+@XmlRootElement(name = "athlete")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Athlete extends Person {
+    @XmlElement
     private String name;
+    @XmlElement(name = "country")
+    private String xmlCountry; // Needed for JAXB
+    @XmlElement(name = "genre")
+    private String xmlGenre; // Needed for JAXB
+    @XmlElement
+    private int height;
+    @XmlElement
+    private float weight;
+    @XmlElement
+    private Date dateOfBirth;
+    @XmlElementWrapper(name = "olympicParticipations")
+    @XmlElement(name = "participation")
+    private List<ParticipationAthleteXML> olympicParticipations; // Needed for JAXB
     private Country country;
     private Gender genre;
-    private int height;
-    private float weight;
-    private Date dateOfBirth;
 
     /**
      * Constructor of Athlete
@@ -30,6 +45,13 @@ public class Athlete extends Person {
         this.height = height;
         this.weight = weight;
         this.dateOfBirth = dateOfBirth;
+    }
+
+    /**
+     * Constructor of Athlete (without parameters)
+     */
+    public Athlete() {
+        super();
     }
 
     /**
@@ -126,5 +148,53 @@ public class Athlete extends Person {
      */
     public void setDateOfBirth(Date dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
+    }
+
+    /**
+     * Get olympic participations (used only for JAXB)
+     * @return List<ParticipationAthlete>
+     */
+    public List<ParticipationAthleteXML> getOlympicParticipations() {
+        return olympicParticipations;
+    }
+
+    /**
+     * Set olympic participations (used only for JAXB)
+     * @param olympicParticipations {List<ParticipationAthlete>} Olympic participations
+     */
+    public void setOlympicParticipations(List<ParticipationAthleteXML> olympicParticipations) {
+        this.olympicParticipations = olympicParticipations;
+    }
+
+    /**
+     * Get country (used only for JAXB)
+     * @return String
+     */
+    public String getXmlCountry() {
+        return xmlCountry;
+    }
+
+    /**
+     * Set country (used only for JAXB)
+     * @param xmlCountry {String} Country
+     */
+    public void setXmlCountry(String xmlCountry) {
+        this.xmlCountry = xmlCountry;
+    }
+
+    /**
+     * Get genre (used only for JAXB)
+     * @return String
+     */
+    public String getXmlGenre() {
+        return xmlGenre;
+    }
+
+    /**
+     * Set genre (used only for JAXB)
+     * @param xmlGenre {String} Genre
+     */
+    public void setXmlGenre(String xmlGenre) {
+        this.xmlGenre = xmlGenre;
     }
 }
