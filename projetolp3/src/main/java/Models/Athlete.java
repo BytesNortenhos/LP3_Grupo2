@@ -96,4 +96,17 @@ public class Athlete extends Person {
     public void setOlympicParticipations(List<Participation> olympicParticipations) {
         this.olympicParticipations = olympicParticipations;
     }
+    @Override
+    public String toString() {
+        return "Athlete{" +
+                "id=" + getId() +
+                ", name=" + name +
+                ", country=" + country.getName() +
+                ", height=" + height +
+                ", weight=" + weight +
+                ", dateOfBirth=" + dateOfBirth +
+                ", olympicParticipations=" + olympicParticipations +
+                '}';
+    }
+
 }

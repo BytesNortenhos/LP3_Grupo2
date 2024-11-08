@@ -1,10 +1,7 @@
 package Dao;
 
-import Models.Country;
-import Models.Gender;
-import Models.Participation;
+import Models.*;
 import Utils.ConnectionsUtlis;
-import Models.Athlete;
 
 import javax.sql.rowset.CachedRowSet;
 import java.sql.Connection;
@@ -35,34 +32,60 @@ public class AthleteDao {
                         "   GROUP BY m.idAthlete, e.year " +
                         ") AS p ON a.idAthlete = p.idAthlete " +
                         "ORDER BY a.idAthlete, p.year;");
+
         if (rs != null) {
+            int previousId = -1; // Para rastrear mudanças no idAthlete
+            Athlete currentAthlete = null;
+            List<Participation> participations = null;
+
             while (rs.next()) {
                 int idAthlete = rs.getInt("idAthlete");
-                String password = rs.getString("password");
-                String name = rs.getString("name");
-                Country country = new Country(rs.getInt("idCountry"), rs.getString("countryName"), rs.getString("continent"));
-                Gender gender = new Gender(rs.getInt("idGender"), rs.getString("genderDescription"));
-                int height = rs.getInt("height");
-                float weight = rs.getFloat("weight");
-                java.sql.Date dateOfBirth = rs.getDate("dateOfBirth");
-                List<Participation> participations = new ArrayList<>();
-                do {
-                    int year = rs.getInt("year");
+
+                // Verifica se estamos em um novo atleta
+                if (idAthlete != previousId) {
+                    // Adiciona o atleta anterior com suas participações completas à lista, se houver
+                    if (currentAthlete != null) {
+                        currentAthlete.setOlympicParticipations(participations);
+                        athletes.add(currentAthlete);
+                    }
+
+                    // Cria um novo atleta e uma nova lista de participações
+                    String password = rs.getString("password");
+                    String name = rs.getString("name");
+                    Country country = new Country(rs.getInt("idCountry"), rs.getString("countryName"), rs.getString("continent"));
+                    Gender gender = new Gender(rs.getInt("idGender"), rs.getString("genderDescription"));
+                    int height = rs.getInt("height");
+                    float weight = rs.getFloat("weight");
+                    java.sql.Date dateOfBirth = rs.getDate("dateOfBirth");
+
+                    participations = new ArrayList<>(); // Inicializa uma nova lista de participações
+                    currentAthlete = new Athlete(idAthlete, password, name, country, gender, height, weight, dateOfBirth, participations);
+                    previousId = idAthlete;
+                }
+
+                // Adiciona a participação ao atleta atual
+                int year = rs.getInt("year");
+                if (!rs.wasNull()) {
                     int gold = rs.getInt("gold");
                     int silver = rs.getInt("silver");
                     int bronze = rs.getInt("bronze");
                     int certificate = rs.getInt("certificate");
                     participations.add(new Participation(year, gold, silver, bronze, certificate));
-                } while (rs.next() && rs.getInt("idAthlete") == idAthlete);
+                }
+            }
 
-                Athlete athlete = new Athlete(idAthlete, password, name, country, gender, height, weight, dateOfBirth, participations);
-                athletes.add(athlete);
+            // Adiciona o último atleta processado com suas participações completas à lista
+            if (currentAthlete != null) {
+                currentAthlete.setOlympicParticipations(participations);
+                athletes.add(currentAthlete);
             }
         } else {
             System.out.println("ResultSet is null. No results for Athlete found.");
         }
         return athletes;
     }
+
+
 
     public static void addAthlete(Athlete athlete) throws SQLException {
         String query = "INSERT INTO tblAthlete (password, name, idCountry, idGender, height, weight, dateOfBirth) VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -141,11 +164,11 @@ public class AthleteDao {
                 "c.idCountry, c.name AS countryName, c.continent, " +
                 "g.idGender, g.description AS genderDescription, " +
                 "a.height, a.weight, a.dateOfBirth, " +
-                "p.year AS participationYear, p.gold, p.silver, p.bronze, p.certificate " +
+                "p.year AS participationYear " +
                 "FROM tblAthlete a " +
                 "INNER JOIN tblCountry c ON a.idCountry = c.idCountry " +
                 "INNER JOIN tblGender g ON a.idGender = g.idGender " +
-                "LEFT JOIN tblParticipation p ON a.idAthlete = p.idAthlete " +
+                "LEFT JOIN tblMedal p ON a.idAthlete = p.idAthlete " +
                 "WHERE a.idAthlete = ? " +
                 "ORDER BY p.year";
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idAthlete);
@@ -157,20 +180,20 @@ public class AthleteDao {
             int height = rs.getInt("height");
             float weight = rs.getFloat("weight");
             java.sql.Date dateOfBirth = rs.getDate("dateOfBirth");
-            List<Participation> olympicParticipations = new ArrayList<>();
-            do {
-                int participationYear = rs.getInt("participationYear");
-                if (!rs.wasNull()) {
-                    int gold = rs.getInt("gold");
-                    int silver = rs.getInt("silver");
-                    int bronze = rs.getInt("bronze");
-                    int certificate = rs.getInt("certificate");
-                    Participation participation = new Participation(participationYear, gold, silver, bronze, certificate);
-                    olympicParticipations.add(participation);
-                }
-            } while (rs.next() && rs.getInt("idAthlete") == idAthlete);
+//            List<Medal> medals = new ArrayList<>();
+//            do {
+//                int participationYear = rs.getInt("year");
+//                if (!rs.wasNull()) {
+//                    int gold = rs.getInt("gold");
+//                    int silver = rs.getInt("silver");
+//                    int bronze = rs.getInt("bronze");
+//                    int certificate = rs.getInt("certificate");
+//                    Participation participation = new Participation(participationYear, gold, silver, bronze, certificate);
+//                    olympicParticipations.add(participation);
+//                }
+//            } while (rs.next() && rs.getInt("idAthlete") == idAthlete);
 
-            return new Athlete(idAthlete, password, name, country, gender, height, weight, dateOfBirth, olympicParticipations);
+            return new Athlete(idAthlete, password, name, country, gender, height, weight, dateOfBirth, null);
         }
         return null;
     }

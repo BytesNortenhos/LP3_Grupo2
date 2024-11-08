@@ -58,4 +58,16 @@ public class Participation {
     public void setCertificate(int certificate) {
         this.certificate = certificate;
     }
+
+    @Override
+    public String toString() {
+        return "Participation{" +
+                "year=" + year +
+                ", gold=" + gold +
+                ", silver=" + silver +
+                ", bronze=" + bronze +
+                ", certificate=" + certificate +
+                '}';
+    }
+
 }
