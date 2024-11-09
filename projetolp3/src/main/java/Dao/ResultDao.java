@@ -1,8 +1,7 @@
 package Dao;
 
-import Models.Local;
+import Models.*;
 import Utils.ConnectionsUtlis;
-import Models.Result;
 
 import javax.sql.rowset.CachedRowSet;
 import java.sql.Connection;
@@ -24,9 +23,13 @@ public class ResultDao {
                 java.sql.Date date = rs.getDate("date");
                 String resultValue = rs.getString("result");
                 int idLocal = rs.getInt("idLocal");
+
+                Sport sport = SportDao.getSportById(idSport);
+                Athlete athlete = AthleteDao.getAthleteById(idAthlete);
+                Team team = TeamDao.getTeamById(idTeam);
                 Local local = LocalDao.getLocalById(idLocal);
 
-                Result result = new Result(idResult, idSport, idAthlete, idTeam, date, resultValue, local);
+                Result result = new Result(idResult, sport, athlete, team, date, resultValue, local);
                 results.add(result);
             }
         } else {
@@ -43,9 +46,9 @@ public class ResultDao {
             conn = ConnectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
-            stmt.setInt(1, result.getIdSport());
-            stmt.setInt(2, result.getIdAthlete());
-            stmt.setInt(3, result.getIdTeam());
+            stmt.setInt(1, result.getSport().getIdSport());
+            stmt.setInt(2, result.getAthlete().getIdAthlete());
+            stmt.setInt(3, result.getTeam().getIdTeam());
             stmt.setDate(4, result.getDate());
             stmt.setString(5, result.getResult());
             stmt.setInt(6, result.getLocal().getIdLocal());
@@ -87,9 +90,9 @@ public class ResultDao {
             conn = ConnectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
-            stmt.setInt(1, result.getIdSport());
-            stmt.setInt(2, result.getIdAthlete());
-            stmt.setInt(3, result.getIdTeam());
+            stmt.setInt(1, result.getSport().getIdSport());
+            stmt.setInt(2, result.getAthlete().getIdAthlete());
+            stmt.setInt(3, result.getTeam().getIdTeam());
             stmt.setDate(4, result.getDate());
             stmt.setString(5, result.getResult());
             stmt.setInt(6, result.getLocal().getIdLocal());
@@ -115,8 +118,12 @@ public class ResultDao {
             java.sql.Date date = rs.getDate("date");
             String resultValue = rs.getString("result");
             int idLocal = rs.getInt("idLocal");
+
+            Sport sport = SportDao.getSportById(idSport);
+            Athlete athlete = AthleteDao.getAthleteById(idAthlete);
+            Team team = TeamDao.getTeamById(idTeam);
             Local local = LocalDao.getLocalById(idLocal);
-            return new Result(idResult, idSport, idAthlete, idTeam, date, resultValue, local);
+            return new Result(idResult, sport, athlete, team, date, resultValue, local);
         }
         return null;
     }

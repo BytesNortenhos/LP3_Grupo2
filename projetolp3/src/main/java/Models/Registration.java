@@ -2,24 +2,24 @@ package Models;
 
 public class Registration {
     private int idRegistration;
-    private int idAthlete = 0;
-    private int idTeam = 0;
-    private int idSport;
+    private Athlete athlete;
+    private Team team;
+    private Sport sport;
     private RegistrationStatus status;
 
     /**
      * Constructor of Registration
      * @param idRegistration {int} Registration ID
-     * @param idAthlete {int} Athlete ID
-     * @param idTeam {int} Team ID
-     * @param idSport {int} Sport ID
-     * @param status {String} Status
+     * @param athlete {Athlete} Athlete
+     * @param team {Team} Team
+     * @param sport {Sport} Sport
+     * @param status {RegistrationStatus} Status
      */
-    public Registration(int idRegistration, int idAthlete, int idTeam, int idSport, RegistrationStatus status) {
+    public Registration(int idRegistration, Athlete athlete, Team team, Sport sport, RegistrationStatus status) {
         this.idRegistration = idRegistration;
-        this.idAthlete = idAthlete;
-        this.idTeam = idTeam;
-        this.idSport = idSport;
+        this.athlete = athlete;
+        this.team = team;
+        this.sport = sport;
         this.status = status;
     }
 
@@ -40,51 +40,51 @@ public class Registration {
     }
 
     /**
-     * Get Athlete ID
-     * @return int
+     * Get Athlete
+     * @return Athlete
      */
-    public int getIdAthlete() {
-        return idAthlete;
+    public Athlete getAthlete() {
+        return athlete;
     }
 
     /**
-     * Set Athlete ID
-     * @param idAthlete {int} Athlete ID
+     * Set Athlete
+     * @param athlete {Athlete} Athlete
      */
-    public void setIdAthlete(int idAthlete) {
-        this.idAthlete = idAthlete;
+    public void setAthlete(Athlete athlete) {
+        this.athlete = athlete;
     }
 
     /**
-     * Get Team ID
-     * @return int
+     * Get Team
+     * @return Team
      */
-    public int getIdTeam() {
-        return idTeam;
+    public Team getTeam() {
+        return team;
     }
 
     /**
-     * Set Team ID
-     * @param idTeam {int} Team ID
+     * Set Team
+     * @param team {Team} Team
      */
-    public void setIdTeam(int idTeam) {
-        this.idTeam = idTeam;
+    public void setTeam(Team team) {
+        this.team = team;
     }
 
     /**
-     * Get Sport ID
-     * @return int
+     * Get Sport
+     * @return Sport
      */
-    public int getIdSport() {
-        return idSport;
+    public Sport getSport() {
+        return sport;
     }
 
     /**
-     * Set Sport ID
-     * @param idSport {int} Sport ID
+     * Set Sport
+     * @param sport {Sport} Sport
      */
-    public void setIdSport(int idSport) {
-        this.idSport = idSport;
+    public void setSport(Sport sport) {
+        this.sport = sport;
     }
 
     /**
