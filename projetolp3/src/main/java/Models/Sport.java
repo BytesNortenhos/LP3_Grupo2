@@ -4,33 +4,15 @@ import jakarta.xml.bind.annotation.*;
 
 import java.util.List;
 
-@XmlRootElement(name = "sport")
-@XmlAccessorType(XmlAccessType.FIELD)
 public class Sport {
     private int idSport;
-    @XmlElement
     private String type;
-    @XmlElement(name = "genre")
-    private String xmlGenre;
-    @XmlElement
-    private String name;
-    @XmlElement(name = "description")
-    private String desc;
-    @XmlElement
-    private int minParticipants;
-    @XmlElement
-    private String scoringMeasure;
-    @XmlElement
-    private String oneGame;
-    @XmlElement(name = "olympicRecord")
-    private List<OlympicRecordXML> xmlOlympicRecord; // Needed for JAXB
-    @XmlElement(name = "winnerOlympic")
-    private List<WinnerOlympicXML> xmlWinnerOlympic; // Needed for JAXB
-    @XmlElementWrapper(name = "rules")
-    @XmlElement(name = "rule")
-    private List<String> xmlRules; // Needed for JAXB
-
     private Gender genre;
+    private String name;
+    private String desc;
+    private int minParticipants;
+    private String scoringMeasure;
+    private String oneGame;
     private OlympicRecord olympicRecord;
     private List<WinnerOlympic> winnerOlympic;
     private List<Rule> rules;
@@ -64,7 +46,6 @@ public class Sport {
         this.winnerOlympic = winnerOlympic;
         this.rules = rules;
     }
-    public Sport() {}
 
     /**
      * Get Sport ID
@@ -240,69 +221,5 @@ public class Sport {
      */
     public void setRules(List<Rule> rules) {
         this.rules = rules;
-    }
-
-    /**
-     * Get XML genre
-     * @return
-     */
-    public String getXmlGenre() {
-        return xmlGenre;
-    }
-
-    /**
-     * Set XML genre
-     * @param xmlGenre {String} Genre
-     */
-    public void setXmlGenre(String xmlGenre) {
-        this.xmlGenre = xmlGenre;
-    }
-
-    /**
-     * Get XML olympic record
-     * @return List<RecordOrWinnerOlympicXML>
-     */
-    public List<OlympicRecordXML> getXmlOlympicRecord() {
-        return xmlOlympicRecord;
-    }
-
-    /**
-     * Set XML olympic record
-     * @param xmlOlympicRecord {List<RecordOrWinnerOlympicXML>} Olympic record
-     */
-    public void setXmlOlympicRecord(List<OlympicRecordXML> xmlOlympicRecord) {
-        this.xmlOlympicRecord = xmlOlympicRecord;
-    }
-
-    /**
-     * Get XML winner olympic
-     * @return List<WinnerOlympicXML>
-     */
-    public List<WinnerOlympicXML> getXmlWinnerOlympic() {
-        return xmlWinnerOlympic;
-    }
-
-    /**
-     * Set XML winner olympic
-     * @param xmlWinnerOlympic {List<WinnerOlympicXML>} Winner olympic
-     */
-    public void setXmlWinnerOlympic(List<WinnerOlympicXML> xmlWinnerOlympic) {
-        this.xmlWinnerOlympic = xmlWinnerOlympic;
-    }
-
-    /**
-     * Get XML rules
-     * @return List<String>
-     */
-    public List<String> getXmlRules() {
-        return xmlRules;
-    }
-
-    /**
-     * Set XML rules
-     * @param xmlRules {List<String>} Rules
-     */
-    public void setXmlRules(List<String> xmlRules) {
-        this.xmlRules = xmlRules;
     }
 }

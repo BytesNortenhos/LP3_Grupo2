@@ -15,11 +15,6 @@ public class Gender {
     }
 
     /**
-     * Constructor of Gender (without parameters)
-     */
-    public Gender() {}
-
-    /**
      * Get Gender ID
      * @return int
      */

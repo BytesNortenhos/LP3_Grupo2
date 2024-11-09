@@ -10,22 +10,33 @@ public class MedalType {
     }
 
     /**
-     * Constructor of MedalType (without parameters)
+     * Get ID
+     * @return int
      */
-    public MedalType() {}
-
     public int getId() {
         return idMedalType;
     }
 
+    /**
+     * Set ID
+     * @param idMedalType {int} ID
+     */
     public void setId(int idMedalType) {
         this.idMedalType = idMedalType;
     }
 
+    /**
+     * Get Desc Medal Type
+     * @return String
+     */
     public String getDescMedalType() {
         return descMedalType;
     }
 
+    /**
+     * Set Desc Medal Type
+     * @param descMedalType {String} Desc
+     */
     public void setDescMedalType(String descMedalType) {
         this.descMedalType = descMedalType;
     }

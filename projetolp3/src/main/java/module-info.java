@@ -10,6 +10,8 @@ module bytesnortenhos.projetolp3 {
     exports bytesnortenhos.projetolp3;
     exports controllers;
     exports Models;
+    exports AuxilierXML;
     opens controllers to javafx.fxml, jakarta.xml.bind;
     opens Models to jakarta.xml.bind;
+    opens AuxilierXML to jakarta.xml.bind;
 }

@@ -14,8 +14,6 @@ public class Person {
         this.password = password;
     }
 
-    public Person() {}
-
     /**
      * Get ID
      * @return int

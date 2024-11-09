@@ -1,4 +1,4 @@
-package Models;
+package AuxilierXML;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;

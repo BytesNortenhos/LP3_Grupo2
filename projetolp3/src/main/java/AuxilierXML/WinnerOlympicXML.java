@@ -1,15 +1,13 @@
-package Models;
+package AuxilierXML;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
-import java.sql.Time;
-
-@XmlRootElement(name = "olympicRecord")
+@XmlRootElement(name = "winnerOlympic")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class OlympicRecordXML {
+public class WinnerOlympicXML {
     @XmlElement
     private int year;
     @XmlElement
@@ -17,25 +15,25 @@ public class OlympicRecordXML {
     @XmlElement
     private String time;
     @XmlElement
-    private int medals;
+    private String medal;
 
     /**
      * Constructor of OlympicRecord (without parameters)
      */
-    public OlympicRecordXML() {}
+    public WinnerOlympicXML() {}
 
     /**
      * Constructor of OlympicRecord
      * @param year {int} Year
      * @param holder {String} Holder
      * @param time {String} Time
-     * @param medals {int} Medals
+     * @param medal {String} Medal
      */
-    public OlympicRecordXML(int year, String holder, String time, int medals) {
+    public WinnerOlympicXML(int year, String holder, String time, String medal) {
         this.year = year;
         this.holder = holder;
         this.time = time;
-        this.medals = medals;
+        this.medal = medal;
     }
 
     /**
@@ -72,7 +70,7 @@ public class OlympicRecordXML {
 
     /**
      * Get time
-     * @return String
+     * @return Time
      */
     public String getTime() {
         return time;
@@ -87,18 +85,18 @@ public class OlympicRecordXML {
     }
 
     /**
-     * Get medals
-     * @return int
+     * Get medal
+     * @return String
      */
-    public int getMedals() {
-        return medals;
+    public String getMedal() {
+        return medal;
     }
 
     /**
-     * Set medals
-     * @param medals {int} Medals
+     * Set medal
+     * @param medal {String} Medal
      */
-    public void setMedals(int medals) {
-        this.medals = medals;
+    public void setMedal(String medal) {
+        this.medal = medal;
     }
 }
