@@ -9,6 +9,9 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.sql.Statement;
+import java.sql.ResultSet;
+
 
 public class AthleteDao {
 
@@ -37,14 +40,18 @@ public class AthleteDao {
         return athletes;
     }
 
-    public static void addAthlete(Athlete athlete) throws SQLException {
+    public static int addAthlete(Athlete athlete) throws SQLException {
         String query = "INSERT INTO tblAthlete (password, name, idCountry, idGender, height, weight, dateOfBirth) VALUES (?, ?, ?, ?, ?, ?, ?)";
         Connection conn = null;
         PreparedStatement stmt = null;
+        ResultSet rs = null; // Para armazenar o id gerado
+        int generatedId = -1; // Valor padrão caso não consiga pegar o id
+
         try {
             conn = ConnectionsUtlis.dbConnect();
-            stmt = conn.prepareStatement(query);
+            stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS); // Importante: Use Statement.RETURN_GENERATED_KEYS
 
+            // Definir os parâmetros do statement
             stmt.setString(1, athlete.getPassword());
             stmt.setString(2, athlete.getName());
             stmt.setInt(3, athlete.getCountry().getIdCountry());
@@ -52,8 +59,20 @@ public class AthleteDao {
             stmt.setInt(5, athlete.getHeight());
             stmt.setFloat(6, athlete.getWeight());
             stmt.setDate(7, athlete.getDateOfBirth());
+
+            // Executa o insert
             stmt.executeUpdate();
+
+            // Recuperar o id gerado
+            rs = stmt.getGeneratedKeys(); // Obtém as chaves geradas
+            if (rs.next()) {
+                generatedId = rs.getInt(1); // O id gerado estará na primeira coluna
+            }
         } finally {
+            // Fechar recursos
+            if (rs != null) {
+                rs.close();
+            }
             if (stmt != null) {
                 stmt.close();
             }
@@ -61,7 +80,10 @@ public class AthleteDao {
                 conn.close();
             }
         }
+
+        return generatedId; // Retorna o id gerado automaticamente
     }
+
 
     public static void removeAthlete(int idAthlete) throws SQLException {
         String query = "DELETE FROM tblAthlete WHERE idAthlete = ?";
@@ -127,4 +149,31 @@ public class AthleteDao {
         }
         return null;
     }
+    public static void updateAthletePassword(int idAthlete, String password) throws SQLException {
+        String query = "UPDATE tblAthlete SET password = ? WHERE idAthlete = ?";
+        Connection conn = null;
+        PreparedStatement stmt = null;
+
+        try {
+            conn = ConnectionsUtlis.dbConnect();
+            stmt = conn.prepareStatement(query);
+
+            // Define a senha do atleta
+            stmt.setString(1, password); // Senha a ser atualizada
+            stmt.setInt(2, idAthlete);   // ID do atleta para identificar a linha
+
+            // Executa a atualização
+            stmt.executeUpdate();
+        } finally {
+            // Fechar recursos
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+    }
+
+
 }

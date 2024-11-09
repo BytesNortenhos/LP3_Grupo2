@@ -101,6 +101,28 @@ public class RegistrationDao {
             }
         }
     }
+    public static void updateRegistrationStatus(int registrationId, int newStatus) throws SQLException {
+        String query = "UPDATE tblRegistration SET idStatus = ? WHERE idRegistration = ?";
+        Connection conn = null;
+        PreparedStatement stmt = null;
+
+        try {
+            conn = ConnectionsUtlis.dbConnect();
+            stmt = conn.prepareStatement(query);
+
+            stmt.setInt(1, newStatus);  // novo status (2 para rejeitar, 3 para aceitar)
+            stmt.setInt(2, registrationId); // id da inscrição
+
+            stmt.executeUpdate(); // Executa a atualização
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+    }
 
     public static Registration getRegistrationById(int idRegistration) throws SQLException {
         String query = "SELECT * FROM tblRegistration WHERE idRegistration = ?";
@@ -119,4 +141,31 @@ public class RegistrationDao {
         }
         return null;
     }
+    public static List<Registration> getPendingRegistrations() throws SQLException {
+        List<Registration> registrations = new ArrayList<>();
+        // Query modificada para buscar apenas registros com idStatus = 1
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT * FROM tblRegistration WHERE idStatus = 1;");
+
+        if (rs != null) {
+            while (rs.next()) {
+                int idRegistration = rs.getInt("idRegistration");
+                int idAthlete = rs.getInt("idAthlete");
+                int idTeam = rs.getInt("idTeam");
+                int idSport = rs.getInt("idSport");
+                int idStatus = rs.getInt("idStatus");
+
+                Athlete athlete = AthleteDao.getAthleteById(idAthlete);
+                Team team = TeamDao.getTeamById(idTeam);
+                Sport sport = SportDao.getSportById(idSport);
+                RegistrationStatus status = RegistrationStatusDao.getRegistrationStatusById(idStatus);
+
+                Registration registration = new Registration(idRegistration, athlete, team, sport, status);
+                registrations.add(registration);
+            }
+        } else {
+            System.out.println("ResultSet is null. No results found.");
+        }
+        return registrations;
+    }
+
 }

@@ -1,5 +1,6 @@
 package controllers;
 
+import Dao.RegistrationDao;
 import bytesnortenhos.projetolp3.Main;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -9,20 +10,25 @@ import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.application.Platform;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+
+import Models.Registration; // Importa a classe Registration
 
 public class HomeController {
     @FXML
@@ -46,92 +52,82 @@ public class HomeController {
     String cssLight = ((URL) cssLightURL).toExternalForm();
     @FXML
     private SplitMenuButton splitMenuButton;
-    @FXML
-    private ComboBox<String> athleteDrop;
+
     public void initialize() {
         URL iconMoonNavURL = Main.class.getResource("img/iconMoon.png");
         String iconMoonNavStr = ((URL) iconMoonNavURL).toExternalForm();
         Image image = new Image(iconMoonNavStr);
         if(iconModeNav != null) iconModeNav.setImage(image);
+
         URL iconHomeNavURL = Main.class.getResource("img/iconOlympic.png");
         String iconHomeNavStr = ((URL) iconHomeNavURL).toExternalForm();
         image = new Image(iconHomeNavStr);
         if(iconHomeNav != null) iconHomeNav.setImage(image);
-        List<Request> requests = getPendingRequests();
 
-        if (requests.isEmpty()) {
+        // Chama o método para obter apenas as inscrições pendentes (idStatus = 1)
+        List<Registration> registrations = null;
+        try {
+            registrations = getPendingRegistrations(); // Atualizado para usar o filtro
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        if (registrations.isEmpty()) {
             showNoRequestsMessage();
         } else {
-            displayRequests(requests);
+            displayRequests(registrations);
         }
+
         splitMenuButton.setOnMouseClicked(event -> {
-            // Open the dropdown menu when clicking on the button's text
-            splitMenuButton.show();
+            splitMenuButton.show(); // Exibe o menu suspenso
         });
     }
-    public class Request {
-        private final String name;
-        private final int age;
-        private final String sport;
-        public Request(String name, int age, String sport) {
-            this.name = name;
-            this.age = age;
-            this.sport = sport;
-        }
 
-        public String getName() {
-            return name;
-        }
+    // Método atualizado para obter apenas as inscrições pendentes (idStatus = 1)
+    private List<Registration> getPendingRegistrations() throws SQLException {
+        List<Registration> registrations = RegistrationDao.getRegistrations(); // Busca todos os registros
+        // Filtra os registros para incluir apenas os que têm idStatus = 1
+        return registrations.stream()
+                .filter(reg -> reg.getStatus().getIdStatus() == 1)  // Filtra pelo idStatus igual a 1
+                .collect(Collectors.toList());
+    }
 
-        public int getAge() {
-            return age;
-        }
-        public String getSport() {
-            return sport;
-        }
-    }
-    private List<Request> getPendingRequests() {
-        // Replace this with actual logic to fetch your requests
-        return List.of(
-                new Request("Cristiano Ronaldo", 39, "Futebol"),
-                new Request("Rayssa Leal", 16, "Skate"),
-                new Request("Cristiano Ronaldo", 39, "Futebol"),
-                new Request("Cristiano Ronaldo", 39, "Futebol")
-        );
-    }
     private void showNoRequestsMessage() {
         noRequestsLabel.setVisible(true);
         requestsContainer.setVisible(false);
     }
 
-    private void displayRequests(List<Request> requests) {
+    private void displayRequests(List<Registration> registrations) {
         noRequestsLabel.setVisible(false);
         requestsContainer.setVisible(true);
 
-        // Create and add request nodes dynamically
-        for (Request request : requests) {
-            HBox requestItem = createRequestItem(request);
+        // Cria e adiciona os itens de registro dinamicamente
+        for (Registration registration : registrations) {
+            HBox requestItem = createRequestItem(registration);
             requestsContainer.getChildren().add(requestItem);
         }
     }
 
-    private HBox createRequestItem(Request request) {
+    // Método para criar um item de inscrição
+    private HBox createRequestItem(Registration registration) {
         VBox requestItem = new VBox();
         requestItem.setSpacing(10);
         requestItem.getStyleClass().add("request-item");
 
-        // Create the label for the name
-        Label nameLabel = new Label(request.getName());
+        // Pega as informações da inscrição e as exibe
+        Label nameLabel = new Label(registration.getAthlete().getName()); // Nome do atleta
         nameLabel.getStyleClass().add("name-label");
 
-        // Create the label for the age
-        Label ageLabel = new Label("Idade: " + request.getAge());
+        Label ageLabel = new Label("Idade: " + registration.getAthlete().getDateOfBirth()); // Idade do atleta
         ageLabel.getStyleClass().add("age-label");
 
-        Label sportLabel = new Label("Modalidade: " + request.getSport());
+        Label sportLabel = new Label("Modalidade: " + registration.getSport().getName()); // Modalidade
         sportLabel.getStyleClass().add("sport-label");
 
-        // Create the accept button with an image
+        Label teamLabel = new Label("Equipa: " + registration.getTeam().getName()); // Nome da equipe
+        teamLabel.getStyleClass().add("team-label");
+
+        // Criação do botão de aceitar
         ImageView acceptImageView = new ImageView();
         URL iconAcceptURL = Main.class.getResource("img/iconAccept.png");
         if (iconAcceptURL != null) {
@@ -145,7 +141,7 @@ public class HomeController {
         acceptButton.setGraphic(acceptImageView);
         acceptButton.getStyleClass().add("acceptButton");
 
-        // Create the reject button with an image
+        // Criação do botão de rejeitar
         ImageView rejectImageView = new ImageView();
         URL iconRejectURL = Main.class.getResource("img/iconReject.png");
         if (iconRejectURL != null) {
@@ -159,20 +155,51 @@ public class HomeController {
         rejectButton.setGraphic(rejectImageView);
         rejectButton.getStyleClass().add("rejectButton");
 
-        // Place both buttons in an HBox
-        HBox buttonContainer = new HBox(10); // Spacing between buttons (10px)
-        buttonContainer.getChildren().addAll(acceptButton, rejectButton);
-        buttonContainer.setAlignment(Pos.CENTER_RIGHT); // Align buttons to the center
-        buttonContainer.setPadding(new Insets(10)); // Optional: Add padding around the buttons
+        // Definir o que acontece quando os botões são clicados
+        acceptButton.setOnAction(event -> {
+            try {
+                // Atualiza o status da inscrição para 3 (aceito)
+                RegistrationDao.updateRegistrationStatus(registration.getIdRegistration(), 3); // ID da inscrição e novo status
+                // Atualizar a interface (remover ou alterar o item na interface)
+                Platform.runLater(() -> {
+                    // Remover o HBox que contém o requestItem
+                    requestsContainer.getChildren().remove(requestItem.getParent());
+                });
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
 
-        // Add the labels and button container to the request item
-        requestItem.getChildren().addAll(nameLabel,sportLabel, ageLabel, buttonContainer);
-        HBox container = new HBox(10); // Spacing between buttons (10px)
+        rejectButton.setOnAction(event -> {
+            try {
+                // Atualiza o status da inscrição para 2 (rejeitado)
+                RegistrationDao.updateRegistrationStatus(registration.getIdRegistration(), 2); // ID da inscrição e novo status
+                // Atualizar a interface (remover ou alterar o item na interface)
+                Platform.runLater(() -> {
+                    // Remover o HBox que contém o requestItem
+                    requestsContainer.getChildren().remove(requestItem.getParent());
+                });
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
+
+        // Coloca os botões de aceitar e rejeitar dentro de um HBox
+        HBox buttonContainer = new HBox(10);
+        buttonContainer.getChildren().addAll(acceptButton, rejectButton);
+        buttonContainer.setAlignment(Pos.CENTER_RIGHT);
+        buttonContainer.setPadding(new Insets(10));
+
+        // Adiciona as labels e os botões ao item de inscrição
+        requestItem.getChildren().addAll(nameLabel, sportLabel, ageLabel, teamLabel, buttonContainer);
+        HBox container = new HBox(10);
         container.setMinWidth(750);
         container.setAlignment(Pos.CENTER);
         container.getChildren().addAll(requestItem);
-        return container;
+
+        return container; // Retorna o HBox que contém o item de solicitação
     }
+
     public boolean changeMode(ActionEvent event){
         isDarkMode = !isDarkMode;
         if(isDarkMode){
@@ -192,6 +219,7 @@ public class HomeController {
         Image image = new Image(iconMoonStr);
         iconModeNav.setImage(image);
     }
+
     public void setDarkMode(){
         parent.getStylesheets().remove(String.valueOf(cssLight));
         parent.getStylesheets().add(String.valueOf(cssDark));
@@ -200,6 +228,7 @@ public class HomeController {
         Image image = new Image(iconMoonStr);
         iconModeNav.setImage(image);
     }
+
     public void mostrarRegistar(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
         Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/register.fxml")));
@@ -213,6 +242,7 @@ public class HomeController {
         stage.setScene(scene);
         stage.show();
     }
+
     public static void returnHomeMenu(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
         Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/home.fxml")));
