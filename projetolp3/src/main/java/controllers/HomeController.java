@@ -20,6 +20,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.application.Platform;
+import java.time.LocalDate;
+import java.time.Period;
+
 
 import java.io.IOException;
 import java.net.URL;
@@ -118,7 +121,14 @@ public class HomeController {
         Label nameLabel = new Label(registration.getAthlete().getName()); // Nome do atleta
         nameLabel.getStyleClass().add("name-label");
 
-        Label ageLabel = new Label("Idade: " + registration.getAthlete().getDateOfBirth()); // Idade do atleta
+        // Calcula a idade diretamente (sem método separado)
+        java.sql.Date birthDate = registration.getAthlete().getDateOfBirth();
+        LocalDate birthLocalDate = birthDate.toLocalDate(); // Converte para LocalDate
+        LocalDate currentDate = LocalDate.now(); // Data atual
+        int age = Period.between(birthLocalDate, currentDate).getYears(); // Calcula a idade
+
+        // Exibe a idade do atleta
+        Label ageLabel = new Label("Idade: " + age); // Exibe a idade
         ageLabel.getStyleClass().add("age-label");
 
         Label sportLabel = new Label("Modalidade: " + registration.getSport().getName()); // Modalidade
@@ -199,6 +209,7 @@ public class HomeController {
 
         return container; // Retorna o HBox que contém o item de solicitação
     }
+
 
     public boolean changeMode(ActionEvent event){
         isDarkMode = !isDarkMode;
