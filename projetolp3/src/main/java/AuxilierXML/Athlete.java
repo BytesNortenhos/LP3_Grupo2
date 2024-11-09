@@ -1,8 +1,5 @@
 package AuxilierXML;
 
-import Models.Country;
-import Models.Gender;
-import Models.Person;
 import jakarta.xml.bind.annotation.*;
 
 import java.util.Date;
@@ -25,26 +22,20 @@ public class Athlete extends Person {
     private Date dateOfBirth;
     @XmlElementWrapper(name = "olympicParticipations")
     @XmlElement(name = "participation")
-    private List<ParticipationAthleteXML> olympicParticipations; // Needed for JAXB
-    private Country country;
-    private Gender genre;
+    private List<ParticipationAthlete> olympicParticipations; // Needed for JAXB
 
     /**
      * Constructor of Athlete
      * @param id {int} ID
      * @param password {String} Password
      * @param name {String} Name
-     * @param country {Country} Country
-     * @param genre {Gender} Genre
      * @param height {int} Height
      * @param weight {float} Weight
      * @param dateOfBirth {Date} Date of birth
      */
-    public Athlete(int id, String password, String name, Country country, Gender genre, int height, float weight, Date dateOfBirth) {
+    public Athlete(int id, String password, String name, int height, float weight, Date dateOfBirth) {
         super(id, password);
         this.name = name;
-        this.country = country;
-        this.genre = genre;
         this.height = height;
         this.weight = weight;
         this.dateOfBirth = dateOfBirth;
@@ -71,38 +62,6 @@ public class Athlete extends Person {
      */
     public void setName(String name) {
         this.name = name;
-    }
-
-    /**
-     * Get country
-     * @return Country
-     */
-    public Country getCountry() {
-        return country;
-    }
-
-    /**
-     * Set country
-     * @param country {Country} Country
-     */
-    public void setCountry(Country country) {
-        this.country = country;
-    }
-
-    /**
-     * Get genre
-     * @return String
-     */
-    public Gender getGenre() {
-        return genre;
-    }
-
-    /**
-     * Set genre
-     * @param genre {String} Genre
-     */
-    public void setGenre(Gender genre) {
-        this.genre = genre;
     }
 
     /**
@@ -157,7 +116,7 @@ public class Athlete extends Person {
      * Get olympic participations (used only for JAXB)
      * @return List<ParticipationAthlete>
      */
-    public List<ParticipationAthleteXML> getOlympicParticipations() {
+    public List<ParticipationAthlete> getOlympicParticipations() {
         return olympicParticipations;
     }
 
@@ -165,7 +124,7 @@ public class Athlete extends Person {
      * Set olympic participations (used only for JAXB)
      * @param olympicParticipations {List<ParticipationAthlete>} Olympic participations
      */
-    public void setOlympicParticipations(List<ParticipationAthleteXML> olympicParticipations) {
+    public void setOlympicParticipations(List<ParticipationAthlete> olympicParticipations) {
         this.olympicParticipations = olympicParticipations;
     }
 

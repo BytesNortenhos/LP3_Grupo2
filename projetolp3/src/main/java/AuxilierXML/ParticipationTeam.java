@@ -7,7 +7,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "participation")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class ParticipationTeamXML {
+public class ParticipationTeam {
     @XmlElement
     private int year;
     @XmlElement
@@ -16,14 +16,14 @@ public class ParticipationTeamXML {
     /**
      * Constructor of Participation (without parameters)
      */
-    public ParticipationTeamXML() {}
+    public ParticipationTeam() {}
 
     /**
      * Constructor of Participation
      * @param year {int} Year
      * @param result {String} Result
      */
-    public ParticipationTeamXML(int year, String result) {
+    public ParticipationTeam(int year, String result) {
         this.year = year;
         this.result = result;
     }

@@ -9,18 +9,18 @@ import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
 import java.io.File;
+import java.sql.SQLOutput;
 
 public class Main {
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
          //TestXML.main();
         //AthleteDao.getAthletes();
         XMLUtils xmlUtils = new XMLUtils();
-        xmlUtils.getTeamsDataXML();
-        System.out.println("================");
-        xmlUtils.getSportsDataXML();
-        System.out.println("================");
-        xmlUtils.getAthletesDataXML();
-        System.out.println("================");
+
+        System.out.println(xmlUtils.validateXML("athletes"));
+        //xmlUtils.getTeamsDataXML();
+        //xmlUtils.getSportsDataXML();
+        //xmlUtils.getAthletesDataXML();
     }
 }
 

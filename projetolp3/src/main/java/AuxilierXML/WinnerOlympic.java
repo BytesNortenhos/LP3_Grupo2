@@ -7,7 +7,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "winnerOlympic")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class WinnerOlympicXML {
+public class WinnerOlympic {
     @XmlElement
     private int year;
     @XmlElement
@@ -20,7 +20,7 @@ public class WinnerOlympicXML {
     /**
      * Constructor of OlympicRecord (without parameters)
      */
-    public WinnerOlympicXML() {}
+    public WinnerOlympic() {}
 
     /**
      * Constructor of OlympicRecord
@@ -29,7 +29,7 @@ public class WinnerOlympicXML {
      * @param time {String} Time
      * @param medal {String} Medal
      */
-    public WinnerOlympicXML(int year, String holder, String time, String medal) {
+    public WinnerOlympic(int year, String holder, String time, String medal) {
         this.year = year;
         this.holder = holder;
         this.time = time;

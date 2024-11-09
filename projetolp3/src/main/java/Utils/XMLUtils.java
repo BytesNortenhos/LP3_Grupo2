@@ -4,7 +4,6 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.*;
 
 import AuxilierXML.*;
-import Models.*;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
@@ -70,7 +69,7 @@ public class XMLUtils {
         List<Sport> sportsList = new ArrayList<>();
 
         try {
-            JAXBContext jaxbContext = JAXBContext.newInstance(Sports.class, Sport.class, WinnerOlympicXML.class, OlympicRecordXML.class, RulesXML.class);
+            JAXBContext jaxbContext = JAXBContext.newInstance(Sports.class, Sport.class, WinnerOlympic.class, OlympicRecord.class, RulesXML.class);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 
             Sports sports = (Sports) unmarshaller.unmarshal(new File(absolutePath + "/" + xmlName + ".xml"));
@@ -86,7 +85,7 @@ public class XMLUtils {
                 System.out.println("");
 
                 if (sport.getXmlOlympicRecord() != null && !sport.getXmlOlympicRecord().isEmpty()) {
-                    for (OlympicRecordXML record : sport.getXmlOlympicRecord()) {
+                    for (OlympicRecord record : sport.getXmlOlympicRecord()) {
                         System.out.println("Year: " + record.getYear());
                         System.out.println("Holder: " + record.getHolder());
                         System.out.println("Time: " + record.getTime());
@@ -98,7 +97,7 @@ public class XMLUtils {
                 }
 
                 if (sport.getXmlWinnerOlympic() != null && !sport.getXmlWinnerOlympic().isEmpty()) {
-                    for (WinnerOlympicXML winner : sport.getXmlWinnerOlympic()) {
+                    for (WinnerOlympic winner : sport.getXmlWinnerOlympic()) {
                         System.out.println("Year: " + winner.getYear());
                         System.out.println("Winner: " + winner.getHolder());
                         System.out.println("Country: " + winner.getTime());
@@ -132,7 +131,7 @@ public class XMLUtils {
         String xmlName = "teams";
 
         try {
-            JAXBContext jaxbContext = JAXBContext.newInstance(Teams.class, Team.class, ParticipationTeamXML.class);
+            JAXBContext jaxbContext = JAXBContext.newInstance(Teams.class, Team.class, ParticipationTeam.class);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 
             Teams teams = (Teams) unmarshaller.unmarshal(new File(absolutePath + "/" + xmlName + ".xml"));
@@ -145,7 +144,7 @@ public class XMLUtils {
                 System.out.println("Foundation Year: " + team.getYearFounded());
 
                 if (team.getOlympicParticipations() != null && !team.getOlympicParticipations().isEmpty()) {
-                    for (ParticipationTeamXML participation : team.getOlympicParticipations()) {
+                    for (ParticipationTeam participation : team.getOlympicParticipations()) {
                         System.out.println("Year: " + participation.getYear());
                         System.out.println("Result: " + participation.getResult());
                         System.out.println("---------------------------");
@@ -169,7 +168,7 @@ public class XMLUtils {
         String xmlName = "athletes";
 
         try {
-            JAXBContext jaxbContext = JAXBContext.newInstance(Athletes.class, Athlete.class, ParticipationAthleteXML.class);
+            JAXBContext jaxbContext = JAXBContext.newInstance(Athletes.class, Athlete.class, ParticipationAthlete.class);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 
             Athletes athletes = (Athletes) unmarshaller.unmarshal(new File(absolutePath + "/" + xmlName + ".xml"));
@@ -183,7 +182,7 @@ public class XMLUtils {
                 System.out.println("Date of Birth: " + athlete.getDateOfBirth());
 
                 if (athlete.getOlympicParticipations() != null && !athlete.getOlympicParticipations().isEmpty()) {
-                    for (ParticipationAthleteXML participation : athlete.getOlympicParticipations()) {
+                    for (ParticipationAthlete participation : athlete.getOlympicParticipations()) {
                         System.out.println("Year: " + participation.getYear());
                         System.out.println("Gold: " + participation.getGold());
                         System.out.println("Silver: " + participation.getSilver());
