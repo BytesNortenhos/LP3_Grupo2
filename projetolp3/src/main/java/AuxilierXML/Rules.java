@@ -7,14 +7,14 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "rules")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class RulesXML {
+public class Rules {
     @XmlElement
     private String rule;
 
     /**
      * Constructor of Rules (without parameters)
      */
-    public RulesXML() {}
+    public Rules() {}
 
     /**
      * Get rule

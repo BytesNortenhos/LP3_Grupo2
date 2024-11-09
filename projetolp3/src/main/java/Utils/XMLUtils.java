@@ -69,7 +69,7 @@ public class XMLUtils {
         List<Sport> sportsList = new ArrayList<>();
 
         try {
-            JAXBContext jaxbContext = JAXBContext.newInstance(Sports.class, Sport.class, WinnerOlympic.class, OlympicRecord.class, RulesXML.class);
+            JAXBContext jaxbContext = JAXBContext.newInstance(Sports.class, Sport.class, WinnerOlympic.class, OlympicRecord.class, Rules.class);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 
             Sports sports = (Sports) unmarshaller.unmarshal(new File(absolutePath + "/" + xmlName + ".xml"));
