@@ -7,7 +7,7 @@ public class Team {
     private String name;
     private Country country;
     private Gender genre;
-    private int idSport;
+    private Sport sport;
     private int yearFounded;
 
     /**
@@ -16,15 +16,15 @@ public class Team {
      * @param name {String} Name
      * @param country {Country} Country
      * @param genre {Gender} Genre
-     * @param idSport {int} Sport
+     * @param sport {Sport} Sport
      * @param yearFounded {int} Year of foundation
      */
-    public Team(int idTeam, String name, Country country, Gender genre, int idSport, int yearFounded) {
+    public Team(int idTeam, String name, Country country, Gender genre, Sport sport, int yearFounded) {
         this.idTeam = idTeam;
         this.name = name;
         this.country = country;
         this.genre = genre;
-        this.idSport = idSport;
+        this.sport = sport;
         this.yearFounded = yearFounded;
     }
 
@@ -93,19 +93,19 @@ public class Team {
     }
 
     /**
-     * Get Sport ID
-     * @return int
+     * Get Sport
+     * @return Sport
      */
-    public int getIdSport() {
-        return idSport;
+    public Sport getSport() {
+        return sport;
     }
 
     /**
      * Set sport
-     * @param idSport {int} Sport DI
+     * @param sport {Sport} Sport
      */
-    public void setIdSport(int idSport) {
-        this.idSport = idSport;
+    public void setSport(Sport sport) {
+        this.sport = sport;
     }
 
     /**

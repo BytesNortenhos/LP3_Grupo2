@@ -1,6 +1,8 @@
 package bytesnortenhos.projetolp3;
 
-import Dao.AthleteDao;
+import Dao.*;
+import Models.Gender;
+import Models.Sport;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -45,7 +47,23 @@ public class Main extends Application {
         } catch (IOException e) {
             System.err.println("Error loading FXML file: " + e.getMessage());
         }
+        /*AdminDao.getAdmins();
         AthleteDao.getAthletes();
+        CountryDao.getCountries();
+        EventDao.getEvents();
+        GenderDao.getGenders();
+        LocalDao.getLocals();
+        MedalDao.getMedals();
+        MedalTypeDao.getMedalTypes();
+        OlympicRecordDao.getOlympicRecords();
+        RegistrationDao.getRegistrations();
+        RegistrationStatusDao.getRegistrationStatuses();
+        ResultDao.getResults();
+        RuleDao.getRules();
+        SportDao.getSports();
+        TeamDao.getTeams();
+        WinnerOlympicDao.getWinnerOlympics();
+        System.out.println("Correu!");*/
     }
 
     private Scene createScene(Parent root) {

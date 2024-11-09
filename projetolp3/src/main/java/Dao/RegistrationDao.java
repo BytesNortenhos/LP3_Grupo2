@@ -1,8 +1,7 @@
 package Dao;
 
-import Models.RegistrationStatus;
+import Models.*;
 import Utils.ConnectionsUtlis;
-import Models.Registration;
 
 import javax.sql.rowset.CachedRowSet;
 import java.sql.Connection;
@@ -22,9 +21,13 @@ public class RegistrationDao {
                 int idTeam = rs.getInt("idTeam");
                 int idSport = rs.getInt("idSport");
                 int idStatus = rs.getInt("idStatus");
+
+                Athlete athlete = AthleteDao.getAthleteById(idAthlete);
+                Team team = TeamDao.getTeamById(idTeam);
+                Sport sport = SportDao.getSportById(idSport);
                 RegistrationStatus status = RegistrationStatusDao.getRegistrationStatusById(idStatus);
 
-                Registration registration = new Registration(idRegistration, idAthlete, idTeam, idSport, status);
+                Registration registration = new Registration(idRegistration, athlete, team, sport, status);
                 registrations.add(registration);
             }
         } else {
@@ -41,9 +44,9 @@ public class RegistrationDao {
             conn = ConnectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
-            stmt.setInt(1, registration.getIdAthlete());
-            stmt.setInt(2, registration.getIdTeam());
-            stmt.setInt(3, registration.getIdSport());
+            stmt.setInt(1, registration.getAthlete().getIdAthlete());
+            stmt.setInt(2, registration.getTeam().getIdTeam());
+            stmt.setInt(3, registration.getSport().getIdSport());
             stmt.setInt(4, registration.getStatus().getIdStatus());
             stmt.executeUpdate();
         } finally {
@@ -83,9 +86,9 @@ public class RegistrationDao {
             conn = ConnectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
-            stmt.setInt(1, registration.getIdAthlete());
-            stmt.setInt(2, registration.getIdTeam());
-            stmt.setInt(3, registration.getIdSport());
+            stmt.setInt(1, registration.getAthlete().getIdAthlete());
+            stmt.setInt(2, registration.getTeam().getIdTeam());
+            stmt.setInt(3, registration.getSport().getIdSport());
             stmt.setInt(4, registration.getStatus().getIdStatus());
             stmt.setInt(5, registration.getIdRegistration());
             stmt.executeUpdate();
@@ -107,8 +110,12 @@ public class RegistrationDao {
             int idTeam = rs.getInt("idTeam");
             int idSport = rs.getInt("idSport");
             int idStatus = rs.getInt("idStatus");
+
+            Athlete athlete = AthleteDao.getAthleteById(idAthlete);
+            Team team = TeamDao.getTeamById(idTeam);
+            Sport sport = SportDao.getSportById(idSport);
             RegistrationStatus status = RegistrationStatusDao.getRegistrationStatusById(idStatus);
-            return new Registration(idRegistration, idAthlete, idTeam, idSport, status);
+            return new Registration(idRegistration, athlete, team, sport, status);
         }
         return null;
     }
