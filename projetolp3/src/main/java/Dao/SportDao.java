@@ -13,22 +13,14 @@ import java.util.List;
 public class SportDao {
     public static List<Sport> getSports() throws SQLException {
         List<Sport> sports = new ArrayList<>();
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT s.idSport, s.type, s.idGender, s.name, s.description, s.minParticipants," +
-                "s.scoringMeasure, s.oneGame," +
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT s.*," +
                 "g.description AS genderDescription," +
-                "orc.year AS olympicYear, orc.idAthlete AS olympicAthlete," +
-                "orc.idTeam AS olympicTeam, orc.timeMS AS olympicTime, orc.medals AS olympicMedals," +
-                "w.year AS winnerYear, w.idAthlete AS winnerAthlete," +
-                "w.idTeam AS winnerTeam, w.timeMS AS winnerTime, w.idMedal AS winnerMedal," +
-                "mt.descMedalType AS medalTypeDescription," +
-                "r.idRule, r.description AS ruleDescription" +
-                "FROM tblSport s" +
-                "LEFT JOIN tblGender g ON s.idGender = g.idGender" +
-                "LEFT JOIN tblOlympicRecord orc ON s.idSport = orc.idSport" +
-                "LEFT JOIN tblWinnerOlympic w ON s.idSport = w.idSport" +
-                "LEFT JOIN tblMedal m ON w.idMedal = m.idMedal" +
-                "LEFT JOIN tblMedalType mt ON m.idMedalType = mt.idMedalType" +
-                "LEFT JOIN tblRule r ON s.idSport = r.idSport;");
+                "r.year AS olympicYear," +
+                "r.timeMS," +
+                "r.medals " +
+                "FROM tblSport s " +
+                "JOIN tblGender g ON s.idGender = g.idGender " +
+                "LEFT JOIN tblOlympicRecord r ON s.idSport = r.idSport;");
         if (rs != null) {
             while (rs.next()) {
                 int idSport = rs.getInt("idSport");
@@ -39,28 +31,16 @@ public class SportDao {
                 int minParticipants = rs.getInt("minParticipants");
                 String scoringMeasure = rs.getString("scoringMeasure");
                 String oneGame = rs.getString("oneGame");
+
                 String genderDescription = rs.getString("genderDescription");
                 Gender gender = new Gender(idGender, genderDescription);
 
-                OlympicRecord olympicRecord = new OlympicRecord(idSport, rs.getInt("olympicYear"),
-                        rs.getInt("olympicAthlete"), rs.getInt("olympicTeam"), rs.getInt("olympicTime"), rs.getInt("olympicMedals"));
+                OlympicRecord olympicRecord = OlympicRecordDao.getOlympicRecordById(idSport, rs.getInt("olympicYear"));
 
-                List<WinnerOlympic> winnerOlympic = new ArrayList<>();
-                do {
-                    int winnerMedalId = rs.getInt("winnerMedal");
-                    String medalTypeDescription = rs.getString("medalTypeDescription");
-                    MedalType medalType = new MedalType(winnerMedalId, medalTypeDescription);
-                    winnerOlympic.add(new WinnerOlympic(idSport, rs.getInt("winnerYear"), rs.getInt("winnerAthlete"),
-                            rs.getInt("winnerTeam"), rs.getInt("winnerTime"), new Medal(rs.getInt("winnerMedal"),
-                            rs.getInt("winnerAthlete"), rs.getInt("winnerTeam"), rs.getInt("winnerYear"), medalType)));
-                } while (rs.next() && rs.getInt("idSport") == idSport);
+                List<WinnerOlympic> winnerOlympics = WinnerOlympicDao.getWinnerOlympicsBySport(idSport);
+                List<Rule> rules = RuleDao.getRulesBySport(idSport);
 
-                List<Rule> rules = new ArrayList<>();
-                do {
-                    rules.add(new Rule(rs.getInt("idRule"), idSport, rs.getString("ruleDescription")));
-                } while (rs.next() && rs.getInt("idSport") == idSport);
-
-                Sport sport = new Sport(idSport, type, gender, name, description, minParticipants, scoringMeasure, oneGame, olympicRecord, winnerOlympic, rules);
+                Sport sport = new Sport(idSport, type, gender, name, description, minParticipants, scoringMeasure, oneGame, olympicRecord, winnerOlympics, rules);
                 sports.add(sport);
             }
         } else {
@@ -142,24 +122,22 @@ public class SportDao {
     }
 
     public static Sport getSportById(int idSport) throws SQLException {
-        String query = "SELECT s.type, s.idGender, s.name, s.description, s.minParticipants, s.scoringMeasure, s.oneGame," +
-                "g.description AS genderDescription," +
-                "orc.year AS olympicYear, orc.idAthlete AS olympicAthlete," +
-                "orc.idTeam AS olympicTeam, orc.timeMS AS olympicTime, orc.medals AS olympicMedals," +
-                "w.year AS winnerYear, w.idAthlete AS winnerAthlete," +
-                "w.idTeam AS winnerTeam, w.timeMS AS winnerTime, w.idMedal AS winnerMedal," +
-                "mt.descMedalType AS medalTypeDescription," +
-                "r.idRule, r.description AS ruleDescription" +
-                "FROM tblSport s" +
-                "LEFT JOIN tblGender g ON s.idGender = g.idGender" +
-                "LEFT JOIN tblOlympicRecord orc ON s.idSport = orc.idSport" +
-                "LEFT JOIN tblWinnerOlympic w ON s.idSport = w.idSport" +
-                "LEFT JOIN tblMedal m ON w.idMedal = m.idMedal" +
-                "LEFT JOIN tblMedalType mt ON m.idMedalType = mt.idMedalType" +
-                "LEFT JOIN tblRule r ON s.idSport = r.idSport" +
+        // Consulta SQL para pegar os dados principais do esporte
+        String query = "SELECT s.*, " +
+                "g.description AS genderDescription, " +
+                "r.year AS olympicYear, " +
+                "r.timeMS, " +
+                "r.medals " +
+                "FROM tblSport s " +
+                "JOIN tblGender g ON s.idGender = g.idGender " +
+                "LEFT JOIN tblOlympicRecord r ON s.idSport = r.idSport " +
                 "WHERE s.idSport = ?";
+
+        // Executa a consulta SQL com o idSport fornecido
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport);
+
         if (rs != null && rs.next()) {
+            int idSportResult = rs.getInt("idSport");
             String type = rs.getString("type");
             int idGender = rs.getInt("idGender");
             String name = rs.getString("name");
@@ -167,28 +145,24 @@ public class SportDao {
             int minParticipants = rs.getInt("minParticipants");
             String scoringMeasure = rs.getString("scoringMeasure");
             String oneGame = rs.getString("oneGame");
+
+            // Criar o objeto Gender usando os dados da consulta
             String genderDescription = rs.getString("genderDescription");
             Gender gender = new Gender(idGender, genderDescription);
-            OlympicRecord olympicRecord = new OlympicRecord(idSport, rs.getInt("olympicYear"), rs.getInt("olympicAthlete"),
-                    rs.getInt("olympicTeam"), rs.getInt("olympicTime"), rs.getInt("olympicMedals"));
 
-            List<WinnerOlympic> winnerOlympic = new ArrayList<>();
-            do {
-                int winnerMedalId = rs.getInt("winnerMedal");
-                String medalTypeDescription = rs.getString("medalTypeDescription");
-                MedalType medalType = new MedalType(winnerMedalId, medalTypeDescription);
-                winnerOlympic.add(new WinnerOlympic(idSport, rs.getInt("winnerYear"), rs.getInt("winnerAthlete"),
-                        rs.getInt("winnerTeam"), rs.getInt("winnerTime"), new Medal(winnerMedalId, rs.getInt("winnerAthlete"),
-                        rs.getInt("winnerTeam"), rs.getInt("winnerYear"), medalType)));
-            } while (rs.next() && rs.getInt("idSport") == idSport);
+            // Carregar o recorde olímpico associado ao esporte
+            OlympicRecord olympicRecord = OlympicRecordDao.getOlympicRecordById(idSportResult, rs.getInt("olympicYear"));
 
-            List<Rule> rules = new ArrayList<>();
-            do {
-                rules.add(new Rule(rs.getInt("idRule"), idSport, rs.getString("ruleDescription")));
-            } while (rs.next() && rs.getInt("idSport") == idSport);
+            // Carregar os vencedores olímpicos associados ao esporte
+            List<WinnerOlympic> winnerOlympics = WinnerOlympicDao.getWinnerOlympicsBySport(idSportResult);
 
-            return new Sport(idSport, type, gender, name, description, minParticipants, scoringMeasure, oneGame, olympicRecord, winnerOlympic, rules);
+            // Carregar as regras associadas ao esporte
+            List<Rule> rules = RuleDao.getRulesBySport(idSportResult);
+
+            // Criar e retornar o objeto Sport com todos os dados carregados
+            return new Sport(idSportResult, type, gender, name, description, minParticipants, scoringMeasure, oneGame, olympicRecord, winnerOlympics, rules);
         }
+
+        // Caso não encontre o esporte, retorna null
         return null;
-    }
-}
+    }}

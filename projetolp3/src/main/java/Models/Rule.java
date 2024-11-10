@@ -2,18 +2,18 @@ package Models;
 
 public class Rule {
     private int idRule;
-    private int idSport;
+    private Sport sport;
     private String desc;
 
     /**
      * Constructor of Rule
      * @param idRule {int} Rule ID
-     * @param idSport {int} Sport ID
+     * @param sport {Sport} Sport
      * @param desc {String} Description
      */
-    public Rule(int idRule, int idSport, String desc) {
+    public Rule(int idRule, Sport sport, String desc) {
         this.idRule = idRule;
-        this.idSport = idSport;
+        this.sport = sport;
         this.desc = desc;
     }
 
@@ -34,19 +34,19 @@ public class Rule {
     }
 
     /**
-     * Get Sport ID
-     * @return int
+     * Get Sport
+     * @return Sport
      */
-    public int getIdSport() {
-        return idSport;
+    public Sport getSport() {
+        return sport;
     }
 
     /**
-     * Set Sport ID
-     * @param idSport {int} Sport ID
+     * Set Sport
+     * @param sport {Sport} Sport
      */
-    public void setIdSport(int idSport) {
-        this.idSport = idSport;
+    public void setSport(Sport sport) {
+        this.sport = sport;
     }
 
     /**

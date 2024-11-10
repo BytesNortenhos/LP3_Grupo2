@@ -1,5 +1,8 @@
 package Dao;
 
+import Models.Athlete;
+import Models.Sport;
+import Models.Team;
 import Utils.ConnectionsUtlis;
 import Models.OlympicRecord;
 
@@ -23,7 +26,11 @@ public class OlympicRecordDao {
                 int timeMS = rs.getInt("timeMS");
                 int medals = rs.getInt("medals");
 
-                OlympicRecord record = new OlympicRecord(idSport, year, idAthlete, idTeam, timeMS, medals);
+                Sport sport = SportDao.getSportById(idSport);
+                Athlete athlete = AthleteDao.getAthleteById(idAthlete);
+                Team team = TeamDao.getTeamById(idTeam);
+
+                OlympicRecord record = new OlympicRecord(sport, year, athlete, team, timeMS, medals);
                 records.add(record);
             }
         } else {
@@ -40,10 +47,10 @@ public class OlympicRecordDao {
             conn = ConnectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
-            stmt.setInt(1, record.getIdSport());
+            stmt.setInt(1, record.getSport().getIdSport());
             stmt.setInt(2, record.getYear());
-            stmt.setInt(3, record.getIdAthlete());
-            stmt.setInt(4, record.getIdTeam());
+            stmt.setInt(3, record.getAthlete().getIdAthlete());
+            stmt.setInt(4, record.getTeam().getIdTeam());
             stmt.setInt(5, record.getTimeMS());
             stmt.setInt(6, record.getMedals());
             stmt.executeUpdate();
@@ -85,11 +92,11 @@ public class OlympicRecordDao {
             conn = ConnectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
-            stmt.setInt(1, record.getIdAthlete());
-            stmt.setInt(2, record.getIdTeam());
+            stmt.setInt(1, record.getAthlete().getIdAthlete());
+            stmt.setInt(2, record.getTeam().getIdTeam());
             stmt.setInt(3, record.getTimeMS());
             stmt.setInt(4, record.getMedals());
-            stmt.setInt(5, record.getIdSport());
+            stmt.setInt(5, record.getSport().getIdSport());
             stmt.setInt(6, record.getYear());
             stmt.executeUpdate();
         } finally {
@@ -110,7 +117,11 @@ public class OlympicRecordDao {
             int idTeam = rs.getInt("idTeam");
             int timeMS = rs.getInt("timeMS");
             int medals = rs.getInt("medals");
-            return new OlympicRecord(idSport, year, idAthlete, idTeam, timeMS, medals);
+
+            Sport sport = SportDao.getSportById(idSport);
+            Athlete athlete = AthleteDao.getAthleteById(idAthlete);
+            Team team = TeamDao.getTeamById(idTeam);
+            return new OlympicRecord(sport, year, athlete, team, timeMS, medals);
         }
         return null;
     }

@@ -2,6 +2,7 @@ package Dao;
 
 import Models.Country;
 import Models.Gender;
+import Models.Sport;
 import Utils.ConnectionsUtlis;
 import Models.Team;
 
@@ -16,7 +17,7 @@ public class TeamDao {
     public static List<Team> getTeams() throws SQLException {
         List<Team> teams = new ArrayList<>();
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT t.idTeam, t.name AS teamName, t.idCountry, c.name AS countryName, " +
-                "c.continent, t.idGender, g.desc AS genderDesc, " +
+                "c.continent, t.idGender, g.description AS genderDesc, " +
                 "t.idSport, t.yearFounded " +
                 "FROM tblTeam t " +
                 "INNER JOIN tblCountry c ON t.idCountry = c.idCountry " +
@@ -33,8 +34,9 @@ public class TeamDao {
                 int yearFounded = rs.getInt("yearFounded");
                 Country country = new Country(idCountry, countryName, continent);
                 Gender gender = new Gender(idGender, genderDesc);
+                Sport sport = SportDao.getSportById(idSport);
 
-                Team team = new Team(idTeam, teamName, country, gender, idSport, yearFounded);
+                Team team = new Team(idTeam, teamName, country, gender, sport, yearFounded);
                 teams.add(team);
             }
         } else {
@@ -54,7 +56,7 @@ public class TeamDao {
             stmt.setString(1, team.getName());
             stmt.setInt(2, team.getCountry().getIdCountry());
             stmt.setInt(3, team.getGenre().getIdGender());
-            stmt.setInt(4, team.getIdSport());
+            stmt.setInt(4, team.getSport().getIdSport());
             stmt.setInt(5, team.getYearFounded());
             stmt.executeUpdate();
         } finally {
@@ -97,7 +99,7 @@ public class TeamDao {
             stmt.setString(1, team.getName());
             stmt.setInt(2, team.getCountry().getIdCountry());
             stmt.setInt(3, team.getGenre().getIdGender());
-            stmt.setInt(4, team.getIdSport());
+            stmt.setInt(4, team.getSport().getIdSport());
             stmt.setInt(5, team.getYearFounded());
             stmt.setInt(6, team.getIdTeam());
             stmt.executeUpdate();
@@ -113,7 +115,7 @@ public class TeamDao {
 
     public static Team getTeamById(int idTeam) throws SQLException {
         String query = "SELECT t.idTeam, t.name AS teamName, c.idCountry, c.name AS countryName, c.continent, " +
-                "g.idGender AS genderId, g.desc AS genderDesc, " +
+                "g.idGender AS genderId, g.description AS genderDesc, " +
                 "t.idSport, t.yearFounded " +
                 "FROM tblTeam t " +
                 "INNER JOIN tblCountry c ON t.idCountry = c.idCountry " +
@@ -131,7 +133,8 @@ public class TeamDao {
             int yearFounded = rs.getInt("yearFounded");
             Country country = new Country(idCountry, countryName, continent);
             Gender gender = new Gender(genderId, genderDesc);
-            return new Team(idTeam, teamName, country, gender, idSport, yearFounded);
+            Sport sport = SportDao.getSportById(idSport);
+            return new Team(idTeam, teamName, country, gender, sport, yearFounded);
         }
         return null;
     }

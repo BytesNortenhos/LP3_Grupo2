@@ -1,27 +1,17 @@
 package Models;
+import AuxilierXML.*;
+import jakarta.xml.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
 
 public class Athlete extends Person {
     private String name;
-    private Country country;
-    private Gender genre;
     private int height;
     private float weight;
     private Date dateOfBirth;
-    private List<Participation> olympicParticipations;
-
-    public Athlete(int id, String password, String name, Country country, Gender genre, int height, float weight, Date dateOfBirth, List<Participation> olympicParticipations) {
-        super(id, password);
-        this.name = name;
-        this.country = country;
-        this.genre = genre;
-        this.height = height;
-        this.weight = weight;
-        this.dateOfBirth = dateOfBirth;
-        this.olympicParticipations = olympicParticipations;
-    }
+    private Country country;
+    private Gender genre;
 
     public Athlete(int id, String password, String name, Country country, Gender genre, int height, float weight, Date dateOfBirth) {
         super(id, password);
@@ -32,7 +22,6 @@ public class Athlete extends Person {
         this.weight = weight;
         this.dateOfBirth = dateOfBirth;
     }
-
     public int getIdAthlete() {
         return super.getId();
     }
@@ -88,25 +77,4 @@ public class Athlete extends Person {
     public void setDateOfBirth(Date dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
-
-    public List<Participation> getOlympicParticipations() {
-        return olympicParticipations;
-    }
-
-    public void setOlympicParticipations(List<Participation> olympicParticipations) {
-        this.olympicParticipations = olympicParticipations;
-    }
-    @Override
-    public String toString() {
-        return "Athlete{" +
-                "id=" + getId() +
-                ", name=" + name +
-                ", country=" + country.getName() +
-                ", height=" + height +
-                ", weight=" + weight +
-                ", dateOfBirth=" + dateOfBirth +
-                ", olympicParticipations=" + olympicParticipations +
-                '}';
-    }
-
 }

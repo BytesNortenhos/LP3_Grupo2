@@ -7,7 +7,7 @@ public class Country {
 
     /**
      * Constructor of Country
-     * @param idCountry {int} ID
+     * @param idCountry {String} ID
      * @param name {String} Name
      * @param continent {String} Continent
      */
@@ -19,7 +19,8 @@ public class Country {
 
     /**
      * Get id
-     * @return int
+     *
+     * @return String
      */
     public int getIdCountry() {
         return idCountry;
@@ -27,7 +28,7 @@ public class Country {
 
     /**
      * Set id
-     * @param idCountry {int} ID
+     * @param idCountry {String} ID
      */
     public void setIdCountry(int idCountry) {
         this.idCountry = idCountry;

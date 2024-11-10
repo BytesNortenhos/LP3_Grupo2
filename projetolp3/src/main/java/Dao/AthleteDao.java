@@ -9,75 +9,30 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.sql.Statement;
+import java.sql.ResultSet;
+
 
 public class AthleteDao {
 
     public static List<Athlete> getAthletes() throws SQLException {
         List<Athlete> athletes = new ArrayList<>();
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(
-                "SELECT a.idAthlete, a.password, a.name, c.idCountry, c.name AS countryName, c.continent, " +
-                        "g.idGender, g.description AS genderDescription, a.height, a.weight, a.dateOfBirth, " +
-                        "p.year, p.gold, p.silver, p.bronze, p.certificate " +
-                        "FROM tblAthlete a " +
-                        "INNER JOIN tblCountry c ON a.idCountry = c.idCountry " +
-                        "INNER JOIN tblGender g ON a.idGender = g.idGender " +
-                        "LEFT JOIN ( " +
-                        "   SELECT m.idAthlete, e.year, " +
-                        "       SUM(CASE WHEN m.idMedalType = 1 THEN 1 ELSE 0 END) AS gold, " +
-                        "       SUM(CASE WHEN m.idMedalType = 2 THEN 1 ELSE 0 END) AS silver, " +
-                        "       SUM(CASE WHEN m.idMedalType = 3 THEN 1 ELSE 0 END) AS bronze, " +
-                        "       SUM(CASE WHEN m.idMedalType IS NULL THEN 1 ELSE 0 END) AS certificate " +
-                        "   FROM tblMedal m " +
-                        "   LEFT JOIN tblEvent e ON m.year = e.year " +
-                        "   GROUP BY m.idAthlete, e.year " +
-                        ") AS p ON a.idAthlete = p.idAthlete " +
-                        "ORDER BY a.idAthlete, p.year;");
-
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT * FROM tblAthlete;");
         if (rs != null) {
-            int previousId = -1; // Para rastrear mudanças no idAthlete
-            Athlete currentAthlete = null;
-            List<Participation> participations = null;
-
             while (rs.next()) {
                 int idAthlete = rs.getInt("idAthlete");
+                String password = rs.getString("password");
+                String name = rs.getString("name");
+                int idCountry = rs.getInt("idCountry");
+                Country country = CountryDao.getCountryById(idCountry);
+                int idGender = rs.getInt("idGender");
+                Gender gender = GenderDao.getGenderById(idGender);
+                int height = rs.getInt("height");
+                float weight = rs.getFloat("weight");
+                java.sql.Date dateOfBirth = rs.getDate("dateOfBirth");
 
-                // Verifica se estamos em um novo atleta
-                if (idAthlete != previousId) {
-                    // Adiciona o atleta anterior com suas participações completas à lista, se houver
-                    if (currentAthlete != null) {
-                        currentAthlete.setOlympicParticipations(participations);
-                        athletes.add(currentAthlete);
-                    }
-
-                    // Cria um novo atleta e uma nova lista de participações
-                    String password = rs.getString("password");
-                    String name = rs.getString("name");
-                    Country country = new Country(rs.getInt("idCountry"), rs.getString("countryName"), rs.getString("continent"));
-                    Gender gender = new Gender(rs.getInt("idGender"), rs.getString("genderDescription"));
-                    int height = rs.getInt("height");
-                    float weight = rs.getFloat("weight");
-                    java.sql.Date dateOfBirth = rs.getDate("dateOfBirth");
-
-                    participations = new ArrayList<>(); // Inicializa uma nova lista de participações
-                    currentAthlete = new Athlete(idAthlete, password, name, country, gender, height, weight, dateOfBirth, participations);
-                    previousId = idAthlete;
-                }
-
-                // Adiciona a participação ao atleta atual
-                int year = rs.getInt("year");
-                if (!rs.wasNull()) {
-                    int gold = rs.getInt("gold");
-                    int silver = rs.getInt("silver");
-                    int bronze = rs.getInt("bronze");
-                    int certificate = rs.getInt("certificate");
-                    participations.add(new Participation(year, gold, silver, bronze, certificate));
-                }
-            }
-
-            // Adiciona o último atleta processado com suas participações completas à lista
-            if (currentAthlete != null) {
-                currentAthlete.setOlympicParticipations(participations);
-                athletes.add(currentAthlete);
+                Athlete athlete = new Athlete(idAthlete, password, name, country, gender, height, weight, dateOfBirth);
+                athletes.add(athlete);
             }
         } else {
             System.out.println("ResultSet is null. No results for Athlete found.");
@@ -85,16 +40,18 @@ public class AthleteDao {
         return athletes;
     }
 
-
-
-    public static void addAthlete(Athlete athlete) throws SQLException {
+    public static int addAthlete(Athlete athlete) throws SQLException {
         String query = "INSERT INTO tblAthlete (password, name, idCountry, idGender, height, weight, dateOfBirth) VALUES (?, ?, ?, ?, ?, ?, ?)";
         Connection conn = null;
         PreparedStatement stmt = null;
+        ResultSet rs = null; // Para armazenar o id gerado
+        int generatedId = -1; // Valor padrão caso não consiga pegar o id
+
         try {
             conn = ConnectionsUtlis.dbConnect();
-            stmt = conn.prepareStatement(query);
+            stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS); // Importante: Use Statement.RETURN_GENERATED_KEYS
 
+            // Definir os parâmetros do statement
             stmt.setString(1, athlete.getPassword());
             stmt.setString(2, athlete.getName());
             stmt.setInt(3, athlete.getCountry().getIdCountry());
@@ -102,8 +59,20 @@ public class AthleteDao {
             stmt.setInt(5, athlete.getHeight());
             stmt.setFloat(6, athlete.getWeight());
             stmt.setDate(7, athlete.getDateOfBirth());
+
+            // Executa o insert
             stmt.executeUpdate();
+
+            // Recuperar o id gerado
+            rs = stmt.getGeneratedKeys(); // Obtém as chaves geradas
+            if (rs.next()) {
+                generatedId = rs.getInt(1); // O id gerado estará na primeira coluna
+            }
         } finally {
+            // Fechar recursos
+            if (rs != null) {
+                rs.close();
+            }
             if (stmt != null) {
                 stmt.close();
             }
@@ -111,7 +80,10 @@ public class AthleteDao {
                 conn.close();
             }
         }
+
+        return generatedId; // Retorna o id gerado automaticamente
     }
+
 
     public static void removeAthlete(int idAthlete) throws SQLException {
         String query = "DELETE FROM tblAthlete WHERE idAthlete = ?";
@@ -160,41 +132,48 @@ public class AthleteDao {
     }
 
     public static Athlete getAthleteById(int idAthlete) throws SQLException {
-        String query = "SELECT a.idAthlete, a.password, a.name, " +
-                "c.idCountry, c.name AS countryName, c.continent, " +
-                "g.idGender, g.description AS genderDescription, " +
-                "a.height, a.weight, a.dateOfBirth, " +
-                "p.year AS participationYear " +
-                "FROM tblAthlete a " +
-                "INNER JOIN tblCountry c ON a.idCountry = c.idCountry " +
-                "INNER JOIN tblGender g ON a.idGender = g.idGender " +
-                "LEFT JOIN tblMedal p ON a.idAthlete = p.idAthlete " +
-                "WHERE a.idAthlete = ? " +
-                "ORDER BY p.year";
+        String query = "SELECT * FROM tblAthlete WHERE idAthlete = ?";
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idAthlete);
         if (rs != null && rs.next()) {
             String password = rs.getString("password");
             String name = rs.getString("name");
-            Country country = new Country(rs.getInt("idCountry"), rs.getString("countryName"), rs.getString("continent"));
-            Gender gender = new Gender(rs.getInt("idGender"), rs.getString("genderDescription"));
+            int idCountry = rs.getInt("idCountry");
+            Country country = CountryDao.getCountryById(idCountry);
+            int idGender = rs.getInt("idGender");
+            Gender gender = GenderDao.getGenderById(idGender);
             int height = rs.getInt("height");
             float weight = rs.getFloat("weight");
             java.sql.Date dateOfBirth = rs.getDate("dateOfBirth");
-//            List<Medal> medals = new ArrayList<>();
-//            do {
-//                int participationYear = rs.getInt("year");
-//                if (!rs.wasNull()) {
-//                    int gold = rs.getInt("gold");
-//                    int silver = rs.getInt("silver");
-//                    int bronze = rs.getInt("bronze");
-//                    int certificate = rs.getInt("certificate");
-//                    Participation participation = new Participation(participationYear, gold, silver, bronze, certificate);
-//                    olympicParticipations.add(participation);
-//                }
-//            } while (rs.next() && rs.getInt("idAthlete") == idAthlete);
 
-            return new Athlete(idAthlete, password, name, country, gender, height, weight, dateOfBirth, null);
+            return new Athlete(idAthlete, password, name, country, gender, height, weight, dateOfBirth);
         }
         return null;
     }
+    public static void updateAthletePassword(int idAthlete, String password) throws SQLException {
+        String query = "UPDATE tblAthlete SET password = ? WHERE idAthlete = ?";
+        Connection conn = null;
+        PreparedStatement stmt = null;
+
+        try {
+            conn = ConnectionsUtlis.dbConnect();
+            stmt = conn.prepareStatement(query);
+
+            // Define a senha do atleta
+            stmt.setString(1, password); // Senha a ser atualizada
+            stmt.setInt(2, idAthlete);   // ID do atleta para identificar a linha
+
+            // Executa a atualização
+            stmt.executeUpdate();
+        } finally {
+            // Fechar recursos
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+    }
+
+
 }

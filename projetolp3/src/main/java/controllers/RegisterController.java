@@ -145,18 +145,20 @@ public class RegisterController {
                     .findFirst().orElse(null);
 
             if (gender != null && country != null) {
-                // Gerar um ID para o atleta (ou você pode usar um método para obter o próximo ID disponível)
-                int athleteId = 5; // Método fictício para obter o próximo ID
-                String password = generatePassword(); // Método fictício para gerar uma senha
+                // Criar o atleta com um id inicial (0 porque será gerado automaticamente)
+                Athlete athlete = new Athlete(0, "", userName, country, gender, height, weight, dateOfBirth);
 
-                // Criar o atleta
-                Athlete athlete = new Athlete(athleteId, password, userName, country, gender, height, weight, dateOfBirth);
+                // Registrar o atleta no banco de dados e obter o id gerado
+                int generatedId = AthleteDao.addAthlete(athlete);
 
-                // Registrar o atleta no banco de dados
-                AthleteDao.addAthlete(athlete);
+                // A senha do atleta será o id gerado
+                String generatedPassword = String.valueOf(generatedId); // Definir a senha como o ID gerado
+
+                // Atualizar o atleta no banco de dados com a nova senha (que é o id gerado)
+                AthleteDao.updateAthletePassword(generatedId, generatedPassword); // Passa o id e a senha gerada
 
                 // Exibir uma mensagem de sucesso ou redirecionar para outra tela
-                System.out.println("Atleta registrado com sucesso!");
+                System.out.println("Atleta registrado com sucesso! ID gerado: " + generatedId);
 
             } else {
                 System.out.println("Por favor, selecione um gênero e um país válidos.");
@@ -169,6 +171,8 @@ public class RegisterController {
             e.printStackTrace();
         }
     }
+
+
 
     private String generatePassword() {
         // Implementar lógica para gerar uma senha, ou coletar do usuário
