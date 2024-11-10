@@ -207,24 +207,4 @@ public class XMLUtils {
             return null;
         }
     }
-
-    /**
-     * Convert String HH:MM:SS.MS/HH:MM:SS to MS
-     * @param time {String} String of time (HH:MM:SS.MS/HH:MM:SS)
-     * @return int
-     */
-    public static int convertToMS(String time) {
-        DateTimeFormatter formatter;
-        LocalTime parsedTime;
-
-        if (time.contains(".")) {
-            formatter = DateTimeFormatter.ofPattern("HH:mm:ss.SS");
-            parsedTime = LocalTime.parse(time, formatter);
-        } else {
-            formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-            parsedTime = LocalTime.parse(time, formatter);
-        }
-
-        return (int) parsedTime.until(LocalTime.MIDNIGHT, ChronoUnit.MILLIS);
-    }
 }

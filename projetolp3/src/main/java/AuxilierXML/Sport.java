@@ -28,6 +28,7 @@ public class Sport {
     @XmlElementWrapper(name = "rules")
     @XmlElement(name = "rule")
     private List<String> xmlRules; // Needed for JAXB
+    private int tempDatabaseId;
 
     /**
      * Constructor of Sport (without parameters)
@@ -192,5 +193,21 @@ public class Sport {
      */
     public void setXmlRules(List<String> xmlRules) {
         this.xmlRules = xmlRules;
+    }
+
+    /**
+     * Get temporary database ID
+     * @return int
+     */
+    public int getTempDatabaseId() {
+        return tempDatabaseId;
+    }
+
+    /**
+     * Set temporary database ID
+     * @param tempDatabaseId {int} Temporary database ID
+     */
+    public void setTempDatabaseId(int tempDatabaseId) {
+        this.tempDatabaseId = tempDatabaseId;
     }
 }
