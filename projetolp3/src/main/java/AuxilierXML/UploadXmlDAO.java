@@ -2,6 +2,7 @@ package AuxilierXML;
 import Utils.ConnectionsUtlis;
 
 import javax.sql.rowset.CachedRowSet;
+import java.lang.reflect.Type;
 import java.sql.*;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -40,6 +41,16 @@ public class UploadXmlDAO {
                     sport.setTempDatabaseId(rs.getInt(1));
                 }
             }
+
+
+            String queryCustom = "INSERT INTO tblTeam (name, idCountry, idGender, idSport, yearFounded)\n" +
+                    "VALUES ('Jamaica Men''s 4x100m Relay Team', 'JAM', 1, 12, 1910),\n" +
+                    "       ('USA Women''s 4x100m Relay Team', 'USA', 2, 13, 1930),\n" +
+                    "       ('Australia Women''s 4x100m Relay Team', 'AUS', 2, 13, 1980),\n" +
+                    "       ('USA Women''s 4x100m Freestyle Relay Team', 'AUS', 1, 9, 1954);";
+            stmt = conn.prepareStatement(queryCustom);
+            stmt.executeUpdate();
+
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -72,7 +83,6 @@ public class UploadXmlDAO {
                         if (tempHolderId != 0) {
                             String query = "INSERT INTO tblOlympicRecord (idSport, year, idAthlete, idTeam, timeMS, medals) VALUES (?, ?, ?, ?, ?, ?)";
                             stmt2 = conn.prepareStatement(query);
-                            System.out.println("TempDatabaseId: " + sport.getTempDatabaseId());
                             stmt2.setInt(1, sport.getTempDatabaseId());
                             stmt2.setInt(2, record.getYear());
 
@@ -155,7 +165,6 @@ public class UploadXmlDAO {
                                 stmt.setInt(5, convertToMS(winner.getTime()));
                                 stmt.setNull(6, Types.INTEGER);
                             } else {
-                                System.out.println("Medal: " + tempMedalId);
                                 stmt.setNull(5, Types.INTEGER);
                                 stmt.setInt(6, tempMedalId);
                             }
@@ -217,13 +226,40 @@ public class UploadXmlDAO {
 
                 if (tempSportId != 0) {
                     String query = "INSERT INTO tblTeam (name, idCountry, idGender, idSport, yearFounded) VALUES (?, ?, ?, ?, ?)";
-                    stmt2 = conn.prepareStatement(query);
+                    stmt2 = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
                     stmt2.setString(1, team.getName());
                     stmt2.setString(2, team.getXmlCountry());
                     stmt2.setInt(3, tempGenderId);
                     stmt2.setInt(4, tempSportId);
                     stmt2.setInt(5, team.getYearFounded());
                     stmt2.executeUpdate();
+
+                    ResultSet rs2 = stmt2.getGeneratedKeys();
+                    int tempTeamId = 0;
+                    if(rs2.next()) {
+                        tempTeamId = rs2.getInt(1);
+                    }
+
+                    if (team.getOlympicParticipations() != null && !team.getOlympicParticipations().isEmpty()) {
+                        for (ParticipationTeam participation : team.getOlympicParticipations()) {
+                            int tempMedalTypeId = switch (participation.getResult()) {
+                                case "Gold" -> 1;
+                                case "Silver" -> 2;
+                                case "Bronze" -> 3;
+                                case "Diploma" -> 4;
+                                default -> 0;
+                            };
+
+                            String query3 = "INSERT INTO tblMedal (idAthlete, idTeam, year, idMedalType) VALUES (?, ?, ?, ?)";
+                            stmt2 = conn.prepareStatement(query3);
+                            stmt2.setNull(1, Types.INTEGER);
+                            stmt2.setInt(2, tempTeamId);
+                            stmt2.setInt(3, participation.getYear());
+                            stmt2.setInt(4, tempMedalTypeId);
+                            stmt2.executeUpdate();
+                        }
+                    }
+
                 } else {
                     System.out.println("Sport not found: " + team.getName());
                 }
