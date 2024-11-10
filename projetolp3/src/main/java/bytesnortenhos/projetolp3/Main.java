@@ -1,34 +1,26 @@
 package bytesnortenhos.projetolp3;
+
+import Dao.AthleteDao;
+import Dao.CountryDao;
+import javafx.application.Application;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.image.ImageView;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
+
+import java.io.IOException;
+import java.net.URL;
 import java.sql.SQLException;
 
-import AuxilierXML.Athletes;
-import AuxilierXML.Teams;
-import AuxilierXML.Sports;
-import AuxilierXML.UploadXmlDAO;
-import Utils.XMLUtils;
-
-public class Main {
-    public static void main(String[] args) throws SQLException, ClassNotFoundException {
-        //TestXML.main();
-        AthleteDao.getAthletes();
-        //XMLUtils xmlUtils = new XMLUtils();
-
-        //System.out.println(xmlUtils.validateXML("sports"));
-        //Sports sports = xmlUtils.getSportsDataXML();
-        //System.out.println(UploadXmlDAO.addSports(sports));
-
-        //System.out.println(xmlUtils.validateXML("athletes"));
-        //Athletes athletes = xmlUtils.getAthletesDataXML();
-        //System.out.println(UploadXmlDAO.addAthletes(athletes));
-
-        //System.out.println(xmlUtils.validateXML("teams"));
-        //Teams teams = xmlUtils.getTeamsDataXML();
-        //System.out.println(UploadXmlDAO.addTeams(teams));
-
-        //System.out.println(UploadXmlDAO.addSportsExtra(sports));
-    }
-}
-
+//public class Main {
+//    public static void main(String[] args) throws SQLException, ClassNotFoundException {
+//        AthleteDao.getAthletes();
+//    }
+//}
 
 public class Main extends Application {
     private static final String LOGIN_VIEW_FXML = "loginView.fxml";
@@ -54,23 +46,6 @@ public class Main extends Application {
         } catch (IOException e) {
             System.err.println("Error loading FXML file: " + e.getMessage());
         }
-        /*AdminDao.getAdmins();
-        AthleteDao.getAthletes();
-        CountryDao.getCountries();
-        EventDao.getEvents();
-        GenderDao.getGenders();
-        LocalDao.getLocals();
-        MedalDao.getMedals();
-        MedalTypeDao.getMedalTypes();
-        OlympicRecordDao.getOlympicRecords();
-        RegistrationDao.getRegistrations();
-        RegistrationStatusDao.getRegistrationStatuses();
-        ResultDao.getResults();
-        RuleDao.getRules();
-        SportDao.getSports();
-        TeamDao.getTeams();
-        WinnerOlympicDao.getWinnerOlympics();
-        System.out.println("Correu!");*/
     }
 
     private Scene createScene(Parent root) {

@@ -1,7 +1,7 @@
 package Models;
 
 public class Country {
-    private String idCountry;
+    private int idCountry;
     private String name;
     private String continent;
 
@@ -11,7 +11,7 @@ public class Country {
      * @param name {String} Name
      * @param continent {String} Continent
      */
-    public Country(String idCountry, String name, String continent) {
+    public Country(int idCountry, String name, String continent) {
         this.idCountry = idCountry;
         this.name = name;
         this.continent = continent;
@@ -19,9 +19,10 @@ public class Country {
 
     /**
      * Get id
+     *
      * @return String
      */
-    public String getIdCountry() {
+    public int getIdCountry() {
         return idCountry;
     }
 
@@ -29,7 +30,7 @@ public class Country {
      * Set id
      * @param idCountry {String} ID
      */
-    public void setIdCountry(String idCountry) {
+    public void setIdCountry(int idCountry) {
         this.idCountry = idCountry;
     }
 
