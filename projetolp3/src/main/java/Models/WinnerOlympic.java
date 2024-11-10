@@ -6,15 +6,15 @@ public class WinnerOlympic extends RecordOrWinner {
 
     /**
      * Constructor of WinnerOlympic
-     * @param idSport {int} Sport ID
+     * @param sport {Sport} Sport
      * @param year {int} Year
-     * @param idAthlete {int} Athlete ID
-     * @param idTeam {int} Team ID
+     * @param athlete {Athlete} Athlete
+     * @param team {Team} Team
      * @param timeMS {int} Time in ms
      * @param medal {Medal} Medal
      */
-    public WinnerOlympic(int idSport, int year, int idAthlete, int idTeam, int timeMS, Medal medal) {
-        super(idSport, year, idAthlete, idTeam);
+    public WinnerOlympic(Sport sport, int year, Athlete athlete, Team team, int timeMS, Medal medal) {
+        super(sport, year, athlete, team);
         this.timeMS = timeMS;
         this.medal = medal;
     }

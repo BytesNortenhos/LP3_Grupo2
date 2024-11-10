@@ -3,39 +3,20 @@ package Models;
 import java.util.List;
 
 public class Event {
-    private int idEvent;
     private int year;
     private Country country;
     private String logo;
 
     /**
      * Constructor of Event
-     * @param idEvent {int} Event ID
      * @param year {int} Year
      * @param country {Country} Country
      * @param logo {String} Logo
      */
-    public Event(int idEvent, int year, Country country, String logo) {
-        this.idEvent = idEvent;
+    public Event(int year, Country country, String logo) {
         this.year = year;
         this.country = country;
         this.logo = logo;
-    }
-
-    /**
-     * Get Event ID
-     * @return int
-     */
-    public int getIdEvent() {
-        return idEvent;
-    }
-
-    /**
-     * Set Event ID
-     * @param idEvent {int} Event ID
-     */
-    public void setIdEvent(int idEvent) {
-        this.idEvent = idEvent;
     }
 
     /**
