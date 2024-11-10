@@ -63,10 +63,9 @@ public class XMLUtils {
      * Guarda os dados do XML de Sports na Base de Dados
      * @return void
      */
-    public void getSportsDataXML() {
+    public Sports getSportsDataXML() {
         String absolutePath = "src/main/java/DataXML";
         String xmlName = "sports";
-        List<Sport> sportsList = new ArrayList<>();
 
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(Sports.class, Sport.class, WinnerOlympic.class, OlympicRecord.class, Rules.class);
@@ -117,8 +116,11 @@ public class XMLUtils {
                     System.out.println("Nenhuma regra encontrada.");
                 }
             }
+
+            return sports;
         } catch (JAXBException e) {
             e.printStackTrace();
+            return null;
         }
     }
 
@@ -126,7 +128,7 @@ public class XMLUtils {
      * Guarda os dados do XML de Equipas na Base de Dados
      * @return void
      */
-    public void getTeamsDataXML() {
+    public Teams getTeamsDataXML() {
         String absolutePath = "src/main/java/DataXML";
         String xmlName = "teams";
 
@@ -154,8 +156,11 @@ public class XMLUtils {
                 }
                 System.out.println();
             }
+
+            return teams;
         } catch (JAXBException e) {
             e.printStackTrace();
+            return null;
         }
     }
 
@@ -163,7 +168,7 @@ public class XMLUtils {
      * Guarda os dados do XML de Atletas na Base de Dados (falta obter o id do atleta para colocar na tabela de medalhas)
      * @return void
      */
-    public void getAthletesDataXML() {
+    public Athletes getAthletesDataXML() {
         String absolutePath = "src/main/java/DataXML";
         String xmlName = "athletes";
 
@@ -195,8 +200,11 @@ public class XMLUtils {
                 }
                 System.out.println();
             }
+
+            return athletes;
         } catch (JAXBException e) {
             e.printStackTrace();
+            return null;
         }
     }
 

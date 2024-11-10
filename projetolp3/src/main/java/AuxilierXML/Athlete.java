@@ -98,6 +98,7 @@ public class Athlete extends Person {
 
     /**
      * Get date of birth
+     *
      * @return Date
      */
     public Date getDateOfBirth() {

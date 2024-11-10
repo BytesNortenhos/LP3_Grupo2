@@ -132,7 +132,7 @@ public class Sport {
 
     /**
      * Get XML genre
-     * @return
+     * @return String
      */
     public String getXmlGenre() {
         return xmlGenre;

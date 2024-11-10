@@ -1,15 +1,12 @@
 package bytesnortenhos.projetolp3;
 
-import Models.*;
-
 import java.sql.SQLException;
 
+import AuxilierXML.Athletes;
+import AuxilierXML.Teams;
+import AuxilierXML.Sports;
+import AuxilierXML.UploadXmlDAO;
 import Utils.XMLUtils;
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
-import jakarta.xml.bind.Unmarshaller;
-import java.io.File;
-import java.sql.SQLOutput;
 
 public class Main {
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
@@ -17,10 +14,20 @@ public class Main {
         //AthleteDao.getAthletes();
         XMLUtils xmlUtils = new XMLUtils();
 
-        System.out.println(xmlUtils.validateXML("athletes"));
-        //xmlUtils.getTeamsDataXML();
-        //xmlUtils.getSportsDataXML();
-        //xmlUtils.getAthletesDataXML();
+        //-> Falta:
+        //System.out.println(xmlUtils.validateXML("sports"));
+        Sports sports = xmlUtils.getSportsDataXML();
+        System.out.println(UploadXmlDAO.addSports(sports));
+
+        //-> Falta:
+        //System.out.println(xmlUtils.validateXML("teams"));
+        //Teams teams = xmlUtils.getTeamsDataXML();
+        //System.out.println(UploadXmlDAO.addTeams(teams));
+
+        //-> Feito:
+        //System.out.println(xmlUtils.validateXML("athletes"));
+        //Athletes athletes = xmlUtils.getAthletesDataXML();
+        //System.out.println(UploadXmlDAO.addAthletes(athletes));
     }
 }
 
