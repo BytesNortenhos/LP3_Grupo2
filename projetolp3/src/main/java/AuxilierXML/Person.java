@@ -1,4 +1,4 @@
-package Models;
+package AuxilierXML;
 
 public class Person {
     private int id;
@@ -13,6 +13,11 @@ public class Person {
         this.id = id;
         this.password = password;
     }
+
+    /**
+     * Constructor of Person (without parameters)
+     */
+    public Person() {}
 
     /**
      * Get ID

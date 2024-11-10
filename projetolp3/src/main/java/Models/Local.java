@@ -28,8 +28,6 @@ public class Local {
         this.constructionYear = constructionYear;
     }
 
-    public Local() {}
-
     /**
      * Get Local ID
      * @return int

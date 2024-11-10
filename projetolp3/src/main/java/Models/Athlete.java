@@ -1,15 +1,17 @@
 package Models;
+import AuxilierXML.*;
+import jakarta.xml.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
 
 public class Athlete extends Person {
     private String name;
-    private Country country;
-    private Gender genre;
     private int height;
     private float weight;
     private Date dateOfBirth;
+    private Country country;
+    private Gender genre;
 
     public Athlete(int id, String password, String name, Country country, Gender genre, int height, float weight, Date dateOfBirth) {
         super(id, password);

@@ -1,5 +1,7 @@
 package Models;
 
+import jakarta.xml.bind.annotation.*;
+
 import java.util.List;
 
 public class Team {

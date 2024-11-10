@@ -1,5 +1,7 @@
 package Models;
 
+import jakarta.xml.bind.annotation.*;
+
 import java.util.List;
 
 public class Sport {
@@ -44,7 +46,6 @@ public class Sport {
         this.winnerOlympic = winnerOlympic;
         this.rules = rules;
     }
-    public Sport() {}
 
     /**
      * Get Sport ID
