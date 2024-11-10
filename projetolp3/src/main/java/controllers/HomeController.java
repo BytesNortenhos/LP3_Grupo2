@@ -10,6 +10,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.Scene;
@@ -26,11 +27,9 @@ import java.util.Objects;
 
 public class HomeController {
     @FXML
-    private VBox mainContainer;
+    private FlowPane mainContainer;
     @FXML
     private Label noRequestsLabel;
-    @FXML
-    private VBox requestsContainer;
     private static Stage stage;
     private static Scene scene;
     @FXML
@@ -45,7 +44,9 @@ public class HomeController {
     String cssDark = ((URL) cssDarkURL).toExternalForm();
     String cssLight = ((URL) cssLightURL).toExternalForm();
     @FXML
-    private SplitMenuButton splitMenuButton;
+    private SplitMenuButton athleteSplitButton;
+    @FXML
+    private SplitMenuButton sportSplitButton;
     @FXML
     private ComboBox<String> athleteDrop;
     public void initialize() {
@@ -64,9 +65,12 @@ public class HomeController {
         } else {
             displayRequests(requests);
         }
-        splitMenuButton.setOnMouseClicked(event -> {
+        athleteSplitButton.setOnMouseClicked(event -> {
             // Open the dropdown menu when clicking on the button's text
-            splitMenuButton.show();
+            athleteSplitButton.show();
+        });
+        sportSplitButton.setOnMouseClicked(mouseEvent -> {
+            sportSplitButton.show();
         });
     }
     public class Request {
@@ -101,21 +105,24 @@ public class HomeController {
     }
     private void showNoRequestsMessage() {
         noRequestsLabel.setVisible(true);
-        requestsContainer.setVisible(false);
+        mainContainer.setVisible(false);
     }
 
     private void displayRequests(List<Request> requests) {
         noRequestsLabel.setVisible(false);
-        requestsContainer.setVisible(true);
+        mainContainer.setVisible(true);
+
+        // Clear existing children
+        mainContainer.getChildren().clear();
 
         // Create and add request nodes dynamically
         for (Request request : requests) {
-            HBox requestItem = createRequestItem(request);
-            requestsContainer.getChildren().add(requestItem);
+            VBox requestItem = createRequestItem(request);
+            mainContainer.getChildren().add(requestItem);
         }
     }
 
-    private HBox createRequestItem(Request request) {
+    private VBox createRequestItem(Request request) {
         VBox requestItem = new VBox();
         requestItem.setSpacing(10);
         requestItem.getStyleClass().add("request-item");
@@ -166,12 +173,8 @@ public class HomeController {
         buttonContainer.setPadding(new Insets(10)); // Optional: Add padding around the buttons
 
         // Add the labels and button container to the request item
-        requestItem.getChildren().addAll(nameLabel,sportLabel, ageLabel, buttonContainer);
-        HBox container = new HBox(10); // Spacing between buttons (10px)
-        container.setMinWidth(750);
-        container.setAlignment(Pos.CENTER);
-        container.getChildren().addAll(requestItem);
-        return container;
+        requestItem.getChildren().addAll(nameLabel, sportLabel, ageLabel, buttonContainer);
+        return requestItem;
     }
     public boolean changeMode(ActionEvent event){
         isDarkMode = !isDarkMode;
@@ -203,6 +206,19 @@ public class HomeController {
     public void mostrarRegistar(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
         Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/register.fxml")));
+        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
+        scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
+        if(isDarkMode){
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+        }else{
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
+        }
+        stage.setScene(scene);
+        stage.show();
+    }
+    public void mostrarModalidades(ActionEvent event) throws IOException {
+        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
+        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/sportsView.fxml")));
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
         scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
         if(isDarkMode){
