@@ -125,4 +125,17 @@ public class OlympicRecordDao {
         }
         return null;
     }
+    public static OlympicRecord getOlympicRecordByIdV2(int idSport, int year) throws SQLException {
+        String query = "SELECT * FROM tblOlympicRecord WHERE idSport = ? AND year = ?";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, year);
+        if (rs != null && rs.next()) {
+            int idAthlete = rs.getInt("idAthlete");
+            int idTeam = rs.getInt("idTeam");
+            int timeMS = rs.getInt("timeMS");
+            int medals = rs.getInt("medals");
+
+            return new OlympicRecord(idSport, year, idAthlete, idTeam, timeMS, medals);
+        }
+        return null;
+    }
 }

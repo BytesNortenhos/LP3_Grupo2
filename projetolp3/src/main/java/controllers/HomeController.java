@@ -17,9 +17,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -34,13 +31,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import Models.Registration; // Importa a classe Registration
+import Models.Registration;
 
 public class HomeController {
     @FXML
     private FlowPane mainContainer;
-    @FXML
-    private HBox noRequestHBox;
     @FXML
     private Label noRequestsLabel;
     private static Stage stage;
@@ -62,9 +57,8 @@ public class HomeController {
     private SplitMenuButton sportSplitButton;
     @FXML
     private ComboBox<String> athleteDrop;
-    public void initialize() {
-        System.out.println("initialize method called"); // Log de depuração
 
+    public void initialize() {
         URL iconMoonNavURL = Main.class.getResource("img/iconMoon.png");
         String iconMoonNavStr = ((URL) iconMoonNavURL).toExternalForm();
         Image image = new Image(iconMoonNavStr);
@@ -75,10 +69,9 @@ public class HomeController {
         image = new Image(iconHomeNavStr);
         if(iconHomeNav != null) iconHomeNav.setImage(image);
 
-        // Chama o método para obter apenas as inscrições pendentes (idStatus = 1)
         List<Registration> registrations = null;
         try {
-            registrations = getPendingRegistrations(); // Atualizado para usar o filtro
+            registrations = getPendingRegistrations();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -88,39 +81,28 @@ public class HomeController {
         } else {
             displayRequests(registrations);
         }
-        athleteSplitButton.setOnMouseClicked(event -> {
-            // Open the dropdown menu when clicking on the button's text
-            athleteSplitButton.show();
-        });
-        sportSplitButton.setOnMouseClicked(mouseEvent -> {
-            sportSplitButton.show();
-        });
+        athleteSplitButton.setOnMouseClicked(event -> athleteSplitButton.show());
+        sportSplitButton.setOnMouseClicked(mouseEvent -> sportSplitButton.show());
     }
 
-    // Método atualizado para obter apenas as inscrições pendentes (idStatus = 1)
     private List<Registration> getPendingRegistrations() throws SQLException {
-        List<Registration> registrations = RegistrationDao.getRegistrations(); // Busca todos os registros
+        List<Registration> registrations = RegistrationDao.getRegistrations();
         return registrations.stream()
-                .filter(reg -> reg.getStatus().getIdStatus() == 1)  // Filtra pelo idStatus igual a 1
+                .filter(reg -> reg.getStatus().getIdStatus() == 1)
                 .collect(Collectors.toList());
     }
 
     private void showNoRequestsMessage() {
         noRequestsLabel.setVisible(true);
-        noRequestHBox.setVisible(true);
-        mainContainer.setVisible(false);
     }
 
     private void displayRequests(List<Registration> registrations) {
         noRequestsLabel.setVisible(false);
-        noRequestHBox.setVisible(false);
         mainContainer.setVisible(true);
 
-        // Cria e adiciona os itens de registro dinamicamente
         for (Registration registration : registrations) {
             VBox requestItem = createRequestItem(registration);
             mainContainer.getChildren().add(requestItem);
-            System.out.println("Added request item for: " + registration.getAthlete().getName()); // Log de depuração
         }
     }
 
@@ -129,27 +111,23 @@ public class HomeController {
         requestItem.setSpacing(10);
         requestItem.getStyleClass().add("request-item");
 
-        // Pega as informações da inscrição e as exibe
-        Label nameLabel = new Label(request.getAthlete().getName()); // Nome do atleta
+        Label nameLabel = new Label(request.getAthlete().getName());
         nameLabel.getStyleClass().add("name-label");
 
-        // Calcula a idade diretamente (sem método separado)
         java.sql.Date birthDate = request.getAthlete().getDateOfBirth();
-        LocalDate birthLocalDate = birthDate.toLocalDate(); // Converte para LocalDate
-        LocalDate currentDate = LocalDate.now(); // Data atual
-        int age = Period.between(birthLocalDate, currentDate).getYears(); // Calcula a idade
+        LocalDate birthLocalDate = birthDate.toLocalDate();
+        LocalDate currentDate = LocalDate.now();
+        int age = Period.between(birthLocalDate, currentDate).getYears();
 
-        // Exibe a idade do atleta
-        Label ageLabel = new Label("Idade: " + age); // Exibe a idade
+        Label ageLabel = new Label("Idade: " + age);
         ageLabel.getStyleClass().add("age-label");
 
-        Label sportLabel = new Label("Modalidade: " + request.getSport().getName()); // Modalidade
+        Label sportLabel = new Label("Modalidade: " + request.getSport().getName());
         sportLabel.getStyleClass().add("sport-label");
 
-        Label teamLabel = new Label("Equipa: " + request.getTeam().getName()); // Nome da equipe
+        Label teamLabel = new Label("Equipa: " + request.getTeam().getName());
         teamLabel.getStyleClass().add("team-label");
 
-        // Criação do botão de aceitar
         ImageView acceptImageView = new ImageView();
         URL iconAcceptURL = Main.class.getResource("img/iconAccept.png");
         if (iconAcceptURL != null) {
@@ -163,7 +141,6 @@ public class HomeController {
         acceptButton.setGraphic(acceptImageView);
         acceptButton.getStyleClass().add("acceptButton");
 
-        // Criação do botão de rejeitar
         ImageView rejectImageView = new ImageView();
         URL iconRejectURL = Main.class.getResource("img/iconReject.png");
         if (iconRejectURL != null) {
@@ -177,16 +154,10 @@ public class HomeController {
         rejectButton.setGraphic(rejectImageView);
         rejectButton.getStyleClass().add("rejectButton");
 
-        // Definir o que acontece quando os botões são clicados
         acceptButton.setOnAction(event -> {
             try {
-                // Atualiza o status da inscrição para 3 (aceito)
-                RegistrationDao.updateRegistrationStatus(request.getIdRegistration(), 3); // ID da inscrição e novo status
-                // Atualizar a interface (remover ou alterar o item na interface)
-                Platform.runLater(() -> {
-                    // Remover o HBox que contém o requestItem
-                    mainContainer.getChildren().remove(requestItem.getParent());
-                });
+                RegistrationDao.updateRegistrationStatus(request.getIdRegistration(), 3);
+                Platform.runLater(() -> mainContainer.getChildren().remove(requestItem.getParent()));
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -194,25 +165,18 @@ public class HomeController {
 
         rejectButton.setOnAction(event -> {
             try {
-                // Atualiza o status da inscrição para 2 (rejeitado)
-                RegistrationDao.updateRegistrationStatus(request.getIdRegistration(), 2); // ID da inscrição e novo status
-                // Atualizar a interface (remover ou alterar o item na interface)
-                Platform.runLater(() -> {
-                    // Remover o HBox que contém o requestItem
-                    mainContainer.getChildren().remove(requestItem.getParent());
-                });
+                RegistrationDao.updateRegistrationStatus(request.getIdRegistration(), 2);
+                Platform.runLater(() -> mainContainer.getChildren().remove(requestItem.getParent()));
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         });
 
-        // Coloca os botões de aceitar e rejeitar dentro de um HBox
         HBox buttonContainer = new HBox(10);
         buttonContainer.getChildren().addAll(acceptButton, rejectButton);
         buttonContainer.setAlignment(Pos.CENTER_RIGHT);
         buttonContainer.setPadding(new Insets(10));
 
-        // Add the labels and button container to the request item
         requestItem.getChildren().addAll(nameLabel, sportLabel, ageLabel, buttonContainer);
         return requestItem;
     }
@@ -259,6 +223,7 @@ public class HomeController {
         stage.setScene(scene);
         stage.show();
     }
+
     public void mostrarModalidades(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
         Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/sportsView.fxml")));

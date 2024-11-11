@@ -157,4 +157,37 @@ public class WinnerOlympicDao {
         }
         return winnerOlympics;
     }
+    public static List<WinnerOlympic> getWinnerOlympicsBySportV2(int idSport) throws SQLException {
+        List<WinnerOlympic> winnerOlympics = new ArrayList<>();
+        String query = ("SELECT wo.*, a.idAthlete, a.name AS athleteName, " +
+                "t.idTeam, t.name AS teamName, " +
+                "m.idMedal, mt.descMedalType " +
+                "FROM tblWinnerOlympic wo " +
+                "JOIN tblAthlete a ON wo.idAthlete = a.idAthlete " +
+                "JOIN tblTeam t ON wo.idTeam = t.idTeam " +
+                "JOIN tblMedal m ON wo.idMedal = m.idMedal " +
+                "JOIN tblMedalType mt ON m.idMedalType = mt.idMedalType " +
+                "WHERE wo.idSport = ?");
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport);
+
+        while (rs.next()) {
+            int year = rs.getInt("year");
+            int timeMS = rs.getInt("timeMS");
+
+            int idAthlete = rs.getInt("idAthlete");
+            int idTeam = rs.getInt("idTeam");
+            int idMedal = rs.getInt("idMedal");
+
+            // Ainda criamos o objeto Medal porque ele é um parâmetro no construtor
+            String descMedalType = rs.getString("descMedalType");
+            MedalType medalType = new MedalType(idMedal, descMedalType);
+            Medal medal = new Medal(idMedal, idAthlete, idTeam, year, medalType);
+
+            // Agora usamos o novo construtor que aceita IDs ao invés de objetos
+            WinnerOlympic winnerOlympic = new WinnerOlympic(idSport, year, idAthlete, idTeam, timeMS, medal);
+            winnerOlympics.add(winnerOlympic);
+        }
+        return winnerOlympics;
+    }
+
 }

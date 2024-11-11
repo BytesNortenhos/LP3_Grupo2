@@ -138,4 +138,32 @@ public class TeamDao {
         }
         return null;
     }
+    public static Team getTeamByIdV2(int idTeam) throws SQLException {
+        String query = "SELECT t.idTeam, t.name AS teamName, c.idCountry, c.name AS countryName, c.continent, " +
+                "g.idGender AS genderId, g.description AS genderDesc, " +
+                "t.idSport, t.yearFounded " +
+                "FROM tblTeam t " +
+                "INNER JOIN tblCountry c ON t.idCountry = c.idCountry " +
+                "INNER JOIN tblGender g ON t.idGender = g.idGender " +
+                "WHERE t.idTeam = ?";
+
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idTeam);
+        if (rs != null && rs.next()) {
+            String teamName = rs.getString("teamName");
+            String idCountry = rs.getString("idCountry");
+            String countryName = rs.getString("countryName");
+            String continent = rs.getString("continent");
+            int genderId = rs.getInt("genderId");
+            String genderDesc = rs.getString("genderDesc");
+            int idSport = rs.getInt("idSport"); // Apenas o ID do esporte
+            int yearFounded = rs.getInt("yearFounded");
+
+            Country country = new Country(idCountry, countryName, continent);
+            Gender gender = new Gender(genderId, genderDesc);
+
+            // Aqui o esporte ainda não é carregado; será carregado quando necessário
+            return new Team(idTeam, teamName, country, gender, idSport, yearFounded);
+        }
+        return null;
+    }
 }

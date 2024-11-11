@@ -11,6 +11,7 @@ public class Team {
     private Gender genre;
     private Sport sport;
     private int yearFounded;
+    private int idSport;
 
     /**
      * Constructor of Team
@@ -27,6 +28,15 @@ public class Team {
         this.country = country;
         this.genre = genre;
         this.sport = sport;
+        this.yearFounded = yearFounded;
+    }
+
+    public Team(int idTeam, String name, Country country, Gender genre, int idSport, int yearFounded) {
+        this.idTeam = idTeam;
+        this.name = name;
+        this.country = country;
+        this.genre = genre;
+        this.idSport = idSport; // Atribui apenas o id do esporte
         this.yearFounded = yearFounded;
     }
 

@@ -5,6 +5,8 @@ public class Rule {
     private Sport sport;
     private String desc;
 
+    private int idSport;
+
     /**
      * Constructor of Rule
      * @param idRule {int} Rule ID
@@ -14,6 +16,12 @@ public class Rule {
     public Rule(int idRule, Sport sport, String desc) {
         this.idRule = idRule;
         this.sport = sport;
+        this.desc = desc;
+    }
+
+    public Rule(int idRule, int idSport, String desc) {
+        this.idRule = idRule;
+        this.idSport = idSport;
         this.desc = desc;
     }
 

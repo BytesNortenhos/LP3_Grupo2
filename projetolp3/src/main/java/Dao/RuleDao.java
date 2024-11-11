@@ -119,4 +119,19 @@ public class RuleDao {
         }
         return null;
     }
+    public static List<Rule> getRulesBySportV2(int idSport) throws SQLException {
+        List<Rule> rules = new ArrayList<>();
+        String query = "SELECT r.idRule, r.description FROM tblRule r WHERE r.idSport = ?";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport);
+        while (rs.next()) {
+            int idRule = rs.getInt("idRule");
+            String description = rs.getString("description");
+
+            // InstÃ¢ncia de Rule com idSport
+            Rule rule = new Rule(idRule, idSport, description);
+            rules.add(rule);
+        }
+        return rules;  // Corrigido para retornar a lista de regras
+    }
+
 }

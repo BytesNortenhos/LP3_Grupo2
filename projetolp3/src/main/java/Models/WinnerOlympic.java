@@ -18,7 +18,20 @@ public class WinnerOlympic extends RecordOrWinner {
         this.timeMS = timeMS;
         this.medal = medal;
     }
-
+    /**
+     * New Constructor of WinnerOlympic with IDs instead of objects
+     * @param idSport {int} Sport ID
+     * @param year {int} Year
+     * @param idAthlete {int} Athlete ID
+     * @param idTeam {int} Team ID
+     * @param timeMS {int} Time in milliseconds
+     * @param medal {Medal} Medal
+     */
+    public WinnerOlympic(int idSport, int year, int idAthlete, int idTeam, int timeMS, Medal medal) {
+        super(idSport, year, idAthlete, idTeam);  // Calls the constructor in RecordOrWinner with IDs
+        this.timeMS = timeMS;
+        this.medal = medal; // Creates a Medal object with just the ID, or you could store idMedal as a variable
+    }
     /**
      * Get time in ms
      * @return int

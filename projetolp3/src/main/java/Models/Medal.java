@@ -7,6 +7,8 @@ public class Medal {
     private int year;
     private MedalType medalType;
 
+    private int idAthlete;  // Armazena o ID do atleta
+    private int idTeam;      // Armazena o ID do time
     /**
      * Constructor of Medal for Athlete
      * @param idMedal {int} Medal ID
@@ -22,7 +24,13 @@ public class Medal {
         this.year = year;
         this.medalType = medalType;
     }
-
+    public Medal(int idMedal, int idAthlete, int idTeam, int year, MedalType medalType) {
+        this.idMedal = idMedal;
+        this.idAthlete = idAthlete;
+        this.idTeam = idTeam;
+        this.year = year;
+        this.medalType = medalType;
+    }
     /**
      * Get Medal ID
      * @return int

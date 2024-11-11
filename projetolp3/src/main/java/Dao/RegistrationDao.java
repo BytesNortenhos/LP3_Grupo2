@@ -22,8 +22,8 @@ public class RegistrationDao {
                 int idSport = rs.getInt("idSport");
                 int idStatus = rs.getInt("idStatus");
                 Athlete athlete = AthleteDao.getAthleteById(idAthlete);
-                Team team = TeamDao.getTeamById(idTeam);
-                Sport sport = SportDao.getSportById(idSport);
+                Team team = TeamDao.getTeamByIdV2(idTeam);
+                Sport sport = SportDao.getSportByIdV2(idSport);
                 RegistrationStatus status = RegistrationStatusDao.getRegistrationStatusById(idStatus);
                 Registration registration = new Registration(idRegistration, athlete, team, sport, status);
                 registrations.add(registration);

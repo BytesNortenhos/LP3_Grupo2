@@ -6,6 +6,10 @@ public class RecordOrWinner {
     private Athlete athlete;
     private Team team;
 
+    private int idSport;     // ID for Sport
+    private int idAthlete;   // ID for Athlete
+    private int idTeam;      // ID for Team
+
     /**
      * Constructor of RecordOrWinner
      * @param sport {Sport} Sport
@@ -19,7 +23,19 @@ public class RecordOrWinner {
         this.athlete = athlete;
         this.team = team;
     }
-
+    /**
+     * New Constructor of RecordOrWinner with IDs instead of objects
+     * @param idSport {int} Sport ID
+     * @param year {int} Year
+     * @param idAthlete {int} Athlete ID
+     * @param idTeam {int} Team ID
+     */
+    public RecordOrWinner(int idSport, int year, int idAthlete, int idTeam) {
+        this.idSport = idSport;
+        this.year = year;
+        this.idAthlete = idAthlete;
+        this.idTeam = idTeam;
+    }
     /**
      * Get Sport
      * @return Sport

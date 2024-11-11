@@ -19,6 +19,11 @@ public class OlympicRecord extends RecordOrWinner {
         this.medals = medals;
     }
 
+    public OlympicRecord(int idSport, int year, int idAthlete, int idTeam, int timeMS, int medals) {
+        super(idSport, year, idAthlete, idTeam);  // Calls the constructor in RecordOrWinner with IDs
+        this.timeMS = timeMS;
+        this.medals = medals;
+    }
     /**
      * Get time in ms
      * @return int
