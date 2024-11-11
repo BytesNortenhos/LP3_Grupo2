@@ -21,7 +21,7 @@ public class EventDao {
         if (rs != null) {
             while (rs.next()) {
                 int year = rs.getInt("year");
-                Country country = new Country(rs.getInt("idCountry"), rs.getString("countryName"), rs.getString("continent"));
+                Country country = new Country(rs.getString("idCountry"), rs.getString("countryName"), rs.getString("continent"));
                 String logo = rs.getString("Logo");
 
                 Event event = new Event(year, country, logo);
@@ -42,7 +42,7 @@ public class EventDao {
             stmt = conn.prepareStatement(query);
 
             stmt.setInt(1, event.getYear());
-            stmt.setInt(2, event.getCountry().getIdCountry());
+            stmt.setString(2, event.getCountry().getIdCountry());
             stmt.setString(3, event.getLogo());
             stmt.executeUpdate();
         } finally {
@@ -83,7 +83,7 @@ public class EventDao {
             conn = ConnectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
-            stmt.setInt(1, event.getCountry().getIdCountry());
+            stmt.setString(1, event.getCountry().getIdCountry());
             stmt.setString(2, event.getLogo());
             stmt.setInt(3, event.getYear());
             stmt.executeUpdate();
@@ -105,7 +105,7 @@ public class EventDao {
                 "WHERE e.year = ?;";
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, year);
         if (rs != null && rs.next()) {
-            Country country = new Country(rs.getInt("idCountry"), rs.getString("countryName"), rs.getString("continent"));
+            Country country = new Country(rs.getString("idCountry"), rs.getString("countryName"), rs.getString("continent"));
             String logo = rs.getString("Logo");
             return new Event(year, country, logo);
         }

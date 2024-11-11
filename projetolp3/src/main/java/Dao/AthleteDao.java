@@ -23,7 +23,7 @@ public class AthleteDao {
                 int idAthlete = rs.getInt("idAthlete");
                 String password = rs.getString("password");
                 String name = rs.getString("name");
-                int idCountry = rs.getInt("idCountry");
+                String idCountry = rs.getString("idCountry");
                 Country country = CountryDao.getCountryById(idCountry);
                 int idGender = rs.getInt("idGender");
                 Gender gender = GenderDao.getGenderById(idGender);
@@ -54,7 +54,7 @@ public class AthleteDao {
             // Definir os parâmetros do statement
             stmt.setString(1, athlete.getPassword());
             stmt.setString(2, athlete.getName());
-            stmt.setInt(3, athlete.getCountry().getIdCountry());
+            stmt.setString(3, athlete.getCountry().getIdCountry());
             stmt.setInt(4, athlete.getGenre().getIdGender());
             stmt.setInt(5, athlete.getHeight());
             stmt.setFloat(6, athlete.getWeight());
@@ -114,7 +114,7 @@ public class AthleteDao {
 
             stmt.setString(1, athlete.getPassword());
             stmt.setString(2, athlete.getName());
-            stmt.setInt(3, athlete.getCountry().getIdCountry());
+            stmt.setString(3, athlete.getCountry().getIdCountry());
             stmt.setInt(4, athlete.getGenre().getIdGender());
             stmt.setInt(5, athlete.getHeight());
             stmt.setFloat(6, athlete.getWeight());
@@ -137,14 +137,13 @@ public class AthleteDao {
         if (rs != null && rs.next()) {
             String password = rs.getString("password");
             String name = rs.getString("name");
-            int idCountry = rs.getInt("idCountry");
+            String idCountry = rs.getString("idCountry");
             Country country = CountryDao.getCountryById(idCountry);
             int idGender = rs.getInt("idGender");
             Gender gender = GenderDao.getGenderById(idGender);
             int height = rs.getInt("height");
             float weight = rs.getFloat("weight");
             java.sql.Date dateOfBirth = rs.getDate("dateOfBirth");
-
             return new Athlete(idAthlete, password, name, country, gender, height, weight, dateOfBirth);
         }
         return null;

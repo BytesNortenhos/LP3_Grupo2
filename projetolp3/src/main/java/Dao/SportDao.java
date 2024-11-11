@@ -123,6 +123,7 @@ public class SportDao {
 
     public static Sport getSportById(int idSport) throws SQLException {
         // Consulta SQL para pegar os dados principais do esporte
+        System.out.println("a");
         String query = "SELECT s.*, " +
                 "g.description AS genderDescription, " +
                 "r.year AS olympicYear, " +
@@ -135,7 +136,6 @@ public class SportDao {
 
         // Executa a consulta SQL com o idSport fornecido
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport);
-
         if (rs != null && rs.next()) {
             int idSportResult = rs.getInt("idSport");
             String type = rs.getString("type");
@@ -145,7 +145,6 @@ public class SportDao {
             int minParticipants = rs.getInt("minParticipants");
             String scoringMeasure = rs.getString("scoringMeasure");
             String oneGame = rs.getString("oneGame");
-
             // Criar o objeto Gender usando os dados da consulta
             String genderDescription = rs.getString("genderDescription");
             Gender gender = new Gender(idGender, genderDescription);
@@ -165,4 +164,5 @@ public class SportDao {
 
         // Caso não encontre o esporte, retorna null
         return null;
-    }}
+    }
+}

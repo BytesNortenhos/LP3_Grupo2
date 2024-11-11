@@ -25,7 +25,7 @@ public class TeamDao {
         if (rs != null) {
             while (rs.next()) { int idTeam = rs.getInt("idTeam");
                 String teamName = rs.getString("teamName");
-                int idCountry = rs.getInt("idCountry");
+                String idCountry = rs.getString("idCountry");
                 String countryName = rs.getString("countryName");
                 String continent = rs.getString("continent");
                 int idGender = rs.getInt("idGender");
@@ -54,7 +54,7 @@ public class TeamDao {
             stmt = conn.prepareStatement(query);
 
             stmt.setString(1, team.getName());
-            stmt.setInt(2, team.getCountry().getIdCountry());
+            stmt.setString(2, team.getCountry().getIdCountry());
             stmt.setInt(3, team.getGenre().getIdGender());
             stmt.setInt(4, team.getSport().getIdSport());
             stmt.setInt(5, team.getYearFounded());
@@ -97,7 +97,7 @@ public class TeamDao {
             stmt = conn.prepareStatement(query);
 
             stmt.setString(1, team.getName());
-            stmt.setInt(2, team.getCountry().getIdCountry());
+            stmt.setString(2, team.getCountry().getIdCountry());
             stmt.setInt(3, team.getGenre().getIdGender());
             stmt.setInt(4, team.getSport().getIdSport());
             stmt.setInt(5, team.getYearFounded());
@@ -124,7 +124,7 @@ public class TeamDao {
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idTeam);
         if (rs != null && rs.next()) {
             String teamName = rs.getString("teamName");
-            int idCountry = rs.getInt("idCountry");
+            String idCountry = rs.getString("idCountry");
             String countryName = rs.getString("countryName");
             String continent = rs.getString("continent");
             int genderId = rs.getInt("genderId");

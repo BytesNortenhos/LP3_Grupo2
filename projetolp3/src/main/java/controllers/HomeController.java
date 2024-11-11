@@ -27,7 +27,6 @@ import javafx.application.Platform;
 import java.time.LocalDate;
 import java.time.Period;
 
-
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -40,6 +39,8 @@ import Models.Registration; // Importa a classe Registration
 public class HomeController {
     @FXML
     private FlowPane mainContainer;
+    @FXML
+    private HBox noRequestHBox;
     @FXML
     private Label noRequestsLabel;
     private static Stage stage;
@@ -62,6 +63,8 @@ public class HomeController {
     @FXML
     private ComboBox<String> athleteDrop;
     public void initialize() {
+        System.out.println("initialize method called"); // Log de depuração
+
         URL iconMoonNavURL = Main.class.getResource("img/iconMoon.png");
         String iconMoonNavStr = ((URL) iconMoonNavURL).toExternalForm();
         Image image = new Image(iconMoonNavStr);
@@ -97,7 +100,6 @@ public class HomeController {
     // Método atualizado para obter apenas as inscrições pendentes (idStatus = 1)
     private List<Registration> getPendingRegistrations() throws SQLException {
         List<Registration> registrations = RegistrationDao.getRegistrations(); // Busca todos os registros
-        // Filtra os registros para incluir apenas os que têm idStatus = 1
         return registrations.stream()
                 .filter(reg -> reg.getStatus().getIdStatus() == 1)  // Filtra pelo idStatus igual a 1
                 .collect(Collectors.toList());
@@ -105,38 +107,34 @@ public class HomeController {
 
     private void showNoRequestsMessage() {
         noRequestsLabel.setVisible(true);
+        noRequestHBox.setVisible(true);
         mainContainer.setVisible(false);
     }
 
     private void displayRequests(List<Registration> registrations) {
         noRequestsLabel.setVisible(false);
+        noRequestHBox.setVisible(false);
         mainContainer.setVisible(true);
 
-        // Clear existing children
-        mainContainer.getChildren().clear();
-
-        // Create and add request nodes dynamically
-        for (Request request : requests) {
-            VBox requestItem = createRequestItem(request);
-            mainContainer.getChildren().add(requestItem);
         // Cria e adiciona os itens de registro dinamicamente
         for (Registration registration : registrations) {
-            HBox requestItem = createRequestItem(registration);
-            requestsContainer.getChildren().add(requestItem);
+            VBox requestItem = createRequestItem(registration);
+            mainContainer.getChildren().add(requestItem);
+            System.out.println("Added request item for: " + registration.getAthlete().getName()); // Log de depuração
         }
     }
 
-    private VBox createRequestItem(Request request) {
+    private VBox createRequestItem(Registration request) {
         VBox requestItem = new VBox();
         requestItem.setSpacing(10);
         requestItem.getStyleClass().add("request-item");
 
         // Pega as informações da inscrição e as exibe
-        Label nameLabel = new Label(registration.getAthlete().getName()); // Nome do atleta
+        Label nameLabel = new Label(request.getAthlete().getName()); // Nome do atleta
         nameLabel.getStyleClass().add("name-label");
 
         // Calcula a idade diretamente (sem método separado)
-        java.sql.Date birthDate = registration.getAthlete().getDateOfBirth();
+        java.sql.Date birthDate = request.getAthlete().getDateOfBirth();
         LocalDate birthLocalDate = birthDate.toLocalDate(); // Converte para LocalDate
         LocalDate currentDate = LocalDate.now(); // Data atual
         int age = Period.between(birthLocalDate, currentDate).getYears(); // Calcula a idade
@@ -145,10 +143,10 @@ public class HomeController {
         Label ageLabel = new Label("Idade: " + age); // Exibe a idade
         ageLabel.getStyleClass().add("age-label");
 
-        Label sportLabel = new Label("Modalidade: " + registration.getSport().getName()); // Modalidade
+        Label sportLabel = new Label("Modalidade: " + request.getSport().getName()); // Modalidade
         sportLabel.getStyleClass().add("sport-label");
 
-        Label teamLabel = new Label("Equipa: " + registration.getTeam().getName()); // Nome da equipe
+        Label teamLabel = new Label("Equipa: " + request.getTeam().getName()); // Nome da equipe
         teamLabel.getStyleClass().add("team-label");
 
         // Criação do botão de aceitar
@@ -183,11 +181,11 @@ public class HomeController {
         acceptButton.setOnAction(event -> {
             try {
                 // Atualiza o status da inscrição para 3 (aceito)
-                RegistrationDao.updateRegistrationStatus(registration.getIdRegistration(), 3); // ID da inscrição e novo status
+                RegistrationDao.updateRegistrationStatus(request.getIdRegistration(), 3); // ID da inscrição e novo status
                 // Atualizar a interface (remover ou alterar o item na interface)
                 Platform.runLater(() -> {
                     // Remover o HBox que contém o requestItem
-                    requestsContainer.getChildren().remove(requestItem.getParent());
+                    mainContainer.getChildren().remove(requestItem.getParent());
                 });
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -197,11 +195,11 @@ public class HomeController {
         rejectButton.setOnAction(event -> {
             try {
                 // Atualiza o status da inscrição para 2 (rejeitado)
-                RegistrationDao.updateRegistrationStatus(registration.getIdRegistration(), 2); // ID da inscrição e novo status
+                RegistrationDao.updateRegistrationStatus(request.getIdRegistration(), 2); // ID da inscrição e novo status
                 // Atualizar a interface (remover ou alterar o item na interface)
                 Platform.runLater(() -> {
                     // Remover o HBox que contém o requestItem
-                    requestsContainer.getChildren().remove(requestItem.getParent());
+                    mainContainer.getChildren().remove(requestItem.getParent());
                 });
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -218,7 +216,6 @@ public class HomeController {
         requestItem.getChildren().addAll(nameLabel, sportLabel, ageLabel, buttonContainer);
         return requestItem;
     }
-
 
     public boolean changeMode(ActionEvent event){
         isDarkMode = !isDarkMode;

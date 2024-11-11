@@ -142,9 +142,14 @@
     -fx-translate-y: 30px;
     -fx-padding: 10px;
 }
+#noRequestHBox{
+    -fx-min-height: 500px;
+    -fx-min-width: 1000px;
+    -fx-background-color: #1E1E1E
+}
 #mainContainer, .scrollStyle{
     -fx-alignment: center;
-    -fx-background-color: #1E1E1E;
+    -fx-background-color: red;
 }
 .scroll-pane .scroll-bar .track,
 .scroll-pane .scroll-bar .increment-button,
