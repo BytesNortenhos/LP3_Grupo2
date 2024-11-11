@@ -1,10 +1,10 @@
 package controllers;
 
-import Dao.AthleteDao; // Importar a classe AthleteDao
-import Dao.CountryDao; // Importar a classe CountryDao
+import Dao.AthleteDao;
+import Dao.CountryDao;
 import Dao.GenderDao;
-import Models.Athlete; // Importar a classe Athlete
-import Models.Country; // Importar a classe Country
+import Models.Athlete;
+import Models.Country;
 import Models.Gender;
 import bytesnortenhos.projetolp3.Main;
 import javafx.collections.FXCollections;
@@ -28,7 +28,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 
-public class RegisterController {
+public class RegisterSportController {
     private static Stage stage;
     private static Scene scene;
     URL cssDarkURL = Main.class.getResource("css/dark.css");
@@ -51,16 +51,7 @@ public class RegisterController {
 
     @FXML
     private ComboBox<String> genderDrop; // ComboBox de gênero
-    @FXML
-    private ComboBox<String> nacDrop; // ComboBox de nacionalidade
-    @FXML
-    private TextField userNameText; // Campo de texto para nome de utilizador
-    @FXML
-    private TextField weightText; // Campo de texto para peso
-    @FXML
-    private TextField heightText; // Campo de texto para altura
-    @FXML
-    private DatePicker datePicker; // DatePicker para data de nascimento
+
 
     public void initialize() {
         // Configuração dos ícones
@@ -70,7 +61,7 @@ public class RegisterController {
         loadGenders();
 
         // Carregar países na ComboBox de nacionalidade
-        loadCountries();
+//        loadCountries();
 
         athleteSplitButton.setOnMouseClicked(event -> athleteSplitButton.show());
         sportSplitButton.setOnMouseClicked(mouseEvent -> sportSplitButton.show());
@@ -108,80 +99,11 @@ public class RegisterController {
     }
 
     // Novo método para carregar os países
-    private void loadCountries() {
-        try {
-            // Limpar qualquer item existente em nacDrop
-            nacDrop.getItems().clear();
 
-            // Obter a lista de países do banco de dados
-            List<Country> countries = CountryDao.getCountries();
-            ObservableList<String> countryOptions = FXCollections.observableArrayList();
-
-            // Adicionar cada nome de país à lista
-            for (Country country : countries) {
-                countryOptions.add(country.getName());
-            }
-
-            // Definir itens da ComboBox de nacionalidade
-            nacDrop.setItems(countryOptions);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 
     @FXML
-    public void registerAthlete(ActionEvent event) {
-        try {
-            // Obter os valores dos campos
-            String userName = userNameText.getText();
-            String selectedGender = genderDrop.getValue();
-            String selectedCountry = nacDrop.getValue();
-            float weight = Float.parseFloat(weightText.getText());
-            int height = Integer.parseInt(heightText.getText());
-            java.sql.Date dateOfBirth = java.sql.Date.valueOf(datePicker.getValue());
+    public void registerSport(ActionEvent event){
 
-            // Obter o id do gênero e do país usando as listas carregadas
-            Gender gender = GenderDao.getGenders().stream()
-                    .filter(g -> g.getDesc().equals(selectedGender))
-                    .findFirst().orElse(null);
-
-            Country country = CountryDao.getCountries().stream()
-                    .filter(c -> c.getName().equals(selectedCountry))
-                    .findFirst().orElse(null);
-
-            if (gender != null && country != null) {
-                // Criar o atleta com um id inicial (0 porque será gerado automaticamente)
-                Athlete athlete = new Athlete(0, "", userName, country, gender, height, weight, dateOfBirth);
-
-                // Registrar o atleta no banco de dados e obter o id gerado
-                int generatedId = AthleteDao.addAthlete(athlete);
-
-                // A senha do atleta será o id gerado
-                String generatedPassword = String.valueOf(generatedId); // Definir a senha como o ID gerado
-
-                // Atualizar o atleta no banco de dados com a nova senha (que é o id gerado)
-                AthleteDao.updateAthletePassword(generatedId, generatedPassword); // Passa o id e a senha gerada
-
-                // Exibir uma mensagem de sucesso ou redirecionar para outra tela
-                System.out.println("Atleta registrado com sucesso! ID gerado: " + generatedId);
-
-            } else {
-                System.out.println("Por favor, selecione um gênero e um país válidos.");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (NumberFormatException e) {
-            System.out.println("Por favor, insira valores válidos para peso e altura.");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
-
-    private String generatePassword() {
-        // Implementar lógica para gerar uma senha, ou coletar do usuário
-        return "defaultPassword"; // Exemplo de senha padrão
     }
 
     public void returnHomeMenu(ActionEvent event) throws IOException {
@@ -254,8 +176,4 @@ public class RegisterController {
         stage.show();
     }
 
-    @FXML
-    public void registerSport(ActionEvent event){
-
-    }
 }

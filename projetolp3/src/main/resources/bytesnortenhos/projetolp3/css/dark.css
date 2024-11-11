@@ -239,6 +239,43 @@
     -fx-border-color: lightgray; /* Change border color on hover */
 }
 
+.registerDropBig {
+    -fx-background-color: #3A3A38; /* Dark background color */
+    -fx-min-width: 350px;
+    -fx-max-width: 350px;
+    -fx-background-radius: 20; /* Rounded corners */
+    -fx-border-radius: 20;
+    -fx-border-color: gray; /* Border color */
+    -fx-border-width: 2px;
+    -fx-padding: 0 10 0 10;
+    -fx-font-size: 16px;
+}
+
+/* Text color and style for ComboBox */
+.registerDropBig .list-cell {
+    -fx-text-fill: #F7EED8; /* Light text color */
+    -fx-background-color: #3A3A38;
+}
+.registerDropBig .list-cell:hover {
+    -fx-text-fill: #3A3A38; /* Light text color */
+    -fx-background-color: #F7EED8;
+}
+
+/* Styling the ComboBox arrow */
+.registerDropBig .arrow-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0 5 0 5;
+}
+
+.registerDropBig .arrow {
+    -fx-background-color: #F7EED8; /* Color of the dropdown arrow */
+}
+
+/* Hover effect on the ComboBox */
+.registerDropBig:hover {
+    -fx-border-color: lightgray; /* Change border color on hover */
+}
+
 .registerTextSmall{
     -fx-font-size: 17px;
     -fx-text-fill: #F7EED8;

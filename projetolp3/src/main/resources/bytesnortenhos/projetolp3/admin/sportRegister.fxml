@@ -19,7 +19,7 @@
 <?import java.lang.String?>
 <?import javafx.scene.control.DatePicker?>
 
-<BorderPane fx:id="parent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="background" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.RegisterController">
+<BorderPane fx:id="parent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="background" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.RegisterSportController">
     <top>
         <HBox styleClass="navBar" prefHeight="40.0" prefWidth="400.0">
             <Button styleClass="iconHomeNav" onAction="#returnHomeMenu">
@@ -48,20 +48,20 @@
     </top>
     <center>
         <VBox alignment="CENTER">
-            <Label styleClass="loginText" text="REGISTAR" />
+            <Label styleClass="loginText" text="REGISTAR MODALIDADES" />
             <ImageView fx:id="iconOlympic" styleClass="iconOlympic" fitWidth="96" fitHeight="96" preserveRatio="true" />
-            <TextField styleClass="userNameText" fx:id="userNameText"  promptText="Nome de utilizador" />
-            <HBox style="-fx-translate-y: -60px; -fx-max-width: 350px">
+            <TextField styleClass="userNameText" fx:id="nameText"  promptText="Nome da modalidade" />
+            <TextField styleClass="userNameText" fx:id="descText" style="-fx-translate-y: -60px;"  promptText="Descrição da modalidade" />
+            <HBox style="-fx-translate-y: -40px; -fx-max-width: 350px">
                 <ComboBox fx:id="genderDrop" styleClass="registerDrop" promptText="Género" />
-                <ComboBox fx:id="nacDrop" styleClass="registerDrop" promptText="Nacionalidade" style="-fx-translate-x: 10px"/>
+                <ComboBox fx:id="typeDrop" styleClass="registerDrop" promptText="Tipo" style="-fx-translate-x: 10px"/>
             </HBox>
-            <HBox style="-fx-translate-y: -40px; -fx-max-width: 350px;">
-                <TextField styleClass="registerTextSmall" fx:id="weightText"  promptText="Peso(KG)" />
-                <TextField styleClass="registerTextSmall" fx:id="heightText"  promptText="Altura(CM)" style="-fx-translate-x: 10px"/>
+            <HBox style="-fx-translate-y: -20px; -fx-max-width: 350px;">
+                <TextField styleClass="registerTextSmall" fx:id="minText"  promptText="Minímo de participantes" />
+                <ComboBox fx:id="scoringDrop" styleClass="registerDrop" promptText="Tipo de pontos" style="-fx-translate-x: 10px"/>
             </HBox>
-            <DatePicker fx:id="datePicker" promptText="Data de nascimento" styleClass="datePickerRegister" style="-fx-translate-y: -20px"/>
-            <!-- Adicione onAction aqui -->
-            <Button styleClass="buttonEntrar" onAction="#registerAthlete">Registar</Button>
+            <ComboBox fx:id="oneGameDrop" styleClass="registerDropBig"  promptText="Número de jogos" />
+            <Button styleClass="buttonEntrar"  style="-fx-translate-y: 20px;" onAction="#registerSport">Registar</Button>
         </VBox>
     </center>
 </BorderPane>
