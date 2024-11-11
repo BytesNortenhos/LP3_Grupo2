@@ -157,7 +157,7 @@ public class HomeController {
         acceptButton.setOnAction(event -> {
             try {
                 RegistrationDao.updateRegistrationStatus(request.getIdRegistration(), 3);
-                Platform.runLater(() -> mainContainer.getChildren().remove(requestItem.getParent()));
+                Platform.runLater(() -> mainContainer.getChildren().remove(requestItem));
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -166,7 +166,7 @@ public class HomeController {
         rejectButton.setOnAction(event -> {
             try {
                 RegistrationDao.updateRegistrationStatus(request.getIdRegistration(), 2);
-                Platform.runLater(() -> mainContainer.getChildren().remove(requestItem.getParent()));
+                Platform.runLater(() -> mainContainer.getChildren().remove(requestItem));
             } catch (SQLException e) {
                 e.printStackTrace();
             }
