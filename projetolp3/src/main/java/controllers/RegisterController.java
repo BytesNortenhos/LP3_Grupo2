@@ -27,6 +27,7 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 public class RegisterController {
     private static Stage stage;
@@ -163,10 +164,18 @@ public class RegisterController {
                 AthleteDao.updateAthletePassword(generatedId, generatedPassword); // Passa o id e a senha gerada
 
                 // Exibir uma mensagem de sucesso ou redirecionar para outra tela
-                System.out.println("Atleta registrado com sucesso! ID gerado: " + generatedId);
-
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Sucesso!");
+                alert.setHeaderText("Atleta registrado com sucesso! ID gerado: " + generatedId);
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.isPresent() && result.get() == ButtonType.OK) {
+                    returnHomeMenu(event);
+                }
             } else {
-                System.out.println("Por favor, selecione um gênero e um país válidos.");
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setTitle("Erro!");
+                alerta.setHeaderText("Por favor, selecione um gênero e um país válidos.");
+                alerta.show();
             }
         } catch (SQLException e) {
             e.printStackTrace();

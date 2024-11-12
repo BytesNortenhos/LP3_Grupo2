@@ -7,6 +7,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -38,7 +39,10 @@ public class ViewsController {
     String cssDark = ((URL) cssDarkURL).toExternalForm();
     String cssLight = ((URL) cssLightURL).toExternalForm();
 
-
+    private final LoginController loginController;
+    public ViewsController() {
+        loginController = new LoginController();
+    }
 
     public void initialize() {
         URL iconOlympicURL = Main.class.getResource("img/iconOlympic.png");
@@ -96,9 +100,9 @@ public class ViewsController {
             }else{
                 password = passwordText.getText();
             }
-            LoginController.verificaLogin(id, password, event);
+            loginController.verificaLogin(id, password, event);
         } else {
-            System.out.println("O ID deve conter apenas números.");
+
         }
     }
     public static void verificaCargo(ActionEvent event) throws Exception {
@@ -109,9 +113,9 @@ public class ViewsController {
             case 1:
                 mostrarAdminView(event);
                 break;
-//            case 2:
-//                mostrarAtletaView(currentStage);
-//                break;
+            case 2:
+                showAthleteView(event);
+                break;
             default:
                 System.out.println("Invalid cargo value");
         }
@@ -127,6 +131,19 @@ public class ViewsController {
     private static void mostrarAdminView(ActionEvent event) throws Exception {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
         Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/home.fxml")));
+        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
+        if(isDarkMode){
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+        }else{
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
+        }
+        stage.setScene(scene);
+        stage.show();
+    }
+    private static void showAthleteView(ActionEvent event) throws Exception {
+        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
+        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/athlete/home.fxml")));
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
         if(isDarkMode){

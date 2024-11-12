@@ -29,12 +29,11 @@ public class LoginController {
     }
 
 
-    public static void verificaLogin(int idTemp, String senhaTemp, ActionEvent event) throws Exception {
-        boolean loginSucesso = false;
 
-//        for (Funcionario fun : funcionarios) {
-//            if (emailTemp.equals(fun.getEmail()) && senhaTemp.equals(fun.getSenha())) {
-        if(senhaTemp.equals(AthleteDao.getAthleteById(idTemp).getPassword())){
+    public void verificaLogin(int idTemp, String senhaTemp, ActionEvent event) throws Exception {
+        boolean loginSucesso = false;
+        if(idTemp < 1000){
+            if(senhaTemp.equals(AdminDao.getAdminById(idTemp).getPassword())){
                 cargo = 1;
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Sucesso!");
@@ -45,6 +44,20 @@ public class LoginController {
                 }
                 loginSucesso = true;
             }
+        }
+        else{
+            if(senhaTemp.equals(AthleteDao.getAthleteById(idTemp).getPassword())){
+                cargo = 2;
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Sucesso!");
+                alert.setHeaderText("Login efetuado com sucesso!");
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.isPresent() && result.get() == ButtonType.OK) {
+                    ViewsController.verificaCargo(event);
+                }
+                loginSucesso = true;
+            }
+        }
         if (!loginSucesso) {
             Alert alerta = new Alert(Alert.AlertType.ERROR);
             alerta.setTitle("Erro!");
