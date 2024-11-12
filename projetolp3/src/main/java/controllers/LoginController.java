@@ -32,8 +32,9 @@ public class LoginController {
 
     public void verificaLogin(int idTemp, String senhaTemp, ActionEvent event) throws Exception {
         boolean loginSucesso = false;
-        if(idTemp < 1000){
-            if(senhaTemp.equals(AdminDao.getAdminById(idTemp).getPassword())){
+        if (idTemp < 1000) {
+            Admin admin = AdminDao.getAdminById(idTemp);
+            if (admin != null && senhaTemp.equals(admin.getPassword())) {
                 cargo = 1;
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Sucesso!");
@@ -44,9 +45,9 @@ public class LoginController {
                 }
                 loginSucesso = true;
             }
-        }
-        else{
-            if(senhaTemp.equals(AthleteDao.getAthleteById(idTemp).getPassword())){
+        } else {
+            Athlete athlete = AthleteDao.getAthleteById(idTemp);
+            if (athlete != null && senhaTemp.equals(athlete.getPassword())) {
                 cargo = 2;
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Sucesso!");
@@ -64,7 +65,6 @@ public class LoginController {
             alerta.setHeaderText("O email ou password inserido não está correto!");
             alerta.show();
         }
-
     }
 
 }
