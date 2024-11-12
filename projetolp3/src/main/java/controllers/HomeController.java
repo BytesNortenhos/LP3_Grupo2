@@ -18,9 +18,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.application.Platform;
+
+import java.io.File;
 import java.time.LocalDate;
 import java.time.Period;
 
@@ -56,6 +59,8 @@ public class HomeController {
     @FXML
     private SplitMenuButton sportSplitButton;
     @FXML
+    private SplitMenuButton xmlSplitButton;
+    @FXML
     private ComboBox<String> athleteDrop;
 
     public void initialize() {
@@ -83,6 +88,7 @@ public class HomeController {
         }
         athleteSplitButton.setOnMouseClicked(event -> athleteSplitButton.show());
         sportSplitButton.setOnMouseClicked(mouseEvent -> sportSplitButton.show());
+        xmlSplitButton.setOnMouseClicked(mouseEvent -> xmlSplitButton.show());
     }
 
     private List<Registration> getPendingRegistrations() throws SQLException {
@@ -263,5 +269,51 @@ public class HomeController {
         }
         stage.setScene(scene);
         stage.show();
+    }
+
+    @FXML
+    public void loadTeams(ActionEvent event) throws IOException {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Resource File");
+
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Text Files (*.txt)", "*.txt");
+        fileChooser.getExtensionFilters().add(extFilter);
+
+        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
+        File file = fileChooser.showOpenDialog(stage);
+
+        if (file != null) {
+            System.out.println("File selected: " + file.getAbsolutePath());
+        }
+    }
+    @FXML
+    public void loadSports(ActionEvent event) throws IOException {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Resource File");
+
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Text Files (*.txt)", "*.txt");
+        fileChooser.getExtensionFilters().add(extFilter);
+
+        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
+        File file = fileChooser.showOpenDialog(stage);
+
+        if (file != null) {
+            System.out.println("File selected: " + file.getAbsolutePath());
+        }
+    }
+    @FXML
+    public void loadAthletes(ActionEvent event) throws IOException {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Resource File");
+
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Text Files (*.txt)", "*.txt");
+        fileChooser.getExtensionFilters().add(extFilter);
+
+        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
+        File file = fileChooser.showOpenDialog(stage);
+
+        if (file != null) {
+            System.out.println("File selected: " + file.getAbsolutePath());
+        }
     }
 }
