@@ -5,6 +5,7 @@ import Models.Gender;
 import Models.Participation;
 import Utils.ConnectionsUtlis;
 import Models.Athlete;
+import Utils.PasswordUtils;
 
 import javax.sql.rowset.CachedRowSet;
 import java.sql.Connection;
@@ -68,11 +69,13 @@ public class AthleteDao {
         String query = "INSERT INTO tblAthlete (password, name, idCountry, idGender, height, weight, dateOfBirth) VALUES (?, ?, ?, ?, ?, ?, ?)";
         Connection conn = null;
         PreparedStatement stmt = null;
+        PasswordUtils passwordUtils = new PasswordUtils();
+        String password = passwordUtils.encriptarPassword(athlete.getPassword());
         try {
             conn = ConnectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
-            stmt.setString(1, athlete.getPassword());
+            stmt.setString(1, password);
             stmt.setString(2, athlete.getName());
             stmt.setInt(3, athlete.getCountry().getIdCountry());
             stmt.setInt(4, athlete.getGenre().getIdGender());
