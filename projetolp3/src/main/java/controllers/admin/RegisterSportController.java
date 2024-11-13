@@ -10,6 +10,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -41,6 +42,8 @@ public class RegisterSportController {
     private ImageView iconHomeNav;
     @FXML
     private ImageView iconSports;
+    @FXML
+    private ImageView iconLogoutNav;
     private static boolean isDarkMode = true;
 
     @FXML
@@ -74,6 +77,10 @@ public class RegisterSportController {
         URL iconHomeNavURL = Main.class.getResource("img/iconOlympic.png");
         image = new Image(iconHomeNavURL.toExternalForm());
         if (iconHomeNav != null) iconHomeNav.setImage(image);
+
+        URL iconLogoutNavURL = Main.class.getResource("img/iconLogoutDark.png");
+        image = new Image(iconLogoutNavURL.toExternalForm());
+        if(iconLogoutNav != null) iconLogoutNav.setImage(image);
     }
 
     private void loadGenders() {
@@ -174,5 +181,20 @@ public class RegisterSportController {
         stage.setScene(scene);
         stage.show();
     }
-
+    public void logout(ActionEvent event) throws Exception {
+        mostrarLogin(event);
+    }
+    public void mostrarLogin(ActionEvent event) throws IOException {
+        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
+        Parent root = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/loginView.fxml")));
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
+        if (isDarkMode) {
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+        } else {
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
+        }
+        stage.setScene(scene);
+        stage.show();
+    }
 }

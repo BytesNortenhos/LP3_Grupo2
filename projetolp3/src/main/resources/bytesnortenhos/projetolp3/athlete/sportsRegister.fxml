@@ -45,6 +45,11 @@
                     <ImageView fx:id="iconModeNav" fitWidth="55" fitHeight="55" preserveRatio="true" />
                 </graphic>
             </Button>
+            <Button mnemonicParsing="false" onAction="#logout" styleClass="iconLogoutNav">
+                <graphic>
+                    <ImageView fx:id="iconLogoutNav" fitWidth="55" fitHeight="55" preserveRatio="true" />
+                </graphic>
+            </Button>
         </HBox>
     </top>
     <center>

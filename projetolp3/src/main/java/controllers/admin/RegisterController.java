@@ -14,6 +14,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -39,7 +40,8 @@ public class RegisterController {
     String cssLight = cssLightURL.toExternalForm();
     @FXML
     private ImageView iconOlympic;
-
+    @FXML
+    private ImageView iconLogoutNav;
     @FXML
     private BorderPane parent;
     @FXML
@@ -85,6 +87,10 @@ public class RegisterController {
         URL iconHomeNavURL = Main.class.getResource("img/iconOlympic.png");
         image = new Image(iconHomeNavURL.toExternalForm());
         if (iconHomeNav != null) iconHomeNav.setImage(image);
+
+        URL iconLogoutNavURL = Main.class.getResource("img/iconLogoutDark.png");
+        image = new Image(iconLogoutNavURL.toExternalForm());
+        if(iconLogoutNav != null) iconLogoutNav.setImage(image);
     }
 
     private void loadGenders() {
@@ -111,19 +117,15 @@ public class RegisterController {
     // Novo método para carregar os países
     private void loadCountries() {
         try {
-            // Limpar qualquer item existente em nacDrop
             nacDrop.getItems().clear();
 
-            // Obter a lista de países do banco de dados
             List<Country> countries = CountryDao.getCountries();
             ObservableList<String> countryOptions = FXCollections.observableArrayList();
 
-            // Adicionar cada nome de país à lista
             for (Country country : countries) {
                 countryOptions.add(country.getName());
             }
 
-            // Definir itens da ComboBox de nacionalidade
             nacDrop.setItems(countryOptions);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -186,7 +188,22 @@ public class RegisterController {
         }
     }
 
-
+    public void logout(ActionEvent event) throws Exception {
+        mostrarLogin(event);
+    }
+    public void mostrarLogin(ActionEvent event) throws IOException {
+        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
+        Parent root = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/loginView.fxml")));
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
+        if (isDarkMode) {
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+        } else {
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
+        }
+        stage.setScene(scene);
+        stage.show();
+    }
 
     private String generatePassword() {
         // Implementar lógica para gerar uma senha, ou coletar do usuário

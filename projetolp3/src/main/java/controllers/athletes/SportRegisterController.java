@@ -40,6 +40,8 @@ public class SportRegisterController {
     private ImageView iconModeNav;
     @FXML
     private ImageView iconHomeNav;
+    @FXML
+    private ImageView iconLogoutNav;
     URL cssDarkURL = Main.class.getResource("css/dark.css");
     URL cssLightURL = Main.class.getResource("css/light.css");
     String cssDark = ((URL) cssDarkURL).toExternalForm();
@@ -59,7 +61,6 @@ public class SportRegisterController {
         sportSplitButton.setOnMouseClicked(mouseEvent -> sportSplitButton.show());
     }
     private void loadIcons() {
-
         URL iconMoonNavURL = Main.class.getResource("img/iconMoon.png");
         Image image = new Image(iconMoonNavURL.toExternalForm());
         if (iconModeNav != null) iconModeNav.setImage(image);
@@ -67,13 +68,16 @@ public class SportRegisterController {
         URL iconHomeNavURL = Main.class.getResource("img/iconOlympic.png");
         image = new Image(iconHomeNavURL.toExternalForm());
         if (iconHomeNav != null) iconHomeNav.setImage(image);
+
+        URL iconLogoutNavURL = Main.class.getResource("img/iconLogoutDark.png");
+        image = new Image(iconLogoutNavURL.toExternalForm());
+        if(iconLogoutNav != null) iconLogoutNav.setImage(image);
     }
     private void loadSports() {
         try{
             sportsDrop.getItems().clear();
             List<Sport> sports = SportDao.getSports();
             ObservableList<String> sportsOptions = FXCollections.observableArrayList();
-            System.out.println(LoginController.gender);
             if(LoginController.gender.equals("Female")){
                 sports.removeIf(sport -> sport.getGenre().getDesc().equals("Male"));
             }
@@ -154,6 +158,22 @@ public class SportRegisterController {
         if(isDarkMode){
             scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
         }else{
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
+        }
+        stage.setScene(scene);
+        stage.show();
+    }
+    public void logout(ActionEvent event) throws Exception {
+        mostrarLogin(event);
+    }
+    public void mostrarLogin(ActionEvent event) throws IOException {
+        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
+        Parent root = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/loginView.fxml")));
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
+        if (isDarkMode) {
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+        } else {
             scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
         }
         stage.setScene(scene);

@@ -2,6 +2,7 @@ package controllers.admin;
 
 import Dao.RegistrationDao;
 import bytesnortenhos.projetolp3.Main;
+import controllers.LoginController;
 import controllers.ViewsController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -51,6 +52,8 @@ public class HomeController {
     private ImageView iconModeNav;
     @FXML
     private ImageView iconHomeNav;
+    @FXML
+    private ImageView iconLogoutNav;
     URL cssDarkURL = Main.class.getResource("css/dark.css");
     URL cssLightURL = Main.class.getResource("css/light.css");
     String cssDark = ((URL) cssDarkURL).toExternalForm();
@@ -65,15 +68,7 @@ public class HomeController {
     private ComboBox<String> athleteDrop;
 
     public void initialize() {
-        URL iconMoonNavURL = Main.class.getResource("img/iconMoon.png");
-        String iconMoonNavStr = ((URL) iconMoonNavURL).toExternalForm();
-        Image image = new Image(iconMoonNavStr);
-        if(iconModeNav != null) iconModeNav.setImage(image);
-
-        URL iconHomeNavURL = Main.class.getResource("img/iconOlympic.png");
-        String iconHomeNavStr = ((URL) iconHomeNavURL).toExternalForm();
-        image = new Image(iconHomeNavStr);
-        if(iconHomeNav != null) iconHomeNav.setImage(image);
+        loadIcons();
 
         List<Registration> registrations = null;
         try {
@@ -92,6 +87,20 @@ public class HomeController {
         xmlSplitButton.setOnMouseClicked(mouseEvent -> xmlSplitButton.show());
     }
 
+    public void loadIcons(){
+        URL iconMoonNavURL = Main.class.getResource("img/iconMoon.png");
+        Image image = new Image(iconMoonNavURL.toExternalForm());
+        if(iconModeNav != null) iconModeNav.setImage(image);
+
+        URL iconHomeNavURL = Main.class.getResource("img/iconOlympic.png");
+        image = new Image(iconHomeNavURL.toExternalForm());
+        if(iconHomeNav != null) iconHomeNav.setImage(image);
+
+        URL iconLogoutNavURL = Main.class.getResource("img/iconLogoutDark.png");
+        image = new Image(iconLogoutNavURL.toExternalForm());
+        if(iconLogoutNav != null) iconLogoutNav.setImage(image);
+
+    }
     private List<Registration> getPendingRegistrations() throws SQLException {
         List<Registration> registrations = RegistrationDao.getRegistrations();
         return registrations.stream()
@@ -216,7 +225,22 @@ public class HomeController {
         Image image = new Image(iconMoonStr);
         iconModeNav.setImage(image);
     }
-
+    public void logout(ActionEvent event) throws Exception {
+        mostrarLogin(event);
+    }
+    public void mostrarLogin(ActionEvent event) throws IOException {
+        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
+        Parent root = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/loginView.fxml")));
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
+        if (isDarkMode) {
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+        } else {
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
+        }
+        stage.setScene(scene);
+        stage.show();
+    }
     public void mostrarRegistar(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
         Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/register.fxml")));

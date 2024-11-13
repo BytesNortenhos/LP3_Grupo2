@@ -44,6 +44,8 @@ public class SportsController {
     private ImageView iconModeNav;
     @FXML
     private ImageView iconHomeNav;
+    @FXML
+    private ImageView iconLogoutNav;
     URL cssDarkURL = Main.class.getResource("css/dark.css");
     URL cssLightURL = Main.class.getResource("css/light.css");
     String cssDark = ((URL) cssDarkURL).toExternalForm();
@@ -59,14 +61,8 @@ public class SportsController {
     private Label noSportsLabel;
 
     public void initialize() throws SQLException {
-        URL iconMoonNavURL = Main.class.getResource("img/iconMoon.png");
-        String iconMoonNavStr = ((URL) iconMoonNavURL).toExternalForm();
-        Image image = new Image(iconMoonNavStr);
-        if (iconModeNav != null) iconModeNav.setImage(image);
-        URL iconHomeNavURL = Main.class.getResource("img/iconOlympic.png");
-        String iconHomeNavStr = ((URL) iconHomeNavURL).toExternalForm();
-        image = new Image(iconHomeNavStr);
-        if (iconHomeNav != null) iconHomeNav.setImage(image);
+        loadIcons();
+
         athleteSplitButton.setOnMouseClicked(event -> {
             // Open the dropdown menu when clicking on the button's text
             athleteSplitButton.show();
@@ -88,6 +84,21 @@ public class SportsController {
             displaySports(sports);
         }
     }
+
+    public void loadIcons(){
+        URL iconMoonNavURL = Main.class.getResource("img/iconMoon.png");
+        Image image = new Image(iconMoonNavURL.toExternalForm());
+        if (iconModeNav != null) iconModeNav.setImage(image);
+
+        URL iconHomeNavURL = Main.class.getResource("img/iconOlympic.png");
+        image = new Image(iconHomeNavURL.toExternalForm());
+        if (iconHomeNav != null) iconHomeNav.setImage(image);
+
+        URL iconLogoutNavURL = Main.class.getResource("img/iconLogoutDark.png");
+        image = new Image(iconLogoutNavURL.toExternalForm());
+        if(iconLogoutNav != null) iconLogoutNav.setImage(image);
+    }
+
     private List<Sport> getSports() throws SQLException {
         return SportDao.getSports();
     }
@@ -212,6 +223,22 @@ public class SportsController {
         if(isDarkMode){
             scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
         }else{
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
+        }
+        stage.setScene(scene);
+        stage.show();
+    }
+    public void logout(ActionEvent event) throws Exception {
+        mostrarLogin(event);
+    }
+    public void mostrarLogin(ActionEvent event) throws IOException {
+        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
+        Parent root = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/loginView.fxml")));
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
+        if (isDarkMode) {
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+        } else {
             scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
         }
         stage.setScene(scene);
