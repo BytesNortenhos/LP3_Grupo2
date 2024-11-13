@@ -8,6 +8,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -19,6 +20,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
+import java.util.Optional;
 
 public class ViewsController {
     @FXML
@@ -102,9 +104,22 @@ public class ViewsController {
             }else{
                 password = passwordText.getText();
             }
-            loginController.verificaLogin(id, password, event);
-        } else {
-
+            boolean sucesso = loginController.verificaLogin(id, password, event);
+            if (sucesso) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Sucesso!");
+                alert.setHeaderText("Login efetuado com sucesso!");
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.isPresent() && result.get() == ButtonType.OK) {
+                    verificaCargo(event);
+                }
+            }
+            else {
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setTitle("Erro!");
+                alerta.setHeaderText("O email ou password inserido não está correto!");
+                alerta.show();
+            }
         }
     }
     public static void verificaCargo(ActionEvent event) throws Exception {
