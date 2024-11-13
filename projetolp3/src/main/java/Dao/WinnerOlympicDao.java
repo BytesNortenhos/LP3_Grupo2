@@ -139,13 +139,13 @@ public class WinnerOlympicDao {
             int year = rs.getInt("year");
             int timeMS = rs.getInt("timeMS");
 
-            Sport sport = SportDao.getSportById(idSport);
+            Sport sport = SportDao.getSportByIdV2(idSport);
 
             int idAthlete = rs.getInt("idAthlete");
             Athlete athlete = AthleteDao.getAthleteById(idAthlete);
 
             int idTeam = rs.getInt("idTeam");
-            Team team = TeamDao.getTeamById(idTeam);
+            Team team = TeamDao.getTeamByIdV2(idTeam);
 
             int idMedal = rs.getInt("idMedal");
             String descMedalType = rs.getString("descMedalType");
