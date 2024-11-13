@@ -2,6 +2,7 @@ package bytesnortenhos.projetolp3;
 
 import Dao.AthleteDao;
 import Dao.CountryDao;
+import Dao.RegistrationDao;
 import Dao.TesteDao;
 import javafx.application.Application;
 import javafx.fxml.FXML;
@@ -56,5 +57,6 @@ public class Main extends Application {
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
         launch();
+
     }
 }

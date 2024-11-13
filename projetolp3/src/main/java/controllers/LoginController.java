@@ -20,15 +20,7 @@ public class LoginController {
 
     public static int idAthlete;
 
-    static List<Athlete> athlete;
 
-    static {
-        try {
-            athlete = AthleteDao.getAthletes();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
 
 
