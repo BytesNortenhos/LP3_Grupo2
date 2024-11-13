@@ -1,8 +1,16 @@
 package controllers.athletes;
 
 import Dao.SportDao;
+import Dao.AthleteDao;
+import Dao.RegistrationStatusDao;
 import Models.Country;
 import Models.Sport;
+import Models.Athlete;
+import Models.Team;
+import Models.Registration;
+import Models.RegistrationStatus;
+import Dao.RegistrationDao;
+import Models.Athlete;
 import bytesnortenhos.projetolp3.Main;
 import controllers.LoginController;
 import controllers.ViewsController;
@@ -102,6 +110,66 @@ public class SportRegisterController {
             setLightMode();
         }
         return isDarkMode;
+    }
+    @FXML
+    private void registerSport(ActionEvent event) {
+        try {
+            // Obter o esporte selecionado
+            Sport selectedSport = getSelectedSport();
+            if (selectedSport == null) {
+                System.out.println("Nenhuma modalidade selecionada.");
+                return;
+            }
+
+            // Obter o atleta logado usando o ID armazenado na sessão
+            int athleteId = LoginController.idAthlete; // Acessando o athleteId da sessão
+            Athlete athlete = AthleteDao.getAthleteById(athleteId); // Buscar o atleta completo pelo ID
+
+            if (athlete == null) {
+                System.out.println("Atleta não encontrado.");
+                return;
+            }
+
+            // Configurar team como null (modalidade solo, sem equipe)
+            Team team = null;
+
+            // Obter o status com ID 1
+            RegistrationStatus status = RegistrationStatusDao.getRegistrationStatusById(1); // Status com id 1
+
+            if (status == null) {
+                System.out.println("Status não encontrado.");
+                return;
+            }
+
+            // Usando o construtor com parâmetros para criar a inscrição
+            // Agora passando null para o team, já que é um atleta solo
+            Registration registration = new Registration(0, athlete, team, selectedSport, status); // idRegistration pode ser 0 ou gerado pelo banco de dados
+
+            // Chamar a função de adicionar registro no DAO
+            RegistrationDao.addRegistration(registration);
+
+            System.out.println("Inscrição realizada com sucesso!");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Erro ao realizar a inscrição.");
+        }
+    }
+    private Sport getSelectedSport() {
+        String selectedSportName = sportsDrop.getSelectionModel().getSelectedItem().toString();
+        if (selectedSportName != null) {
+            try {
+                // Procura o esporte selecionado na lista de esportes
+                for (Sport sport : SportDao.getSports()) {
+                    if (sport.getName().equals(selectedSportName)) {
+                        return sport;
+                    }
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 
     public void setLightMode(){

@@ -18,6 +18,8 @@ public class LoginController {
 
     public static String gender = "";
 
+    public static int idAthlete;
+
     static List<Athlete> athlete;
 
     static {
@@ -49,6 +51,7 @@ public class LoginController {
             Athlete athlete = AthleteDao.getAthleteById(idTemp);
             if (athlete != null && senhaTemp.equals(athlete.getPassword())) {
                 cargo = 2;
+                idAthlete = idTemp;
                 gender = athlete.getGenre().getDesc();
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Sucesso!");

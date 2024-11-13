@@ -58,7 +58,7 @@
             <Label styleClass="descriptionText" translateY="-50" text="Nesta área poderá inscrever-se na modaliade desejada!" />
             <Label styleClass="descriptionText" translateY="-40" text="Após o registo deverá aguardar a aprovação por parte do gestor do comité olímpico." />
             <ComboBox fx:id="sportsDrop" styleClass="registerDropBig"  translateY="-20" promptText="Escolha a modalidade" />
-            <Button styleClass="buttonEntrar"  style="-fx-translate-y: 10px;">Registar</Button>
+            <Button styleClass="buttonEntrar" onAction="#registerSport" style="-fx-translate-y: 10px;">Registar</Button>
         </VBox>
     </center>
 </BorderPane>
