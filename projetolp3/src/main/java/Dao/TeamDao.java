@@ -34,7 +34,8 @@ public class TeamDao {
                 int yearFounded = rs.getInt("yearFounded");
                 Country country = new Country(idCountry, countryName, continent);
                 Gender gender = new Gender(idGender, genderDesc);
-                Sport sport = SportDao.getSportById(idSport);
+                SportDao sportDao = new SportDao();
+                Sport sport = sportDao.getSportById(idSport);
 
                 Team team = new Team(idTeam, teamName, country, gender, sport, yearFounded);
                 teams.add(team);
@@ -133,12 +134,13 @@ public class TeamDao {
             int yearFounded = rs.getInt("yearFounded");
             Country country = new Country(idCountry, countryName, continent);
             Gender gender = new Gender(genderId, genderDesc);
-            Sport sport = SportDao.getSportById(idSport);
+            SportDao sportDao = new SportDao();
+            Sport sport = sportDao.getSportById(idSport);
             return new Team(idTeam, teamName, country, gender, sport, yearFounded);
         }
         return null;
     }
-    public static Team getTeamByIdV2(int idTeam) throws SQLException {
+    public Team getTeamByIdV2(int idTeam) throws SQLException {
         String query = "SELECT t.idTeam, t.name AS teamName, c.idCountry, c.name AS countryName, c.continent, " +
                 "g.idGender AS genderId, g.description AS genderDesc, " +
                 "t.idSport, t.yearFounded " +

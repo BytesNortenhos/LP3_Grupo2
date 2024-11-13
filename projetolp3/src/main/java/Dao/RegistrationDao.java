@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RegistrationDao {
-    public static List<Registration> getRegistrations() throws SQLException {
+    public List<Registration> getRegistrations() throws SQLException {
         List<Registration> registrations = new ArrayList<>();
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT * FROM tblRegistration;");
         if (rs != null) {
@@ -21,10 +21,14 @@ public class RegistrationDao {
                 int idTeam = rs.getInt("idTeam");
                 int idSport = rs.getInt("idSport");
                 int idStatus = rs.getInt("idStatus");
-                Athlete athlete = AthleteDao.getAthleteById(idAthlete);
-                Team team = TeamDao.getTeamByIdV2(idTeam);
-                Sport sport = SportDao.getSportByIdV2(idSport);
-                RegistrationStatus status = RegistrationStatusDao.getRegistrationStatusById(idStatus);
+                AthleteDao athleteDao = new AthleteDao();
+                Athlete athlete = athleteDao.getAthleteById(idAthlete);
+                TeamDao teamDao = new TeamDao();
+                Team team = teamDao.getTeamByIdV2(idTeam);
+                SportDao sportDao = new SportDao();
+                Sport sport = sportDao.getSportByIdV2(idSport);
+                RegistrationStatusDao registrationStatusDao = new RegistrationStatusDao();
+                RegistrationStatus status = registrationStatusDao.getRegistrationStatusById(idStatus);
                 Registration registration = new Registration(idRegistration, athlete, team, sport, status);
                 registrations.add(registration);
             }
@@ -151,10 +155,13 @@ public class RegistrationDao {
             int idSport = rs.getInt("idSport");
             int idStatus = rs.getInt("idStatus");
 
-            Athlete athlete = AthleteDao.getAthleteById(idAthlete);
+            AthleteDao athleteDao = new AthleteDao();
+            Athlete athlete = athleteDao.getAthleteById(idAthlete);
             Team team = TeamDao.getTeamById(idTeam);
-            Sport sport = SportDao.getSportById(idSport);
-            RegistrationStatus status = RegistrationStatusDao.getRegistrationStatusById(idStatus);
+            SportDao sportDao = new SportDao();
+            Sport sport = sportDao.getSportById(idSport);
+            RegistrationStatusDao registrationStatusDao = new RegistrationStatusDao();
+            RegistrationStatus status = registrationStatusDao.getRegistrationStatusById(idStatus);
             return new Registration(idRegistration, athlete, team, sport, status);
         }
         return null;
@@ -172,10 +179,13 @@ public class RegistrationDao {
                 int idSport = rs.getInt("idSport");
                 int idStatus = rs.getInt("idStatus");
 
-                Athlete athlete = AthleteDao.getAthleteById(idAthlete);
+                AthleteDao athleteDao = new AthleteDao();
+                Athlete athlete = athleteDao.getAthleteById(idAthlete);
                 Team team = TeamDao.getTeamById(idTeam);
-                Sport sport = SportDao.getSportById(idSport);
-                RegistrationStatus status = RegistrationStatusDao.getRegistrationStatusById(idStatus);
+                SportDao sportDao = new SportDao();
+                Sport sport = sportDao.getSportById(idSport);
+                RegistrationStatusDao registrationStatusDao = new RegistrationStatusDao();
+                RegistrationStatus status = registrationStatusDao.getRegistrationStatusById(idStatus);
 
                 Registration registration = new Registration(idRegistration, athlete, team, sport, status);
                 registrations.add(registration);

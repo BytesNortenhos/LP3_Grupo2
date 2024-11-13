@@ -131,7 +131,7 @@ public class AthleteDao {
         }
     }
 
-    public static Athlete getAthleteById(int idAthlete) throws SQLException {
+    public Athlete getAthleteById(int idAthlete) throws SQLException {
         String query = "SELECT * FROM tblAthlete WHERE idAthlete = ?";
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idAthlete);
         if (rs != null && rs.next()) {

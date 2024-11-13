@@ -123,7 +123,8 @@ public class SportRegisterController {
 
             // Obter o atleta logado usando o ID armazenado na sessão
             int athleteId = LoginController.idAthlete; // Acessando o athleteId da sessão
-            Athlete athlete = AthleteDao.getAthleteById(athleteId); // Buscar o atleta completo pelo ID
+            AthleteDao athleteDao = new AthleteDao();
+            Athlete athlete = athleteDao.getAthleteById(athleteId);
 
             if (athlete == null) {
                 System.out.println("Atleta não encontrado.");
@@ -134,7 +135,8 @@ public class SportRegisterController {
             Team team = null;
 
             // Obter o status com ID 1
-            RegistrationStatus status = RegistrationStatusDao.getRegistrationStatusById(1); // Status com id 1
+            RegistrationStatusDao registrationStatusDao = new RegistrationStatusDao();
+            RegistrationStatus status = registrationStatusDao.getRegistrationStatusById(1); // Status com id 1
 
             if (status == null) {
                 System.out.println("Status não encontrado.");

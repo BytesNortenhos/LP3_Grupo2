@@ -102,7 +102,8 @@ public class HomeController {
 
     }
     private List<Registration> getPendingRegistrations() throws SQLException {
-        List<Registration> registrations = RegistrationDao.getRegistrations();
+        RegistrationDao registrationDao = new RegistrationDao();
+        List<Registration> registrations = registrationDao.getRegistrations();
         return registrations.stream()
                 .filter(reg -> reg.getStatus().getIdStatus() == 1)
                 .collect(Collectors.toList());

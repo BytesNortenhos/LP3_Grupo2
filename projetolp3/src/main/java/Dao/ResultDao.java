@@ -24,8 +24,10 @@ public class ResultDao {
                 String resultValue = rs.getString("result");
                 int idLocal = rs.getInt("idLocal");
 
-                Sport sport = SportDao.getSportById(idSport);
-                Athlete athlete = AthleteDao.getAthleteById(idAthlete);
+                SportDao sportDao = new SportDao();
+                Sport sport = sportDao.getSportById(idSport);
+                AthleteDao athleteDao = new AthleteDao();
+                Athlete athlete = athleteDao.getAthleteById(idAthlete);
                 Team team = TeamDao.getTeamById(idTeam);
                 Local local = LocalDao.getLocalById(idLocal);
 
@@ -108,7 +110,7 @@ public class ResultDao {
         }
     }
 
-    public static Result getResultById(int idResult) throws SQLException {
+    public Result getResultById(int idResult) throws SQLException {
         String query = "SELECT * FROM tblResult WHERE idResult = ?";
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idResult);
         if (rs != null && rs.next()) {
@@ -119,8 +121,10 @@ public class ResultDao {
             String resultValue = rs.getString("result");
             int idLocal = rs.getInt("idLocal");
 
-            Sport sport = SportDao.getSportById(idSport);
-            Athlete athlete = AthleteDao.getAthleteById(idAthlete);
+            SportDao sportDao = new SportDao();
+            Sport sport = sportDao.getSportById(idSport);
+            AthleteDao athleteDao = new AthleteDao();
+            Athlete athlete = athleteDao.getAthleteById(idAthlete);
             Team team = TeamDao.getTeamById(idTeam);
             Local local = LocalDao.getLocalById(idLocal);
             return new Result(idResult, sport, athlete, team, date, resultValue, local);

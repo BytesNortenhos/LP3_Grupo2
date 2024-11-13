@@ -121,7 +121,7 @@ public class SportDao {
         }
     }
 
-    public static Sport getSportById(int idSport) throws SQLException {
+    public Sport getSportById(int idSport) throws SQLException {
         // Consulta SQL para pegar os dados principais do esporte
         String query = "SELECT s.*, " +
                 "g.description AS genderDescription, " +
@@ -149,10 +149,12 @@ public class SportDao {
             Gender gender = new Gender(idGender, genderDescription);
 
             // Carregar o recorde olímpico associado ao esporte
-            OlympicRecord olympicRecord = OlympicRecordDao.getOlympicRecordById(idSportResult, rs.getInt("olympicYear"));
+            OlympicRecordDao olympicRecordDao = new OlympicRecordDao();
+            OlympicRecord olympicRecord = olympicRecordDao.getOlympicRecordById(idSportResult, rs.getInt("olympicYear"));
 
             // Carregar os vencedores olímpicos associados ao esporte
-            List<WinnerOlympic> winnerOlympics = WinnerOlympicDao.getWinnerOlympicsBySport(idSportResult);
+            WinnerOlympicDao winnerOlympicDao = new WinnerOlympicDao();
+            List<WinnerOlympic> winnerOlympics = winnerOlympicDao.getWinnerOlympicsBySport(idSportResult);
 
             // Carregar as regras associadas ao esporte
             List<Rule> rules = RuleDao.getRulesBySport(idSportResult);
@@ -164,7 +166,7 @@ public class SportDao {
         // Caso não encontre o esporte, retorna null
         return null;
     }
-    public static Sport getSportByIdV2(int idSport) throws SQLException {
+    public Sport getSportByIdV2(int idSport) throws SQLException {
         // Consulta SQL para pegar os dados principais do esporte
         String query = "SELECT s.*, " +
                 "g.description AS genderDescription, " +

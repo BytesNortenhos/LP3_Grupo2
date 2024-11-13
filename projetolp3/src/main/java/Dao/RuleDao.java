@@ -21,7 +21,8 @@ public class RuleDao {
                 int idSport = rs.getInt("idSport");
                 String description = rs.getString("description");
 
-                Sport sport = SportDao.getSportById(idSport);
+                SportDao sportDao = new SportDao();
+                Sport sport = sportDao.getSportById(idSport);
 
                 Rule rule = new Rule(idRule, sport, description);
                 rules.add(rule);
@@ -100,7 +101,8 @@ public class RuleDao {
         if (rs != null && rs.next()) {
             int idSport = rs.getInt("idSport");
             String description = rs.getString("description");
-            Sport sport = SportDao.getSportById(idSport);
+            SportDao sportDao = new SportDao();
+            Sport sport = sportDao.getSportById(idSport);
             return new Rule(idRule, sport, description);
         }
         return null;
@@ -113,7 +115,8 @@ public class RuleDao {
         while (rs.next()) {
             int idRule = rs.getInt("idRule");
             String description = rs.getString("description");
-            Sport sport = SportDao.getSportByIdV2(idSport);
+            SportDao sportDao = new SportDao();
+            Sport sport = sportDao.getSportByIdV2(idSport);
             Rule rule = new Rule(idRule, sport, description);
             rules.add(rule);
         }
