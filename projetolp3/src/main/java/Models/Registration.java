@@ -23,6 +23,14 @@ public class Registration {
         this.status = status;
     }
 
+    // Construtor com todos os parâmetros
+    public Registration(int idRegistration, Athlete athlete, Sport sport, RegistrationStatus status) {
+        this.idRegistration = idRegistration;
+        this.athlete = athlete;
+        this.sport = sport;
+        this.status = status;
+    }
+
     /**
      * Get Registration ID
      * @return int

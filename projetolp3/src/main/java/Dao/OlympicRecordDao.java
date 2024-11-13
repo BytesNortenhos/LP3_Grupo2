@@ -118,9 +118,9 @@ public class OlympicRecordDao {
             int timeMS = rs.getInt("timeMS");
             int medals = rs.getInt("medals");
 
-            Sport sport = SportDao.getSportById(idSport);
+            Sport sport = SportDao.getSportByIdV2(idSport);
             Athlete athlete = AthleteDao.getAthleteById(idAthlete);
-            Team team = TeamDao.getTeamById(idTeam);
+            Team team = TeamDao.getTeamByIdV2(idTeam);
             return new OlympicRecord(sport, year, athlete, team, timeMS, medals);
         }
         return null;

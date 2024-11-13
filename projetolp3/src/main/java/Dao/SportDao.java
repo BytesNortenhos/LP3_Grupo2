@@ -192,13 +192,13 @@ public class SportDao {
 
 
             // Carregar o recorde olímpico associado ao esporte
-            OlympicRecord olympicRecord = OlympicRecordDao.getOlympicRecordById(idSportResult, rs.getInt("olympicYear"));
+            OlympicRecord olympicRecord = OlympicRecordDao.getOlympicRecordByIdV2(idSportResult, rs.getInt("olympicYear"));
 
             // Carregar os vencedores olímpicos associados ao esporte
-            List<WinnerOlympic> winnerOlympics = WinnerOlympicDao.getWinnerOlympicsBySport(idSportResult);
+            List<WinnerOlympic> winnerOlympics = WinnerOlympicDao.getWinnerOlympicsBySportV2(idSportResult);
 
             // Carregar as regras associadas ao esporte
-            List<Rule> rules = RuleDao.getRulesBySport(idSportResult);
+            List<Rule> rules = RuleDao.getRulesBySportV2(idSportResult);
 
             // Criar e retornar o objeto Sport com todos os dados carregados
             return new Sport(idSportResult, type, idGender, name, description, minParticipants, scoringMeasure, oneGame, olympicRecord, winnerOlympics, rules);

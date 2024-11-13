@@ -113,7 +113,7 @@ public class RuleDao {
         while (rs.next()) {
             int idRule = rs.getInt("idRule");
             String description = rs.getString("description");
-            Sport sport = SportDao.getSportById(idSport);
+            Sport sport = SportDao.getSportByIdV2(idSport);
             Rule rule = new Rule(idRule, sport, description);
             rules.add(rule);
         }
