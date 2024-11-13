@@ -161,7 +161,6 @@ public class TeamDao {
             Country country = new Country(idCountry, countryName, continent);
             Gender gender = new Gender(genderId, genderDesc);
 
-            // Aqui o esporte ainda não é carregado; será carregado quando necessário
             return new Team(idTeam, teamName, country, gender, idSport, yearFounded);
         }
         return null;
