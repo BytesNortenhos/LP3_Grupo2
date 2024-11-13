@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SportDao {
-    public static List<Sport> getSports() throws SQLException {
+    public List<Sport> getSports() throws SQLException {
         List<Sport> sports = new ArrayList<>();
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT s.*," +
                 "g.description AS genderDescription," +
@@ -48,7 +48,30 @@ public class SportDao {
         }
         return sports;
     }
-
+    public List<List> getSportsToShow() throws SQLException {
+        List<List> sports = new ArrayList<>();
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT s.*, " +
+                "g.description AS genderDescription " + // Added space before FROM
+                "FROM tblSport s " +
+                "JOIN tblGender g ON s.idGender = g.idGender;");
+        if (rs != null) {
+            while (rs.next()) {
+                List<String> sport = new ArrayList<>();
+                sport.add(rs.getString("idSport"));
+                sport.add(rs.getString("type"));
+                sport.add(rs.getString("genderDescription"));
+                sport.add(rs.getString("name"));
+                sport.add(rs.getString("description"));
+                sport.add(rs.getString("minParticipants"));
+                sport.add(rs.getString("scoringMeasure"));
+                sport.add(rs.getString("oneGame"));
+                sports.add(sport);
+            }
+        } else {
+            System.out.println("ResultSet is null. No results for Sport found.");
+        }
+        return sports;
+    }
     public static void addSport(Sport sport) throws SQLException {
         String query = "INSERT INTO tblSport (type, idGender, name, description, minParticipants, scoringMeasure, oneGame) VALUES (?, ?, ?, ?, ?, ?, ?)";
         Connection conn = null;

@@ -63,7 +63,6 @@ public class SportRegisterController {
 
     public void initialize() {
         loadIcons();
-
         loadSports();
         theamsSplitButton.setOnMouseClicked(event -> theamsSplitButton.show());
         sportSplitButton.setOnMouseClicked(mouseEvent -> sportSplitButton.show());
@@ -84,17 +83,17 @@ public class SportRegisterController {
     private void loadSports() {
         try{
             sportsDrop.getItems().clear();
-            List<Sport> sports = SportDao.getSports();
+            SportDao sportDao = new SportDao();
+            List<List> sports = sportDao.getSportsToShow();
             ObservableList<String> sportsOptions = FXCollections.observableArrayList();
             if(LoginController.gender.equals("Female")){
-                sports.removeIf(sport -> sport.getGenre().getDesc().equals("Male"));
+                sports.removeIf(sport -> sport.get(2).toString().equals("Male"));
             }
             else{
-                sports.removeIf(sport -> sport.getGenre().getDesc().equals("Female"));
+                sports.removeIf(sport -> sport.get(2).toString().equals("Female"));
             }
-            for (Sport sport : sports) {
-                sportsOptions.add(sport.getName());
-                System.out.println(sport.getGenre().getDesc());
+            for (List sport : sports) {
+                sportsOptions.add(sport.get(3).toString());
             }
             sportsDrop.setItems(sportsOptions);
         }catch (SQLException e) {
@@ -131,7 +130,6 @@ public class SportRegisterController {
                 return;
             }
 
-            // Configurar team como null (modalidade solo, sem equipe)
             Team team = null;
 
             // Obter o status com ID 1
@@ -143,11 +141,8 @@ public class SportRegisterController {
                 return;
             }
 
-            // Usando o construtor com parâmetros para criar a inscrição
-            // Agora passando null para o team, já que é um atleta solo
             Registration registration = new Registration(0, athlete, selectedSport, status); // idRegistration pode ser 0 ou gerado pelo banco de dados
 
-            // Chamar a função de adicionar registro no DAO
             RegistrationDao.addRegistrationSolo(registration);
 
             System.out.println("Inscrição realizada com sucesso!");
@@ -161,8 +156,8 @@ public class SportRegisterController {
         String selectedSportName = sportsDrop.getSelectionModel().getSelectedItem().toString();
         if (selectedSportName != null) {
             try {
-                // Procura o esporte selecionado na lista de esportes
-                for (Sport sport : SportDao.getSports()) {
+                SportDao sportDao = new SportDao();
+                for (Sport sport : sportDao.getSports()) {
                     if (sport.getName().equals(selectedSportName)) {
                         return sport;
                     }
@@ -223,6 +218,19 @@ public class SportRegisterController {
     public void mostrarRegistaModalidades(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
         Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/athlete/sportsRegister.fxml")));
+        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
+        scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
+        if(isDarkMode){
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+        }else{
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
+        }
+        stage.setScene(scene);
+        stage.show();
+    }
+    public void mostrarRegistaEquipas(ActionEvent event) throws IOException {
+        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
+        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/athlete/teamsRegister.fxml")));
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
         scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
         if(isDarkMode){

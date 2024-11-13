@@ -17,7 +17,6 @@ public class RegistrationDao {
     public List<Registration> getRegistrations() throws SQLException {
         List<Registration> registrations = new ArrayList<>();
 
-        // Consulta otimizada com JOINs
         String query = """
     SELECT r.idRegistration, r.idAthlete, r.idTeam, r.idSport, r.idStatus,
            a.name AS athleteName, a.height AS athleteHeight, a.weight AS athleteWeight, a.dateOfBirth AS athleteDOB,
@@ -31,7 +30,6 @@ public class RegistrationDao {
     LEFT JOIN tblRegistrationStatus rs ON r.idStatus = rs.idStatus
     """;
 
-        // Executa a consulta
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query);
 
         if (rs != null) {
@@ -42,7 +40,6 @@ public class RegistrationDao {
                 int idSport = rs.getInt("idSport");
                 int idStatus = rs.getInt("idStatus");
 
-                // Cria uma nova instância de Athlete
                 Athlete athlete = new Athlete(
                         idAthlete,
                         rs.getString("athleteName"),
@@ -51,32 +48,29 @@ public class RegistrationDao {
                         rs.getDate("athleteDOB")
                 );
 
-                // Cria uma nova instância de Team
                 Team team = new Team(
                         idTeam,
                         rs.getString("teamName"),
-                        new Country(rs.getString("teamCountryId"), null), // Informação de país, se necessário
-                        new Gender(rs.getInt("sportGenderId"), null), // Informação de gênero, se necessário
+                        new Country(rs.getString("teamCountryId"), null),
+                        new Gender(rs.getInt("sportGenderId"), null),
                         rs.getInt("idSport"), // ID do esporte
                         rs.getInt("teamYearFounded")
                 );
 
-                // Cria uma nova instância de Sport
                 Sport sport = new Sport(
                         idSport,
                         rs.getString("sportType"),
                         rs.getInt("sportGenderId"),
                         rs.getString("sportName"),
                         rs.getString("sportDescription"),
-                        0, // Informações adicionais, se necessário
-                        null, // Mais informações do esporte, se necessário
-                        null, // Informações extras, se necessário
-                        null, // Registros olímpicos, se necessário
-                        null, // Vencedores olímpicos, se necessário
-                        null  // Regras do esporte, se necessário
+                        0,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
                 );
 
-                // Cria uma nova instância de RegistrationStatus
                 RegistrationStatus status = new RegistrationStatus(
                         idStatus,
                         rs.getString("statusDescription")

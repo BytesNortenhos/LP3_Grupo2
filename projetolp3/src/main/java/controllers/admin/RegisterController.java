@@ -71,6 +71,7 @@ public class RegisterController {
     public void initialize() {
         loadCountries();
         loadIcons();
+        loadGenders();
         URL iconOlympicURL = Main.class.getResource("img/iconAthlete.png");
         String iconOlympicStr = ((URL) iconOlympicURL).toExternalForm();
         Image image = new Image(iconOlympicStr);

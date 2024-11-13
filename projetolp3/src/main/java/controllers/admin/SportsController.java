@@ -70,7 +70,7 @@ public class SportsController {
         sportSplitButton.setOnMouseClicked(mouseEvent -> {
             sportSplitButton.show();
         });
-        List<Sport> sports = null;
+        List<List> sports = null;
         try{
             sports = getSports();
         }
@@ -99,50 +99,50 @@ public class SportsController {
         if(iconLogoutNav != null) iconLogoutNav.setImage(image);
     }
 
-    private List<Sport> getSports() throws SQLException {
-        return SportDao.getSports();
+    private List<List> getSports() throws SQLException {
+        SportDao sportDao = new SportDao();
+        return sportDao.getSportsToShow();
     }
     private void showNoSportsMessage() {
         noSportsLabel.setVisible(true);
 
     }
-    private void displaySports(List<Sport> sports) throws SQLException {
+    private void displaySports(List<List> sports) throws SQLException {
         noSportsLabel.setVisible(false);
         sportsContainer.setVisible(true);
 
-        // Cria e adiciona os itens de registro dinamicamente
-        for (Sport sport : sports) {
+        for (List sport : sports) {
             VBox sportsItem = createSportsItem(sport);
             sportsContainer.getChildren().add(sportsItem);
 
         }
     }
-    private VBox createSportsItem(Sport sport) throws SQLException {
+    private VBox createSportsItem(List sport) throws SQLException {
         VBox requestItem = new VBox();
         requestItem.setSpacing(10);
         requestItem.getStyleClass().add("request-item");
 
-        Label nameLabel = new Label(sport.getName());
+        Label nameLabel = new Label(sport.get(3).toString());
         nameLabel.getStyleClass().add("name-label");
 
-        Label typeLabel = new Label(sport.getType());
+        Label typeLabel = new Label(sport.get(1).toString());
         typeLabel.getStyleClass().add("type-label");
 
-        Label description = new Label(sport.getDesc());
+        Label description = new Label(sport.get(4).toString());
         description.setWrapText(true);
         description.getStyleClass().add("description-label");
 
 
-        Label genderLabel = new Label(sport.getGenre().getDesc());
+        Label genderLabel = new Label(sport.get(2).toString());
         genderLabel.getStyleClass().add("gender-label");
 
-        Label minPart = new Label("Minímo de participantes: " + sport.getMinParticipants());
+        Label minPart = new Label("Minímo de participantes: " + sport.get(5).toString());
         minPart.getStyleClass().add("minPart-label");
 
-        Label scoringMeasure = new Label("Medida de pontuação: " + sport.getScoringMeasure());
+        Label scoringMeasure = new Label("Medida de pontuação: " + sport.get(6).toString());
         scoringMeasure.getStyleClass().add("scoringMeasure-label");
 
-        Label oneGame = new Label("Quantidade de jogos: " + sport.getOneGame());
+        Label oneGame = new Label("Quantidade de jogos: " + sport.get(7).toString());
         oneGame.getStyleClass().add("oneGame-label");
 
         requestItem.getChildren().addAll(nameLabel, description, typeLabel, genderLabel, minPart, scoringMeasure, oneGame);

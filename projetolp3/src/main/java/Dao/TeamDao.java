@@ -140,6 +140,30 @@ public class TeamDao {
         }
         return null;
     }
+    public List<List> getTeamToShow(int idAthlete) throws SQLException {
+        List<List> teams = new ArrayList<>();
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT t.idTeam, t.name AS teamName, " +
+                "g.idGender AS genderId, g.description AS genderDesc, " +
+                "c.idCountry, c.name AS countryName " +
+                "FROM tblTeam t " +
+                "INNER JOIN tblGender g ON t.idGender = g.idGender " +
+                "INNER JOIN tblCountry c ON t.idCountry = c.idCountry; ");
+        if (rs != null) {
+            while (rs.next()) {
+                List<String> team = new ArrayList<>();
+                team.add(rs.getString("idTeam"));
+                team.add(rs.getString("teamName"));
+                team.add(rs.getString("genderId"));
+                team.add(rs.getString("genderDesc"));
+                team.add(rs.getString("idCountry"));
+                team.add(rs.getString("countryName"));
+                teams.add(team);
+            }
+        }else {
+            System.out.println("ResultSet is null. No results for Sport found.");
+        }
+        return teams;
+    }
     public Team getTeamByIdV2(int idTeam) throws SQLException {
         String query = "SELECT t.idTeam, t.name AS teamName, c.idCountry, c.name AS countryName, c.continent, " +
                 "g.idGender AS genderId, g.description AS genderDesc, " +

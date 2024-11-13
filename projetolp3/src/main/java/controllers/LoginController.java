@@ -17,6 +17,7 @@ public class LoginController {
 
     public static String gender = "";
     public static int idAthlete;
+    public static String idCountry;
 
 
     public boolean verificaLogin(int idTemp, String senhaTemp, ActionEvent event) throws Exception {
@@ -34,6 +35,7 @@ public class LoginController {
             if (athlete != null && senhaTemp.equals(athlete.getPassword())) {
                 cargo = 2;
                 gender = athlete.getGenre().getDesc();
+                idCountry = athlete.getCountry().getIdCountry();
                 loginSucesso = true;
             }
         }

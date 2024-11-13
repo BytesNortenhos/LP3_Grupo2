@@ -39,7 +39,7 @@
       </SplitMenuButton>
       <SplitMenuButton fx:id="theamsSplitButton" styleClass="dropdownButton" text="Equipas">
         <items>
-          <MenuItem text="Inscrição" onAction="#mostrarModalidades"/>
+          <MenuItem text="Inscrição" onAction="#mostrarRegistaEquipas"/>
           <MenuItem text="Visualizar equipas" onAction="#mostrarRegistaModalidades"/>
         </items>
       </SplitMenuButton>
