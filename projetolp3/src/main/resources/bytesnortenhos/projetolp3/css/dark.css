@@ -349,3 +349,10 @@
     -fx-text-fill: #1E1E1E;
     -fx-border-color: #F7EED8;
 }
+.descriptionText{
+    -fx-font-size: 17px;
+    -fx-text-fill: #F7EED8;
+    -fx-font-family: 'Inter';
+    -fx-font-style: normal;
+    -fx-font-weight: 400;
+}

@@ -34,6 +34,8 @@ public class ViewsController {
     @FXML
     private PasswordField passwordText;
     private static boolean isDarkMode = true;
+
+    public static String gender = "";
     URL cssDarkURL = Main.class.getResource("css/dark.css");
     URL cssLightURL = Main.class.getResource("css/light.css");
     String cssDark = ((URL) cssDarkURL).toExternalForm();
@@ -119,6 +121,7 @@ public class ViewsController {
             default:
                 System.out.println("Invalid cargo value");
         }
+        gender = LoginController.gender;
     }
     private static void mostrarLoginView(ActionEvent event) throws Exception {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();

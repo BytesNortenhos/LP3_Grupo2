@@ -1,7 +1,10 @@
-package controllers;
+package controllers.athletes;
 
 import Dao.RegistrationDao;
+import Models.Registration;
 import bytesnortenhos.projetolp3.Main;
+import controllers.ViewsController;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,31 +15,25 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.layout.BorderPane;
-import javafx.stage.FileChooser;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.application.Platform;
-
-import java.io.File;
-import java.time.LocalDate;
-import java.time.Period;
 
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import Models.Registration;
-
-public class HomeController {
+public class HomeControllerAthlete {
     @FXML
     private FlowPane mainContainer;
     @FXML
@@ -55,11 +52,9 @@ public class HomeController {
     String cssDark = ((URL) cssDarkURL).toExternalForm();
     String cssLight = ((URL) cssLightURL).toExternalForm();
     @FXML
-    private SplitMenuButton athleteSplitButton;
+    private SplitMenuButton theamsSplitButton;
     @FXML
     private SplitMenuButton sportSplitButton;
-    @FXML
-    private SplitMenuButton xmlSplitButton;
     @FXML
     private ComboBox<String> athleteDrop;
 
@@ -86,9 +81,8 @@ public class HomeController {
         } else {
             displayRequests(registrations);
         }
-        athleteSplitButton.setOnMouseClicked(event -> athleteSplitButton.show());
+        theamsSplitButton.setOnMouseClicked(event -> theamsSplitButton.show());
         sportSplitButton.setOnMouseClicked(mouseEvent -> sportSplitButton.show());
-        xmlSplitButton.setOnMouseClicked(mouseEvent -> xmlSplitButton.show());
     }
 
     private List<Registration> getPendingRegistrations() throws SQLException {
@@ -216,19 +210,6 @@ public class HomeController {
         iconModeNav.setImage(image);
     }
 
-    public void mostrarRegistar(ActionEvent event) throws IOException {
-        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
-        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/register.fxml")));
-        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
-        scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
-        if(isDarkMode){
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
-        }else{
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
-        }
-        stage.setScene(scene);
-        stage.show();
-    }
 
     public void mostrarModalidades(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
@@ -244,22 +225,9 @@ public class HomeController {
         stage.show();
     }
 
-    public static void returnHomeMenu(ActionEvent event) throws IOException {
-        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
-        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/home.fxml")));
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
-        if(isDarkMode){
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
-        }else{
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
-        }
-        stage.setScene(scene);
-        stage.show();
-    }
     public void mostrarRegistaModalidades(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
-        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/sportRegister.fxml")));
+        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/athlete/sportsRegister.fxml")));
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
         scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
         if(isDarkMode){
@@ -269,51 +237,5 @@ public class HomeController {
         }
         stage.setScene(scene);
         stage.show();
-    }
-
-    @FXML
-    public void loadTeams(ActionEvent event) throws IOException {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open Resource File");
-
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Text Files (*.txt)", "*.txt");
-        fileChooser.getExtensionFilters().add(extFilter);
-
-        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
-        File file = fileChooser.showOpenDialog(stage);
-
-        if (file != null) {
-            System.out.println("File selected: " + file.getAbsolutePath());
-        }
-    }
-    @FXML
-    public void loadSports(ActionEvent event) throws IOException {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open Resource File");
-
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Text Files (*.txt)", "*.txt");
-        fileChooser.getExtensionFilters().add(extFilter);
-
-        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
-        File file = fileChooser.showOpenDialog(stage);
-
-        if (file != null) {
-            System.out.println("File selected: " + file.getAbsolutePath());
-        }
-    }
-    @FXML
-    public void loadAthletes(ActionEvent event) throws IOException {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open Resource File");
-
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Text Files (*.txt)", "*.txt");
-        fileChooser.getExtensionFilters().add(extFilter);
-
-        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
-        File file = fileChooser.showOpenDialog(stage);
-
-        if (file != null) {
-            System.out.println("File selected: " + file.getAbsolutePath());
-        }
     }
 }

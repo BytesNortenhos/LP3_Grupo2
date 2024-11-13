@@ -1,10 +1,11 @@
-package controllers;
+package controllers.admin;
 
 import Dao.GenderDao;
 import Dao.SportDao;
 import Models.Gender;
 import Models.Sport;
 import bytesnortenhos.projetolp3.Main;
+import controllers.ViewsController;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

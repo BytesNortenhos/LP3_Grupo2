@@ -1,4 +1,4 @@
-package controllers;
+package controllers.admin;
 
 import Dao.AthleteDao; // Importar a classe AthleteDao
 import Dao.CountryDao; // Importar a classe CountryDao
@@ -7,6 +7,7 @@ import Models.Athlete; // Importar a classe Athlete
 import Models.Country; // Importar a classe Country
 import Models.Gender;
 import bytesnortenhos.projetolp3.Main;
+import controllers.ViewsController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -36,6 +37,8 @@ public class RegisterController {
     URL cssLightURL = Main.class.getResource("css/light.css");
     String cssDark = cssDarkURL.toExternalForm();
     String cssLight = cssLightURL.toExternalForm();
+    @FXML
+    private ImageView iconOlympic;
 
     @FXML
     private BorderPane parent;
@@ -61,18 +64,15 @@ public class RegisterController {
     @FXML
     private TextField heightText; // Campo de texto para altura
     @FXML
-    private DatePicker datePicker; // DatePicker para data de nascimento
+    private DatePicker datePicker;
 
     public void initialize() {
-        // Configuração dos ícones
-        loadIcons();
-
-        // Carregar gêneros na ComboBox de gênero
-        loadGenders();
-
-        // Carregar países na ComboBox de nacionalidade
         loadCountries();
-
+        loadIcons();
+        URL iconOlympicURL = Main.class.getResource("img/iconAthlete.png");
+        String iconOlympicStr = ((URL) iconOlympicURL).toExternalForm();
+        Image image = new Image(iconOlympicStr);
+        if(iconOlympic != null) iconOlympic.setImage(image);
         athleteSplitButton.setOnMouseClicked(event -> athleteSplitButton.show());
         sportSplitButton.setOnMouseClicked(mouseEvent -> sportSplitButton.show());
     }

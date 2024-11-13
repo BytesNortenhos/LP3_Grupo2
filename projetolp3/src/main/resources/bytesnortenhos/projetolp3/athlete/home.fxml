@@ -22,10 +22,10 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.layout.FlowPane?>
 
-<BorderPane fx:id="parent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="background" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.HomeControllerAthlete">
+<BorderPane fx:id="parent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="background" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.athletes.HomeControllerAthlete">
   <top>
     <HBox styleClass="navBar" prefHeight="40.0" prefWidth="400.0">
-      <Button styleClass="iconHomeNav">
+      <Button styleClass="iconHomeNav" >
         <graphic>
           <ImageView fx:id="iconHomeNav" fitWidth="55" fitHeight="55" preserveRatio="true" />
         </graphic>
@@ -33,13 +33,14 @@
       <Pane HBox.hgrow="ALWAYS" />
       <SplitMenuButton fx:id="sportSplitButton" styleClass="dropdownButton" text="Modalidade">
         <items>
-          <MenuItem text="Inscrição" onAction="#mostrarModalidades"/>
-          <MenuItem text="Registar modalidade" onAction="#mostrarRegistaModalidades"/>
+          <MenuItem text="Inscrição" onAction="#mostrarRegistaModalidades"/>
+          <MenuItem text="Visualizar modalidades" onAction="#mostrarModalidades"/>
         </items>
       </SplitMenuButton>
-      <SplitMenuButton fx:id="athleteSplitButton" styleClass="dropdownButton" text="Gerir atleta">
+      <SplitMenuButton fx:id="theamsSplitButton" styleClass="dropdownButton" text="Equipas">
         <items>
-          <MenuItem text="Registar atleta" onAction="#mostrarRegistar"/>
+          <MenuItem text="Inscrição" onAction="#mostrarModalidades"/>
+          <MenuItem text="Visualizar equipas" onAction="#mostrarRegistaModalidades"/>
         </items>
       </SplitMenuButton>
       <Button mnemonicParsing="false" onAction="#changeMode" styleClass="iconMoonNav">

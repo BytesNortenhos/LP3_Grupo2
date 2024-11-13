@@ -1,9 +1,8 @@
-package controllers;
+package controllers.admin;
 
 import Dao.RegistrationDao;
-import Models.Registration;
 import bytesnortenhos.projetolp3.Main;
-import javafx.application.Platform;
+import controllers.ViewsController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,25 +13,31 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.application.Platform;
+
+import java.io.File;
+import java.time.LocalDate;
+import java.time.Period;
 
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.Period;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class HomeControllerAthlete {
+import Models.Registration;
+
+public class HomeController {
     @FXML
     private FlowPane mainContainer;
     @FXML
@@ -54,6 +59,8 @@ public class HomeControllerAthlete {
     private SplitMenuButton athleteSplitButton;
     @FXML
     private SplitMenuButton sportSplitButton;
+    @FXML
+    private SplitMenuButton xmlSplitButton;
     @FXML
     private ComboBox<String> athleteDrop;
 
@@ -82,6 +89,7 @@ public class HomeControllerAthlete {
         }
         athleteSplitButton.setOnMouseClicked(event -> athleteSplitButton.show());
         sportSplitButton.setOnMouseClicked(mouseEvent -> sportSplitButton.show());
+        xmlSplitButton.setOnMouseClicked(mouseEvent -> xmlSplitButton.show());
     }
 
     private List<Registration> getPendingRegistrations() throws SQLException {
@@ -262,5 +270,51 @@ public class HomeControllerAthlete {
         }
         stage.setScene(scene);
         stage.show();
+    }
+
+    @FXML
+    public void loadTeams(ActionEvent event) throws IOException {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Resource File");
+
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Text Files (*.txt)", "*.txt");
+        fileChooser.getExtensionFilters().add(extFilter);
+
+        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
+        File file = fileChooser.showOpenDialog(stage);
+
+        if (file != null) {
+            System.out.println("File selected: " + file.getAbsolutePath());
+        }
+    }
+    @FXML
+    public void loadSports(ActionEvent event) throws IOException {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Resource File");
+
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Text Files (*.txt)", "*.txt");
+        fileChooser.getExtensionFilters().add(extFilter);
+
+        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
+        File file = fileChooser.showOpenDialog(stage);
+
+        if (file != null) {
+            System.out.println("File selected: " + file.getAbsolutePath());
+        }
+    }
+    @FXML
+    public void loadAthletes(ActionEvent event) throws IOException {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Resource File");
+
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Text Files (*.txt)", "*.txt");
+        fileChooser.getExtensionFilters().add(extFilter);
+
+        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
+        File file = fileChooser.showOpenDialog(stage);
+
+        if (file != null) {
+            System.out.println("File selected: " + file.getAbsolutePath());
+        }
     }
 }
