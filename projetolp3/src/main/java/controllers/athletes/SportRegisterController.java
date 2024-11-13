@@ -143,10 +143,10 @@ public class SportRegisterController {
 
             // Usando o construtor com parâmetros para criar a inscrição
             // Agora passando null para o team, já que é um atleta solo
-            Registration registration = new Registration(0, athlete, team, selectedSport, status); // idRegistration pode ser 0 ou gerado pelo banco de dados
+            Registration registration = new Registration(0, athlete, selectedSport, status); // idRegistration pode ser 0 ou gerado pelo banco de dados
 
             // Chamar a função de adicionar registro no DAO
-            RegistrationDao.addRegistration(registration);
+            RegistrationDao.addRegistrationSolo(registration);
 
             System.out.println("Inscrição realizada com sucesso!");
 

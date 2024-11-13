@@ -34,7 +34,7 @@ public class RegistrationDao {
         return registrations;
     }
 
-    public static void addRegistration(Registration registration) throws SQLException {
+    public static void addRegistrationTeam(Registration registration) throws SQLException {
         String query = "INSERT INTO tblRegistration (idAthlete, idTeam, idSport, idStatus) VALUES (?, ?, ?, ?)";
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -54,8 +54,28 @@ public class RegistrationDao {
             if (conn != null) {
                 conn.close();
             }
-        }
-    }
+        } }
+        public static void addRegistrationSolo(Registration registration) throws SQLException {
+            String query = "INSERT INTO tblRegistration (idAthlete, idSport, idStatus) VALUES (?, ?, ?)";
+            Connection conn = null;
+            PreparedStatement stmt = null;
+            try {
+                conn = ConnectionsUtlis.dbConnect();
+                stmt = conn.prepareStatement(query);
+
+                stmt.setInt(1, registration.getAthlete().getIdAthlete());
+                stmt.setInt(2, registration.getSport().getIdSport());
+                stmt.setInt(3, registration.getStatus().getIdStatus());
+                stmt.executeUpdate();
+            } finally {
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+
+            } }
 
     public static void removeRegistration(int idRegistration) throws SQLException {
         String query = "DELETE FROM tblRegistration WHERE idRegistration = ?";
