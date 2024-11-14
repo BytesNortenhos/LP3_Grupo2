@@ -138,8 +138,10 @@
 #mainContainer, .scrollStyle, #sportsContainer{
     -fx-background-color: #1E1E1E;
 }
-#mainContainer, #sportsContainer{
-    -fx-pref-width: 1000px;
+#mainContainer{
+    -fx-min-width: 600px;
+    -fx-max-width: 1800px;
+    -fx-min-height: 600px;
 }
 #noRequestsLabel{
     -fx-text-fill: red;

@@ -21,6 +21,13 @@
                 </graphic>
             </Button>
             <Pane HBox.hgrow="ALWAYS" />
+            <SplitMenuButton fx:id="xmlSplitButton" styleClass="dropdownButton" text="Carregar XML">
+                <items>
+                    <MenuItem text="Carregar equipas" onAction="#loadTeams"/>
+                    <MenuItem text="Carregar modalidades" onAction="#loadSports"/>
+                    <MenuItem text="Carregar atletas" onAction="#loadAthletes"/>
+                </items>
+            </SplitMenuButton>
             <SplitMenuButton fx:id="sportSplitButton" styleClass="dropdownButton" text="Gerir modalidade">
                 <items>
                     <MenuItem text="Visualizar modalidades" onAction="#mostrarModalidades"/>

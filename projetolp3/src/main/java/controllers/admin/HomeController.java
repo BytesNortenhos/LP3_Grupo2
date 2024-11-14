@@ -116,6 +116,7 @@ public class HomeController {
     private void displayRequests(List<Registration> registrations) {
         noRequestsLabel.setVisible(false);
         mainContainer.setVisible(true);
+        mainContainer.getChildren().clear();
 
         for (Registration registration : registrations) {
             VBox requestItem = createRequestItem(registration);
