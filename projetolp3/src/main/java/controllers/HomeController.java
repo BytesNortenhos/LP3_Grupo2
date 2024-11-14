@@ -1,5 +1,6 @@
 package controllers;
 
+import Dao.RegistrationDao;
 import bytesnortenhos.projetolp3.Main;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -9,28 +10,34 @@ import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.application.Platform;
+import java.time.LocalDate;
+import java.time.Period;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+
+import Models.Registration;
 
 public class HomeController {
     @FXML
-    private VBox mainContainer;
+    private FlowPane mainContainer;
     @FXML
     private Label noRequestsLabel;
-    @FXML
-    private VBox requestsContainer;
     private static Stage stage;
     private static Scene scene;
     @FXML
@@ -45,93 +52,82 @@ public class HomeController {
     String cssDark = ((URL) cssDarkURL).toExternalForm();
     String cssLight = ((URL) cssLightURL).toExternalForm();
     @FXML
-    private SplitMenuButton splitMenuButton;
+    private SplitMenuButton athleteSplitButton;
+    @FXML
+    private SplitMenuButton sportSplitButton;
     @FXML
     private ComboBox<String> athleteDrop;
+
     public void initialize() {
         URL iconMoonNavURL = Main.class.getResource("img/iconMoon.png");
         String iconMoonNavStr = ((URL) iconMoonNavURL).toExternalForm();
         Image image = new Image(iconMoonNavStr);
         if(iconModeNav != null) iconModeNav.setImage(image);
+
         URL iconHomeNavURL = Main.class.getResource("img/iconOlympic.png");
         String iconHomeNavStr = ((URL) iconHomeNavURL).toExternalForm();
         image = new Image(iconHomeNavStr);
         if(iconHomeNav != null) iconHomeNav.setImage(image);
-        List<Request> requests = getPendingRequests();
 
-        if (requests.isEmpty()) {
+        List<Registration> registrations = null;
+        try {
+            registrations = getPendingRegistrations();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        if (registrations.isEmpty()) {
             showNoRequestsMessage();
         } else {
-            displayRequests(requests);
+            displayRequests(registrations);
         }
-        splitMenuButton.setOnMouseClicked(event -> {
-            // Open the dropdown menu when clicking on the button's text
-            splitMenuButton.show();
-        });
+        athleteSplitButton.setOnMouseClicked(event -> athleteSplitButton.show());
+        sportSplitButton.setOnMouseClicked(mouseEvent -> sportSplitButton.show());
     }
-    public class Request {
-        private final String name;
-        private final int age;
-        private final String sport;
-        public Request(String name, int age, String sport) {
-            this.name = name;
-            this.age = age;
-            this.sport = sport;
-        }
 
-        public String getName() {
-            return name;
-        }
+    private List<Registration> getPendingRegistrations() throws SQLException {
+        List<Registration> registrations = RegistrationDao.getRegistrations();
+        return registrations.stream()
+                .filter(reg -> reg.getStatus().getIdStatus() == 1)
+                .collect(Collectors.toList());
+    }
 
-        public int getAge() {
-            return age;
-        }
-        public String getSport() {
-            return sport;
-        }
-    }
-    private List<Request> getPendingRequests() {
-        // Replace this with actual logic to fetch your requests
-        return List.of(
-                new Request("Cristiano Ronaldo", 39, "Futebol"),
-                new Request("Rayssa Leal", 16, "Skate"),
-                new Request("Cristiano Ronaldo", 39, "Futebol"),
-                new Request("Cristiano Ronaldo", 39, "Futebol")
-        );
-    }
     private void showNoRequestsMessage() {
         noRequestsLabel.setVisible(true);
-        requestsContainer.setVisible(false);
     }
 
-    private void displayRequests(List<Request> requests) {
+    private void displayRequests(List<Registration> registrations) {
         noRequestsLabel.setVisible(false);
-        requestsContainer.setVisible(true);
+        mainContainer.setVisible(true);
 
-        // Create and add request nodes dynamically
-        for (Request request : requests) {
-            HBox requestItem = createRequestItem(request);
-            requestsContainer.getChildren().add(requestItem);
+        for (Registration registration : registrations) {
+            VBox requestItem = createRequestItem(registration);
+            mainContainer.getChildren().add(requestItem);
         }
     }
 
-    private HBox createRequestItem(Request request) {
+    private VBox createRequestItem(Registration request) {
         VBox requestItem = new VBox();
         requestItem.setSpacing(10);
         requestItem.getStyleClass().add("request-item");
 
-        // Create the label for the name
-        Label nameLabel = new Label(request.getName());
+        Label nameLabel = new Label(request.getAthlete().getName());
         nameLabel.getStyleClass().add("name-label");
 
-        // Create the label for the age
-        Label ageLabel = new Label("Idade: " + request.getAge());
+        java.sql.Date birthDate = request.getAthlete().getDateOfBirth();
+        LocalDate birthLocalDate = birthDate.toLocalDate();
+        LocalDate currentDate = LocalDate.now();
+        int age = Period.between(birthLocalDate, currentDate).getYears();
+
+        Label ageLabel = new Label("Idade: " + age);
         ageLabel.getStyleClass().add("age-label");
 
-        Label sportLabel = new Label("Modalidade: " + request.getSport());
+        Label sportLabel = new Label("Modalidade: " + request.getSport().getName());
         sportLabel.getStyleClass().add("sport-label");
 
-        // Create the accept button with an image
+        Label teamLabel = new Label("Equipa: " + request.getTeam().getName());
+        teamLabel.getStyleClass().add("team-label");
+
         ImageView acceptImageView = new ImageView();
         URL iconAcceptURL = Main.class.getResource("img/iconAccept.png");
         if (iconAcceptURL != null) {
@@ -145,7 +141,6 @@ public class HomeController {
         acceptButton.setGraphic(acceptImageView);
         acceptButton.getStyleClass().add("acceptButton");
 
-        // Create the reject button with an image
         ImageView rejectImageView = new ImageView();
         URL iconRejectURL = Main.class.getResource("img/iconReject.png");
         if (iconRejectURL != null) {
@@ -159,20 +154,33 @@ public class HomeController {
         rejectButton.setGraphic(rejectImageView);
         rejectButton.getStyleClass().add("rejectButton");
 
-        // Place both buttons in an HBox
-        HBox buttonContainer = new HBox(10); // Spacing between buttons (10px)
-        buttonContainer.getChildren().addAll(acceptButton, rejectButton);
-        buttonContainer.setAlignment(Pos.CENTER_RIGHT); // Align buttons to the center
-        buttonContainer.setPadding(new Insets(10)); // Optional: Add padding around the buttons
+        acceptButton.setOnAction(event -> {
+            try {
+                RegistrationDao.updateRegistrationStatus(request.getIdRegistration(), 3);
+                Platform.runLater(() -> mainContainer.getChildren().remove(requestItem));
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
 
-        // Add the labels and button container to the request item
-        requestItem.getChildren().addAll(nameLabel,sportLabel, ageLabel, buttonContainer);
-        HBox container = new HBox(10); // Spacing between buttons (10px)
-        container.setMinWidth(750);
-        container.setAlignment(Pos.CENTER);
-        container.getChildren().addAll(requestItem);
-        return container;
+        rejectButton.setOnAction(event -> {
+            try {
+                RegistrationDao.updateRegistrationStatus(request.getIdRegistration(), 2);
+                Platform.runLater(() -> mainContainer.getChildren().remove(requestItem));
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
+
+        HBox buttonContainer = new HBox(10);
+        buttonContainer.getChildren().addAll(acceptButton, rejectButton);
+        buttonContainer.setAlignment(Pos.CENTER_RIGHT);
+        buttonContainer.setPadding(new Insets(10));
+
+        requestItem.getChildren().addAll(nameLabel, sportLabel, ageLabel, buttonContainer);
+        return requestItem;
     }
+
     public boolean changeMode(ActionEvent event){
         isDarkMode = !isDarkMode;
         if(isDarkMode){
@@ -192,6 +200,7 @@ public class HomeController {
         Image image = new Image(iconMoonStr);
         iconModeNav.setImage(image);
     }
+
     public void setDarkMode(){
         parent.getStylesheets().remove(String.valueOf(cssLight));
         parent.getStylesheets().add(String.valueOf(cssDark));
@@ -200,6 +209,7 @@ public class HomeController {
         Image image = new Image(iconMoonStr);
         iconModeNav.setImage(image);
     }
+
     public void mostrarRegistar(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
         Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/register.fxml")));
@@ -213,10 +223,38 @@ public class HomeController {
         stage.setScene(scene);
         stage.show();
     }
+
+    public void mostrarModalidades(ActionEvent event) throws IOException {
+        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
+        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/sportsView.fxml")));
+        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
+        scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
+        if(isDarkMode){
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+        }else{
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
+        }
+        stage.setScene(scene);
+        stage.show();
+    }
+
     public static void returnHomeMenu(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
         Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/home.fxml")));
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
+        if(isDarkMode){
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+        }else{
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
+        }
+        stage.setScene(scene);
+        stage.show();
+    }
+    public void mostrarRegistaModalidades(ActionEvent event) throws IOException {
+        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
+        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/sportRegister.fxml")));
+        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
         scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
         if(isDarkMode){
             scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());

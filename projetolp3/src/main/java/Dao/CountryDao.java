@@ -16,7 +16,7 @@ public class CountryDao {
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT * FROM tblCountry;");
         if (rs != null) {
             while (rs.next()) {
-                int idCountry = rs.getInt("idCountry");
+                String idCountry = rs.getString("idCountry");
                 String name = rs.getString("name");
                 String continent = rs.getString("continent");
 
@@ -81,7 +81,7 @@ public class CountryDao {
 
             stmt.setString(1, country.getName());
             stmt.setString(2, country.getContinent());
-            stmt.setInt(3, country.getIdCountry());
+            stmt.setString(3, country.getIdCountry());
             stmt.executeUpdate();
         } finally {
             if (stmt != null) {
@@ -93,7 +93,7 @@ public class CountryDao {
         }
     }
 
-    public static Country getCountryById(int idCountry) throws SQLException {
+    public static Country getCountryById(String idCountry) throws SQLException {
         String query = "SELECT * FROM tblCountry WHERE idCountry = ?";
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idCountry);
         if (rs != null && rs.next()) {

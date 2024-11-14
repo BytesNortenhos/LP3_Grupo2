@@ -1,5 +1,6 @@
 package Dao;
 
+import Models.Sport;
 import Utils.ConnectionsUtlis;
 import Models.Rule;
 
@@ -20,7 +21,9 @@ public class RuleDao {
                 int idSport = rs.getInt("idSport");
                 String description = rs.getString("description");
 
-                Rule rule = new Rule(idRule, idSport, description);
+                Sport sport = SportDao.getSportById(idSport);
+
+                Rule rule = new Rule(idRule, sport, description);
                 rules.add(rule);
             }
         } else {
@@ -37,7 +40,7 @@ public class RuleDao {
             conn = ConnectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
-            stmt.setInt(1, rule.getIdSport());
+            stmt.setInt(1, rule.getSport().getIdSport());
             stmt.setString(2, rule.getDesc());
             stmt.executeUpdate();
         } finally {
@@ -77,7 +80,7 @@ public class RuleDao {
             conn = ConnectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
-            stmt.setInt(1, rule.getIdSport());
+            stmt.setInt(1, rule.getSport().getIdSport());
             stmt.setString(2, rule.getDesc());
             stmt.setInt(3, rule.getIdRule());
             stmt.executeUpdate();
@@ -97,8 +100,38 @@ public class RuleDao {
         if (rs != null && rs.next()) {
             int idSport = rs.getInt("idSport");
             String description = rs.getString("description");
-            return new Rule(idRule, idSport, description);
+            Sport sport = SportDao.getSportById(idSport);
+            return new Rule(idRule, sport, description);
         }
         return null;
     }
+
+    public static List<Rule> getRulesBySport(int idSport) throws SQLException {
+        List<Rule> rules = new ArrayList<>();
+        String query = "SELECT r.idRule, r.description FROM tblRule r WHERE r.idSport = ?";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport);
+        while (rs.next()) {
+            int idRule = rs.getInt("idRule");
+            String description = rs.getString("description");
+            Sport sport = SportDao.getSportById(idSport);
+            Rule rule = new Rule(idRule, sport, description);
+            rules.add(rule);
+        }
+        return null;
+    }
+    public static List<Rule> getRulesBySportV2(int idSport) throws SQLException {
+        List<Rule> rules = new ArrayList<>();
+        String query = "SELECT r.idRule, r.description FROM tblRule r WHERE r.idSport = ?";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport);
+        while (rs.next()) {
+            int idRule = rs.getInt("idRule");
+            String description = rs.getString("description");
+
+            // InstÃ¢ncia de Rule com idSport
+            Rule rule = new Rule(idRule, idSport, description);
+            rules.add(rule);
+        }
+        return rules;  // Corrigido para retornar a lista de regras
+    }
+
 }

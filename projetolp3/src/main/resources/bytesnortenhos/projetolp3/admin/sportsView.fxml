@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitMenuButton?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane fx:id="parent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="background" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.SportsController">
+    <top>
+        <HBox styleClass="navBar" prefHeight="40.0" prefWidth="400.0">
+            <Button styleClass="iconHomeNav" onAction="#returnHomeMenu">
+                <graphic >
+                    <ImageView fx:id="iconHomeNav" fitWidth="55" fitHeight="55" preserveRatio="true" />
+                </graphic>
+            </Button>
+            <Pane HBox.hgrow="ALWAYS" />
+            <SplitMenuButton fx:id="sportSplitButton" styleClass="dropdownButton" text="Gerir modalidade">
+                <items>
+                    <MenuItem text="Visualizar modalidades" onAction="#mostrarModalidades"/>
+                    <MenuItem text="Registar modalidade" onAction="#mostrarRegistaModalidades"/>
+                </items>
+            </SplitMenuButton>
+            <SplitMenuButton fx:id="athleteSplitButton" styleClass="dropdownButton" text="Gerir atleta">
+                <items>
+                    <MenuItem text="Registar atleta" onAction="#mostrarRegistar"/>
+                </items>
+            </SplitMenuButton>
+            <Button mnemonicParsing="false" onAction="#changeMode" styleClass="iconMoonNav">
+                <graphic>
+                    <ImageView fx:id="iconModeNav" fitWidth="55" fitHeight="55" preserveRatio="true" />
+                </graphic>
+            </Button>
+        </HBox>
+    </top>
+    <center>
+        <VBox>
+            <Label styleClass="labelHome">Visualizar modalidades</Label>
+            <Label styleClass="textWelcome">Na lista abaixo poderá visualizar todas as modalidades</Label>
+            <ScrollPane fitToWidth="true" pannable="true" styleClass="scrollStyle">
+                <FlowPane fx:id="sportsContainer" alignment="CENTER" hgap="20" vgap="20" prefWrapLength="1040" prefHeight="600">
+                    <Label fx:id="noSportsLabel" text="Não existem pedidos pendentes" visible="false" />
+                    <!-- Requests will be dynamically added here -->
+                </FlowPane>
+            </ScrollPane>
+        </VBox>
+    </center>
+</BorderPane>

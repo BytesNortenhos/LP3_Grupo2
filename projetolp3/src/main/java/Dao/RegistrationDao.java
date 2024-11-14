@@ -1,8 +1,7 @@
 package Dao;
 
-import Models.RegistrationStatus;
+import Models.*;
 import Utils.ConnectionsUtlis;
-import Models.Registration;
 
 import javax.sql.rowset.CachedRowSet;
 import java.sql.Connection;
@@ -22,9 +21,11 @@ public class RegistrationDao {
                 int idTeam = rs.getInt("idTeam");
                 int idSport = rs.getInt("idSport");
                 int idStatus = rs.getInt("idStatus");
+                Athlete athlete = AthleteDao.getAthleteById(idAthlete);
+                Team team = TeamDao.getTeamByIdV2(idTeam);
+                Sport sport = SportDao.getSportByIdV2(idSport);
                 RegistrationStatus status = RegistrationStatusDao.getRegistrationStatusById(idStatus);
-
-                Registration registration = new Registration(idRegistration, idAthlete, idTeam, idSport, status);
+                Registration registration = new Registration(idRegistration, athlete, team, sport, status);
                 registrations.add(registration);
             }
         } else {
@@ -41,9 +42,9 @@ public class RegistrationDao {
             conn = ConnectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
-            stmt.setInt(1, registration.getIdAthlete());
-            stmt.setInt(2, registration.getIdTeam());
-            stmt.setInt(3, registration.getIdSport());
+            stmt.setInt(1, registration.getAthlete().getIdAthlete());
+            stmt.setInt(2, registration.getTeam().getIdTeam());
+            stmt.setInt(3, registration.getSport().getIdSport());
             stmt.setInt(4, registration.getStatus().getIdStatus());
             stmt.executeUpdate();
         } finally {
@@ -83,12 +84,34 @@ public class RegistrationDao {
             conn = ConnectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
-            stmt.setInt(1, registration.getIdAthlete());
-            stmt.setInt(2, registration.getIdTeam());
-            stmt.setInt(3, registration.getIdSport());
+            stmt.setInt(1, registration.getAthlete().getIdAthlete());
+            stmt.setInt(2, registration.getTeam().getIdTeam());
+            stmt.setInt(3, registration.getSport().getIdSport());
             stmt.setInt(4, registration.getStatus().getIdStatus());
             stmt.setInt(5, registration.getIdRegistration());
             stmt.executeUpdate();
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+    }
+    public static void updateRegistrationStatus(int registrationId, int newStatus) throws SQLException {
+        String query = "UPDATE tblRegistration SET idStatus = ? WHERE idRegistration = ?";
+        Connection conn = null;
+        PreparedStatement stmt = null;
+
+        try {
+            conn = ConnectionsUtlis.dbConnect();
+            stmt = conn.prepareStatement(query);
+
+            stmt.setInt(1, newStatus);  // novo status (2 para rejeitar, 3 para aceitar)
+            stmt.setInt(2, registrationId); // id da inscrição
+
+            stmt.executeUpdate(); // Executa a atualização
         } finally {
             if (stmt != null) {
                 stmt.close();
@@ -107,9 +130,40 @@ public class RegistrationDao {
             int idTeam = rs.getInt("idTeam");
             int idSport = rs.getInt("idSport");
             int idStatus = rs.getInt("idStatus");
+
+            Athlete athlete = AthleteDao.getAthleteById(idAthlete);
+            Team team = TeamDao.getTeamById(idTeam);
+            Sport sport = SportDao.getSportById(idSport);
             RegistrationStatus status = RegistrationStatusDao.getRegistrationStatusById(idStatus);
-            return new Registration(idRegistration, idAthlete, idTeam, idSport, status);
+            return new Registration(idRegistration, athlete, team, sport, status);
         }
         return null;
     }
+    public static List<Registration> getPendingRegistrations() throws SQLException {
+        List<Registration> registrations = new ArrayList<>();
+        // Query modificada para buscar apenas registros com idStatus = 1
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT * FROM tblRegistration WHERE idStatus = 1;");
+
+        if (rs != null) {
+            while (rs.next()) {
+                int idRegistration = rs.getInt("idRegistration");
+                int idAthlete = rs.getInt("idAthlete");
+                int idTeam = rs.getInt("idTeam");
+                int idSport = rs.getInt("idSport");
+                int idStatus = rs.getInt("idStatus");
+
+                Athlete athlete = AthleteDao.getAthleteById(idAthlete);
+                Team team = TeamDao.getTeamById(idTeam);
+                Sport sport = SportDao.getSportById(idSport);
+                RegistrationStatus status = RegistrationStatusDao.getRegistrationStatusById(idStatus);
+
+                Registration registration = new Registration(idRegistration, athlete, team, sport, status);
+                registrations.add(registration);
+            }
+        } else {
+            System.out.println("ResultSet is null. No results found.");
+        }
+        return registrations;
+    }
+
 }

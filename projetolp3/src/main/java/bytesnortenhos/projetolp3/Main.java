@@ -1,6 +1,8 @@
 package bytesnortenhos.projetolp3;
 
 import Dao.AthleteDao;
+import Dao.CountryDao;
+import Dao.TesteDao;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -45,7 +47,6 @@ public class Main extends Application {
         } catch (IOException e) {
             System.err.println("Error loading FXML file: " + e.getMessage());
         }
-        AthleteDao.getAthletes();
     }
 
     private Scene createScene(Parent root) {

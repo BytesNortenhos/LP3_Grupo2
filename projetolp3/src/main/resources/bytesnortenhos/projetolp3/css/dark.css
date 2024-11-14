@@ -91,22 +91,11 @@
     line-height: 120%;
     -fx-text-fill: #F7EED8;
 }
-.boxAccept{
-    visibility: false;
-    -fx-translate-x: 30px;
-    -fx-translate-y: 60px;
-    -fx-background-color: #3A3A38;
-    -fx-min-height: 130px;
-    -fx-min-width: 660px;
-    -fx-border-radius: 20px;
-    -fx-background-radius: 20px;
-}
 .request-item {
-    -fx-translate-x: 30px;
     -fx-background-color: #2c2c2c;
     -fx-padding: 15;
-    -fx-max-width: 750px;
-    -fx-min-width: 750px;
+    -fx-max-width: 500px; /* Ensure consistent width */
+    -fx-min-width: 500px; /* Ensure consistent width */
     -fx-border-radius: 10;
     -fx-background-radius: 10;
     -fx-alignment: center-left;
@@ -120,7 +109,7 @@
     line-height: 120%;
     -fx-text-fill: #F7EED8;
 }
-.age-label, .sport-label {
+.age-label, .sport-label, .type-label, .description-label, .gender-label, .minPart-label, .scoringMeasure-label, .oneGame-label {
     -fx-font-family: 'Inter';
     -fx-font-style: normal;
     -fx-font-weight: 400;
@@ -141,9 +130,21 @@
     -fx-translate-y: 30px;
     -fx-padding: 10px;
 }
-#mainContainer, .scrollStyle{
-    -fx-alignment: center;
+#noRequest{
+    -fx-min-height: 500px;
+    -fx-min-width: 1000px;
+    -fx-background-color: #1E1E1E
+}
+#mainContainer, .scrollStyle, #sportsContainer{
     -fx-background-color: #1E1E1E;
+}
+#mainContainer, #sportsContainer{
+    -fx-pref-width: 1000px;
+}
+#noRequestsLabel{
+    -fx-text-fill: red;
+    -fx-font-size: 30px;
+    -fx-translate-x: 30px;
 }
 .scroll-pane .scroll-bar .track,
 .scroll-pane .scroll-bar .increment-button,
@@ -235,6 +236,43 @@
 
 /* Hover effect on the ComboBox */
 .registerDrop:hover {
+    -fx-border-color: lightgray; /* Change border color on hover */
+}
+
+.registerDropBig {
+    -fx-background-color: #3A3A38; /* Dark background color */
+    -fx-min-width: 350px;
+    -fx-max-width: 350px;
+    -fx-background-radius: 20; /* Rounded corners */
+    -fx-border-radius: 20;
+    -fx-border-color: gray; /* Border color */
+    -fx-border-width: 2px;
+    -fx-padding: 0 10 0 10;
+    -fx-font-size: 16px;
+}
+
+/* Text color and style for ComboBox */
+.registerDropBig .list-cell {
+    -fx-text-fill: #F7EED8; /* Light text color */
+    -fx-background-color: #3A3A38;
+}
+.registerDropBig .list-cell:hover {
+    -fx-text-fill: #3A3A38; /* Light text color */
+    -fx-background-color: #F7EED8;
+}
+
+/* Styling the ComboBox arrow */
+.registerDropBig .arrow-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0 5 0 5;
+}
+
+.registerDropBig .arrow {
+    -fx-background-color: #F7EED8; /* Color of the dropdown arrow */
+}
+
+/* Hover effect on the ComboBox */
+.registerDropBig:hover {
     -fx-border-color: lightgray; /* Change border color on hover */
 }
 

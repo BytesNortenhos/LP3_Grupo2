@@ -1,5 +1,7 @@
 package Models;
 
+import jakarta.xml.bind.annotation.*;
+
 import java.util.List;
 
 public class Sport {
@@ -14,6 +16,8 @@ public class Sport {
     private OlympicRecord olympicRecord;
     private List<WinnerOlympic> winnerOlympic;
     private List<Rule> rules;
+
+    private int idGender; // Atributo para armazenar apenas o id do gênero
 
     /**
      * Constructor of Sport
@@ -44,8 +48,22 @@ public class Sport {
         this.winnerOlympic = winnerOlympic;
         this.rules = rules;
     }
-    public Sport() {}
 
+    public Sport(int idSport, String type, int idGender, String name, String desc, int minParticipants,
+                 String scoringMeasure, String oneGame, OlympicRecord olympicRecord, List<WinnerOlympic> winnerOlympic,
+                 List<Rule> rules) {
+        this.idSport = idSport;
+        this.type = type;
+        this.idGender = idGender; // Atribui o id do gênero diretamente
+        this.name = name;
+        this.desc = desc;
+        this.minParticipants = minParticipants;
+        this.scoringMeasure = scoringMeasure;
+        this.oneGame = oneGame;
+        this.olympicRecord = olympicRecord;
+        this.winnerOlympic = winnerOlympic;
+        this.rules = rules;
+    }
     /**
      * Get Sport ID
      * @return int

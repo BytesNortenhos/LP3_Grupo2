@@ -2,19 +2,28 @@ package Models;
 
 public class Medal {
     private int idMedal;
-    private int idAthlete = 0;
-    private int idTeam = 0;
+    private Athlete athlete;
+    private Team team;
     private int year;
     private MedalType medalType;
 
+    private int idAthlete;  // Armazena o ID do atleta
+    private int idTeam;      // Armazena o ID do time
     /**
      * Constructor of Medal for Athlete
      * @param idMedal {int} Medal ID
-     * @param idAthlete {int} Athlete ID
-     * @param idTeam {int} Team ID
+     * @param athlete {Athlete} Athlete
+     * @param team {Team} Team
      * @param year {int} Year
      * @param medalType {MedalType} MedalType
      */
+    public Medal(int idMedal, Athlete athlete, Team team, int year, MedalType medalType) {
+        this.idMedal = idMedal;
+        this.athlete = athlete;
+        this.team = team;
+        this.year = year;
+        this.medalType = medalType;
+    }
     public Medal(int idMedal, int idAthlete, int idTeam, int year, MedalType medalType) {
         this.idMedal = idMedal;
         this.idAthlete = idAthlete;
@@ -22,7 +31,6 @@ public class Medal {
         this.year = year;
         this.medalType = medalType;
     }
-
     /**
      * Get Medal ID
      * @return int
@@ -40,35 +48,35 @@ public class Medal {
     }
 
     /**
-     * Get Athlete ID
-     * @return int
+     * Get Athlete
+     * @return Athlete
      */
-    public int getIdAthlete() {
-        return idAthlete;
+    public Athlete getAthlete() {
+        return athlete;
     }
 
     /**
-     * Set Athlete ID
-     * @param idAthlete {int} Athlete ID
+     * Set Athlete
+     * @param athlete {Athlete}
      */
-    public void setIdAthlete(int idAthlete) {
-        this.idAthlete = idAthlete;
+    public void setAthlete(Athlete athlete) {
+        this.athlete = athlete;
     }
 
     /**
-     * Get Team ID
-     * @return int
+     * Get Team
+     * @return Team
      */
-    public int getIdTeam() {
-        return idTeam;
+    public Team getTeam() {
+        return team;
     }
 
     /**
-     * Set Team ID
-     * @param idTeam int
+     * Set Team
+     * @param team {Team}
      */
-    public void setIdTeam(int idTeam) {
-        this.idTeam = idTeam;
+    public void setTeam(Team team) {
+        this.team = team;
     }
 
     /**

@@ -1,9 +1,7 @@
 package Dao;
 
-import Models.Medal;
-import Models.MedalType;
+import Models.*;
 import Utils.ConnectionsUtlis;
-import Models.WinnerOlympic;
 
 import javax.sql.rowset.CachedRowSet;
 import java.sql.Connection;
@@ -15,13 +13,7 @@ import java.util.List;
 public class WinnerOlympicDao {
     public static List<WinnerOlympic> getWinnerOlympics() throws SQLException {
         List<WinnerOlympic> winners = new ArrayList<>();
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT wo.idSport, wo.year, wo.idAthlete, wo.idTeam, wo.timeMS, " +
-                "wo.idMedal, m.idMedal AS medalId, m.idAthlete AS medalAthlete, " +
-                "m.idTeam AS medalTeam, m.year AS medalYear, m.idMedalType, " +
-                "mt.descMedalType " +
-                "FROM tblWinnerOlympic wo " +
-                "INNER JOIN tblMedal m ON wo.idMedal = m.idMedal " +
-                "INNER JOIN tblMedalType mt ON m.idMedalType = mt.idMedalType;");
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT * FROM tblWinnerOlympic");
         if (rs != null) {
             while (rs.next()) {
                 int idSport = rs.getInt("idSport");
@@ -30,15 +22,12 @@ public class WinnerOlympicDao {
                 int idTeam = rs.getInt("idTeam");
                 int timeMS = rs.getInt("timeMS");
                 int idMedal = rs.getInt("medalId");
-                int medalAthlete = rs.getInt("medalAthlete");
-                int medalTeam = rs.getInt("medalTeam");
-                int medalYear = rs.getInt("medalYear");
-                int medalTypeId = rs.getInt("idMedalType");
-                String medalTypeDescription = rs.getString("descMedalType");
-                MedalType medalType = new MedalType(medalTypeId, medalTypeDescription);
-                Medal medal = new Medal(idMedal, medalAthlete, medalTeam, medalYear, medalType);
+                Sport sport = SportDao.getSportById(idSport);
+                Athlete athlete = AthleteDao.getAthleteById(idAthlete);
+                Team team = TeamDao.getTeamById(idTeam);
+                Medal medal = MedalDao.getMedalById(idMedal);
 
-                WinnerOlympic winner = new WinnerOlympic(idSport, year, idAthlete, idTeam, timeMS, medal);
+                WinnerOlympic winner = new WinnerOlympic(sport, year, athlete, team, timeMS, medal);
                 winners.add(winner);
             }
         } else {
@@ -55,10 +44,10 @@ public class WinnerOlympicDao {
             conn = ConnectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
-            stmt.setInt(1, winner.getIdSport());
+            stmt.setInt(1, winner.getSport().getIdSport());
             stmt.setInt(2, winner.getYear());
-            stmt.setInt(3, winner.getIdAthlete());
-            stmt.setInt(4, winner.getIdTeam());
+            stmt.setInt(3, winner.getAthlete().getIdAthlete());
+            stmt.setInt(4, winner.getTeam().getIdTeam());
             stmt.setInt(5, winner.getTimeMS());
             stmt.setInt(6, winner.getMedal().getIdMedal());
             stmt.executeUpdate();
@@ -100,11 +89,11 @@ public class WinnerOlympicDao {
             conn = ConnectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
-            stmt.setInt(1, winner.getIdAthlete());
-            stmt.setInt(2, winner.getIdTeam());
+            stmt.setInt(1, winner.getAthlete().getIdAthlete());
+            stmt.setInt(2, winner.getTeam().getIdTeam());
             stmt.setInt(3, winner.getTimeMS());
             stmt.setInt(4, winner.getMedal().getIdMedal());
-            stmt.setInt(5, winner.getIdSport());
+            stmt.setInt(5, winner.getSport().getIdSport());
             stmt.setInt(6, winner.getYear());
             stmt.executeUpdate();
         } finally {
@@ -118,24 +107,87 @@ public class WinnerOlympicDao {
     }
 
     public static WinnerOlympic getWinnerOlympicById(int idSport, int year) throws SQLException {
-        String query = "SELECT wo.idAthlete, wo.idTeam, wo.timeMS, wo.idMedal, " +
-                "m.idMedal AS medalId, m.year AS medalYear, " +
-                "m.idMedalType AS medalTypeId, mt.descMedalType AS medalTypeDesc " +
-                "FROM tblWinnerOlympic wo " +
-                "INNER JOIN tblMedal m ON wo.idMedal = m.idMedal " +
-                "INNER JOIN tblMedalType mt ON m.idMedalType = mt.idMedalType " +
-                "WHERE wo.idSport = ? AND wo.year = ?";
+        String query = "SELECT * FROM tblWinnerOlympic WHERE idSport = ? AND year = ?";
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, year);
         if (rs != null && rs.next()) {
             int idAthlete = rs.getInt("idAthlete");
             int idTeam = rs.getInt("idTeam");
             int timeMS = rs.getInt("timeMS");
             int idMedal = rs.getInt("medalId");
-            int medalTypeId = rs.getInt("medalTypeId");
-            String medalTypeDesc = rs.getString("medalTypeDesc");
-            Medal medal = new Medal(idMedal, idAthlete, idTeam, year, new MedalType(medalTypeId, medalTypeDesc));;
-            return new WinnerOlympic(idSport, year, idAthlete, idTeam, timeMS, medal);
+            Sport sport = SportDao.getSportById(idSport);
+            Athlete athlete = AthleteDao.getAthleteById(idAthlete);
+            Team team = TeamDao.getTeamById(idTeam);
+            Medal medal = MedalDao.getMedalById(idMedal);
+            return new WinnerOlympic(sport, year, athlete, team, timeMS, medal);
         }
         return null;
     }
+
+    public static List<WinnerOlympic> getWinnerOlympicsBySport(int idSport) throws SQLException {
+        List<WinnerOlympic> winnerOlympics = new ArrayList<>();
+        String query = (" SELECT wo.*, a.idAthlete,a.name AS athleteName," +
+                "t.idTeam, t.name AS teamName," +
+                "m.idMedal, mt.descMedalType " +
+                "FROM tblWinnerOlympic wo " +
+                "JOIN tblAthlete a ON wo.idAthlete = a.idAthlete " +
+                "JOIN tblTeam t ON wo.idTeam = t.idTeam " +
+                "JOIN tblMedal m ON wo.idMedal = m.idMedal " +
+                "JOIN tblMedalType mt ON m.idMedalType = mt.idMedalType " +
+                "WHERE wo.idSport = ?");
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport);
+        while (rs.next()) {
+            int year = rs.getInt("year");
+            int timeMS = rs.getInt("timeMS");
+
+            Sport sport = SportDao.getSportById(idSport);
+
+            int idAthlete = rs.getInt("idAthlete");
+            Athlete athlete = AthleteDao.getAthleteById(idAthlete);
+
+            int idTeam = rs.getInt("idTeam");
+            Team team = TeamDao.getTeamById(idTeam);
+
+            int idMedal = rs.getInt("idMedal");
+            String descMedalType = rs.getString("descMedalType");
+            MedalType medalType = new MedalType(idMedal, descMedalType);
+            Medal medal = new Medal(idMedal, athlete, team, year, medalType);
+
+            WinnerOlympic winnerOlympic = new WinnerOlympic(sport, year, athlete, team, timeMS, medal);
+            winnerOlympics.add(winnerOlympic);
+        }
+        return winnerOlympics;
+    }
+    public static List<WinnerOlympic> getWinnerOlympicsBySportV2(int idSport) throws SQLException {
+        List<WinnerOlympic> winnerOlympics = new ArrayList<>();
+        String query = ("SELECT wo.*, a.idAthlete, a.name AS athleteName, " +
+                "t.idTeam, t.name AS teamName, " +
+                "m.idMedal, mt.descMedalType " +
+                "FROM tblWinnerOlympic wo " +
+                "JOIN tblAthlete a ON wo.idAthlete = a.idAthlete " +
+                "JOIN tblTeam t ON wo.idTeam = t.idTeam " +
+                "JOIN tblMedal m ON wo.idMedal = m.idMedal " +
+                "JOIN tblMedalType mt ON m.idMedalType = mt.idMedalType " +
+                "WHERE wo.idSport = ?");
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport);
+
+        while (rs.next()) {
+            int year = rs.getInt("year");
+            int timeMS = rs.getInt("timeMS");
+
+            int idAthlete = rs.getInt("idAthlete");
+            int idTeam = rs.getInt("idTeam");
+            int idMedal = rs.getInt("idMedal");
+
+            // Ainda criamos o objeto Medal porque ele é um parâmetro no construtor
+            String descMedalType = rs.getString("descMedalType");
+            MedalType medalType = new MedalType(idMedal, descMedalType);
+            Medal medal = new Medal(idMedal, idAthlete, idTeam, year, medalType);
+
+            // Agora usamos o novo construtor que aceita IDs ao invés de objetos
+            WinnerOlympic winnerOlympic = new WinnerOlympic(idSport, year, idAthlete, idTeam, timeMS, medal);
+            winnerOlympics.add(winnerOlympic);
+        }
+        return winnerOlympics;
+    }
+
 }

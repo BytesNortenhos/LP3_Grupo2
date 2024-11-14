@@ -20,6 +20,8 @@
 <?import javafx.scene.control.skin.TabPaneSkin.TabControlButtons?>
 <?import javafx.scene.control.SplitMenuButton?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.layout.FlowPane?>
+
 <BorderPane fx:id="parent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="background" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.HomeController">
   <top>
     <HBox styleClass="navBar" prefHeight="40.0" prefWidth="400.0">
@@ -29,7 +31,13 @@
         </graphic>
       </Button>
       <Pane HBox.hgrow="ALWAYS" />
-      <SplitMenuButton fx:id="splitMenuButton" styleClass="dropdownButton" text="Gerir atleta">
+      <SplitMenuButton fx:id="sportSplitButton" styleClass="dropdownButton" text="Gerir modalidade">
+        <items>
+          <MenuItem text="Visualizar modalidades" onAction="#mostrarModalidades"/>
+          <MenuItem text="Registar modalidade" onAction="#mostrarRegistaModalidades"/>
+        </items>
+      </SplitMenuButton>
+      <SplitMenuButton fx:id="athleteSplitButton" styleClass="dropdownButton" text="Gerir atleta">
         <items>
           <MenuItem text="Registar atleta" onAction="#mostrarRegistar"/>
         </items>
@@ -46,12 +54,10 @@
       <Label styleClass="labelHome">Inicio</Label>
       <Label styleClass="textWelcome">Lista de membros com aprovação pendente para inscrição em modalidades</Label>
       <ScrollPane fitToWidth="true" pannable="true" styleClass="scrollStyle">
-        <VBox fx:id="mainContainer" alignment="CENTER" spacing="20" xmlns:fx="http://javafx.com/fxml">
-          <Label fx:id="noRequestsLabel" text="Não existem pedidos pendentes" visible="false" />
-          <VBox fx:id="requestsContainer" spacing="10">
-            <!-- Requests will be dynamically added here -->
-          </VBox>
-        </VBox>
+        <FlowPane fx:id="mainContainer" alignment="CENTER" hgap="50" vgap="20" prefWrapLength="1010" xmlns:fx="http://javafx.com/fxml" prefHeight="600">
+          <Label fx:id="noRequestsLabel" text="Não existem pedidos pendentes!" visible="false" />
+          <!-- Requests will be dynamically added here -->
+        </FlowPane>
       </ScrollPane>
     </VBox>
   </center>

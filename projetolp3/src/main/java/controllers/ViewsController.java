@@ -29,7 +29,7 @@ public class ViewsController {
     @FXML
     private BorderPane parent;
     @FXML
-    private TextField userNameText;
+    private TextField idText;
     @FXML
     private PasswordField passwordText;
     private static boolean isDarkMode = true;
@@ -87,14 +87,19 @@ public class ViewsController {
     }
     @FXML
     private void handleEntrarButtonAction(ActionEvent event) throws Exception {
-        String username = userNameText.getText();
-        String password= "";
-        if(passwordText.getText() == null){
-            password = passwordText.getText();
-        }else{
-            password = passwordText.getText();
+        String idTemp = idText.getText();
+        if (idTemp.matches("\\d+")) {
+            int id = Integer.parseInt(idTemp);
+            String password= "";
+            if(passwordText.getText() == null){
+                password = passwordText.getText();
+            }else{
+                password = passwordText.getText();
+            }
+            LoginController.verificaLogin(id, password, event);
+        } else {
+            System.out.println("O ID deve conter apenas números.");
         }
-        LoginController.verificaLogin(username, password, event);
     }
     public static void verificaCargo(ActionEvent event) throws Exception {
         switch (LoginController.cargo) {

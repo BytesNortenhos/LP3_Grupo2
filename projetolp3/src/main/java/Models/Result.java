@@ -4,9 +4,9 @@ import java.util.Date;
 
 public class Result {
     private int idResult;
-    private int idSport;
-    private int idAthlete = 0;
-    private int idTeam = 0;
+    private Sport sport;
+    private Athlete athlete;
+    private Team team;
     private java.sql.Date date;
     private String result;
     private Local local;
@@ -14,18 +14,18 @@ public class Result {
     /**
      * Constructor of Result
      * @param idResult {int} Result ID
-     * @param idSport {int} Sport ID
-     * @param idAthlete {int} Athlete ID
-     * @param idTeam {int} Team ID
+     * @param sport {Sport} Sport
+     * @param athlete {Athlete} Athlete
+     * @param team {Team} Team
      * @param date {Date} Date
      * @param result {String} Result
      * @param local {Local} Local
      */
-    public Result(int idResult, int idSport, int idAthlete, int idTeam, Date date, String result, Local local) {
+    public Result(int idResult, Sport sport, Athlete athlete, Team team, Date date, String result, Local local) {
         this.idResult = idResult;
-        this.idSport = idSport;
-        this.idAthlete = idAthlete;
-        this.idTeam = idTeam;
+        this.sport = sport;
+        this.athlete = athlete;
+        this.team = team;
         this.date = (java.sql.Date) date;
         this.result = result;
         this.local = local;
@@ -48,56 +48,53 @@ public class Result {
     }
 
     /**
-     * Get Sport ID
-     * @return int
+     * Get Sport
+     * @return Sport
      */
-    public int getIdSport() {
-        return idSport;
+    public Sport getSport() {
+        return sport;
     }
 
     /**
-     * Set Sport ID
-     * @param idSport {int} Sport ID
+     * Set Sport
+     * @param sport {Sport} Sport
      */
-    public void setIdSport(int idSport) {
-        this.idSport = idSport;
+    public void setSport(Sport sport) {
+        this.sport = sport;
     }
 
     /**
-     * Get Athlete ID
-     * @return int
+     * Get Athlete
+     * @return Athlete
      */
-    public int getIdAthlete() {
-        return idAthlete;
+    public Athlete getAthlete() {
+        return athlete;
     }
 
     /**
-     * Set Athlete ID
-     * @param idAthlete {int} Athlete ID
+     * Set Athlete
+     * @param athlete {Athlete} Athlete
      */
-    public void setIdAthlete(int idAthlete) {
-        this.idAthlete = idAthlete;
+    public void setAthlete(Athlete athlete) {
+        this.athlete = athlete;
     }
 
     /**
-     * Get Team ID
-     * @return int
+     * Get Team
+     * @return Team
      */
-    public int getIdTeam() {
-        return idTeam;
-    }
+    public Team getTeam() {return team;}
 
     /**
-     * Set Team ID
-     * @param idTeam {int} Team ID
+     * Set Team
+     * @param team {Team} Team
      */
-    public void setIdTeam(int idTeam) {
-        this.idTeam = idTeam;
+    public void setTeam(Team team) {
+        this.team = team;
     }
 
     /**
      * Get Date
-     *
      * @return Date
      */
     public java.sql.Date getDate() {
