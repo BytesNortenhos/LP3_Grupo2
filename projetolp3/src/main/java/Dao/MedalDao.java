@@ -28,7 +28,8 @@ public class MedalDao {
                 int idTeam = rs.getInt("idTeam");
                 int year = rs.getInt("year");
                 MedalType medalType = new MedalType(rs.getInt("idMedalType"), rs.getString("medalTypeDescription"));
-                Athlete athlete = AthleteDao.getAthleteById(idAthlete);
+                AthleteDao athleteDao = new AthleteDao();
+                Athlete athlete = athleteDao.getAthleteById(idAthlete);
                 Team team = TeamDao.getTeamById(idTeam);
                 Medal medal = new Medal(idMedal, athlete, team, year, medalType);
                 medals.add(medal);
@@ -116,7 +117,8 @@ public class MedalDao {
             int idAthlete = rs.getInt("idAthlete");
             int idTeam = rs.getInt("idTeam");
             int year = rs.getInt("year");
-            Athlete athlete = AthleteDao.getAthleteById(idAthlete);
+            AthleteDao athleteDao = new AthleteDao();
+            Athlete athlete = athleteDao.getAthleteById(idAthlete);
             Team team = TeamDao.getTeamById(idTeam);
             MedalType medalType = new MedalType(rs.getInt("idMedalType"), rs.getString("medalTypeDescription"));
             return new Medal(idMedal, athlete, team, year, medalType);
@@ -140,7 +142,8 @@ public class MedalDao {
                 int year = rs.getInt("year");
                 MedalType medalType = new MedalType(rs.getInt("idMedalType"), rs.getString("medalTypeDescription"));
                 Team team = TeamDao.getTeamById(idTeam);
-                Athlete athlete = AthleteDao.getAthleteById(idAthlete);
+                AthleteDao athleteDao = new AthleteDao();
+                Athlete athlete = athleteDao.getAthleteById(idAthlete);
                 Medal medal = new Medal(idMedal, athlete, team, year, medalType);
                 medals.add(medal);
             }

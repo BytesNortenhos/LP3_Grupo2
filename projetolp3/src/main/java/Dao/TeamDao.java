@@ -34,7 +34,8 @@ public class TeamDao {
                 int yearFounded = rs.getInt("yearFounded");
                 Country country = new Country(idCountry, countryName, continent);
                 Gender gender = new Gender(idGender, genderDesc);
-                Sport sport = SportDao.getSportById(idSport);
+                SportDao sportDao = new SportDao();
+                Sport sport = sportDao.getSportById(idSport);
 
                 Team team = new Team(idTeam, teamName, country, gender, sport, yearFounded);
                 teams.add(team);
@@ -133,12 +134,37 @@ public class TeamDao {
             int yearFounded = rs.getInt("yearFounded");
             Country country = new Country(idCountry, countryName, continent);
             Gender gender = new Gender(genderId, genderDesc);
-            Sport sport = SportDao.getSportById(idSport);
+            SportDao sportDao = new SportDao();
+            Sport sport = sportDao.getSportById(idSport);
             return new Team(idTeam, teamName, country, gender, sport, yearFounded);
         }
         return null;
     }
-    public static Team getTeamByIdV2(int idTeam) throws SQLException {
+    public List<List> getTeamToShow(int idAthlete) throws SQLException {
+        List<List> teams = new ArrayList<>();
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT t.idTeam, t.name AS teamName, " +
+                "g.idGender AS genderId, g.description AS genderDesc, " +
+                "c.idCountry, c.name AS countryName " +
+                "FROM tblTeam t " +
+                "INNER JOIN tblGender g ON t.idGender = g.idGender " +
+                "INNER JOIN tblCountry c ON t.idCountry = c.idCountry; ");
+        if (rs != null) {
+            while (rs.next()) {
+                List<String> team = new ArrayList<>();
+                team.add(rs.getString("idTeam"));
+                team.add(rs.getString("teamName"));
+                team.add(rs.getString("genderId"));
+                team.add(rs.getString("genderDesc"));
+                team.add(rs.getString("idCountry"));
+                team.add(rs.getString("countryName"));
+                teams.add(team);
+            }
+        }else {
+            System.out.println("ResultSet is null. No results for Sport found.");
+        }
+        return teams;
+    }
+    public Team getTeamByIdV2(int idTeam) throws SQLException {
         String query = "SELECT t.idTeam, t.name AS teamName, c.idCountry, c.name AS countryName, c.continent, " +
                 "g.idGender AS genderId, g.description AS genderDesc, " +
                 "t.idSport, t.yearFounded " +
@@ -166,4 +192,33 @@ public class TeamDao {
         }
         return null;
     }
+
+    public static Team getTeamByIdMinimum(int idTeam) throws SQLException {
+        String query = "SELECT t.idTeam, t.name AS teamName, c.idCountry, c.name AS countryName, " +
+                "g.idGender AS genderId, g.description AS genderDesc, " +
+                "t.idSport, t.yearFounded " +
+                "FROM tblTeam t " +
+                "INNER JOIN tblCountry c ON t.idCountry = c.idCountry " +
+                "INNER JOIN tblGender g ON t.idGender = g.idGender " +
+                "WHERE t.idTeam = ?";
+
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idTeam);
+        if (rs != null && rs.next()) {
+            String teamName = rs.getString("teamName");
+            String idCountry = rs.getString("idCountry");
+            String countryName = rs.getString("countryName");
+            int genderId = rs.getInt("genderId");
+            String genderDesc = rs.getString("genderDesc");
+            int idSport = rs.getInt("idSport"); // Apenas o ID do esporte
+            int yearFounded = rs.getInt("yearFounded");
+
+            Country country = new Country(idCountry, countryName);
+            Gender gender = new Gender(genderId, genderDesc);
+
+            // Aqui o esporte ainda não é carregado; será carregado quando necessário
+            return new Team(idTeam, teamName, country, gender, idSport, yearFounded);
+        }
+        return null;
+    }
+
 }

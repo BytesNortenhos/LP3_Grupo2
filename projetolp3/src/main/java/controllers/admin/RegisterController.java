@@ -1,4 +1,4 @@
-package controllers;
+package controllers.admin;
 
 import Dao.AthleteDao; // Importar a classe AthleteDao
 import Dao.CountryDao; // Importar a classe CountryDao
@@ -7,12 +7,14 @@ import Models.Athlete; // Importar a classe Athlete
 import Models.Country; // Importar a classe Country
 import Models.Gender;
 import bytesnortenhos.projetolp3.Main;
+import controllers.ViewsController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -27,6 +29,7 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 public class RegisterController {
     private static Stage stage;
@@ -35,7 +38,10 @@ public class RegisterController {
     URL cssLightURL = Main.class.getResource("css/light.css");
     String cssDark = cssDarkURL.toExternalForm();
     String cssLight = cssLightURL.toExternalForm();
-
+    @FXML
+    private ImageView iconOlympic;
+    @FXML
+    private ImageView iconLogoutNav;
     @FXML
     private BorderPane parent;
     @FXML
@@ -60,18 +66,16 @@ public class RegisterController {
     @FXML
     private TextField heightText; // Campo de texto para altura
     @FXML
-    private DatePicker datePicker; // DatePicker para data de nascimento
+    private DatePicker datePicker;
 
     public void initialize() {
-        // Configuração dos ícones
-        loadIcons();
-
-        // Carregar gêneros na ComboBox de gênero
-        loadGenders();
-
-        // Carregar países na ComboBox de nacionalidade
         loadCountries();
-
+        loadIcons();
+        loadGenders();
+        URL iconOlympicURL = Main.class.getResource("img/iconAthlete.png");
+        String iconOlympicStr = ((URL) iconOlympicURL).toExternalForm();
+        Image image = new Image(iconOlympicStr);
+        if(iconOlympic != null) iconOlympic.setImage(image);
         athleteSplitButton.setOnMouseClicked(event -> athleteSplitButton.show());
         sportSplitButton.setOnMouseClicked(mouseEvent -> sportSplitButton.show());
     }
@@ -84,6 +88,10 @@ public class RegisterController {
         URL iconHomeNavURL = Main.class.getResource("img/iconOlympic.png");
         image = new Image(iconHomeNavURL.toExternalForm());
         if (iconHomeNav != null) iconHomeNav.setImage(image);
+
+        URL iconLogoutNavURL = Main.class.getResource("img/iconLogoutDark.png");
+        image = new Image(iconLogoutNavURL.toExternalForm());
+        if(iconLogoutNav != null) iconLogoutNav.setImage(image);
     }
 
     private void loadGenders() {
@@ -110,19 +118,15 @@ public class RegisterController {
     // Novo método para carregar os países
     private void loadCountries() {
         try {
-            // Limpar qualquer item existente em nacDrop
             nacDrop.getItems().clear();
 
-            // Obter a lista de países do banco de dados
             List<Country> countries = CountryDao.getCountries();
             ObservableList<String> countryOptions = FXCollections.observableArrayList();
 
-            // Adicionar cada nome de país à lista
             for (Country country : countries) {
                 countryOptions.add(country.getName());
             }
 
-            // Definir itens da ComboBox de nacionalidade
             nacDrop.setItems(countryOptions);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -163,10 +167,18 @@ public class RegisterController {
                 AthleteDao.updateAthletePassword(generatedId, generatedPassword); // Passa o id e a senha gerada
 
                 // Exibir uma mensagem de sucesso ou redirecionar para outra tela
-                System.out.println("Atleta registrado com sucesso! ID gerado: " + generatedId);
-
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Sucesso!");
+                alert.setHeaderText("Atleta registrado com sucesso! ID gerado: " + generatedId);
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.isPresent() && result.get() == ButtonType.OK) {
+                    returnHomeMenu(event);
+                }
             } else {
-                System.out.println("Por favor, selecione um gênero e um país válidos.");
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setTitle("Erro!");
+                alerta.setHeaderText("Por favor, selecione um gênero e um país válidos.");
+                alerta.show();
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -177,7 +189,22 @@ public class RegisterController {
         }
     }
 
-
+    public void logout(ActionEvent event) throws Exception {
+        mostrarLogin(event);
+    }
+    public void mostrarLogin(ActionEvent event) throws IOException {
+        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
+        Parent root = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/loginView.fxml")));
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
+        if (isDarkMode) {
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+        } else {
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
+        }
+        stage.setScene(scene);
+        stage.show();
+    }
 
     private String generatePassword() {
         // Implementar lógica para gerar uma senha, ou coletar do usuário

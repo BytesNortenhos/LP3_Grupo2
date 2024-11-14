@@ -91,7 +91,7 @@ public class AdminDao {
         }
     }
 
-    public static Admin getAdminById(int id) throws SQLException {
+    public Admin getAdminById(int id) throws SQLException {
         String query = "SELECT * FROM tblAdmin WHERE id = ?";
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, id);
         if (rs != null && rs.next()) {

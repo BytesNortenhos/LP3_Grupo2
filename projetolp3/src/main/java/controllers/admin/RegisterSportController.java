@@ -1,18 +1,16 @@
-package controllers;
+package controllers.admin;
 
-import Dao.AthleteDao;
-import Dao.CountryDao;
 import Dao.GenderDao;
-import Models.Athlete;
-import Models.Country;
 import Models.Gender;
 import bytesnortenhos.projetolp3.Main;
+import controllers.ViewsController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -42,6 +40,10 @@ public class RegisterSportController {
     private ImageView iconModeNav;
     @FXML
     private ImageView iconHomeNav;
+    @FXML
+    private ImageView iconSports;
+    @FXML
+    private ImageView iconLogoutNav;
     private static boolean isDarkMode = true;
 
     @FXML
@@ -54,27 +56,31 @@ public class RegisterSportController {
 
 
     public void initialize() {
-        // Configuração dos ícones
         loadIcons();
 
-        // Carregar gêneros na ComboBox de gênero
         loadGenders();
-
-        // Carregar países na ComboBox de nacionalidade
-//        loadCountries();
 
         athleteSplitButton.setOnMouseClicked(event -> athleteSplitButton.show());
         sportSplitButton.setOnMouseClicked(mouseEvent -> sportSplitButton.show());
     }
 
     private void loadIcons() {
+
         URL iconMoonNavURL = Main.class.getResource("img/iconMoon.png");
         Image image = new Image(iconMoonNavURL.toExternalForm());
         if (iconModeNav != null) iconModeNav.setImage(image);
 
+        URL iconOlympicURL = Main.class.getResource("img/iconSports.png");
+        image = new Image(iconOlympicURL.toExternalForm());
+        if(iconSports != null) iconSports.setImage(image);
+
         URL iconHomeNavURL = Main.class.getResource("img/iconOlympic.png");
         image = new Image(iconHomeNavURL.toExternalForm());
         if (iconHomeNav != null) iconHomeNav.setImage(image);
+
+        URL iconLogoutNavURL = Main.class.getResource("img/iconLogoutDark.png");
+        image = new Image(iconLogoutNavURL.toExternalForm());
+        if(iconLogoutNav != null) iconLogoutNav.setImage(image);
     }
 
     private void loadGenders() {
@@ -175,5 +181,20 @@ public class RegisterSportController {
         stage.setScene(scene);
         stage.show();
     }
-
+    public void logout(ActionEvent event) throws Exception {
+        mostrarLogin(event);
+    }
+    public void mostrarLogin(ActionEvent event) throws IOException {
+        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
+        Parent root = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/loginView.fxml")));
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
+        if (isDarkMode) {
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+        } else {
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
+        }
+        stage.setScene(scene);
+        stage.show();
+    }
 }

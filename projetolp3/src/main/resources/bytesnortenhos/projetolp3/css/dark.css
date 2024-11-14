@@ -24,7 +24,7 @@
 .iconOlympic{
     -fx-translate-y: -100px;
 }
-.iconMoon, .iconMoonNav, .iconHomeNav{
+.iconMoon, .iconMoonNav, .iconHomeNav, .iconLogoutNav{
     -fx-cursor: hand;
     -fx-border-color: transparent;
     -fx-background-color: transparent;
@@ -66,7 +66,7 @@
     -fx-prompt-text-fill: #1E1E1E;
     -fx-border-color: #9B9898;
 }
-.buttonReg:hover, .iconMoonNav:hover, .iconHomeNav:hover, #buttonRegSelect{
+.buttonReg:hover, .iconMoonNav:hover, .iconHomeNav:hover, #buttonRegSelect, .iconLogoutNav:hover{
     -fx-background-color: #9B9898;
 }
 .labelHome{
@@ -348,4 +348,11 @@
     -fx-background-color: #F7EED8;
     -fx-text-fill: #1E1E1E;
     -fx-border-color: #F7EED8;
+}
+.descriptionText{
+    -fx-font-size: 17px;
+    -fx-text-fill: #F7EED8;
+    -fx-font-family: 'Inter';
+    -fx-font-style: normal;
+    -fx-font-weight: 400;
 }

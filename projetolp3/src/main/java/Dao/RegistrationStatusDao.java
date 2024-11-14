@@ -88,7 +88,7 @@ public class RegistrationStatusDao {
         }
     }
 
-    public static RegistrationStatus getRegistrationStatusById(int idStatus) throws SQLException {
+    public RegistrationStatus getRegistrationStatusById(int idStatus) throws SQLException {
         String query = "SELECT * FROM tblRegistrationStatus WHERE idStatus = ?";
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idStatus);
         if (rs != null && rs.next()) {

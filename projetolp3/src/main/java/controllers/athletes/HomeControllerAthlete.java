@@ -1,7 +1,10 @@
-package controllers;
+package controllers.athletes;
 
 import Dao.RegistrationDao;
+import Models.Registration;
 import bytesnortenhos.projetolp3.Main;
+import controllers.ViewsController;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,28 +15,25 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.application.Platform;
-import java.time.LocalDate;
-import java.time.Period;
 
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import Models.Registration;
-
-public class HomeController {
+public class HomeControllerAthlete {
     @FXML
     private FlowPane mainContainer;
     @FXML
@@ -47,27 +47,21 @@ public class HomeController {
     private ImageView iconModeNav;
     @FXML
     private ImageView iconHomeNav;
+    @FXML
+    private ImageView iconLogoutNav;
     URL cssDarkURL = Main.class.getResource("css/dark.css");
     URL cssLightURL = Main.class.getResource("css/light.css");
     String cssDark = ((URL) cssDarkURL).toExternalForm();
     String cssLight = ((URL) cssLightURL).toExternalForm();
     @FXML
-    private SplitMenuButton athleteSplitButton;
+    private SplitMenuButton theamsSplitButton;
     @FXML
     private SplitMenuButton sportSplitButton;
     @FXML
     private ComboBox<String> athleteDrop;
 
     public void initialize() {
-        URL iconMoonNavURL = Main.class.getResource("img/iconMoon.png");
-        String iconMoonNavStr = ((URL) iconMoonNavURL).toExternalForm();
-        Image image = new Image(iconMoonNavStr);
-        if(iconModeNav != null) iconModeNav.setImage(image);
-
-        URL iconHomeNavURL = Main.class.getResource("img/iconOlympic.png");
-        String iconHomeNavStr = ((URL) iconHomeNavURL).toExternalForm();
-        image = new Image(iconHomeNavStr);
-        if(iconHomeNav != null) iconHomeNav.setImage(image);
+        loadIcons();
 
         List<Registration> registrations = null;
         try {
@@ -81,12 +75,25 @@ public class HomeController {
         } else {
             displayRequests(registrations);
         }
-        athleteSplitButton.setOnMouseClicked(event -> athleteSplitButton.show());
+        theamsSplitButton.setOnMouseClicked(event -> theamsSplitButton.show());
         sportSplitButton.setOnMouseClicked(mouseEvent -> sportSplitButton.show());
     }
+    public void loadIcons(){
+        URL iconMoonNavURL = Main.class.getResource("img/iconMoon.png");
+        Image image = new Image(iconMoonNavURL.toExternalForm());
+        if(iconModeNav != null) iconModeNav.setImage(image);
 
+        URL iconHomeNavURL = Main.class.getResource("img/iconOlympic.png");
+        image = new Image(iconHomeNavURL.toExternalForm());
+        if(iconHomeNav != null) iconHomeNav.setImage(image);
+
+        URL iconLogoutNavURL = Main.class.getResource("img/iconLogoutDark.png");
+        image = new Image(iconLogoutNavURL.toExternalForm());
+        if(iconLogoutNav != null) iconLogoutNav.setImage(image);
+    }
     private List<Registration> getPendingRegistrations() throws SQLException {
-        List<Registration> registrations = RegistrationDao.getRegistrations();
+        RegistrationDao registrationDao = new RegistrationDao();
+        List<Registration> registrations = registrationDao.getRegistrations();
         return registrations.stream()
                 .filter(reg -> reg.getStatus().getIdStatus() == 1)
                 .collect(Collectors.toList());
@@ -210,19 +217,6 @@ public class HomeController {
         iconModeNav.setImage(image);
     }
 
-    public void mostrarRegistar(ActionEvent event) throws IOException {
-        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
-        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/register.fxml")));
-        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
-        scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
-        if(isDarkMode){
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
-        }else{
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
-        }
-        stage.setScene(scene);
-        stage.show();
-    }
 
     public void mostrarModalidades(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
@@ -238,10 +232,10 @@ public class HomeController {
         stage.show();
     }
 
-    public static void returnHomeMenu(ActionEvent event) throws IOException {
+    public void mostrarRegistaModalidades(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
-        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/home.fxml")));
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/athlete/sportsRegister.fxml")));
+        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
         scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
         if(isDarkMode){
             scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
@@ -251,14 +245,30 @@ public class HomeController {
         stage.setScene(scene);
         stage.show();
     }
-    public void mostrarRegistaModalidades(ActionEvent event) throws IOException {
+    public void mostrarRegistaEquipas(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
-        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/sportRegister.fxml")));
+        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/athlete/teamsRegister.fxml")));
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
         scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
         if(isDarkMode){
             scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
         }else{
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
+        }
+        stage.setScene(scene);
+        stage.show();
+    }
+    public void logout(ActionEvent event) throws Exception {
+        mostrarLogin(event);
+    }
+    public void mostrarLogin(ActionEvent event) throws IOException {
+        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
+        Parent root = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/loginView.fxml")));
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
+        if (isDarkMode) {
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+        } else {
             scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
         }
         stage.setScene(scene);

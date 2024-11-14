@@ -14,4 +14,8 @@ module bytesnortenhos.projetolp3 {
     opens controllers to javafx.fxml, jakarta.xml.bind;
     opens Models to jakarta.xml.bind;
     opens AuxilierXML to jakarta.xml.bind;
+    exports controllers.admin;
+    opens controllers.admin to jakarta.xml.bind, javafx.fxml;
+    exports controllers.athletes;
+    opens controllers.athletes to jakarta.xml.bind, javafx.fxml;
 }

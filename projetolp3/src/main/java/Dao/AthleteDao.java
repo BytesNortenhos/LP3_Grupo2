@@ -136,7 +136,7 @@ public class AthleteDao {
         }
     }
 
-    public static Athlete getAthleteById(int idAthlete) throws SQLException {
+    public Athlete getAthleteById(int idAthlete) throws SQLException {
         String query = "SELECT * FROM tblAthlete WHERE idAthlete = ?";
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idAthlete);
         if (rs != null && rs.next()) {
@@ -152,7 +152,19 @@ public class AthleteDao {
             return new Athlete(idAthlete, password, name, country, gender, height, weight, dateOfBirth);
         }
         return null;
+    }   public static Athlete getAthleteByIdMinimum(int idAthlete) throws SQLException {
+        String query = "SELECT name, height, weight, dateOfBirth FROM tblAthlete WHERE idAthlete = ?";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idAthlete);
+        if (rs != null && rs.next()) {
+            String name = rs.getString("name");
+            int height = rs.getInt("height");
+            float weight = rs.getFloat("weight");
+            java.sql.Date dateOfBirth = rs.getDate("dateOfBirth");
+            return new Athlete(idAthlete, name, height, weight, dateOfBirth);
+        }
+        return null;
     }
+
     public static void updateAthletePassword(int idAthlete, String password) throws SQLException {
         String query = "UPDATE tblAthlete SET password = ? WHERE idAthlete = ?";
         Connection conn = null;
