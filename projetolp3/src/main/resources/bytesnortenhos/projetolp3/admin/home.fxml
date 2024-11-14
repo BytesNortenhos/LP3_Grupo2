@@ -66,7 +66,7 @@
       <Label styleClass="labelHome">Inicio</Label>
       <Label styleClass="textWelcome">Lista de membros com aprovação pendente para inscrição em modalidades</Label>
       <ScrollPane fitToWidth="true" pannable="true" styleClass="scrollStyle" >
-        <FlowPane fx:id="mainContainer" alignment="CENTER" hgap="50" vgap="20" prefWrapLength="1010" xmlns:fx="http://javafx.com/fxml">
+        <FlowPane fx:id="mainContainer" alignment="CENTER" hgap="50" vgap="20" prefWrapLength="1020" xmlns:fx="http://javafx.com/fxml">
           <Label fx:id="noRequestsLabel" text="Não existem pedidos pendentes!" visible="false" />
           <!-- Requests will be dynamically added here -->
         </FlowPane>
