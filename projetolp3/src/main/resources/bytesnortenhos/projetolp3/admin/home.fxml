@@ -65,12 +65,15 @@
     <VBox>
       <Label styleClass="labelHome">Inicio</Label>
       <Label styleClass="textWelcome">Lista de membros com aprovação pendente para inscrição em modalidades</Label>
-      <ScrollPane fitToWidth="true" pannable="true" styleClass="scrollStyle">
-        <FlowPane fx:id="mainContainer" alignment="CENTER" hgap="50" vgap="20" prefWrapLength="1010" xmlns:fx="http://javafx.com/fxml" >
+      <ScrollPane fitToWidth="true" pannable="true" styleClass="scrollStyle" VBox.vgrow="ALWAYS">
+        <FlowPane fx:id="mainContainer" alignment="CENTER" hgap="50" vgap="20" prefWrapLength="1010" xmlns:fx="http://javafx.com/fxml" VBox.vgrow="ALWAYS">
           <Label fx:id="noRequestsLabel" text="Não existem pedidos pendentes!" visible="false" />
           <!-- Requests will be dynamically added here -->
         </FlowPane>
       </ScrollPane>
     </VBox>
   </center>
+  <bottom>
+    <HBox minHeight="60" maxHeight="60" style="-fx-background-color: #1E1E1E"></HBox>
+  </bottom>
 </BorderPane>

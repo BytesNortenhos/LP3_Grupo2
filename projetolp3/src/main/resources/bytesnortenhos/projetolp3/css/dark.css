@@ -139,9 +139,8 @@
     -fx-background-color: #1E1E1E;
 }
 #mainContainer{
-    -fx-min-width: 600px;
-    -fx-max-width: 1800px;
-    -fx-min-height: 600px;
+    -fx-min-width: 100%;
+    -fx-min-height: 100%;
 }
 #noRequestsLabel{
     -fx-text-fill: red;
