@@ -2,6 +2,7 @@ package Dao;
 
 import Utils.ConnectionsUtlis;
 import Models.Admin;
+import Utils.PasswordUtils;
 
 import javax.sql.rowset.CachedRowSet;
 import java.sql.Connection;
@@ -32,11 +33,13 @@ public class AdminDao {
         String query = "INSERT INTO tblAdmin (password) VALUES (?)";
         Connection conn = null;
         PreparedStatement stmt = null;
+        PasswordUtils passwordUtils = new PasswordUtils();
+        String password = passwordUtils.encriptarPassword(admin.getPassword());
         try {
             conn = ConnectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
-            stmt.setString(1, admin.getPassword());
+            stmt.setString(1, password);
             stmt.executeUpdate();
         } finally {
             if (stmt != null) {

@@ -18,7 +18,7 @@ public class TeamDao {
         List<Team> teams = new ArrayList<>();
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT t.idTeam, t.name AS teamName, t.idCountry, c.name AS countryName, " +
                 "c.continent, t.idGender, g.description AS genderDesc, " +
-                "t.idSport, t.yearFounded " +
+                "t.idSport, t.yearFounded, t.minParticipants, t.maxParticipants " +
                 "FROM tblTeam t " +
                 "INNER JOIN tblCountry c ON t.idCountry = c.idCountry " +
                 "INNER JOIN tblGender g ON t.idGender = g.idGender;");
@@ -32,12 +32,14 @@ public class TeamDao {
                 String genderDesc = rs.getString("genderDesc");
                 int idSport = rs.getInt("idSport");
                 int yearFounded = rs.getInt("yearFounded");
+                int minParticipants = rs.getInt("minParticipants");
+                int maxParticipants = rs.getInt("maxParticipants");
                 Country country = new Country(idCountry, countryName, continent);
                 Gender gender = new Gender(idGender, genderDesc);
                 SportDao sportDao = new SportDao();
                 Sport sport = sportDao.getSportByIdV2(idSport);
 
-                Team team = new Team(idTeam, teamName, country, gender, sport, yearFounded);
+                Team team = new Team(idTeam, teamName, country, gender, sport, yearFounded, minParticipants, maxParticipants);
                 teams.add(team);
             }
         } else {
@@ -47,7 +49,7 @@ public class TeamDao {
     }
 
     public static void addTeam(Team team) throws SQLException {
-        String query = "INSERT INTO tblTeam (name, idCountry, idGender, idSport, yearFounded) VALUES (?, ?, ?, ?, ?)";
+        String query = "INSERT INTO tblTeam (name, idCountry, idGender, idSport, yearFounded, minParticipants, maxParticipants) VALUES (?, ?, ?, ?, ?, ?, ?)";
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
@@ -59,6 +61,8 @@ public class TeamDao {
             stmt.setInt(3, team.getGenre().getIdGender());
             stmt.setInt(4, team.getSport().getIdSport());
             stmt.setInt(5, team.getYearFounded());
+            stmt.setInt(6, team.getMinParticipants());
+            stmt.setInt(7, team.getMaxParticipants());
             stmt.executeUpdate();
         } finally {
             if (stmt != null) {
@@ -90,7 +94,7 @@ public class TeamDao {
     }
 
     public static void updateTeam(Team team) throws SQLException {
-        String query = "UPDATE tblTeam SET name = ?, idCountry = ?, idGender = ?, idSport = ?, yearFounded = ? WHERE idTeam = ?";
+        String query = "UPDATE tblTeam SET name = ?, idCountry = ?, idGender = ?, idSport = ?, yearFounded = ?, minParticipants = ?, maxParticipants = ? WHERE idTeam = ?";
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
@@ -102,7 +106,9 @@ public class TeamDao {
             stmt.setInt(3, team.getGenre().getIdGender());
             stmt.setInt(4, team.getSport().getIdSport());
             stmt.setInt(5, team.getYearFounded());
-            stmt.setInt(6, team.getIdTeam());
+            stmt.setInt(6, team.getMinParticipants());
+            stmt.setInt(7, team.getMaxParticipants());
+            stmt.setInt(8, team.getIdTeam());
             stmt.executeUpdate();
         } finally {
             if (stmt != null) {
@@ -117,7 +123,7 @@ public class TeamDao {
     public static Team getTeamById(int idTeam) throws SQLException {
         String query = "SELECT t.idTeam, t.name AS teamName, c.idCountry, c.name AS countryName, c.continent, " +
                 "g.idGender AS genderId, g.description AS genderDesc, " +
-                "t.idSport, t.yearFounded " +
+                "t.idSport, t.yearFounded, t.minParticipants, t.maxParticipants " +
                 "FROM tblTeam t " +
                 "INNER JOIN tblCountry c ON t.idCountry = c.idCountry " +
                 "INNER JOIN tblGender g ON t.idGender = g.idGender " +
@@ -167,7 +173,7 @@ public class TeamDao {
     public Team getTeamByIdV2(int idTeam) throws SQLException {
         String query = "SELECT t.idTeam, t.name AS teamName, c.idCountry, c.name AS countryName, c.continent, " +
                 "g.idGender AS genderId, g.description AS genderDesc, " +
-                "t.idSport, t.yearFounded " +
+                "t.idSport, t.yearFounded, t.minParticipants, t.maxParticipants " +
                 "FROM tblTeam t " +
                 "INNER JOIN tblCountry c ON t.idCountry = c.idCountry " +
                 "INNER JOIN tblGender g ON t.idGender = g.idGender " +
