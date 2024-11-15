@@ -296,7 +296,7 @@ public class UploadXmlDAO {
                 String password = passwordUtils.encriptarPassword(String.valueOf(tempId));
 
                 //-> Update password
-                String query2 = "UPDATE tblAthlete SET password = HashBytes('MD5', ?) WHERE idAthlete = ?";
+                String query2 = "UPDATE tblAthlete SET password = ? WHERE idAthlete = ?";
                 stmt2 = conn.prepareStatement(query2);
                 stmt2.setString(1, password);
                 stmt2.setString(2, String.valueOf(tempId));
