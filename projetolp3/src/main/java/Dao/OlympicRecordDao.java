@@ -26,8 +26,10 @@ public class OlympicRecordDao {
                 int timeMS = rs.getInt("timeMS");
                 int medals = rs.getInt("medals");
 
-                Sport sport = SportDao.getSportById(idSport);
-                Athlete athlete = AthleteDao.getAthleteById(idAthlete);
+                SportDao sportDao = new SportDao();
+                Sport sport = sportDao.getSportById(idSport);
+                AthleteDao athleteDao = new AthleteDao();
+                Athlete athlete = athleteDao.getAthleteById(idAthlete);
                 Team team = TeamDao.getTeamById(idTeam);
 
                 OlympicRecord record = new OlympicRecord(sport, year, athlete, team, timeMS, medals);
@@ -109,7 +111,7 @@ public class OlympicRecordDao {
         }
     }
 
-    public static OlympicRecord getOlympicRecordById(int idSport, int year) throws SQLException {
+    public OlympicRecord getOlympicRecordById(int idSport, int year) throws SQLException {
         String query = "SELECT * FROM tblOlympicRecord WHERE idSport = ? AND year = ?";
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, year);
         if (rs != null && rs.next()) {
@@ -118,9 +120,12 @@ public class OlympicRecordDao {
             int timeMS = rs.getInt("timeMS");
             int medals = rs.getInt("medals");
 
-            Sport sport = SportDao.getSportById(idSport);
-            Athlete athlete = AthleteDao.getAthleteById(idAthlete);
-            Team team = TeamDao.getTeamById(idTeam);
+            SportDao sportDao = new SportDao();
+            Sport sport = sportDao.getSportByIdV2(idSport);
+            AthleteDao athleteDao = new AthleteDao();
+            Athlete athlete = athleteDao.getAthleteById(idAthlete);
+            TeamDao teamDao = new TeamDao();
+            Team team = teamDao.getTeamByIdV2(idTeam);
             return new OlympicRecord(sport, year, athlete, team, timeMS, medals);
         }
         return null;

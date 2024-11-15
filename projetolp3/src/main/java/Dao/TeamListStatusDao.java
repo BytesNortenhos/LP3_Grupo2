@@ -1,7 +1,7 @@
 package Dao;
 
+import Models.TeamListStatus;
 import Utils.ConnectionsUtlis;
-import Models.RegistrationStatus;
 
 import javax.sql.rowset.CachedRowSet;
 import java.sql.Connection;
@@ -10,16 +10,16 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RegistrationStatusDao {
-    public static List<RegistrationStatus> getRegistrationStatuses() throws SQLException {
-        List<RegistrationStatus> statuses = new ArrayList<>();
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT * FROM tblRegistrationStatus;");
+public class TeamListStatusDao {
+    public static List<TeamListStatus> getTeamListStatuses() throws SQLException {
+        List<TeamListStatus> statuses = new ArrayList<>();
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT * FROM tblTeamListStatus;");
         if (rs != null) {
             while (rs.next()) {
                 int idStatus = rs.getInt("idStatus");
                 String description = rs.getString("description");
 
-                RegistrationStatus status = new RegistrationStatus(idStatus, description);
+                TeamListStatus status = new TeamListStatus(idStatus, description);
                 statuses.add(status);
             }
         } else {
@@ -28,8 +28,8 @@ public class RegistrationStatusDao {
         return statuses;
     }
 
-    public static void addRegistrationStatus(RegistrationStatus status) throws SQLException {
-        String query = "INSERT INTO tblRegistrationStatus (description) VALUES (?)";
+    public static void addTeamListStatus(TeamListStatus status) throws SQLException {
+        String query = "INSERT INTO tblTeamListStatus (description) VALUES (?)";
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
@@ -48,8 +48,8 @@ public class RegistrationStatusDao {
         }
     }
 
-    public static void removeRegistrationStatus(int idStatus) throws SQLException {
-        String query = "DELETE FROM tblRegistrationStatus WHERE idStatus = ?";
+    public static void removeTeamListStatus(int idStatus) throws SQLException {
+        String query = "DELETE FROM tblTeamListStatus WHERE idStatus = ?";
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
@@ -67,8 +67,8 @@ public class RegistrationStatusDao {
         }
     }
 
-    public static void updateRegistrationStatus(RegistrationStatus status) throws SQLException {
-        String query = "UPDATE tblRegistrationStatus SET description = ? WHERE idStatus = ?";
+    public static void updateTeamListStatus(TeamListStatus status) throws SQLException {
+        String query = "UPDATE tblTeamListStatus SET description = ? WHERE idStatus = ?";
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
@@ -88,12 +88,12 @@ public class RegistrationStatusDao {
         }
     }
 
-    public RegistrationStatus getRegistrationStatusById(int idStatus) throws SQLException {
-        String query = "SELECT * FROM tblRegistrationStatus WHERE idStatus = ?";
+    public TeamListStatus getTeamListStatusById(int idStatus) throws SQLException {
+        String query = "SELECT * FROM tblTeamListStatus WHERE idStatus = ?";
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idStatus);
         if (rs != null && rs.next()) {
             String description = rs.getString("description");
-            return new RegistrationStatus(idStatus, description);
+            return new TeamListStatus(idStatus, description);
         }
         return null;
     }

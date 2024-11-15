@@ -17,6 +17,11 @@ public class Country {
         this.continent = continent;
     }
 
+    public Country(String idCountry, String name) {
+        this.idCountry = idCountry;
+        this.name = name;
+    }
+
     /**
      * Get id
      *

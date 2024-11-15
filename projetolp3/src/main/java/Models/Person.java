@@ -13,6 +13,10 @@ public class Person {
         this.id = id;
         this.password = password;
     }
+    public Person(int id) {
+        this.id = id;
+
+    }
 
     /**
      * Get ID
