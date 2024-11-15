@@ -4,6 +4,7 @@ import Dao.AdminDao;
 import Dao.AthleteDao;
 import Models.Admin;
 import Models.Athlete;
+import Utils.PasswordUtils;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -21,6 +22,8 @@ public class LoginController {
 
 
     public boolean verificaLogin(int idTemp, String senhaTemp, ActionEvent event) throws Exception {
+        PasswordUtils passwordUtils = new PasswordUtils();
+        senhaTemp = passwordUtils.encriptarPassword(senhaTemp);
         AdminDao adminDao = new AdminDao();
         boolean loginSucesso = false;
         if (idTemp < 1000) {

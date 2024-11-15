@@ -1,9 +1,14 @@
 package bytesnortenhos.projetolp3;
 
+import AuxilierXML.Athletes;
+import AuxilierXML.Sports;
+import AuxilierXML.Teams;
+import AuxilierXML.UploadXmlDAO;
 import Dao.AthleteDao;
 import Dao.CountryDao;
 import Dao.RegistrationDao;
 import Dao.TesteDao;
+import Utils.XMLUtils;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -56,7 +61,20 @@ public class Main extends Application {
 
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
-        launch();
+        //launch();
+        UploadXmlDAO uploadXmlDAO = new UploadXmlDAO();
+        XMLUtils xmlUtils = new XMLUtils();
 
+        System.out.println(xmlUtils.validateXML("sports"));
+        Sports sports = xmlUtils.getSportsDataXML();
+        System.out.println(UploadXmlDAO.addSports(sports));
+
+        System.out.println(xmlUtils.validateXML("athletes"));
+        Athletes athletes = xmlUtils.getAthletesDataXML();
+        System.out.println(UploadXmlDAO.addAthletes(athletes));
+
+        System.out.println(xmlUtils.validateXML("teams"));
+        Teams teams = xmlUtils.getTeamsDataXML();
+        System.out.println(UploadXmlDAO.addTeams(teams));
     }
 }
