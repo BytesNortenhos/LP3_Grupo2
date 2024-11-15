@@ -4,10 +4,8 @@ import AuxilierXML.Athletes;
 import AuxilierXML.Sports;
 import AuxilierXML.Teams;
 import AuxilierXML.UploadXmlDAO;
-import Dao.AthleteDao;
-import Dao.CountryDao;
-import Dao.RegistrationDao;
-import Dao.TesteDao;
+import Dao.*;
+import Models.Team;
 import Utils.XMLUtils;
 import javafx.application.Application;
 import javafx.fxml.FXML;
@@ -22,6 +20,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.List;
 
 //public class Main {
 //    public static void main(String[] args) throws SQLException, ClassNotFoundException {
@@ -61,20 +60,31 @@ public class Main extends Application {
 
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
-        //launch();
-        UploadXmlDAO uploadXmlDAO = new UploadXmlDAO();
-        XMLUtils xmlUtils = new XMLUtils();
+        launch();
+        //UploadXmlDAO uploadXmlDAO = new UploadXmlDAO();
+        // XMLUtils xmlUtils = new XMLUtils();
 
-        System.out.println(xmlUtils.validateXML("sports"));
-        Sports sports = xmlUtils.getSportsDataXML();
-        System.out.println(UploadXmlDAO.addSports(sports));
+        // System.out.println(xmlUtils.validateXML("sports"));
+        //Sports sports = xmlUtils.getSportsDataXML();
+        //System.out.println(UploadXmlDAO.addSports(sports));
 
-        System.out.println(xmlUtils.validateXML("athletes"));
-        Athletes athletes = xmlUtils.getAthletesDataXML();
-        System.out.println(UploadXmlDAO.addAthletes(athletes));
+        // System.out.println(xmlUtils.validateXML("athletes"));
+        // Athletes athletes = xmlUtils.getAthletesDataXML();
+        // System.out.println(UploadXmlDAO.addAthletes(athletes));
 
-        System.out.println(xmlUtils.validateXML("teams"));
-        Teams teams = xmlUtils.getTeamsDataXML();
-        System.out.println(UploadXmlDAO.addTeams(teams));
+        // System.out.println(xmlUtils.validateXML("teams"));
+        // Teams teams = xmlUtils.getTeamsDataXML();
+        // System.out.println(UploadXmlDAO.addTeams(teams));
+        try {
+            List<Team> teamsAA = TeamDao.getTeams();
+            System.out.println("Teams fetched: ");
+            for (Team team : teamsAA) {
+                System.out.println(team);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
     }
 }

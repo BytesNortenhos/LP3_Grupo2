@@ -88,7 +88,7 @@ public class TeamListStatusDao {
         }
     }
 
-    public TeamListStatus getTeamListStatusById(int idStatus) throws SQLException {
+    public static TeamListStatus getTeamListStatusById(int idStatus) throws SQLException {
         String query = "SELECT * FROM tblTeamListStatus WHERE idStatus = ?";
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idStatus);
         if (rs != null && rs.next()) {
