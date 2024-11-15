@@ -1,6 +1,11 @@
 package controllers.admin;
 
+import AuxilierXML.Athletes;
+import AuxilierXML.Sports;
+import AuxilierXML.Teams;
+import AuxilierXML.UploadXmlDAO;
 import Dao.RegistrationDao;
+import Utils.XMLUtils;
 import bytesnortenhos.projetolp3.Main;
 import controllers.LoginController;
 import controllers.ViewsController;
@@ -300,46 +305,204 @@ public class HomeController {
     @FXML
     public void loadTeams(ActionEvent event) throws IOException {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open Resource File");
+        fileChooser.setTitle("Open Resource Files");
 
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Text Files (*.txt)", "*.txt");
-        fileChooser.getExtensionFilters().add(extFilter);
+        FileChooser.ExtensionFilter xmlFilter = new FileChooser.ExtensionFilter("XML Files (*.xml)", "*.xml");
+        FileChooser.ExtensionFilter xsdFilter = new FileChooser.ExtensionFilter("XSD Files (*.xsd)", "*.xsd");
+        fileChooser.getExtensionFilters().addAll(xmlFilter, xsdFilter);
 
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
-        File file = fileChooser.showOpenDialog(stage);
+        List<File> selectedFiles = fileChooser.showOpenMultipleDialog(stage);
 
-        if (file != null) {
-            System.out.println("File selected: " + file.getAbsolutePath());
+        if (selectedFiles != null) {
+            long xsdCount = selectedFiles.stream().filter(file -> file.getName().endsWith("xsd.xml")).count();
+            long xmlCount = selectedFiles.stream().filter(file -> file.getName().endsWith(".xml") && !file.getName().endsWith("_xsd.xml")).count();
+            //long xsdCount = selectedFiles.stream().filter(file -> file.getName().endsWith(".xsd")).count();
+
+            if (selectedFiles.size() == 2 && xmlCount == 1 && xsdCount == 1) {
+                System.out.println("Selected files are valid: " + selectedFiles);
+
+                String xsdPath = selectedFiles.stream().filter(file -> file.getName().endsWith("xsd.xml")).findFirst().get().getAbsolutePath();
+                String xmlPath = selectedFiles.stream().filter(file -> file.getName().endsWith(".xml") && !file.getName().endsWith("_xsd.xml")).findFirst().get().getAbsolutePath();
+
+                XMLUtils xmlUtils = new XMLUtils();
+                boolean xmlValid = xmlUtils.validateXML(xsdPath, xmlPath);
+
+                if(xmlValid) {
+                    Teams teams = xmlUtils.getTeamsDataXML(xmlPath);
+                    try {
+                        UploadXmlDAO uploadXmlDAO = new UploadXmlDAO();
+                        boolean uploaded = uploadXmlDAO.addTeams(teams);
+                        if (uploaded) {
+                            Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+                            alerta.setTitle("Sucesso!");
+                            alerta.setHeaderText("O upload foi efetuado!");
+                            alerta.show();
+                        } else {
+                            Alert alerta = new Alert(Alert.AlertType.ERROR);
+                            alerta.setTitle("Erro!");
+                            alerta.setHeaderText("Ocorreu um erro ao adicionar os dados à Base de Dados!");
+                            alerta.show();
+                        }
+                    } catch (SQLException e) {
+                        Alert alerta = new Alert(Alert.AlertType.ERROR);
+                        alerta.setTitle("Erro!");
+                        alerta.setHeaderText("Ocorreu um erro ao adicionar os dados à Base de Dados!");
+                        alerta.show();
+                    }
+                } else {
+                    Alert alerta = new Alert(Alert.AlertType.ERROR);
+                    alerta.setTitle("Erro!");
+                    alerta.setHeaderText("Baseado no XSD, o XML está incorreto!");
+                    alerta.show();
+                }
+            } else {
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setTitle("Erro!");
+                alerta.setHeaderText("Selecione apenas 2 ficheiros! 1 .xml e 1 xsd.xml");
+                alerta.show();
+            }
+        } else {
+            Alert alerta = new Alert(Alert.AlertType.ERROR);
+            alerta.setTitle("Erro!");
+            alerta.setHeaderText("Selecione 2 ficheiros! 1 .xml e 1 xsd.xml");
+            alerta.show();
         }
     }
     @FXML
     public void loadSports(ActionEvent event) throws IOException {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open Resource File");
+        fileChooser.setTitle("Open Resource Files");
 
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Text Files (*.txt)", "*.txt");
-        fileChooser.getExtensionFilters().add(extFilter);
+        FileChooser.ExtensionFilter xmlFilter = new FileChooser.ExtensionFilter("XML Files (*.xml)", "*.xml");
+        fileChooser.getExtensionFilters().addAll(xmlFilter);
+        //FileChooser.ExtensionFilter xsdFilter = new FileChooser.ExtensionFilter("XSD Files (*.xsd)", "*.xsd");
+        //fileChooser.getExtensionFilters().addAll(xmlFilter, xsdFilter);
 
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
-        File file = fileChooser.showOpenDialog(stage);
+        List<File> selectedFiles = fileChooser.showOpenMultipleDialog(stage);
 
-        if (file != null) {
-            System.out.println("File selected: " + file.getAbsolutePath());
+        if (selectedFiles != null) {
+            long xsdCount = selectedFiles.stream().filter(file -> file.getName().endsWith("xsd.xml")).count();
+            long xmlCount = selectedFiles.stream().filter(file -> file.getName().endsWith(".xml") && !file.getName().endsWith("_xsd.xml")).count();
+            //long xsdCount = selectedFiles.stream().filter(file -> file.getName().endsWith(".xsd")).count();
+
+            if (selectedFiles.size() == 2 && xmlCount == 1 && xsdCount == 1) {
+                System.out.println("Selected files are valid: " + selectedFiles);
+
+                String xsdPath = selectedFiles.stream().filter(file -> file.getName().endsWith("xsd.xml")).findFirst().get().getAbsolutePath();
+                String xmlPath = selectedFiles.stream().filter(file -> file.getName().endsWith(".xml") && !file.getName().endsWith("_xsd.xml")).findFirst().get().getAbsolutePath();
+
+                XMLUtils xmlUtils = new XMLUtils();
+                boolean xmlValid = xmlUtils.validateXML(xsdPath, xmlPath);
+
+                if(xmlValid) {
+                    Sports sports = xmlUtils.getSportsDataXML(xmlPath);
+                    try {
+                        UploadXmlDAO uploadXmlDAO = new UploadXmlDAO();
+                        boolean uploaded = uploadXmlDAO.addSports(sports);
+                        if (uploaded) {
+                            Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+                            alerta.setTitle("Sucesso!");
+                            alerta.setHeaderText("O upload foi efetuado!");
+                            alerta.show();
+                        } else {
+                            Alert alerta = new Alert(Alert.AlertType.ERROR);
+                            alerta.setTitle("Erro!");
+                            alerta.setHeaderText("Ocorreu um erro ao adicionar os dados à Base de Dados!");
+                            alerta.show();
+                        }
+                    } catch (SQLException e) {
+                        Alert alerta = new Alert(Alert.AlertType.ERROR);
+                        alerta.setTitle("Erro!");
+                        alerta.setHeaderText("Ocorreu um erro ao adicionar os dados à Base de Dados!");
+                        alerta.show();
+                    }
+                } else {
+                    Alert alerta = new Alert(Alert.AlertType.ERROR);
+                    alerta.setTitle("Erro!");
+                    alerta.setHeaderText("Baseado no XSD, o XML está incorreto!");
+                    alerta.show();
+                }
+            } else {
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setTitle("Erro!");
+                alerta.setHeaderText("Selecione apenas 2 ficheiros! 1 .xml e 1 xsd.xml");
+                alerta.show();
+            }
+        } else {
+            Alert alerta = new Alert(Alert.AlertType.ERROR);
+            alerta.setTitle("Erro!");
+            alerta.setHeaderText("Selecione 2 ficheiros! 1 .xml e 1 xsd.xml");
+            alerta.show();
         }
     }
     @FXML
     public void loadAthletes(ActionEvent event) throws IOException {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open Resource File");
+        fileChooser.setTitle("Open Resource Files");
 
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Text Files (*.txt)", "*.txt");
-        fileChooser.getExtensionFilters().add(extFilter);
+        FileChooser.ExtensionFilter xmlFilter = new FileChooser.ExtensionFilter("XML Files (*.xml)", "*.xml");
+        fileChooser.getExtensionFilters().addAll(xmlFilter);
+        //FileChooser.ExtensionFilter xsdFilter = new FileChooser.ExtensionFilter("XSD Files (*.xsd)", "*.xsd");
+        //fileChooser.getExtensionFilters().addAll(xmlFilter, xsdFilter);
 
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
-        File file = fileChooser.showOpenDialog(stage);
+        List<File> selectedFiles = fileChooser.showOpenMultipleDialog(stage);
 
-        if (file != null) {
-            System.out.println("File selected: " + file.getAbsolutePath());
+        if (selectedFiles != null) {
+            long xsdCount = selectedFiles.stream().filter(file -> file.getName().endsWith("xsd.xml")).count();
+            long xmlCount = selectedFiles.stream().filter(file -> file.getName().endsWith(".xml") && !file.getName().endsWith("_xsd.xml")).count();
+            //long xsdCount = selectedFiles.stream().filter(file -> file.getName().endsWith(".xsd")).count();
+
+            if (selectedFiles.size() == 2 && xmlCount == 1 && xsdCount == 1) {
+                System.out.println("Selected files are valid: " + selectedFiles);
+
+                String xsdPath = selectedFiles.stream().filter(file -> file.getName().endsWith("xsd.xml")).findFirst().get().getAbsolutePath();
+                String xmlPath = selectedFiles.stream().filter(file -> file.getName().endsWith(".xml") && !file.getName().endsWith("_xsd.xml")).findFirst().get().getAbsolutePath();
+
+                XMLUtils xmlUtils = new XMLUtils();
+                boolean xmlValid = xmlUtils.validateXML(xsdPath, xmlPath);
+
+                if(xmlValid) {
+                    Athletes athletes = xmlUtils.getAthletesDataXML(xmlPath);
+                    try {
+                        UploadXmlDAO uploadXmlDAO = new UploadXmlDAO();
+                        boolean uploaded = uploadXmlDAO.addAthletes(athletes);
+                        if (uploaded) {
+                            Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+                            alerta.setTitle("Sucesso!");
+                            alerta.setHeaderText("O upload foi efetuado!");
+                            alerta.show();
+                        } else {
+                            Alert alerta = new Alert(Alert.AlertType.ERROR);
+                            alerta.setTitle("Erro!");
+                            alerta.setHeaderText("Ocorreu um erro ao adicionar os dados à Base de Dados!");
+                            alerta.show();
+                        }
+                    } catch (SQLException e) {
+                        Alert alerta = new Alert(Alert.AlertType.ERROR);
+                        alerta.setTitle("Erro!");
+                        alerta.setHeaderText("Ocorreu um erro ao adicionar os dados à Base de Dados!");
+                        alerta.show();
+                    }
+                } else {
+                    Alert alerta = new Alert(Alert.AlertType.ERROR);
+                    alerta.setTitle("Erro!");
+                    alerta.setHeaderText("Baseado no XSD, o XML está incorreto!");
+                    alerta.show();
+                }
+            } else {
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setTitle("Erro!");
+                alerta.setHeaderText("Selecione apenas 2 ficheiros! 1 .xml e 1 xsd.xml");
+                alerta.show();
+            }
+        } else {
+            Alert alerta = new Alert(Alert.AlertType.ERROR);
+            alerta.setTitle("Erro!");
+            alerta.setHeaderText("Selecione 2 ficheiros! 1 .xml e 1 xsd.xml");
+            alerta.show();
         }
     }
 }

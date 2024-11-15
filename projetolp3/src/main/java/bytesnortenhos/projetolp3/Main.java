@@ -8,6 +8,7 @@ import Dao.AthleteDao;
 import Dao.CountryDao;
 import Dao.RegistrationDao;
 import Dao.TesteDao;
+import Utils.PasswordUtils;
 import Utils.XMLUtils;
 import javafx.application.Application;
 import javafx.fxml.FXML;
@@ -61,8 +62,9 @@ public class Main extends Application {
 
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
-        //launch();
-        UploadXmlDAO uploadXmlDAO = new UploadXmlDAO();
+        launch();
+
+        /*UploadXmlDAO uploadXmlDAO = new UploadXmlDAO();
         XMLUtils xmlUtils = new XMLUtils();
 
         System.out.println(xmlUtils.validateXML("sports"));
@@ -75,6 +77,6 @@ public class Main extends Application {
 
         System.out.println(xmlUtils.validateXML("teams"));
         Teams teams = xmlUtils.getTeamsDataXML();
-        System.out.println(UploadXmlDAO.addTeams(teams));
+        System.out.println(UploadXmlDAO.addTeams(teams));*/
     }
 }
