@@ -311,7 +311,28 @@ public class HomeController {
 
         if (file != null) {
             System.out.println("File selected: " + file.getAbsolutePath());
+            showFilePreviewPopup(file);
         }
+    }
+
+    private void showFilePreviewPopup(File file) {
+        Stage popupStage = new Stage();
+        popupStage.setTitle("File Preview");
+
+        TextArea filePreviewTextArea = new TextArea();
+        filePreviewTextArea.setEditable(false);
+
+        try {
+            String content = new String(java.nio.file.Files.readAllBytes(file.toPath()));
+            filePreviewTextArea.setText(content);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        VBox vbox = new VBox(filePreviewTextArea);
+        Scene scene = new Scene(vbox, 400, 300);
+        popupStage.setScene(scene);
+        popupStage.show();
     }
     @FXML
     public void loadSports(ActionEvent event) throws IOException {
