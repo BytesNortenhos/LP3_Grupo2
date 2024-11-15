@@ -27,6 +27,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
@@ -106,6 +107,7 @@ public class SportRegisterController {
         }
     }
 
+
     private void loadEvents() {
         try {
             eventsDrop.getItems().clear();
@@ -113,18 +115,27 @@ public class SportRegisterController {
             List<Event> events = eventDao.getEvents();
             ObservableList<String> eventsOptions = FXCollections.observableArrayList();
 
+            // Obter o ano atual
+            int currentYear = LocalDate.now().getYear();
+
+            // Filtrar eventos com ano atual ou posterior
             for (Event event : events) {
-                String eventDisplay = event.getYear() + " - " + event.getCountry().getName();
-                eventsOptions.add(eventDisplay);
+                int eventYear = event.getYear();  // Usando o método getYear() da classe Event
+
+                // Verificar se o evento é no ano atual ou em anos posteriores
+                if (eventYear >= currentYear) {
+                    String eventDisplay = event.getYear() + " - " + event.getCountry().getName();
+                    eventsOptions.add(eventDisplay);
+                }
             }
 
+            // Adicionar os eventos filtrados à ComboBox
             eventsDrop.setItems(eventsOptions);
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("Erro ao carregar eventos.");
         }
     }
-
 
     public boolean changeMode(ActionEvent event){
         isDarkMode = !isDarkMode;
@@ -139,51 +150,101 @@ public class SportRegisterController {
     @FXML
     private void registerSport(ActionEvent event) {
         try {
+            // Exibir passo de depuração
+            System.out.println("Iniciando registro...");
+
             // Obter o esporte selecionado
             Sport selectedSport = getSelectedSport();
+            System.out.println("Passo 1");
             if (selectedSport == null) {
                 System.out.println("Nenhuma modalidade selecionada.");
                 return;
             }
 
+            // Exibir o ID da modalidade
+            System.out.println("ID da Modalidade (Sport): " + selectedSport.getIdSport());
+            System.out.println("Passo 2");
+
             // Obter o atleta logado usando o ID armazenado na sessão
-            int athleteId = LoginController.idAthlete; // Acessando o athleteId da sessão
+            int athleteId = LoginController.idAthlete;
+            System.out.println("ID do Atleta: " + athleteId);
             AthleteDao athleteDao = new AthleteDao();
             Athlete athlete = athleteDao.getAthleteById(athleteId);
+            System.out.println("Passo 3");
 
             if (athlete == null) {
                 System.out.println("Atleta não encontrado.");
                 return;
             }
 
-            Team team = null;
-
             // Obter o status com ID 1
             RegistrationStatusDao registrationStatusDao = new RegistrationStatusDao();
             RegistrationStatus status = registrationStatusDao.getRegistrationStatusById(1); // Status com id 1
+            System.out.println("Passo 4");
 
             if (status == null) {
                 System.out.println("Status não encontrado.");
                 return;
             }
 
-            Registration registration = new Registration(0, athlete, selectedSport, status); // idRegistration pode ser 0 ou gerado pelo banco de dados
+            // Obter o evento selecionado na ComboBox
+            Event selectedEvent = getSelectedEvent(); // Método que retorna o objeto evento selecionado
+            if (selectedEvent == null) {
+                System.out.println("Nenhum evento selecionado.");
+                return;
+            }
 
+            // Obter o ano do evento usando o método getYear()
+            int year = selectedEvent.getYear();
+            System.out.println("Ano do evento selecionado: " + year);
+
+            // Criar o objeto Registration com o ano
+            Registration registration = new Registration(0, athlete, selectedSport, status, year);
+
+            // Registrar a inscrição
             RegistrationDao.addRegistrationSolo(registration);
 
+            // Mensagem de sucesso
             System.out.println("Inscrição realizada com sucesso!");
 
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("Erro ao realizar a inscrição.");
+        } catch (NumberFormatException e) {
+            System.out.println("Erro ao processar o ano do evento.");
         }
     }
+
+    private Event getSelectedEvent() {
+        String selectedEventDisplay = eventsDrop.getSelectionModel().getSelectedItem();
+        if (selectedEventDisplay != null) {
+            try {
+                EventDao eventDao = new EventDao();
+                List<Event> events = eventDao.getEvents(); // Recupera todos os eventos do DAO
+
+                // Busca o evento correspondente ao item selecionado na ComboBox
+                for (Event event : events) {
+                    String eventDisplay = event.getYear() + " - " + event.getCountry().getName();
+                    if (eventDisplay.equals(selectedEventDisplay)) {
+                        return event;
+                    }
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                System.out.println("Erro ao buscar eventos no banco de dados.");
+            }
+        }
+        return null; // Retorna null se nenhum evento for encontrado
+    }
+
+
     private Sport getSelectedSport() {
         String selectedSportName = sportsDrop.getSelectionModel().getSelectedItem().toString();
         if (selectedSportName != null) {
             try {
                 SportDao sportDao = new SportDao();
-                for (Sport sport : sportDao.getSports()) {
+                // Pass the selectedSportName as the argument to getSportsByName
+                for (Sport sport : sportDao.getSportsByName(selectedSportName)) {
                     if (sport.getName().equals(selectedSportName)) {
                         return sport;
                     }
@@ -194,6 +255,7 @@ public class SportRegisterController {
         }
         return null;
     }
+
 
     public void setLightMode(){
         parent.getStylesheets().remove(cssDark);

@@ -54,7 +54,7 @@ public class Sport {
                  List<Rule> rules) {
         this.idSport = idSport;
         this.type = type;
-        this.idGender = idGender; // Atribui o id do gênero diretamente
+        this.idGender = idGender;
         this.name = name;
         this.desc = desc;
         this.minParticipants = minParticipants;
@@ -64,6 +64,21 @@ public class Sport {
         this.winnerOlympic = winnerOlympic;
         this.rules = rules;
     }
+
+    /**
+     * Constructor for creating a Sport object with essential details.
+     * This constructor initializes a Sport with the provided idSport and name.
+     * All other attributes are left with default values (e.g., null or empty).
+     *
+     * @param idSport {int} The ID of the sport.
+     * @param name {String} The name of the sport.
+     */
+    public Sport(int idSport, String name) {
+        this.idSport = idSport;
+        this.name = name;
+    }
+
+
     /**
      * Get Sport ID
      * @return int

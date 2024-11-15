@@ -5,6 +5,8 @@ public class Registration {
     private Athlete athlete;
     private Team team;
     private Sport sport;
+
+    private int year;
     private RegistrationStatus status;
 
     /**
@@ -23,6 +25,39 @@ public class Registration {
         this.status = status;
     }
 
+    /**
+     * Constructor of Registration
+     * @param idRegistration {int} Registration ID
+     * @param athlete {Athlete} Athlete
+     * @param team {Team} Team
+     * @param sport {Sport} Sport
+     * @param status {RegistrationStatus} Status
+     * @param year {int} Year of the Registration
+     */
+    public Registration(int idRegistration, Athlete athlete, Team team, Sport sport, RegistrationStatus status, int year) {
+        this.idRegistration = idRegistration;
+        this.athlete = athlete;
+        this.team = team;
+        this.sport = sport;
+        this.status = status;
+        this.year = year;
+    }
+
+    /**
+     * Constructor of Registration
+     * @param idRegistration {int} Registration ID
+     * @param athlete {Athlete} Athlete
+     * @param sport {Sport} Sport
+     * @param status {RegistrationStatus} Status
+     * @param year {int} Year of the Registration
+     */
+    public Registration(int idRegistration, Athlete athlete, Sport sport, RegistrationStatus status, int year) {
+        this.idRegistration = idRegistration;
+        this.athlete = athlete;
+        this.sport = sport;
+        this.status = status;
+        this.year = year;
+    }
     // Construtor com todos os parâmetros
     public Registration(int idRegistration, Athlete athlete, Sport sport, RegistrationStatus status) {
         this.idRegistration = idRegistration;
@@ -110,4 +145,21 @@ public class Registration {
     public void setStatus(RegistrationStatus status) {
         this.status = status;
     }
+
+    /**
+     * Get Year
+     * @return int
+     */
+    public int getYear() {
+        return year; // Novo método para obter o ano
+    }
+
+    /**
+     * Set Year
+     * @param year {int} Year
+     */
+    public void setYear(int year) {
+        this.year = year; // Novo método para definir o ano
+    }
+
 }
