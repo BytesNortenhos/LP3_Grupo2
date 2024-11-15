@@ -30,7 +30,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 
-public class SportRegisterController {
+public class SportTeamRegisterController {
     private static Stage stage;
     private static Scene scene;
     @FXML
@@ -54,16 +54,20 @@ public class SportRegisterController {
     private ComboBox sportsDrop;
     @FXML
     private ComboBox<String> eventsDrop;
+    @FXML
+    private ComboBox<String> teamsDrop;
+
+
 
 
     public void initialize() {
         loadIcons();
         loadSports();
         loadEvents();
+        loadTeams();
         theamsSplitButton.setOnMouseClicked(event -> theamsSplitButton.show());
         sportSplitButton.setOnMouseClicked(mouseEvent -> sportSplitButton.show());
     }
-
     private void loadIcons() {
         URL iconMoonNavURL = Main.class.getResource("img/iconMoon.png");
         Image image = new Image(iconMoonNavURL.toExternalForm());
@@ -94,7 +98,7 @@ public class SportRegisterController {
             // Adicionar apenas esportes individuais
             for (List sport : sports) {
                 String sportType = sport.get(1).toString(); // Supondo que o índice 1 seja o tipo
-                if (sportType.equalsIgnoreCase("individual")) {
+                if (sportType.equalsIgnoreCase("collective")) {
                     sportsOptions.add(sport.get(3).toString()); // Supondo que o índice 3 seja o nome
                 }
             }
@@ -106,22 +110,37 @@ public class SportRegisterController {
         }
     }
 
-    private void loadEvents() {
+    private void loadTeams() {
         try {
-            eventsDrop.getItems().clear();
-            EventDao eventDao = new EventDao();
-            List<Event> events = eventDao.getEvents();
-            ObservableList<String> eventsOptions = FXCollections.observableArrayList();
+            teamsDrop.getItems().clear(); // Limpa as opções da ComboBox
+            List<Team> teams = TeamDao.getTeams(); // Obtém todas as equipes do banco de dados
+            ObservableList<String> teamOptions = FXCollections.observableArrayList();
 
-            for (Event event : events) {
-                String eventDisplay = event.getYear() + " - " + event.getCountry().getName();
-                eventsOptions.add(eventDisplay);
+            // Obtém o ID do país do atleta logado
+            String athleteCountryId = LoginController.idCountry;
+
+            // Filtra as equipes para mostrar apenas aquelas que pertencem ao mesmo país do atleta
+            for (Team team : teams) {
+                String teamCountryId = team.getCountry().getIdCountry(); // Obtém o ID do país da equipe
+
+                // Verifica se o país da equipe é igual ao país do atleta
+                if (teamCountryId.equals(athleteCountryId)) {
+                    String displayName = team.getName() + " - " + team.getCountry().getName();
+                    teamOptions.add(displayName); // Adiciona a equipe à lista de opções
+                }
             }
 
-            eventsDrop.setItems(eventsOptions);
+            // Configura as opções filtradas na ComboBox
+            teamsDrop.setItems(teamOptions);
+
+            // Verifica se não há equipes para o país do atleta
+            if (teamOptions.isEmpty()) {
+                System.out.println("Nenhuma equipe disponível para o país do atleta.");
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Erro ao carregar eventos.");
+            System.out.println("Erro ao carregar equipes.");
         }
     }
 
@@ -194,7 +213,24 @@ public class SportRegisterController {
         }
         return null;
     }
+    private void loadEvents() {
+        try {
+            eventsDrop.getItems().clear();
+            EventDao eventDao = new EventDao();
+            List<Event> events = eventDao.getEvents();
+            ObservableList<String> eventsOptions = FXCollections.observableArrayList();
 
+            for (Event event : events) {
+                String eventDisplay = event.getYear() + " - " + event.getCountry().getName();
+                eventsOptions.add(eventDisplay);
+            }
+
+            eventsDrop.setItems(eventsOptions);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Erro ao carregar eventos.");
+        }
+    }
     public void setLightMode(){
         parent.getStylesheets().remove(cssDark);
         parent.getStylesheets().add(cssLight);

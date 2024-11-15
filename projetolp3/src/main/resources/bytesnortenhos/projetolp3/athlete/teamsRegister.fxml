@@ -30,13 +30,14 @@
             <Pane HBox.hgrow="ALWAYS" />
             <SplitMenuButton fx:id="sportSplitButton" styleClass="dropdownButton" text="Modalidade">
                 <items>
-                    <MenuItem text="Inscrição" onAction="#mostrarModalidades"/>
+                    <MenuItem text="Inscrição Individual" onAction="#mostrarRegistaModalidades"/>
+                    <MenuItem text="Inscrição Equipa" onAction="#mostrarRegistaModalidadesEquipa"/>
                     <MenuItem text="Visualizar modalidades" onAction="#mostrarRegistaModalidades"/>
                 </items>
             </SplitMenuButton>
             <SplitMenuButton fx:id="theamsSplitButton" styleClass="dropdownButton" text="Equipas">
                 <items>
-                    <MenuItem text="Inscrição" onAction="#mostrarModalidades"/>
+                    <!-- ><MenuItem text="Inscrição Equipa" onAction="#mostrarRegistaModalidadesEquipa"/> -->
                     <MenuItem text="Visualizar equipas" onAction="#mostrarRegistaModalidades"/>
                 </items>
             </SplitMenuButton>

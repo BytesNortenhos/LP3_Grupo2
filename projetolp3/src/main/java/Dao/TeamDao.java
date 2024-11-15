@@ -35,7 +35,7 @@ public class TeamDao {
                 Country country = new Country(idCountry, countryName, continent);
                 Gender gender = new Gender(idGender, genderDesc);
                 SportDao sportDao = new SportDao();
-                Sport sport = sportDao.getSportById(idSport);
+                Sport sport = sportDao.getSportByIdV2(idSport);
 
                 Team team = new Team(idTeam, teamName, country, gender, sport, yearFounded);
                 teams.add(team);
