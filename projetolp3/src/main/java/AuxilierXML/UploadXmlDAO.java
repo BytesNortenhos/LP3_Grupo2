@@ -16,7 +16,7 @@ public class UploadXmlDAO {
      * @return boolean
      * @throws SQLException
      */
-    public static boolean addSports(Sports sports) throws SQLException {
+    public boolean addSports(Sports sports) throws SQLException {
         Connection conn = null;
         PreparedStatement stmt = null;
         PreparedStatement stmt2 = null;
@@ -188,7 +188,7 @@ public class UploadXmlDAO {
      * @return boolean
      * @throws SQLException
      */
-    public static boolean addTeams(Teams teams) throws SQLException {
+    public boolean addTeams(Teams teams) throws SQLException {
         Connection conn = null;
         PreparedStatement stmt = null;
         PreparedStatement stmt2 = null;
@@ -265,7 +265,7 @@ public class UploadXmlDAO {
      * @return boolean
      * @throws SQLException
      */
-    public static boolean addAthletes(Athletes athletes) throws SQLException {
+    public boolean addAthletes(Athletes athletes) throws SQLException {
         Connection conn = null;
         PreparedStatement stmt = null;
         PreparedStatement stmt2 = null;
@@ -353,7 +353,7 @@ public class UploadXmlDAO {
      * @param time {String} String of time (HH:MM:SS.MS/HH:MM:SS)
      * @return int
      */
-    public static int convertToMS(String time) {
+    public int convertToMS(String time) {
         DateTimeFormatter formatter;
         LocalTime parsedTime;
 

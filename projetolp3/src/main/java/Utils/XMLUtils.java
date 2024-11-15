@@ -42,16 +42,17 @@ public class XMLUtils {
 
     /**
      * Faz a validação do ficheiro XML com XSD
-     * @param xmlName {String} Nome do Ficheiro XML (sem extensão)
+     * @param pathXSD {String} Caminho do Ficheiro XSD
+     * @param pathXML {String} Caminho do Ficheiro XML
      * @return boolean
      */
-    public boolean validateXML(String xmlName) {
+    public boolean validateXML(String pathXSD, String pathXML) {
         try {
             SchemaFactory factory = SchemaFactory.newInstance(javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            Schema schema = factory.newSchema(new File(absolutePath + "/" + xmlName + "_xsd.xml"));
+            Schema schema = factory.newSchema(new File(pathXSD));
 
             Validator validator = schema.newValidator();
-            validator.validate(new StreamSource(new File(absolutePath + "/" + xmlName + ".xml")));
+            validator.validate(new StreamSource(new File(pathXML)));
             return true;
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -61,17 +62,16 @@ public class XMLUtils {
 
     /**
      * Guarda os dados do XML de Sports na Base de Dados
-     * @return void
+     * @param pathXML {String} Caminho do Ficheiro XML
+     * @return Sports
      */
-    public Sports getSportsDataXML() {
-        String absolutePath = "src/main/java/DataXML";
-        String xmlName = "sports";
+    public Sports getSportsDataXML(String pathXML) {
 
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(Sports.class, Sport.class, WinnerOlympic.class, OlympicRecord.class, Rules.class);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 
-            Sports sports = (Sports) unmarshaller.unmarshal(new File(absolutePath + "/" + xmlName + ".xml"));
+            Sports sports = (Sports) unmarshaller.unmarshal(new File(pathXML));
 
             for (Sport sport : sports.getSportList()) {
                 System.out.println("Type: " + sport.getType());
@@ -126,17 +126,16 @@ public class XMLUtils {
 
     /**
      * Guarda os dados do XML de Equipas na Base de Dados
-     * @return void
+     * @param pathXML {String} Caminho do Ficheiro XML
+     * @return Teams
      */
-    public Teams getTeamsDataXML() {
-        String absolutePath = "src/main/java/DataXML";
-        String xmlName = "teams";
+    public Teams getTeamsDataXML(String pathXML) {
 
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(Teams.class, Team.class, ParticipationTeam.class);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 
-            Teams teams = (Teams) unmarshaller.unmarshal(new File(absolutePath + "/" + xmlName + ".xml"));
+            Teams teams = (Teams) unmarshaller.unmarshal(new File(pathXML));
 
             for (Team team : teams.getTeamList()) {
                 System.out.println("Name: " + team.getName());
@@ -166,17 +165,16 @@ public class XMLUtils {
 
     /**
      * Guarda os dados do XML de Atletas na Base de Dados (falta obter o id do atleta para colocar na tabela de medalhas)
-     * @return void
+     * @param pathXML {String} Caminho do Ficheiro XML
+     * @return Athletes
      */
-    public Athletes getAthletesDataXML() {
-        String absolutePath = "src/main/java/DataXML";
-        String xmlName = "athletes";
+    public Athletes getAthletesDataXML(String pathXML) {
 
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(Athletes.class, Athlete.class, ParticipationAthlete.class);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 
-            Athletes athletes = (Athletes) unmarshaller.unmarshal(new File(absolutePath + "/" + xmlName + ".xml"));
+            Athletes athletes = (Athletes) unmarshaller.unmarshal(new File(pathXML));
 
             for (Athlete athlete : athletes.getAthleteList()) {
                 System.out.println("Name: " + athlete.getName());
