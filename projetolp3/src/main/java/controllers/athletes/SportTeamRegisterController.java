@@ -175,8 +175,8 @@ public class SportTeamRegisterController {
                     selectedEvent.getYear() // Passando o ano do evento selecionado
             );
 
-            // Registrar a inscrição
-            RegistrationDao.addRegistrationTeam(registration);
+         
+
 
             // Após registrar a inscrição, adicionar o atleta à equipe na tblTeamList
             TeamListDao teamlistDao = new TeamListDao();
