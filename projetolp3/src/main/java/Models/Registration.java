@@ -65,6 +65,13 @@ public class Registration {
         this.sport = sport;
         this.status = status;
     }
+    public Registration(int idRegistration, Athlete athlete, Team team, RegistrationStatus status, int year) {
+        this.idRegistration = idRegistration;
+        this.athlete = athlete;
+        this.team = team;
+        this.status = status;
+        this.year = year;
+    }
 
     /**
      * Get Registration ID

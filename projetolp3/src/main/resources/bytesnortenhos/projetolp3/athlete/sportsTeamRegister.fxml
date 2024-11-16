@@ -56,11 +56,10 @@
     <center>
         <VBox alignment="CENTER">
             <Label styleClass="loginText" style="-fx-font-size: 60px" text="INSCRIÇÃO EM MODALIDADES DE EQUIPA" />
-            <Label styleClass="descriptionText" translateY="-50" text="Nesta área poderá inscrever-se na modaliade desejada!" />
+            <Label styleClass="descriptionText" translateY="-50" text="Nesta área poderá inscrever-se na modalidade em equipas desejadas" />
             <Label styleClass="descriptionText" translateY="-40" text="Após o registo deverá aguardar a aprovação por parte do gestor do comité olímpico." />
             <ComboBox fx:id="eventsDrop" styleClass="registerDropBig"  translateY="-20" promptText="Escolha a o evento" />
-            <ComboBox fx:id="sportsDrop" styleClass="registerDropBig"  translateY="-20" promptText="Escolha a modalidade" />
-            <ComboBox fx:id="teamsDrop" styleClass="registerDropBig" translateY="-5" promptText="Escolha a equipa" />
+            <ComboBox fx:id="teamsDrop" styleClass="registerDropBig" translateY="-5" promptText="Escolha a equipa que deseja" />
             <Button styleClass="buttonEntrar" onAction="#registerSport" style="-fx-translate-y: 10px;">Registar</Button>
         </VBox>
     </center>

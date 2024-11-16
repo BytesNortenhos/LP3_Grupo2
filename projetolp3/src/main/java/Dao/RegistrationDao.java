@@ -91,26 +91,78 @@ public class RegistrationDao {
 
 
     public static void addRegistrationTeam(Registration registration) throws SQLException {
-        String query = "INSERT INTO tblRegistration (idAthlete, idTeam, idSport, idStatus) VALUES (?, ?, ?, ?)";
+        // Query para verificar se a inscrição já existe
+        String checkQuery = "SELECT COUNT(*) FROM tblRegistration WHERE idAthlete = ? AND idTeam = ? AND idStatus = ? AND year = ?";
+        String insertQuery = "INSERT INTO tblRegistration (idAthlete, idTeam, idStatus, year) VALUES (?, ?, ?, ?)";
+
         Connection conn = null;
-        PreparedStatement stmt = null;
+        PreparedStatement checkStmt = null;
+        PreparedStatement insertStmt = null;
+        ResultSet rs = null;
+
         try {
             conn = ConnectionsUtlis.dbConnect();
-            stmt = conn.prepareStatement(query);
 
-            stmt.setInt(1, registration.getAthlete().getIdAthlete());
-            stmt.setInt(2, registration.getTeam().getIdTeam());
-            stmt.setInt(3, registration.getSport().getIdSport());
-            stmt.setInt(4, registration.getStatus().getIdStatus());
-            stmt.executeUpdate();
+            // Preparar a consulta para verificar se a inscrição já existe
+            checkStmt = conn.prepareStatement(checkQuery);
+            checkStmt.setInt(1, registration.getAthlete().getIdAthlete());
+            checkStmt.setInt(2, registration.getTeam().getIdTeam());
+            checkStmt.setInt(3, registration.getStatus().getIdStatus());
+            checkStmt.setInt(4, registration.getYear());
+
+            // Executa a consulta para verificar se a inscrição já existe
+            rs = checkStmt.executeQuery();
+
+            if (rs != null && rs.next()) {
+                int count = rs.getInt(1);  // Obtém a contagem de registros existentes
+                if (count > 0) {
+                    System.out.println("A inscrição já existe!");  // Exibe mensagem se já existir
+                    return;  // Sai do método para evitar inserir o registro duplicado
+                }
+            }
+
+            // Se não houver registro existente, procede com a inserção
+            insertStmt = conn.prepareStatement(insertQuery);
+
+            int idAthlete = registration.getAthlete().getIdAthlete();
+            int idTeam = registration.getTeam().getIdTeam();
+            int idStatus = registration.getStatus().getIdStatus();
+            int year = registration.getYear();
+
+            // Debugging: Imprime os valores antes de inserir
+            System.out.println("Inserindo nova inscrição:");
+            System.out.println("idAthlete: " + idAthlete);
+            System.out.println("idTeam: " + idTeam);
+            System.out.println("idStatus: " + idStatus);
+            System.out.println("year: " + year);
+
+            // Set parameters correctly for the insert statement
+            insertStmt.setInt(1, idAthlete);  // Corresponds to the first placeholder
+            insertStmt.setInt(2, idTeam);     // Corresponds to the second placeholder
+            insertStmt.setInt(3, idStatus);   // Corresponds to the third placeholder
+            insertStmt.setInt(4, year);       // Corresponds to the fourth placeholder
+
+            insertStmt.executeUpdate();
+            System.out.println("Inscrição realizada com sucesso!");  // Mensagem de sucesso após a inserção
+
         } finally {
-            if (stmt != null) {
-                stmt.close();
+            // Fechando os recursos
+            if (rs != null) {
+                rs.close();
+            }
+            if (checkStmt != null) {
+                checkStmt.close();
+            }
+            if (insertStmt != null) {
+                insertStmt.close();
             }
             if (conn != null) {
                 conn.close();
             }
-        } }
+        }
+    }
+
+
     public static void addRegistrationSolo(Registration registration) throws SQLException {
         String checkQuery = "SELECT COUNT(*) FROM tblRegistration WHERE idAthlete = ? AND idSport = ? AND idStatus = ? AND year = ?";
         String insertQuery = "INSERT INTO tblRegistration (idAthlete, idSport, idStatus, year) VALUES (?, ?, ?, ?)";

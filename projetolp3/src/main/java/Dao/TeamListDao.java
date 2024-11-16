@@ -133,4 +133,63 @@ public class TeamListDao {
 
         return null;
     }
-}
+    public void insertIntoTeamList(int athleteId, int teamId, int statusId, int year) throws SQLException {
+        // Consulta para verificar se já existe um registro duplicado
+        String checkQuery = "SELECT COUNT(*) FROM tblTeamList WHERE idAthlete = ? AND idTeam = ? AND idStatus = ? AND year = ?";
+
+        // Query para inserir o novo registro
+        String insertQuery = "INSERT INTO tblTeamList (idTeam, idAthlete, idStatus, year, isActive) VALUES (?, ?, ?, ?, ?)";
+
+        Connection conn = null;
+        PreparedStatement checkStmt = null;
+        PreparedStatement insertStmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = ConnectionsUtlis.dbConnect();  // Estabelece a conexão com o banco de dados
+
+            // Verifica se já existe um registro duplicado
+            checkStmt = conn.prepareStatement(checkQuery);
+            checkStmt.setInt(1, athleteId);  // Define o id do atleta
+            checkStmt.setInt(2, teamId);     // Define o id da equipe
+            checkStmt.setInt(3, statusId);   // Define o id do status
+            checkStmt.setInt(4, year);       // Define o ano do evento
+
+            // Executa a consulta para verificar a duplicidade
+            rs = checkStmt.executeQuery();
+
+            if (rs != null && rs.next()) {
+                int count = rs.getInt(1);  // Obtém o número de registros encontrados
+                if (count > 0) {
+                    System.out.println("A inscrição já existe na lista de equipes!");  // Exibe mensagem de duplicidade
+                    return;  // Sai do método sem fazer a inserção
+                }
+            }
+
+            // Se não houver duplicidade, procede com a inserção
+            insertStmt = conn.prepareStatement(insertQuery);
+            insertStmt.setInt(1, teamId);      // Define o id da equipe
+            insertStmt.setInt(2, athleteId);   // Define o id do atleta
+            insertStmt.setInt(3, statusId);    // Define o id do status
+            insertStmt.setInt(4, year);        // Define o ano do evento
+            insertStmt.setBoolean(5, true);    // Define isActive como true (inscrição ativa)
+
+            insertStmt.executeUpdate();  // Executa a inserção
+            System.out.println("Inscrição na lista de equipes realizada com sucesso!");  // Mensagem de sucesso após a inserção
+
+        } finally {
+            // Fechando os recursos
+            if (rs != null) {
+                rs.close();
+            }
+            if (checkStmt != null) {
+                checkStmt.close();
+            }
+            if (insertStmt != null) {
+                insertStmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+    }   }
