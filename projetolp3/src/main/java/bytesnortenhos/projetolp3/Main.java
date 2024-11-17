@@ -60,21 +60,21 @@ public class Main extends Application {
     }
 
 
-    public static void main(String[] args) throws SQLException, ClassNotFoundException {
-        //launch();
-        UploadXmlDAO uploadXmlDAO = new UploadXmlDAO();
-        XMLUtils xmlUtils = new XMLUtils();
-
-        System.out.println(xmlUtils.validateXML("sports"));
-        Sports sports = xmlUtils.getSportsDataXML();
-        System.out.println(UploadXmlDAO.addSports(sports));
-
-        System.out.println(xmlUtils.validateXML("athletes"));
-        Athletes athletes = xmlUtils.getAthletesDataXML();
-        System.out.println(UploadXmlDAO.addAthletes(athletes));
-
-        System.out.println(xmlUtils.validateXML("teams"));
-        Teams teams = xmlUtils.getTeamsDataXML();
-        System.out.println(UploadXmlDAO.addTeams(teams));
-    }
+//    public static void main(String[] args) throws SQLException, ClassNotFoundException {
+//        //launch();
+//        UploadXmlDAO uploadXmlDAO = new UploadXmlDAO();
+//        XMLUtils xmlUtils = new XMLUtils();
+//
+//        System.out.println(xmlUtils.validateXML("sports"));
+//        Sports sports = xmlUtils.getSportsDataXML();
+//        System.out.println(UploadXmlDAO.addSports(sports));
+//
+//        System.out.println(xmlUtils.validateXML("athletes"));
+//        Athletes athletes = xmlUtils.getAthletesDataXML();
+//        System.out.println(UploadXmlDAO.addAthletes(athletes));
+//
+//        System.out.println(xmlUtils.validateXML("teams"));
+//        Teams teams = xmlUtils.getTeamsDataXML();
+//        System.out.println(UploadXmlDAO.addTeams(teams));
+//    }
 }
