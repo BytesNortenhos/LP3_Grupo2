@@ -87,15 +87,17 @@ public class SportTeamRegisterController {
             List<Team> teams = TeamDao.getTeams(); // Obtém todas as equipes do banco de dados
             ObservableList<String> teamOptions = FXCollections.observableArrayList();
 
-            // Obtém o ID do país do atleta logado
+            // Obtém o ID do país e o gênero do atleta logado
             String athleteCountryId = LoginController.idCountry;
+            String athleteGender = LoginController.gender;
 
-            // Filtra as equipes para mostrar apenas aquelas que pertencem ao mesmo país do atleta
+            // Filtra as equipes para mostrar apenas aquelas que pertencem ao mesmo país e gênero do atleta
             for (Team team : teams) {
                 String teamCountryId = team.getCountry().getIdCountry(); // Obtém o ID do país da equipe
+                String teamGender = team.getGenre().getDesc(); // Obtém o gênero da equipe
 
-                // Verifica se o país da equipe é igual ao país do atleta
-                if (teamCountryId.equals(athleteCountryId)) {
+                // Verifica se o país e o gênero da equipe são compatíveis com os do atleta
+                if (teamCountryId.equals(athleteCountryId) && teamGender.equalsIgnoreCase(athleteGender)) {
                     String displayName = team.getIdTeam() + " - " + team.getName() + " - " + team.getCountry().getName();
                     teamOptions.add(displayName); // Adiciona a equipe à lista de opções
                 }
@@ -104,9 +106,9 @@ public class SportTeamRegisterController {
             // Configura as opções filtradas na ComboBox
             teamsDrop.setItems(teamOptions);
 
-            // Verifica se não há equipes para o país do atleta
+            // Verifica se não há equipes compatíveis
             if (teamOptions.isEmpty()) {
-                System.out.println("Nenhuma equipe disponível para o país do atleta.");
+                System.out.println("Nenhuma equipa disponível para o país e gênero do atleta.");
             }
 
         } catch (SQLException e) {
@@ -114,6 +116,7 @@ public class SportTeamRegisterController {
             System.out.println("Erro ao carregar equipes.");
         }
     }
+
 
     public boolean changeMode(ActionEvent event){
         isDarkMode = !isDarkMode;
@@ -175,12 +178,11 @@ public class SportTeamRegisterController {
                     selectedEvent.getYear() // Passando o ano do evento selecionado
             );
 
-         
 
 
             // Após registrar a inscrição, adicionar o atleta à equipe na tblTeamList
             TeamListDao teamlistDao = new TeamListDao();
-            int statusId = 1;  // Status pendente
+            int statusId = 3;  // Status aprovado
             int year = selectedEvent.getYear();  // Ano do evento
             teamlistDao.insertIntoTeamList(athlete.getIdAthlete(), team.getIdTeam(), statusId, year);
 

@@ -193,3 +193,110 @@ public class TeamListDao {
             }
         }
     }   }
+
+//public void insertIntoTeamList(int athleteId, int teamId, int statusId, int year) throws SQLException {
+//        // Consulta para verificar duplicidade na tblTeamList
+//        String checkQuery = "SELECT COUNT(*) FROM tblTeamList WHERE idAthlete = ? AND idTeam = ? AND idStatus = ? AND year = ?";
+//
+//        // Consulta para obter idSport e minParticipantes a partir do idTeam
+//        String getSportAndMinQuery = "SELECT t.idSport, s.minParticipants FROM tblTeam t INNER JOIN tblSport s ON t.idSport = s.idSport WHERE t.idTeam = ?";
+//
+//        // Consulta para contar registros com idStatus = 3 para o teamId
+//        String countStatusQuery = "SELECT COUNT(*) FROM tblTeamList WHERE idTeam = ? AND idStatus = 3";
+//
+//        // Consulta para inserir novo registro na tblTeamList
+//        String insertQuery = "INSERT INTO tblTeamList (idTeam, idAthlete, idStatus, year, isActive) VALUES (?, ?, ?, ?, ?)";
+//
+//        // Consulta para inserir registro na tblRegistration
+//        String insertRegistrationQuery = "INSERT INTO tblRegistration (idTeam, idSport, idStatus, year) VALUES (?, ?, ?, ?)";
+//
+//        Connection conn = null;
+//        PreparedStatement checkStmt = null;
+//        PreparedStatement getSportAndMinStmt = null;
+//        PreparedStatement countStatusStmt = null;
+//        PreparedStatement insertStmt = null;
+//        PreparedStatement insertRegistrationStmt = null;
+//        ResultSet rs = null;
+//
+//        try {
+//            conn = ConnectionsUtlis.dbConnect();
+//
+//            // Obtém o idSport e minParticipantes para o teamId
+//            getSportAndMinStmt = conn.prepareStatement(getSportAndMinQuery);
+//            getSportAndMinStmt.setInt(1, teamId);
+//            rs = getSportAndMinStmt.executeQuery();
+//            int idSport = 0;
+//            int minParticipantes = 0;
+//            if (rs != null && rs.next()) {
+//                idSport = rs.getInt("idSport");
+//                minParticipantes = rs.getInt("minParticipants");
+//            } else {
+//                System.out.println("Esporte ou minParticipantes não encontrado para o time.");
+//                return;
+//            }
+//
+//            // Conta os registros com idStatus = 3 para o time
+//            countStatusStmt = conn.prepareStatement(countStatusQuery);
+//            countStatusStmt.setInt(1, teamId);
+//            rs = countStatusStmt.executeQuery();
+//            int countStatus = 0;
+//            if (rs != null && rs.next()) {
+//                countStatus = rs.getInt(1);
+//            }
+//
+//            // Verifica se o número de participantes já atingiu o limite
+//            if (countStatus >= minParticipantes) {
+//                System.out.println("Equipa cheia! Nenhum registro foi inserido.");
+//                return;
+//            }
+//
+//            // Verifica duplicidade na tblTeamList
+//            checkStmt = conn.prepareStatement(checkQuery);
+//            checkStmt.setInt(1, athleteId);
+//            checkStmt.setInt(2, teamId);
+//            checkStmt.setInt(3, statusId);
+//            checkStmt.setInt(4, year);
+//            rs = checkStmt.executeQuery();
+//            if (rs != null && rs.next()) {
+//                int count = rs.getInt(1);
+//                if (count > 0) {
+//                    System.out.println("A inscrição já existe na lista de equipes!");
+//                    return;
+//                }
+//            }
+//
+//            // Insere novo registro na tblTeamList
+//            insertStmt = conn.prepareStatement(insertQuery);
+//            insertStmt.setInt(1, teamId);
+//            insertStmt.setInt(2, athleteId);
+//            insertStmt.setInt(3, statusId);
+//            insertStmt.setInt(4, year);
+//            insertStmt.setBoolean(5, true);
+//            insertStmt.executeUpdate();
+//            System.out.println("Inscrição na lista de equipes realizada com sucesso!");
+//
+//            // Atualiza a contagem após inserção
+//            countStatus++;
+//
+//            // Se a contagem atingir exatamente minParticipantes, insere na tblRegistration
+//            if (countStatus == minParticipantes) {
+//                insertRegistrationStmt = conn.prepareStatement(insertRegistrationQuery);
+//                insertRegistrationStmt.setInt(1, teamId);
+//                insertRegistrationStmt.setInt(2, idSport);
+//                insertRegistrationStmt.setInt(3, 1); // idStatus = 2 (ou outro valor especificado)
+//                insertRegistrationStmt.setInt(4, year);
+//                insertRegistrationStmt.executeUpdate();
+//                System.out.println("Registro inserido na tblRegistration com sucesso!");
+//            }
+//
+//        } finally {
+//            // Fecha recursos
+//            if (rs != null) rs.close();
+//            if (checkStmt != null) checkStmt.close();
+//            if (getSportAndMinStmt != null) getSportAndMinStmt.close();
+//            if (countStatusStmt != null) countStatusStmt.close();
+//            if (insertStmt != null) insertStmt.close();
+//            if (insertRegistrationStmt != null) insertRegistrationStmt.close();
+//            if (conn != null) conn.close();
+//        }
+//    } }
