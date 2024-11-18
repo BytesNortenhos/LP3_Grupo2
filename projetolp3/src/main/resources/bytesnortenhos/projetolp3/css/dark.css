@@ -142,7 +142,7 @@
     -fx-min-width: 100%;
     -fx-min-height: 100%;
 }
-#noRequestsLabel{
+#noRequestsLabel, #noSportsLabel{
     -fx-text-fill: red;
     -fx-font-size: 30px;
     -fx-translate-x: 30px;

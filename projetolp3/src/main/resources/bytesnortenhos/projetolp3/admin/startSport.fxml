@@ -59,7 +59,7 @@
             <Label styleClass="textWelcome">os respectivos resultados gerados.</Label>
             <ScrollPane fitToWidth="true" pannable="true" styleClass="scrollStyle">
                 <FlowPane fx:id="startSportsContainer" alignment="CENTER" hgap="20" vgap="20" prefWrapLength="1040" prefHeight="600">
-                    <Label fx:id="noSportsLabel" text="Não existem pedidos pendentes" visible="false" />
+                    <Label fx:id="noSportsLabel" text="Não existem modalidades registadas!" visible="false" />
                     <!-- Requests will be dynamically added here -->
                 </FlowPane>
             </ScrollPane>

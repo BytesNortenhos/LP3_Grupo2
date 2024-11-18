@@ -70,7 +70,7 @@ public class SportTest {
         String oneGame = "TesteUp";
 
         Sport sportEncontrado = null;
-        int idSport = 40;
+        int idSport = 5;
         SportDao spd = new SportDao();
         for (Sport s : spd.getSports()) {
             if (s.getIdSport() == idSport) {

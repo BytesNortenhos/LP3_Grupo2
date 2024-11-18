@@ -81,7 +81,7 @@ public class AthleteTest {
             int idAtleta = 0;
             Athlete atletaEncontrado = null;
             for (Athlete a : AthleteDao.getAthletes()) {
-                if (a.getName().equals("João Costa")) {
+                if (a.getName().equals("Usain Bolt")) {
                     idAtleta = a.getIdAthlete();
                     atletaEncontrado = a;
                     break;

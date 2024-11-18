@@ -9,8 +9,8 @@ class LoginControllerTest {
     @Test
     void testLoginTrue() throws Exception {
         LoginController loginController = new LoginController();
-        int idAtleta = 1061;
-        String password = "1061";
+        int idAtleta = 1001;
+        String password = "1001";
 
         boolean loginSucess = loginController.verificaLogin(idAtleta,password,new ActionEvent());
 

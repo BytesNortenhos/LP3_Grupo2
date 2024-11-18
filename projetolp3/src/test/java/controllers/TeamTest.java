@@ -31,7 +31,7 @@ public class TeamTest {
 
 
             Sport sport = new SportDao().getSports().stream()
-                    .filter(s -> s.getName().equals("4x100m Freestyle Relay") && s.getIdSport() == 13)
+                    .filter(s -> s.getName().equals("4x100m Freestyle Relay") && s.getGenre().getIdGender() == 1)
                     .findFirst().orElse(null);
 
             int minParticipants = 4;
@@ -77,14 +77,14 @@ public class TeamTest {
                     .findFirst().orElse(null);
 
             Sport sport = new SportDao().getSports().stream()
-                    .filter(s -> s.getName().equals("100m Sprint") && s.getIdSport() == 39)
+                    .filter(s -> s.getName().equals("100m Sprint") && s.getGenre().getIdGender() == 1)
                     .findFirst().orElse(null);
 
 
             int idTeam = 0;
             Team teamEncontrado = null;
             for (Team t : TeamDao.getTeams()) {
-                if (t.getName().equals("USA Men's 4x100m Relay Team") && t.getIdTeam() == 14) {
+                if (t.getName().equals("USA Men's 4x100m Relay Team") ) {
                     idTeam = t.getIdTeam();
                     teamEncontrado = t;
                     break;

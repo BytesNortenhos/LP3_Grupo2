@@ -75,7 +75,8 @@ public class SportDao {
     public int getNumberParticipantsSport(int idSport) throws SQLException {
         String query = "SELECT COUNT(*) AS quantidade " +
                 "FROM tblRegistration " +
-                "WHERE idSport = ?;";
+                "WHERE idSport = ? " +
+                "AND idStatus = 3;";
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport);
         int quantidade = 0;
         if (rs != null && rs.next()) {
