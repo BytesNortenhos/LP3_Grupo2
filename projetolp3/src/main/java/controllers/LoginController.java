@@ -4,6 +4,7 @@ import Dao.AdminDao;
 import Dao.AthleteDao;
 import Models.Admin;
 import Models.Athlete;
+import controllers.admin.SportsController;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -21,6 +22,10 @@ public class LoginController {
 
 
     public boolean verificaLogin(int idTemp, String senhaTemp, ActionEvent event) throws Exception {
+
+        SportsController sc = new SportsController();
+        sc.iniciarModalidades();
+
         AdminDao adminDao = new AdminDao();
         boolean loginSucesso = false;
         if (idTemp < 1000) {

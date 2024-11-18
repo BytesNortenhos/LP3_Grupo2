@@ -131,4 +131,17 @@ public class ResultDao {
         }
         return null;
     }
+
+    public boolean BootedSport(int idSport) throws SQLException {
+        String query = "SELECT COUNT(*) AS quantidade " +
+                "FROM tblResult " +
+                "WHERE idSport = ?;";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport);
+        if (rs != null && rs.next()) {
+            if (rs.getInt("quantidade") == 0) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

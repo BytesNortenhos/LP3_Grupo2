@@ -246,4 +246,15 @@ public class RegistrationDao {
         return registrations;
     }
 
+    public int getNumberParticipantsSport(int idSport) throws SQLException {
+        String query = "SELECT COUNT(*) AS quantidade " +
+                "FROM tblRegistration " +
+                "WHERE idSport = ?;";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport);
+        int quantidade = 0;
+        if (rs != null && rs.next()) {
+            quantidade = rs.getInt("quantidade");
+        }
+        return quantidade;
+    }
 }
