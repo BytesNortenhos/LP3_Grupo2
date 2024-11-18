@@ -17,6 +17,7 @@ public class LoginController {
     public static int cargo = 0;
 
     public static String gender = "";
+
     public static int idAthlete;
     public static String idCountry;
 
@@ -39,6 +40,7 @@ public class LoginController {
                 cargo = 2;
                 gender = athlete.getGenre().getDesc();
                 idCountry = athlete.getCountry().getIdCountry();
+                idAthlete = idTemp;
                 loginSucesso = true;
             }
         }

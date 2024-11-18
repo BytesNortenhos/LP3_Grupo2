@@ -4,6 +4,8 @@ import Models.*;
 import Utils.ConnectionsUtlis;
 import java.util.Map;
 import java.util.HashMap;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.sql.rowset.CachedRowSet;
 import java.sql.Connection;
@@ -89,47 +91,149 @@ public class RegistrationDao {
 
 
     public static void addRegistrationTeam(Registration registration) throws SQLException {
-        String query = "INSERT INTO tblRegistration (idAthlete, idTeam, idSport, idStatus) VALUES (?, ?, ?, ?)";
+        // Query para verificar se a inscrição já existe
+        String checkQuery = "SELECT COUNT(*) FROM tblRegistration WHERE idAthlete = ? AND idTeam = ? AND idStatus = ? AND year = ?";
+        String insertQuery = "INSERT INTO tblRegistration (idAthlete, idTeam, idStatus, year) VALUES (?, ?, ?, ?)";
+
         Connection conn = null;
-        PreparedStatement stmt = null;
+        PreparedStatement checkStmt = null;
+        PreparedStatement insertStmt = null;
+        ResultSet rs = null;
+
         try {
             conn = ConnectionsUtlis.dbConnect();
-            stmt = conn.prepareStatement(query);
 
-            stmt.setInt(1, registration.getAthlete().getIdAthlete());
-            stmt.setInt(2, registration.getTeam().getIdTeam());
-            stmt.setInt(3, registration.getSport().getIdSport());
-            stmt.setInt(4, registration.getStatus().getIdStatus());
-            stmt.executeUpdate();
+            // Preparar a consulta para verificar se a inscrição já existe
+            checkStmt = conn.prepareStatement(checkQuery);
+            checkStmt.setInt(1, registration.getAthlete().getIdAthlete());
+            checkStmt.setInt(2, registration.getTeam().getIdTeam());
+            checkStmt.setInt(3, registration.getStatus().getIdStatus());
+            checkStmt.setInt(4, registration.getYear());
+
+            // Executa a consulta para verificar se a inscrição já existe
+            rs = checkStmt.executeQuery();
+
+            if (rs != null && rs.next()) {
+                int count = rs.getInt(1);  // Obtém a contagem de registros existentes
+                if (count > 0) {
+                    System.out.println("A inscrição já existe!");  // Exibe mensagem se já existir
+                    return;  // Sai do método para evitar inserir o registro duplicado
+                }
+            }
+
+            // Se não houver registro existente, procede com a inserção
+            insertStmt = conn.prepareStatement(insertQuery);
+
+            int idAthlete = registration.getAthlete().getIdAthlete();
+            int idTeam = registration.getTeam().getIdTeam();
+            int idStatus = registration.getStatus().getIdStatus();
+            int year = registration.getYear();
+
+            // Debugging: Imprime os valores antes de inserir
+            System.out.println("Inserindo nova inscrição:");
+            System.out.println("idAthlete: " + idAthlete);
+            System.out.println("idTeam: " + idTeam);
+            System.out.println("idStatus: " + idStatus);
+            System.out.println("year: " + year);
+
+            // Set parameters correctly for the insert statement
+            insertStmt.setInt(1, idAthlete);  // Corresponds to the first placeholder
+            insertStmt.setInt(2, idTeam);     // Corresponds to the second placeholder
+            insertStmt.setInt(3, idStatus);   // Corresponds to the third placeholder
+            insertStmt.setInt(4, year);       // Corresponds to the fourth placeholder
+
+            insertStmt.executeUpdate();
+            System.out.println("Inscrição realizada com sucesso!");  // Mensagem de sucesso após a inserção
+
         } finally {
-            if (stmt != null) {
-                stmt.close();
+            // Fechando os recursos
+            if (rs != null) {
+                rs.close();
+            }
+            if (checkStmt != null) {
+                checkStmt.close();
+            }
+            if (insertStmt != null) {
+                insertStmt.close();
             }
             if (conn != null) {
                 conn.close();
             }
-        } }
-        public static void addRegistrationSolo(Registration registration) throws SQLException {
-            String query = "INSERT INTO tblRegistration (idAthlete, idSport, idStatus) VALUES (?, ?, ?)";
-            Connection conn = null;
-            PreparedStatement stmt = null;
-            try {
-                conn = ConnectionsUtlis.dbConnect();
-                stmt = conn.prepareStatement(query);
+        }
+    }
 
-                stmt.setInt(1, registration.getAthlete().getIdAthlete());
-                stmt.setInt(2, registration.getSport().getIdSport());
-                stmt.setInt(3, registration.getStatus().getIdStatus());
-                stmt.executeUpdate();
-            } finally {
-                if (stmt != null) {
-                    stmt.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
 
-            } }
+    public static void addRegistrationSolo(Registration registration) throws SQLException {
+        String checkQuery = "SELECT COUNT(*) FROM tblRegistration WHERE idAthlete = ? AND idSport = ? AND idStatus = ? AND year = ?";
+        String insertQuery = "INSERT INTO tblRegistration (idAthlete, idSport, idStatus, year) VALUES (?, ?, ?, ?)";
+
+        Connection conn = null;
+        PreparedStatement checkStmt = null;
+        PreparedStatement insertStmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = ConnectionsUtlis.dbConnect();
+
+            // Prepare the check statement to check if the record already exists
+            checkStmt = conn.prepareStatement(checkQuery);
+            checkStmt.setInt(1, registration.getAthlete().getIdAthlete());
+            checkStmt.setInt(2, registration.getSport().getIdSport());
+            checkStmt.setInt(3, registration.getStatus().getIdStatus());
+            checkStmt.setInt(4, registration.getYear());
+
+            // Execute the check query to see if the record already exists
+            rs = checkStmt.executeQuery();
+
+            if (rs != null && rs.next()) {
+                int count = rs.getInt(1);  // Get the count of existing records
+                if (count > 0) {
+                    System.out.println("The registration already exists!"); // Show message if already exists
+                    return;  // Exit the method to avoid inserting the duplicate
+                }
+            }
+
+            // If no existing registration, proceed with the insertion
+            insertStmt = conn.prepareStatement(insertQuery);
+
+            int idAthlete = registration.getAthlete().getIdAthlete();
+            int idSport = registration.getSport().getIdSport();
+            int idStatus = registration.getStatus().getIdStatus();
+            int year = registration.getYear();
+
+            // Debugging: Print the values before insertion
+            System.out.println("Inserting new registration:");
+            System.out.println("idAthlete: " + idAthlete);
+            System.out.println("idSport: " + idSport);
+            System.out.println("idStatus: " + idStatus);
+            System.out.println("year: " + year);
+
+            insertStmt.setInt(1, idAthlete);
+            insertStmt.setInt(2, idSport);
+            insertStmt.setInt(3, idStatus);
+            insertStmt.setInt(4, year);
+
+            insertStmt.executeUpdate();
+            System.out.println("Registration successfully added!"); // Show success message only if inserted
+
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (checkStmt != null) {
+                checkStmt.close();
+            }
+            if (insertStmt != null) {
+                insertStmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+    }
+
+
+
 
     public static void removeRegistration(int idRegistration) throws SQLException {
         String query = "DELETE FROM tblRegistration WHERE idRegistration = ?";

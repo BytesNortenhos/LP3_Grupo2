@@ -152,7 +152,7 @@ public class WinnerOlympicDao {
 
             int idTeam = rs.getInt("idTeam");
             TeamDao teamDao = new TeamDao();
-            Team team = teamDao.getTeamByIdV2(idTeam);
+            Team team = teamDao.getTeamById(idTeam);
 
             int idMedal = rs.getInt("idMedal");
             String descMedalType = rs.getString("descMedalType");
