@@ -1,10 +1,8 @@
 package controllers.admin;
 
-import Dao.GenderDao;
 import Dao.RegistrationDao;
 import Dao.ResultDao;
 import Dao.SportDao;
-import Models.Gender;
 import Models.Sport;
 import bytesnortenhos.projetolp3.Main;
 import controllers.ViewsController;
@@ -12,16 +10,11 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SplitMenuButton;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -37,9 +30,10 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Scanner;
 
-public class SportsController {
+public class StartSportsController {
     private static Stage stage;
     private static Scene scene;
     @FXML
@@ -61,9 +55,11 @@ public class SportsController {
     private SplitMenuButton sportSplitButton;
 
     @FXML
-    private FlowPane sportsContainer;
+    private FlowPane startSportsContainer;
     @FXML
     private Label noSportsLabel;
+
+    SportDao sportDao = new SportDao();
 
     public void initialize() throws SQLException {
         loadIcons();
@@ -104,7 +100,6 @@ public class SportsController {
     }
 
     private List<List> getSports() throws SQLException {
-        SportDao sportDao = new SportDao();
         return sportDao.getSportsToShow();
     }
 
@@ -115,11 +110,11 @@ public class SportsController {
 
     private void displaySports(List<List> sports) throws SQLException {
         noSportsLabel.setVisible(false);
-        sportsContainer.setVisible(true);
-        sportsContainer.getChildren().clear();
+        startSportsContainer.setVisible(true);
+        startSportsContainer.getChildren().clear();
         for (List sport : sports) {
             VBox sportsItem = createSportsItem(sport);
-            sportsContainer.getChildren().add(sportsItem);
+            startSportsContainer.getChildren().add(sportsItem);
 
         }
     }
@@ -129,30 +124,73 @@ public class SportsController {
         requestItem.setSpacing(10);
         requestItem.getStyleClass().add("request-item");
 
+        int idSport = Integer.parseInt(sport.get(0).toString());
+        int nPart = sportDao.getNumberParticipantsSport(idSport);
+        int mPart = Integer.parseInt(sport.get(5).toString());
+
         Label nameLabel = new Label(sport.get(3).toString());
         nameLabel.getStyleClass().add("name-label");
 
         Label typeLabel = new Label(sport.get(1).toString());
         typeLabel.getStyleClass().add("type-label");
 
-        Label description = new Label(sport.get(4).toString());
-        description.setWrapText(true);
-        description.getStyleClass().add("description-label");
-
-
         Label genderLabel = new Label(sport.get(2).toString());
         genderLabel.getStyleClass().add("gender-label");
 
-        Label minPart = new Label("Minímo de participantes: " + sport.get(5).toString());
+        Label minPart = new Label("Minímo de participantes: " + mPart);
         minPart.getStyleClass().add("minPart-label");
 
-        Label scoringMeasure = new Label("Medida de pontuação: " + sport.get(6).toString());
-        scoringMeasure.getStyleClass().add("scoringMeasure-label");
+        Label numPart = new Label("Número de participantes: " + nPart);
+        numPart.getStyleClass().add("numPart-label");
 
-        Label oneGame = new Label("Quantidade de jogos: " + sport.get(7).toString());
-        oneGame.getStyleClass().add("oneGame-label");
+        if(sportDao.BootedSport(idSport)){
+            if(nPart >= mPart){
+                ImageView startImageView = new ImageView();
+                URL iconStartURL = Main.class.getResource("img/iconStart.png");
+                if (iconStartURL != null) {
+                    Image image = new Image(iconStartURL.toExternalForm());
+                    startImageView.setImage(image);
+                    startImageView.setFitWidth(80);
+                    startImageView.setFitHeight(80);
+                }
+                Button startButton = new Button();
+                startButton.setGraphic(startImageView);
+                startButton.getStyleClass().add("startButton");
+                requestItem.getChildren().addAll(nameLabel, typeLabel, genderLabel,minPart, numPart, startButton);
+                startButton.setOnAction(event -> {
+                    try {
+                       if(iniciarModalidades(idSport)) {
+                           Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                           alert.setTitle("Sucesso!");
+                           alert.setHeaderText("Modalidade inicada com sucesso!");
+                           Optional<ButtonType> result = alert.showAndWait();
+//                           if (result.isPresent() && result.get() == ButtonType.OK) {
+//                               Platform.runLater(() -> startSportsContainer.getChildren().remove(requestItem));
+//                           }
+                       }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                });
+            }
+            else{
+                requestItem.getChildren().addAll(nameLabel, typeLabel, genderLabel,minPart, numPart);
+            }
+        }else{
+            ImageView viewImageView = new ImageView();
+            URL iconViewURL = Main.class.getResource("img/iconView.png");
+            if (iconViewURL != null) {
+                Image image = new Image(iconViewURL.toExternalForm());
+                viewImageView.setImage(image);
+                viewImageView.setFitWidth(80);
+                viewImageView.setFitHeight(80);
+            }
+            Button viewButton = new Button();
+            viewButton.setGraphic(viewImageView);
+            viewButton.getStyleClass().add("viewButton");
+            requestItem.getChildren().addAll(nameLabel, typeLabel, genderLabel,minPart, numPart, viewButton);
+        }
 
-        requestItem.getChildren().addAll(nameLabel, description, typeLabel, genderLabel, minPart, scoringMeasure, oneGame);
         requestItem.setPrefWidth(500); // Ensure this width allows two items per line
         return requestItem;
     }
@@ -319,4 +357,7 @@ public class SportsController {
         }
     }
 
+    public boolean iniciarModalidades(int id) throws SQLException {
+        return true;
+    }
 }

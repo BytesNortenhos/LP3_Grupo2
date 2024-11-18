@@ -17,9 +17,11 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -181,6 +183,19 @@ public class RegisterSportController {
         stage.setScene(scene);
         stage.show();
     }
+    public void mostrarIniciarModalidades(ActionEvent event) throws IOException {
+        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
+        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/startSport.fxml")));
+        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
+        scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
+        if(isDarkMode){
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+        }else{
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
+        }
+        stage.setScene(scene);
+        stage.show();
+    }
     public void logout(ActionEvent event) throws Exception {
         mostrarLogin(event);
     }
@@ -196,5 +211,50 @@ public class RegisterSportController {
         }
         stage.setScene(scene);
         stage.show();
+    }
+    @FXML
+    public void loadTeams(ActionEvent event) throws IOException {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Resource File");
+
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Text Files (*.txt)", "*.txt");
+        fileChooser.getExtensionFilters().add(extFilter);
+
+        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
+        File file = fileChooser.showOpenDialog(stage);
+
+        if (file != null) {
+            System.out.println("File selected: " + file.getAbsolutePath());
+        }
+    }
+    @FXML
+    public void loadSports(ActionEvent event) throws IOException {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Resource File");
+
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Text Files (*.txt)", "*.txt");
+        fileChooser.getExtensionFilters().add(extFilter);
+
+        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
+        File file = fileChooser.showOpenDialog(stage);
+
+        if (file != null) {
+            System.out.println("File selected: " + file.getAbsolutePath());
+        }
+    }
+    @FXML
+    public void loadAthletes(ActionEvent event) throws IOException {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Resource File");
+
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Text Files (*.txt)", "*.txt");
+        fileChooser.getExtensionFilters().add(extFilter);
+
+        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
+        File file = fileChooser.showOpenDialog(stage);
+
+        if (file != null) {
+            System.out.println("File selected: " + file.getAbsolutePath());
+        }
     }
 }

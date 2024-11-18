@@ -4,11 +4,8 @@ import AuxilierXML.Athletes;
 import AuxilierXML.Sports;
 import AuxilierXML.Teams;
 import AuxilierXML.UploadXmlDAO;
-import Dao.AthleteDao;
-import Dao.CountryDao;
-import Dao.RegistrationDao;
-import Dao.TesteDao;
-import Utils.PasswordUtils;
+import Dao.*;
+import Models.Team;
 import Utils.XMLUtils;
 import javafx.application.Application;
 import javafx.fxml.FXML;
@@ -62,7 +59,7 @@ public class Main extends Application {
 
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
-        launch();
+//        launch();
 
         /*UploadXmlDAO uploadXmlDAO = new UploadXmlDAO();
         XMLUtils xmlUtils = new XMLUtils();

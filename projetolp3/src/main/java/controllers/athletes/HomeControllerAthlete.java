@@ -63,18 +63,18 @@ public class HomeControllerAthlete {
     public void initialize() {
         loadIcons();
 
-        List<Registration> registrations = null;
-        try {
-            registrations = getPendingRegistrations();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-        if (registrations.isEmpty()) {
-            showNoRequestsMessage();
-        } else {
-            displayRequests(registrations);
-        }
+//        List<Registration> registrations = null;
+//        try {
+//            registrations = getPendingRegistrations();
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//        if (registrations.isEmpty()) {
+//            showNoRequestsMessage();
+//        } else {
+//            displayRequests(registrations);
+//        }
         theamsSplitButton.setOnMouseClicked(event -> theamsSplitButton.show());
         sportSplitButton.setOnMouseClicked(mouseEvent -> sportSplitButton.show());
     }
@@ -91,102 +91,102 @@ public class HomeControllerAthlete {
         image = new Image(iconLogoutNavURL.toExternalForm());
         if(iconLogoutNav != null) iconLogoutNav.setImage(image);
     }
-    private List<Registration> getPendingRegistrations() throws SQLException {
-        RegistrationDao registrationDao = new RegistrationDao();
-        List<Registration> registrations = registrationDao.getRegistrations();
-        return registrations.stream()
-                .filter(reg -> reg.getStatus().getIdStatus() == 1)
-                .collect(Collectors.toList());
-    }
-
-    private void showNoRequestsMessage() {
-        noRequestsLabel.setVisible(true);
-    }
-
-    private void displayRequests(List<Registration> registrations) {
-        noRequestsLabel.setVisible(false);
-        mainContainer.setVisible(true);
-
-        for (Registration registration : registrations) {
-            VBox requestItem = createRequestItem(registration);
-            mainContainer.getChildren().add(requestItem);
-        }
-    }
-
-    private VBox createRequestItem(Registration request) {
-        VBox requestItem = new VBox();
-        requestItem.setSpacing(10);
-        requestItem.getStyleClass().add("request-item");
-
-        Label nameLabel = new Label(request.getAthlete().getName());
-        nameLabel.getStyleClass().add("name-label");
-
-        java.sql.Date birthDate = request.getAthlete().getDateOfBirth();
-        LocalDate birthLocalDate = birthDate.toLocalDate();
-        LocalDate currentDate = LocalDate.now();
-        int age = Period.between(birthLocalDate, currentDate).getYears();
-
-        Label ageLabel = new Label("Idade: " + age);
-        ageLabel.getStyleClass().add("age-label");
-
-        Label sportLabel = new Label("Modalidade: " + request.getSport().getName());
-        sportLabel.getStyleClass().add("sport-label");
-
-        Label teamLabel = new Label("Equipa: " + request.getTeam().getName());
-        teamLabel.getStyleClass().add("team-label");
-
-        ImageView acceptImageView = new ImageView();
-        URL iconAcceptURL = Main.class.getResource("img/iconAccept.png");
-        if (iconAcceptURL != null) {
-            String iconAcceptStr = iconAcceptURL.toExternalForm();
-            Image image = new Image(iconAcceptStr);
-            acceptImageView.setImage(image);
-            acceptImageView.setFitWidth(80);
-            acceptImageView.setFitHeight(80);
-        }
-        Button acceptButton = new Button();
-        acceptButton.setGraphic(acceptImageView);
-        acceptButton.getStyleClass().add("acceptButton");
-
-        ImageView rejectImageView = new ImageView();
-        URL iconRejectURL = Main.class.getResource("img/iconReject.png");
-        if (iconRejectURL != null) {
-            String iconRejectStr = iconRejectURL.toExternalForm();
-            Image image = new Image(iconRejectStr);
-            rejectImageView.setImage(image);
-            rejectImageView.setFitWidth(80);
-            rejectImageView.setFitHeight(80);
-        }
-        Button rejectButton = new Button();
-        rejectButton.setGraphic(rejectImageView);
-        rejectButton.getStyleClass().add("rejectButton");
-
-        acceptButton.setOnAction(event -> {
-            try {
-                RegistrationDao.updateRegistrationStatus(request.getIdRegistration(), 3);
-                Platform.runLater(() -> mainContainer.getChildren().remove(requestItem));
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        });
-
-        rejectButton.setOnAction(event -> {
-            try {
-                RegistrationDao.updateRegistrationStatus(request.getIdRegistration(), 2);
-                Platform.runLater(() -> mainContainer.getChildren().remove(requestItem));
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        });
-
-        HBox buttonContainer = new HBox(10);
-        buttonContainer.getChildren().addAll(acceptButton, rejectButton);
-        buttonContainer.setAlignment(Pos.CENTER_RIGHT);
-        buttonContainer.setPadding(new Insets(10));
-
-        requestItem.getChildren().addAll(nameLabel, sportLabel, ageLabel, buttonContainer);
-        return requestItem;
-    }
+//    private List<Registration> getPendingRegistrations() throws SQLException {
+//        RegistrationDao registrationDao = new RegistrationDao();
+//        List<Registration> registrations = registrationDao.getRegistrations();
+//        return registrations.stream()
+//                .filter(reg -> reg.getStatus().getIdStatus() == 1)
+//                .collect(Collectors.toList());
+//    }
+//
+//    private void showNoRequestsMessage() {
+//        noRequestsLabel.setVisible(true);
+//    }
+//
+//    private void displayRequests(List<Registration> registrations) {
+//        noRequestsLabel.setVisible(false);
+//        mainContainer.setVisible(true);
+//        mainContainer.getChildren().clear();
+//        for (Registration registration : registrations) {
+//            VBox requestItem = createRequestItem(registration);
+//            mainContainer.getChildren().add(requestItem);
+//        }
+//    }
+//
+//    private VBox createRequestItem(Registration request) {
+//        VBox requestItem = new VBox();
+//        requestItem.setSpacing(10);
+//        requestItem.getStyleClass().add("request-item");
+//
+//        Label nameLabel = new Label(request.getAthlete().getName());
+//        nameLabel.getStyleClass().add("name-label");
+//
+//        java.sql.Date birthDate = request.getAthlete().getDateOfBirth();
+//        LocalDate birthLocalDate = birthDate.toLocalDate();
+//        LocalDate currentDate = LocalDate.now();
+//        int age = Period.between(birthLocalDate, currentDate).getYears();
+//
+//        Label ageLabel = new Label("Idade: " + age);
+//        ageLabel.getStyleClass().add("age-label");
+//
+//        Label sportLabel = new Label("Modalidade: " + request.getSport().getName());
+//        sportLabel.getStyleClass().add("sport-label");
+//
+//        Label teamLabel = new Label("Equipa: " + request.getTeam().getName());
+//        teamLabel.getStyleClass().add("team-label");
+//
+//        ImageView acceptImageView = new ImageView();
+//        URL iconAcceptURL = Main.class.getResource("img/iconAccept.png");
+//        if (iconAcceptURL != null) {
+//            String iconAcceptStr = iconAcceptURL.toExternalForm();
+//            Image image = new Image(iconAcceptStr);
+//            acceptImageView.setImage(image);
+//            acceptImageView.setFitWidth(80);
+//            acceptImageView.setFitHeight(80);
+//        }
+//        Button acceptButton = new Button();
+//        acceptButton.setGraphic(acceptImageView);
+//        acceptButton.getStyleClass().add("acceptButton");
+//
+//        ImageView rejectImageView = new ImageView();
+//        URL iconRejectURL = Main.class.getResource("img/iconReject.png");
+//        if (iconRejectURL != null) {
+//            String iconRejectStr = iconRejectURL.toExternalForm();
+//            Image image = new Image(iconRejectStr);
+//            rejectImageView.setImage(image);
+//            rejectImageView.setFitWidth(80);
+//            rejectImageView.setFitHeight(80);
+//        }
+//        Button rejectButton = new Button();
+//        rejectButton.setGraphic(rejectImageView);
+//        rejectButton.getStyleClass().add("rejectButton");
+//
+//        acceptButton.setOnAction(event -> {
+//            try {
+//                RegistrationDao.updateRegistrationStatus(request.getIdRegistration(), 3);
+//                Platform.runLater(() -> mainContainer.getChildren().remove(requestItem));
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+//        });
+//
+//        rejectButton.setOnAction(event -> {
+//            try {
+//                RegistrationDao.updateRegistrationStatus(request.getIdRegistration(), 2);
+//                Platform.runLater(() -> mainContainer.getChildren().remove(requestItem));
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+//        });
+//
+//        HBox buttonContainer = new HBox(10);
+//        buttonContainer.getChildren().addAll(acceptButton, rejectButton);
+//        buttonContainer.setAlignment(Pos.CENTER_RIGHT);
+//        buttonContainer.setPadding(new Insets(10));
+//
+//        requestItem.getChildren().addAll(nameLabel, sportLabel, ageLabel, buttonContainer);
+//        return requestItem;
+//    }
 
     public boolean changeMode(ActionEvent event){
         isDarkMode = !isDarkMode;
@@ -235,6 +235,20 @@ public class HomeControllerAthlete {
     public void mostrarRegistaModalidades(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
         Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/athlete/sportsRegister.fxml")));
+        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
+        scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
+        if(isDarkMode){
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+        }else{
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
+        }
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public void mostrarRegistaModalidadesEquipa(ActionEvent event) throws IOException {
+        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
+        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/athlete/sportsTeamRegister.fxml")));
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
         scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
         if(isDarkMode){

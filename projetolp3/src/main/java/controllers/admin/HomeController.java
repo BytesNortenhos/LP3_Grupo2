@@ -1,7 +1,5 @@
 package controllers.admin;
 
-import AuxilierXML.Athletes;
-import AuxilierXML.Sports;
 import AuxilierXML.Teams;
 import AuxilierXML.UploadXmlDAO;
 import Dao.RegistrationDao;
@@ -121,6 +119,7 @@ public class HomeController {
     private void displayRequests(List<Registration> registrations) {
         noRequestsLabel.setVisible(false);
         mainContainer.setVisible(true);
+        mainContainer.getChildren().clear();
 
         for (Registration registration : registrations) {
             VBox requestItem = createRequestItem(registration);
@@ -274,7 +273,19 @@ public class HomeController {
         stage.setScene(scene);
         stage.show();
     }
-
+    public void mostrarIniciarModalidades(ActionEvent event) throws IOException {
+        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
+        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/startSport.fxml")));
+        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
+        scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
+        if(isDarkMode){
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+        }else{
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
+        }
+        stage.setScene(scene);
+        stage.show();
+    }
     public static void returnHomeMenu(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
         Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/home.fxml")));
@@ -368,6 +379,26 @@ public class HomeController {
             alerta.setHeaderText("Selecione 2 ficheiros! 1 .xml e 1 xsd.xml");
             alerta.show();
         }
+    }
+
+    private void showFilePreviewPopup(File file) {
+        Stage popupStage = new Stage();
+        popupStage.setTitle("File Preview");
+
+        TextArea filePreviewTextArea = new TextArea();
+        filePreviewTextArea.setEditable(false);
+
+        try {
+            String content = new String(java.nio.file.Files.readAllBytes(file.toPath()));
+            filePreviewTextArea.setText(content);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        VBox vbox = new VBox(filePreviewTextArea);
+        Scene scene = new Scene(vbox, 400, 300);
+        popupStage.setScene(scene);
+        popupStage.show();
     }
     @FXML
     public void loadSports(ActionEvent event) throws IOException {
