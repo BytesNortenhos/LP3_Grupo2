@@ -1,11 +1,12 @@
 package controllers.admin;
 
+import AuxilierXML.Athletes;
+import AuxilierXML.Sports;
 import AuxilierXML.Teams;
 import AuxilierXML.UploadXmlDAO;
 import Dao.RegistrationDao;
 import Utils.XMLUtils;
 import bytesnortenhos.projetolp3.Main;
-import controllers.LoginController;
 import controllers.ViewsController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
