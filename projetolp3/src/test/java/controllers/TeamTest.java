@@ -29,12 +29,16 @@ public class TeamTest {
                     .filter(c -> c.getName().equals("Portugal"))
                     .findFirst().orElse(null);
 
-            Sport sport = SportDao.getSports().stream()
+
+            Sport sport = new SportDao().getSports().stream()
                     .filter(s -> s.getName().equals("4x100m Freestyle Relay") && s.getIdSport() == 13)
                     .findFirst().orElse(null);
 
+            int minParticipants = 4;
+            int maxParticipants = 8;
 
-            Team team = new Team(0,name, country, gender, sport, yearFounded);
+
+            Team team = new Team(0,name, country, gender, sport, yearFounded,minParticipants,maxParticipants);
 
             TeamDao.addTeam(team);
 
@@ -51,11 +55,10 @@ public class TeamTest {
             }
 
             if(teamEncontrado){
-                //TeamDao.removeTeam(idTeamEncontado);
+                TeamDao.removeTeam(idTeamEncontado);
                 assertTrue(teamEncontrado);
             }
         }
-
     }
 
     @Test
@@ -73,7 +76,7 @@ public class TeamTest {
                     .filter(c -> c.getName().equals("Brazil"))
                     .findFirst().orElse(null);
 
-            Sport sport = SportDao.getSports().stream()
+            Sport sport = new SportDao().getSports().stream()
                     .filter(s -> s.getName().equals("100m Sprint") && s.getIdSport() == 39)
                     .findFirst().orElse(null);
 
@@ -81,14 +84,17 @@ public class TeamTest {
             int idTeam = 0;
             Team teamEncontrado = null;
             for (Team t : TeamDao.getTeams()) {
-                if (t.getName().equals("USA Men's 4x100m Relay Team")) {
+                if (t.getName().equals("USA Men's 4x100m Relay Team") && t.getIdTeam() == 14) {
                     idTeam = t.getIdTeam();
                     teamEncontrado = t;
                     break;
                 }
             }
 
-            Team teamUpdate = new Team(0, name, country, gender, sport, yearFounded);
+            int minParticipants = 4;
+            int maxParticipants = 8;
+
+            Team teamUpdate = new Team(idTeam, name, country, gender, sport, yearFounded, minParticipants, maxParticipants);
 
             if (teamEncontrado != null) {
                 TeamDao.updateTeam(teamUpdate);
@@ -98,16 +104,16 @@ public class TeamTest {
 
             for (Team t : TeamDao.getTeams()) {
                 if (t.getIdTeam() == idTeam) {
-                    if (t.getName().equals(name) && t.getCountry().getIdCountry() == country.getIdCountry() && t.getGenre().getIdGender() == gender.getIdGender()
+                    if (t.getName().equals(name) && t.getCountry().getIdCountry().equals(country.getIdCountry()) && t.getGenre().getIdGender() == gender.getIdGender()
                             && t.getSport().getIdSport() == sport.getIdSport() && t.getYearFounded() == yearFounded) {
                         assertTrue(true);
                         TeamDao.updateTeam(teamEncontrado);
                     } else {
                         fail("Erro ao atualizar");
                     }
-
                 }
             }
         }
     }
 }
+

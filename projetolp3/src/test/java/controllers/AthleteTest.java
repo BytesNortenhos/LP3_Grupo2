@@ -100,7 +100,7 @@ public class AthleteTest {
                 if (a.getIdAthlete() == idAtleta) {
                     if(a.getPassword().equals(password) && a.getName().equals(name) && a.getHeight() == height
                             && a.getWeight() == weight && a.getDateOfBirth().equals(dateOfBirth) && a.getGenre().getIdGender() == gender.getIdGender()
-                            && a.getCountry().getIdCountry() == country.getIdCountry()){
+                            && a.getCountry().getIdCountry().equals(country.getIdCountry())){
                         assertTrue(true);
                         AthleteDao.updateAthlete(atletaEncontrado);
                     }else {

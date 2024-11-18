@@ -39,7 +39,8 @@ public class SportTest {
             boolean sportEncontrado = false;
             int idSport = 0;
 
-            for (Sport s : SportDao.getSports()) {
+            SportDao spd = new SportDao();
+            for (Sport s : spd.getSports()) {
                 if (s.getName().equals(name)) {
                     sportEncontrado = true;
                     idSport = s.getIdSport();
@@ -70,7 +71,8 @@ public class SportTest {
 
         Sport sportEncontrado = null;
         int idSport = 40;
-        for (Sport s : SportDao.getSports()) {
+        SportDao spd = new SportDao();
+        for (Sport s : spd.getSports()) {
             if (s.getIdSport() == idSport) {
                 sportEncontrado = s;
                 break;
@@ -85,7 +87,7 @@ public class SportTest {
             fail();
         }
 
-        for (Sport s: SportDao.getSports()){
+        for (Sport s: spd.getSports()){
             if (s.getIdSport() == idSport) {
                 if (s.getType().equals(type) && s.getGenre().getIdGender() == gender.getIdGender()
                         && s.getName().equals(name) && s.getDesc().equals(description) && s.getMinParticipants() == minParticipants
