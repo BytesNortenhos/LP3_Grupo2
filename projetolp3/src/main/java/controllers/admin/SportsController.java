@@ -1,6 +1,8 @@
 package controllers.admin;
 
 import Dao.GenderDao;
+import Dao.RegistrationDao;
+import Dao.ResultDao;
 import Dao.SportDao;
 import Models.Gender;
 import Models.Sport;
@@ -35,6 +37,7 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
+import java.util.Scanner;
 
 public class SportsController {
     private static Stage stage;
@@ -73,10 +76,9 @@ public class SportsController {
             sportSplitButton.show();
         });
         List<List> sports = null;
-        try{
+        try {
             sports = getSports();
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
@@ -87,7 +89,7 @@ public class SportsController {
         }
     }
 
-    public void loadIcons(){
+    public void loadIcons() {
         URL iconMoonNavURL = Main.class.getResource("img/iconMoon.png");
         Image image = new Image(iconMoonNavURL.toExternalForm());
         if (iconModeNav != null) iconModeNav.setImage(image);
@@ -98,17 +100,19 @@ public class SportsController {
 
         URL iconLogoutNavURL = Main.class.getResource("img/iconLogoutDark.png");
         image = new Image(iconLogoutNavURL.toExternalForm());
-        if(iconLogoutNav != null) iconLogoutNav.setImage(image);
+        if (iconLogoutNav != null) iconLogoutNav.setImage(image);
     }
 
     private List<List> getSports() throws SQLException {
         SportDao sportDao = new SportDao();
         return sportDao.getSportsToShow();
     }
+
     private void showNoSportsMessage() {
         noSportsLabel.setVisible(true);
 
     }
+
     private void displaySports(List<List> sports) throws SQLException {
         noSportsLabel.setVisible(false);
         sportsContainer.setVisible(true);
@@ -119,6 +123,7 @@ public class SportsController {
 
         }
     }
+
     private VBox createSportsItem(List sport) throws SQLException {
         VBox requestItem = new VBox();
         requestItem.setSpacing(10);
@@ -151,18 +156,18 @@ public class SportsController {
         requestItem.setPrefWidth(500); // Ensure this width allows two items per line
         return requestItem;
     }
-    public boolean changeMode(ActionEvent event){
+
+    public boolean changeMode(ActionEvent event) {
         isDarkMode = !isDarkMode;
-        if(isDarkMode){
+        if (isDarkMode) {
             setDarkMode();
-        }
-        else{
+        } else {
             setLightMode();
         }
         return isDarkMode;
     }
 
-    public void setLightMode(){
+    public void setLightMode() {
         parent.getStylesheets().remove(cssDark);
         parent.getStylesheets().add(cssLight);
         URL iconMoonURL = Main.class.getResource("img/iconMoonLight.png");
@@ -170,7 +175,8 @@ public class SportsController {
         Image image = new Image(iconMoonStr);
         iconModeNav.setImage(image);
     }
-    public void setDarkMode(){
+
+    public void setDarkMode() {
         parent.getStylesheets().remove(String.valueOf(cssLight));
         parent.getStylesheets().add(String.valueOf(cssDark));
         URL iconMoonURL = Main.class.getResource("img/iconMoon.png");
@@ -178,61 +184,67 @@ public class SportsController {
         Image image = new Image(iconMoonStr);
         iconModeNav.setImage(image);
     }
+
     public void mostrarRegistar(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
-        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/register.fxml")));
+        Parent root = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/register.fxml")));
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
         scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
-        if(isDarkMode){
+        if (isDarkMode) {
             scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
-        }else{
+        } else {
             scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
         }
         stage.setScene(scene);
         stage.show();
     }
+
     public void mostrarRegistaModalidades(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
-        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/sportRegister.fxml")));
+        Parent root = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/sportRegister.fxml")));
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
         scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
-        if(isDarkMode){
+        if (isDarkMode) {
             scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
-        }else{
+        } else {
             scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
         }
         stage.setScene(scene);
         stage.show();
     }
+
     public void mostrarModalidades(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
-        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/sportsView.fxml")));
+        Parent root = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/sportsView.fxml")));
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
         scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
-        if(isDarkMode){
+        if (isDarkMode) {
             scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
-        }else{
+        } else {
             scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
         }
         stage.setScene(scene);
         stage.show();
     }
+
     public void returnHomeMenu(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
-        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/home.fxml")));
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        Parent root = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/home.fxml")));
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
-        if(isDarkMode){
+        if (isDarkMode) {
             scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
-        }else{
+        } else {
             scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
         }
         stage.setScene(scene);
         stage.show();
     }
+
     public void logout(ActionEvent event) throws Exception {
         mostrarLogin(event);
     }
+
     public void mostrarLogin(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
         Parent root = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/loginView.fxml")));
@@ -246,6 +258,7 @@ public class SportsController {
         stage.setScene(scene);
         stage.show();
     }
+
     @FXML
     public void loadTeams(ActionEvent event) throws IOException {
         FileChooser fileChooser = new FileChooser();
@@ -261,6 +274,7 @@ public class SportsController {
             System.out.println("File selected: " + file.getAbsolutePath());
         }
     }
+
     @FXML
     public void loadSports(ActionEvent event) throws IOException {
         FileChooser fileChooser = new FileChooser();
@@ -276,6 +290,7 @@ public class SportsController {
             System.out.println("File selected: " + file.getAbsolutePath());
         }
     }
+
     @FXML
     public void loadAthletes(ActionEvent event) throws IOException {
         FileChooser fileChooser = new FileChooser();
@@ -289,6 +304,32 @@ public class SportsController {
 
         if (file != null) {
             System.out.println("File selected: " + file.getAbsolutePath());
+        }
+    }
+
+    public void iniciarModalidades() throws SQLException {
+        System.out.println("Iniciou!!!");
+        Scanner scanner = new Scanner(System.in);
+        SportDao sd = new SportDao();
+        RegistrationDao registrationDao = new RegistrationDao();
+        ResultDao resultDao = new ResultDao();
+        System.out.print("Insira o ID da modalidade: ");
+        int id = scanner.nextInt();
+        Sport modalidade = sd.getSportById(id);
+        if (modalidade != null) {
+            System.out.println("Desporto: " + modalidade.getName() + " " + modalidade.getGenre().getDesc());
+            System.out.println("Tipo: " + modalidade.getType());
+            System.out.println("Mín. Participantes: " + modalidade.getMinParticipants());
+            System.out.println("Número de Participantes Inscritos: " + registrationDao.getNumberParticipantsSport(id));
+            if (resultDao.BootedSport(id)) {
+                if (registrationDao.getNumberParticipantsSport(id) < modalidade.getMinParticipants()) {
+                    System.out.println("Modalidade não tem participantes suficientes!");
+                } else {
+                    System.out.println("Modalidade pode ser iniciada!");
+                }
+            } else {
+                System.out.println("A modalidade já foi inicializada!");
+            }
         }
     }
 }
