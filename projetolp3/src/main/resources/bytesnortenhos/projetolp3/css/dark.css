@@ -109,7 +109,7 @@
     line-height: 120%;
     -fx-text-fill: #F7EED8;
 }
-.age-label, .sport-label, .type-label, .description-label, .gender-label, .minPart-label, .scoringMeasure-label, .oneGame-label {
+.age-label, .sport-label, .type-label, .description-label, .gender-label, .minPart-label, .scoringMeasure-label, .oneGame-label, .numPart-label {
     -fx-font-family: 'Inter';
     -fx-font-style: normal;
     -fx-font-weight: 400;
@@ -118,7 +118,7 @@
     -fx-text-fill: #F7EED8;
 }
 
-.acceptButton, .rejectButton {
+.acceptButton, .rejectButton, .startButton, .viewButton {
     -fx-background-color: transparent; /* Remove background to show only the image */
     -fx-padding: 0; /* Remove padding around the image */
     -fx-background-radius: 50%; /* Keep rounded shape if needed */
@@ -135,7 +135,7 @@
     -fx-min-width: 1000px;
     -fx-background-color: #1E1E1E
 }
-#mainContainer, .scrollStyle, #sportsContainer{
+#mainContainer, .scrollStyle, #sportsContainer, #startSportsContainer{
     -fx-background-color: #1E1E1E;
 }
 #mainContainer{

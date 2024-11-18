@@ -1,25 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitMenuButton?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.control.SplitMenuButton?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.collections.FXCollections?>
-<?import java.lang.String?>
-<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.layout.VBox?>
 
-<BorderPane fx:id="parent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="background" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.admin.RegisterController">
+<BorderPane fx:id="parent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="background" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.admin.StartSportsController">
     <top>
         <HBox styleClass="navBar" prefHeight="40.0" prefWidth="400.0">
             <Button styleClass="iconHomeNav" onAction="#returnHomeMenu">
@@ -60,21 +53,16 @@
         </HBox>
     </top>
     <center>
-        <VBox alignment="CENTER">
-            <Label styleClass="loginText" text="REGISTAR ATLETA" />
-            <ImageView fx:id="iconOlympic" styleClass="iconOlympic" fitWidth="65" fitHeight="65" preserveRatio="true" />
-            <TextField styleClass="userNameText" fx:id="userNameText"  promptText="Nome de utilizador" />
-            <HBox style="-fx-translate-y: -60px; -fx-max-width: 350px">
-                <ComboBox fx:id="genderDrop" styleClass="registerDrop" promptText="Género" />
-                <ComboBox fx:id="nacDrop" styleClass="registerDrop" promptText="Nacionalidade" style="-fx-translate-x: 10px"/>
-            </HBox>
-            <HBox style="-fx-translate-y: -40px; -fx-max-width: 350px;">
-                <TextField styleClass="registerTextSmall" fx:id="weightText"  promptText="Peso(KG)" />
-                <TextField styleClass="registerTextSmall" fx:id="heightText"  promptText="Altura(CM)" style="-fx-translate-x: 10px"/>
-            </HBox>
-            <DatePicker fx:id="datePicker" promptText="Data de nascimento" styleClass="datePickerRegister" style="-fx-translate-y: -20px"/>
-            <!-- Adicione onAction aqui -->
-            <Button styleClass="buttonEntrar" onAction="#registerAthlete">Registar</Button>
+        <VBox>
+            <Label styleClass="labelHome">Iniciar modalidades</Label>
+            <Label styleClass="textWelcome">Nesta área poderá iniciar modaldiades bem como visualizar</Label>
+            <Label styleClass="textWelcome">os respectivos resultados gerados.</Label>
+            <ScrollPane fitToWidth="true" pannable="true" styleClass="scrollStyle">
+                <FlowPane fx:id="startSportsContainer" alignment="CENTER" hgap="20" vgap="20" prefWrapLength="1040" prefHeight="600">
+                    <Label fx:id="noSportsLabel" text="Não existem pedidos pendentes" visible="false" />
+                    <!-- Requests will be dynamically added here -->
+                </FlowPane>
+            </ScrollPane>
         </VBox>
     </center>
 </BorderPane>

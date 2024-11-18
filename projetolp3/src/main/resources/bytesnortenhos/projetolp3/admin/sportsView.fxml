@@ -31,6 +31,7 @@
             <SplitMenuButton fx:id="sportSplitButton" styleClass="dropdownButton" text="Gerir modalidade">
                 <items>
                     <MenuItem text="Visualizar modalidades" onAction="#mostrarModalidades"/>
+                    <MenuItem text="Iniciar modalidades" onAction="#mostrarIniciarModalidades"/>
                     <MenuItem text="Registar modalidade" onAction="#mostrarRegistaModalidades"/>
                 </items>
             </SplitMenuButton>

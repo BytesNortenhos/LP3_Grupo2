@@ -60,12 +60,12 @@
     <VBox>
       <Label styleClass="labelHome">Inicio</Label>
       <Label styleClass="textWelcome">Bem vindo atleta! Veja abaixo todas as suas conquistas:</Label>
-      <ScrollPane fitToWidth="true" pannable="true" styleClass="scrollStyle">
-        <FlowPane fx:id="mainContainer" alignment="CENTER" hgap="50" vgap="20" prefWrapLength="1010" xmlns:fx="http://javafx.com/fxml" prefHeight="600">
-          <Label fx:id="noRequestsLabel" text="Não existem pedidos pendentes!" visible="false" />
-          <!-- Requests will be dynamically added here -->
-        </FlowPane>
-      </ScrollPane>
+<!--      <ScrollPane fitToWidth="true" pannable="true" styleClass="scrollStyle">-->
+<!--        <FlowPane fx:id="mainContainer" alignment="CENTER" hgap="50" vgap="20" prefWrapLength="1010" xmlns:fx="http://javafx.com/fxml" prefHeight="600">-->
+<!--          <Label fx:id="noRequestsLabel" text="Não existem pedidos pendentes!" visible="false" />-->
+<!--          &lt;!&ndash; Requests will be dynamically added here &ndash;&gt;-->
+<!--        </FlowPane>-->
+<!--      </ScrollPane>-->
     </VBox>
   </center>
 </BorderPane>

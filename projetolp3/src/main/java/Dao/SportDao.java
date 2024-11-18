@@ -72,6 +72,29 @@ public class SportDao {
         }
         return sports;
     }
+    public int getNumberParticipantsSport(int idSport) throws SQLException {
+        String query = "SELECT COUNT(*) AS quantidade " +
+                "FROM tblRegistration " +
+                "WHERE idSport = ?;";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport);
+        int quantidade = 0;
+        if (rs != null && rs.next()) {
+            quantidade = rs.getInt("quantidade");
+        }
+        return quantidade;
+    }
+    public boolean BootedSport(int idSport) throws SQLException {
+        String query = "SELECT COUNT(*) AS quantidade " +
+                "FROM tblResult " +
+                "WHERE idSport = ?;";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport);
+        if (rs != null && rs.next()) {
+            if (rs.getInt("quantidade") == 0) {
+                return true;
+            }
+        }
+        return false;
+    }
     public static void addSport(Sport sport) throws SQLException {
         String query = "INSERT INTO tblSport (type, idGender, name, description, minParticipants, scoringMeasure, oneGame) VALUES (?, ?, ?, ?, ?, ?, ?)";
         Connection conn = null;
