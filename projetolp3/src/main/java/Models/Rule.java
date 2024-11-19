@@ -72,4 +72,12 @@ public class Rule {
     public void setDesc(String desc) {
         this.desc = desc;
     }
+
+// Getter para o idSport
+public int getIdSport() {
+    return idSport;
+}
+
+// Getter para a descrição
+
 }

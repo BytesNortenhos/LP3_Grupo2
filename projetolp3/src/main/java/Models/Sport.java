@@ -65,6 +65,17 @@ public class Sport {
         this.rules = rules;
     }
 
+    public Sport(String type, Gender genre, String name, String desc, int minParticipants,
+                 String scoringMeasure, String oneGame) {
+        this.type = type;
+        this.genre = genre;
+        this.name = name;
+        this.desc = desc;
+        this.minParticipants = minParticipants;
+        this.scoringMeasure = scoringMeasure;
+        this.oneGame = oneGame;
+    }
+
     /**
      * Constructor for creating a Sport object with essential details.
      * This constructor initializes a Sport with the provided idSport and name.

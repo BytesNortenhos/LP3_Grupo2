@@ -21,6 +21,17 @@
     font-style: normal;
     -fx-spacing: -0,03em;
 }
+
+.loginText2{
+
+    -fx-text-fill: #F7EED8;
+    -fx-font-size: 40px;
+    -fx-translate-y: 20px;
+    font-family: "Inter";
+    font-weight: 700;
+    font-style: normal;
+    -fx-spacing: -0,03em;
+}
 .iconOlympic{
     -fx-translate-y: -100px;
 }

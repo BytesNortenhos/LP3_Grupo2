@@ -41,7 +41,8 @@ public class RuleDao {
             conn = ConnectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
-            stmt.setInt(1, rule.getSport().getIdSport());
+            // Agora estamos acessando diretamente o idSport da Rule
+            stmt.setInt(1, rule.getIdSport());
             stmt.setString(2, rule.getDesc());
             stmt.executeUpdate();
         } finally {
@@ -53,6 +54,7 @@ public class RuleDao {
             }
         }
     }
+
 
     public static void removeRule(int idRule) throws SQLException {
         String query = "DELETE FROM tblRule WHERE idRule = ?";

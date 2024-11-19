@@ -2,6 +2,7 @@ package Dao;
 
 import Models.*;
 import Utils.ConnectionsUtlis;
+import java.sql.ResultSet;
 
 import javax.sql.rowset.CachedRowSet;
 import java.sql.Connection;
@@ -96,13 +97,15 @@ public class SportDao {
         }
         return false;
     }
-    public static void addSport(Sport sport) throws SQLException {
+    public static int addSport(Sport sport) throws SQLException {
         String query = "INSERT INTO tblSport (type, idGender, name, description, minParticipants, scoringMeasure, oneGame) VALUES (?, ?, ?, ?, ?, ?, ?)";
         Connection conn = null;
         PreparedStatement stmt = null;
+        ResultSet rs = null;
+
         try {
             conn = ConnectionsUtlis.dbConnect();
-            stmt = conn.prepareStatement(query);
+            stmt = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
 
             stmt.setString(1, sport.getType());
             stmt.setInt(2, sport.getGenre().getIdGender());
@@ -111,8 +114,24 @@ public class SportDao {
             stmt.setInt(5, sport.getMinParticipants());
             stmt.setString(6, sport.getScoringMeasure());
             stmt.setString(7, sport.getOneGame());
+
+            // Executa a inserção
             stmt.executeUpdate();
+
+            // Obter o ID gerado automaticamente
+            rs = stmt.getGeneratedKeys();
+            if (rs.next()) {
+                int generatedId = rs.getInt(1); // Retorna o ID gerado
+                System.out.println("Generated Sport ID: " + generatedId); // Adicionando para depuração
+                return generatedId;
+            } else {
+                throw new SQLException("Failed to retrieve the generated ID for the sport.");
+            }
         } finally {
+            // Fechar recursos
+            if (rs != null) {
+                rs.close();
+            }
             if (stmt != null) {
                 stmt.close();
             }
@@ -121,6 +140,8 @@ public class SportDao {
             }
         }
     }
+
+
 
     public static void removeSport(int idSport) throws SQLException {
         String query = "DELETE FROM tblSport WHERE idSport = ?";

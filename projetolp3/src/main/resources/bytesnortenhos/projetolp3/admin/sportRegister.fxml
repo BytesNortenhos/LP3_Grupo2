@@ -67,13 +67,40 @@
             <TextField styleClass="userNameText" fx:id="descText" style="-fx-translate-y: -60px;"  promptText="Descrição da modalidade" />
             <HBox style="-fx-translate-y: -40px; -fx-max-width: 350px">
                 <ComboBox fx:id="genderDrop" styleClass="registerDrop" promptText="Género" />
-                <ComboBox fx:id="typeDrop" styleClass="registerDrop" promptText="Tipo" style="-fx-translate-x: 10px"/>
+                <ComboBox fx:id="typeDrop" styleClass="registerDrop" promptText="Tipo" style="-fx-translate-x: 10px">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="Individual" />
+                            <String fx:value="Collective" />
+                        </FXCollections>
+                    </items>
+                </ComboBox>
             </HBox>
             <HBox style="-fx-translate-y: -20px; -fx-max-width: 350px;">
                 <TextField styleClass="registerTextSmall" fx:id="minText"  promptText="Minímo de participantes" />
-                <ComboBox fx:id="scoringDrop" styleClass="registerDrop" promptText="Tipo de pontos" style="-fx-translate-x: 10px"/>
+                <ComboBox fx:id="scoringDrop" styleClass="registerDrop" promptText="Tipo de pontos" style="-fx-translate-x: 10px">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="Points" />
+                            <String fx:value="Time" />
+                        </FXCollections>
+                    </items>
+                </ComboBox>
             </HBox>
-            <ComboBox fx:id="oneGameDrop" styleClass="registerDropBig"  promptText="Número de jogos" />
+            <ComboBox fx:id="oneGameDrop" styleClass="registerDropBig"  promptText="Número de jogos">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="One" />
+                        <String fx:value="Multiple" />
+                    </FXCollections>
+                </items>
+            </ComboBox>
+
+            <!-- Campo para Regras -->
+            <Label styleClass="loginText2" text="Regras da modalidade" />
+            <TextArea fx:id="rulesTextArea" styleClass="userNameText" promptText="Insira as regras da modalidade" wrapText="true" prefHeight="100.0" style="-fx-translate-y: 20px;"/>
+            <Button styleClass="buttonEntrar" style="-fx-translate-y: 20px;" onAction="#addRule">Adicionar Regra</Button>
+
             <Button styleClass="buttonEntrar"  style="-fx-translate-y: 20px;" onAction="#registerSport">Registar</Button>
         </VBox>
     </center>
