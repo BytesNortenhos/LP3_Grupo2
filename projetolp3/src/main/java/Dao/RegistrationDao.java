@@ -21,7 +21,7 @@ public class RegistrationDao {
 
         String query = """
     SELECT r.idRegistration, r.idAthlete, r.idTeam, r.idSport, r.idStatus,
-           a.name AS athleteName, a.height AS athleteHeight, a.weight AS athleteWeight, a.dateOfBirth AS athleteDOB,
+           a.name AS athleteName, a.height AS athleteHeight, a.weight AS athleteWeight, a.dateOfBirth AS athleteDOB, a.idCountry AS athleteCountryId,
            t.name AS teamName, t.idCountry AS teamCountryId, t.yearFounded AS teamYearFounded,
            s.type AS sportType, s.name AS sportName, s.description AS sportDescription, s.idGender AS sportGenderId,
            rs.description AS statusDescription
@@ -29,7 +29,8 @@ public class RegistrationDao {
     LEFT JOIN tblAthlete a ON r.idAthlete = a.idAthlete
     LEFT JOIN tblTeam t ON r.idTeam = t.idTeam
     LEFT JOIN tblSport s ON r.idSport = s.idSport
-    LEFT JOIN tblRegistrationStatus rs ON r.idStatus = rs.idStatus
+    LEFT JOIN tblRegistrationStatus rs ON r.idStatus = rs.idStatus 
+    WHERE r.idStatus = 1
     """;
 
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query);
@@ -47,7 +48,8 @@ public class RegistrationDao {
                         rs.getString("athleteName"),
                         rs.getInt("athleteHeight"),
                         rs.getFloat("athleteWeight"),
-                        rs.getDate("athleteDOB")
+                        rs.getDate("athleteDOB"),
+                        rs.getString("athleteCountryId")
                 );
 
                 Team team = new Team(
@@ -164,7 +166,7 @@ public class RegistrationDao {
 
 
     public static void addRegistrationSolo(Registration registration) throws SQLException {
-        String checkQuery = "SELECT COUNT(*) FROM tblRegistration WHERE idAthlete = ? AND idSport = ? AND idStatus = ? AND year = ?";
+        String checkQuery = "SELECT COUNT(*) FROM tblRegistration WHERE idAthlete = ? AND idSport = ? AND idStatus = 3 AND year = ?";
         String insertQuery = "INSERT INTO tblRegistration (idAthlete, idSport, idStatus, year) VALUES (?, ?, ?, ?)";
 
         Connection conn = null;
@@ -174,13 +176,11 @@ public class RegistrationDao {
 
         try {
             conn = ConnectionsUtlis.dbConnect();
-
             // Prepare the check statement to check if the record already exists
             checkStmt = conn.prepareStatement(checkQuery);
             checkStmt.setInt(1, registration.getAthlete().getIdAthlete());
             checkStmt.setInt(2, registration.getSport().getIdSport());
-            checkStmt.setInt(3, registration.getStatus().getIdStatus());
-            checkStmt.setInt(4, registration.getYear());
+            checkStmt.setInt(3, registration.getYear());
 
             // Execute the check query to see if the record already exists
             rs = checkStmt.executeQuery();

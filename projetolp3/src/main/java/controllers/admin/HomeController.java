@@ -108,9 +108,7 @@ public class HomeController {
     private List<Registration> getPendingRegistrations() throws SQLException {
         RegistrationDao registrationDao = new RegistrationDao();
         List<Registration> registrations = registrationDao.getRegistrations();
-        return registrations.stream()
-                .filter(reg -> reg.getStatus().getIdStatus() == 1)
-                .collect(Collectors.toList());
+        return registrations;
     }
 
     private void showNoRequestsMessage() {
@@ -147,8 +145,8 @@ public class HomeController {
         Label sportLabel = new Label("Modalidade: " + request.getSport().getName());
         sportLabel.getStyleClass().add("sport-label");
 
-        Label teamLabel = new Label("Equipa: " + request.getTeam().getName());
-        teamLabel.getStyleClass().add("team-label");
+        Label countryLabel = new Label("País: " + request.getAthlete().getCountry().getName());
+        countryLabel.getStyleClass().add("country-label");
 
         ImageView acceptImageView = new ImageView();
         URL iconAcceptURL = Main.class.getResource("img/iconAccept.png");
@@ -199,7 +197,7 @@ public class HomeController {
         buttonContainer.setAlignment(Pos.CENTER_RIGHT);
         buttonContainer.setPadding(new Insets(10));
 
-        requestItem.getChildren().addAll(nameLabel, sportLabel, ageLabel, buttonContainer);
+        requestItem.getChildren().addAll(nameLabel, ageLabel, sportLabel, countryLabel, buttonContainer);
         return requestItem;
     }
 

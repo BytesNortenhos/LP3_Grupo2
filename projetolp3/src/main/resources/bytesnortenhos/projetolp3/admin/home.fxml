@@ -67,7 +67,9 @@
     <center>
         <VBox>
             <Label styleClass="labelHome">Inicio</Label>
-            <Label styleClass="textWelcome">Lista de membros com aprovação pendente para inscrição em modalidades
+            <Label styleClass="textWelcome">Lista de membros com aprovação pendente para inscrição em modalidades coletivas
+            </Label>
+            <Label styleClass="textWelcome">Ao iniciar a modalidade, caso não exista será criada uma equipa para o país!
             </Label>
             <ScrollPane fitToWidth="true" pannable="true" styleClass="scrollStyle">
                 <FlowPane fx:id="mainContainer" alignment="CENTER" hgap="50" vgap="20" prefWrapLength="1040"

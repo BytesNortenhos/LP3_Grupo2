@@ -288,14 +288,15 @@ public class SportDao {
     public List<Sport> getSportsByName(String sportName) throws SQLException {
         List<Sport> sports = new ArrayList<>();
         // Consulta otimizada para pegar somente o nome e id do esporte
-        String query = "SELECT idSport, name FROM tblSport WHERE name = ?";
+        String query = "SELECT idSport, name, type FROM tblSport WHERE name = ?";
 
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, sportName);
         if (rs != null) {
             while (rs.next()) {
                 int idSport = rs.getInt("idSport");
                 String name = rs.getString("name");
-                Sport sport = new Sport(idSport, name); // Criando o objeto Sport apenas com id e nome
+                String type = rs.getString("type");
+                Sport sport = new Sport(idSport, name, type); // Criando o objeto Sport apenas com id e nome
                 sports.add(sport);
             }
         } else {

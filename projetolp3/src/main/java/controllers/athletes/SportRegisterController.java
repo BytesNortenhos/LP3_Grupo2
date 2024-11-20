@@ -85,19 +85,14 @@ public class SportRegisterController {
             List<List> sports = sportDao.getSportsToShow();
             ObservableList<String> sportsOptions = FXCollections.observableArrayList();
 
-            // Filtrar esportes pelo gênero do atleta e tipo "individual"
             if (LoginController.gender.equals("Female")) {
                 sports.removeIf(sport -> sport.get(2).toString().equals("Male"));
             } else {
                 sports.removeIf(sport -> sport.get(2).toString().equals("Female"));
             }
 
-            // Adicionar apenas esportes individuais
             for (List sport : sports) {
-                String sportType = sport.get(1).toString(); // Supondo que o índice 1 seja o tipo
-                if (sportType.equalsIgnoreCase("individual")) {
-                    sportsOptions.add(sport.get(3).toString()); // Supondo que o índice 3 seja o nome
-                }
+                    sportsOptions.add(sport.get(3).toString());
             }
 
             sportsDrop.setItems(sportsOptions);
@@ -149,43 +144,35 @@ public class SportRegisterController {
     }
     @FXML
     private void registerSport(ActionEvent event) {
+        int idStatus = 0;
         try {
-            // Exibir passo de depuração
-            System.out.println("Iniciando registro...");
 
-            // Obter o esporte selecionado
             Sport selectedSport = getSelectedSport();
-            System.out.println("Passo 1");
             if (selectedSport == null) {
                 System.out.println("Nenhuma modalidade selecionada.");
                 return;
             }
 
-            // Exibir o ID da modalidade
-            System.out.println("ID da Modalidade (Sport): " + selectedSport.getIdSport());
-            System.out.println("Passo 2");
 
-            // Obter o atleta logado usando o ID armazenado na sessão
+
             int athleteId = LoginController.idAthlete;
-            System.out.println("ID do Atleta: " + athleteId);
             AthleteDao athleteDao = new AthleteDao();
             Athlete athlete = athleteDao.getAthleteById(athleteId);
-            System.out.println("Passo 3");
 
             if (athlete == null) {
                 System.out.println("Atleta não encontrado.");
                 return;
             }
+            if(selectedSport.getType().equals("Individual")) {
+                idStatus = 3;
+            }else{
+                idStatus = 1;
+            }
 
             // Obter o status com ID 1
             RegistrationStatusDao registrationStatusDao = new RegistrationStatusDao();
-            RegistrationStatus status = registrationStatusDao.getRegistrationStatusById(1); // Status com id 1
-            System.out.println("Passo 4");
 
-            if (status == null) {
-                System.out.println("Status não encontrado.");
-                return;
-            }
+            RegistrationStatus status = registrationStatusDao.getRegistrationStatusById(idStatus); // Status com id 1
 
             // Obter o evento selecionado na ComboBox
             Event selectedEvent = getSelectedEvent(); // Método que retorna o objeto evento selecionado

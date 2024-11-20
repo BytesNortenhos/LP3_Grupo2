@@ -26,7 +26,8 @@ public class AthleteDao {
                 String password = rs.getString("password");
                 String name = rs.getString("name");
                 String idCountry = rs.getString("idCountry");
-                Country country = CountryDao.getCountryById(idCountry);
+                CountryDao countryDao = new CountryDao();
+                Country country = countryDao.getCountryById(idCountry);
                 int idGender = rs.getInt("idGender");
                 Gender gender = GenderDao.getGenderById(idGender);
                 int height = rs.getInt("height");
@@ -143,7 +144,8 @@ public class AthleteDao {
             String password = rs.getString("password");
             String name = rs.getString("name");
             String idCountry = rs.getString("idCountry");
-            Country country = CountryDao.getCountryById(idCountry);
+            CountryDao countryDao = new CountryDao();
+            Country country = countryDao.getCountryById(idCountry);
             int idGender = rs.getInt("idGender");
             Gender gender = GenderDao.getGenderById(idGender);
             int height = rs.getInt("height");
