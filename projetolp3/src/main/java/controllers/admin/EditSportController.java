@@ -377,7 +377,7 @@ public class EditSportController {
         stage.show();
     }
 
-    public void mostrarEditaEquipas(ActionEvent event) throws IOException {
+    public void mostraEditaEquipas(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
         Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/teamRegister.fxml")));
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();

@@ -45,8 +45,7 @@
             </SplitMenuButton>
             <SplitMenuButton fx:id="teamSplitButton" styleClass="dropdownButton" text="Gerir equipa">
                 <items>
-                    <MenuItem text="Registar Equipa" onAction="#mostrarRegistaEquipas"/>
-                    <MenuItem text="Editar Equipa" onAction="#mostrarRegistaEquipas"/>
+                    <MenuItem text="Editar Equipa" onAction="#mostrarEditaEquipas"/>
                 </items>
             </SplitMenuButton>
             <SplitMenuButton fx:id="athleteSplitButton" styleClass="dropdownButton" text="Gerir atleta">

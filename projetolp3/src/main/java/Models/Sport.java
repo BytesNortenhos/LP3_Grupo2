@@ -13,6 +13,10 @@ public class Sport {
     private int minParticipants;
     private String scoringMeasure;
     private String oneGame;
+    private int resultMin;
+
+    private int resultMax;
+
     private OlympicRecord olympicRecord;
     private List<WinnerOlympic> winnerOlympic;
     private List<Rule> rules;
@@ -47,6 +51,24 @@ public class Sport {
         this.olympicRecord = olympicRecord;
         this.winnerOlympic = winnerOlympic;
         this.rules = rules;
+    }
+
+    public Sport(int idSport, String type, Gender genre, String name, String desc, int minParticipants,
+                 String scoringMeasure, String oneGame, OlympicRecord olympicRecord, List<WinnerOlympic> winnerOlympic,
+                 List<Rule> rules, int resultMin, int resultMax) {
+        this.idSport = idSport;
+        this.type = type;
+        this.genre = genre;
+        this.name = name;
+        this.desc = desc;
+        this.minParticipants = minParticipants;
+        this.scoringMeasure = scoringMeasure;
+        this.oneGame = oneGame;
+        this.olympicRecord = olympicRecord;
+        this.winnerOlympic = winnerOlympic;
+        this.rules = rules;
+        this.resultMin = resultMin;
+        this.resultMax = resultMax;
     }
 
     public Sport(int idSport, String type, int idGender, String name, String desc, int minParticipants,
