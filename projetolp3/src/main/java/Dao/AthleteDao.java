@@ -190,6 +190,13 @@ public class AthleteDao {
             }
         }
     }
-
+    public String getAthlheteNameByID(int idAthlete) throws SQLException {
+        String query = "SELECT name FROM tblAthlete WHERE idAthlete = ?";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idAthlete);
+        if (rs != null && rs.next()) {
+            return rs.getString("name");
+        }
+        return null;
+    }
 
 }

@@ -350,5 +350,21 @@ public class RegistrationDao {
         return registrations;
     }
 
+    public List<String> getYears() throws SQLException {
+        List<String> years = new ArrayList<>();
+        String query = "SELECT DISTINCT year " +
+                "FROM tblRegistration " +
+                "ORDER BY year DESC;";
 
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query);
+        if (rs != null) {
+            while (rs.next()) {
+                String year = rs.getString("year");
+                years.add(year);
+            }
+        } else {
+            System.out.println("No sports found with the specified name.");
+        }
+        return years;
+    }
 }

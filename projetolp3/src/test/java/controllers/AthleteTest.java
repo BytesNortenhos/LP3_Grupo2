@@ -40,6 +40,7 @@ public class AthleteTest {
 
             AthleteDao.addAthlete(atleta);
 
+
             // Verificar se foi inserido
             boolean atletaEncontrado = false;
             int idAtletaEncontado = 0;

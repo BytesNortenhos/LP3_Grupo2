@@ -72,12 +72,42 @@ public class SportDao {
         }
         return sports;
     }
-    public int getNumberParticipantsSport(int idSport) throws SQLException {
+    public List<List> getSportsToStart(int year) throws SQLException {
+        List<List> sports = new ArrayList<>();
+        String query = "SELECT DISTINCT s.idSport, s.type, s.idGender, s.name, s.description," +
+                " s.minParticipants, s.scoringMeasure, s.oneGame, r.idStatus, " +
+                "g.description AS genderDescription " +
+                "FROM tblSport s " +
+                "JOIN tblGender g ON s.idGender = g.idGender " +
+                "JOIN tblRegistration r ON s.idSport = r.idSport " +
+                "WHERE r.idStatus >= 3 AND r.year = ?;";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, year);
+        if (rs != null) {
+            while (rs.next()) {
+                List<String> sport = new ArrayList<>();
+                sport.add(rs.getString("idSport"));
+                sport.add(rs.getString("type"));
+                sport.add(rs.getString("genderDescription"));
+                sport.add(rs.getString("name"));
+                sport.add(rs.getString("description"));
+                sport.add(rs.getString("minParticipants"));
+                sport.add(rs.getString("scoringMeasure"));
+                sport.add(rs.getString("oneGame"));
+                sport.add(rs.getString("idStatus"));
+                sports.add(sport);
+            }
+        } else {
+            System.out.println("ResultSet is null. No results for Sport found.");
+        }
+        return sports;
+    }
+    public int getNumberParticipantsSport(int idSport, int year) throws SQLException {
         String query = "SELECT COUNT(*) AS quantidade " +
                 "FROM tblRegistration " +
                 "WHERE idSport = ? " +
-                "AND idStatus = 3;";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport);
+                "AND year = ? " +
+                "AND (idStatus = 3 OR idStatus = 4) ;";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, year);
         int quantidade = 0;
         if (rs != null && rs.next()) {
             quantidade = rs.getInt("quantidade");
