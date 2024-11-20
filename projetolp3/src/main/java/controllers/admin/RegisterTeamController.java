@@ -1,11 +1,7 @@
 package controllers.admin;
 
-import Dao.AthleteDao; // Importar a classe AthleteDao
-import Dao.CountryDao; // Importar a classe CountryDao
-import Dao.GenderDao;
-import Models.Athlete; // Importar a classe Athlete
-import Models.Country; // Importar a classe Country
-import Models.Gender;
+import Dao.*;
+import Models.*;
 import bytesnortenhos.projetolp3.Main;
 import controllers.ViewsController;
 import javafx.collections.FXCollections;
@@ -29,28 +25,69 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
-public class RegisterController {
+public class RegisterTeamController {
     private static Stage stage;
     private static Scene scene;
     URL cssDarkURL = Main.class.getResource("css/dark.css");
     URL cssLightURL = Main.class.getResource("css/light.css");
     String cssDark = cssDarkURL.toExternalForm();
     String cssLight = cssLightURL.toExternalForm();
-    @FXML
-    private ImageView iconOlympic;
-    @FXML
-    private ImageView iconLogoutNav;
+
     @FXML
     private BorderPane parent;
+    @FXML
+    private TextArea rulesTextArea;
+
     @FXML
     private ImageView iconModeNav;
     @FXML
     private ImageView iconHomeNav;
+    @FXML
+    private ImageView iconSports;
+    @FXML
+    private ImageView iconLogoutNav;
+
+    @FXML
+    private TextField minText;
+
     private static boolean isDarkMode = true;
+
+    @FXML
+    private TextField txtName;
+    @FXML
+    private TextField txtDescription;
+    @FXML
+    private TextField txtMinParticipants;
+
+    @FXML
+    private ComboBox<Country> countryDrop;
+
+    @FXML
+    private ComboBox<Gender> genderDrop;
+    @FXML
+    private ComboBox<Sport> sportDrop;
+    @FXML
+    private TextField teamNameText, yearFoundedText, minParticipantsText, maxParticipantsText;
+    @FXML
+    private TextField nameText;  // Atualizado para 'nameText' conforme o FXML
+    @FXML
+    private TextField descText;  // Atualizado para 'descText' conforme o FXML
+
+    @FXML
+    private TextArea rulesText; // Campo para inserção de regras
+
+    private List<String> rules = new ArrayList<>();
+
+    @FXML
+    private ComboBox<String> typeDrop;  // ComboBox para tipo
+    @FXML
+    private ComboBox<String> scoringDrop; // ComboBox para medida de pontuação
+    @FXML
+    private ComboBox<String> oneGameDrop; // ComboBox para "One Game"
 
     @FXML
     private SplitMenuButton athleteSplitButton;
@@ -58,36 +95,27 @@ public class RegisterController {
     private SplitMenuButton sportSplitButton;
     @FXML
     private SplitMenuButton teamSplitButton;
-    @FXML
-    private ComboBox<String> genderDrop; // ComboBox de gênero
-    @FXML
-    private ComboBox<String> nacDrop; // ComboBox de nacionalidade
-    @FXML
-    private TextField userNameText; // Campo de texto para nome de utilizador
-    @FXML
-    private TextField weightText; // Campo de texto para peso
-    @FXML
-    private TextField heightText; // Campo de texto para altura
-    @FXML
-    private DatePicker datePicker;
 
     public void initialize() {
-        loadCountries();
         loadIcons();
         loadGenders();
-        URL iconOlympicURL = Main.class.getResource("img/iconAthlete.png");
-        String iconOlympicStr = ((URL) iconOlympicURL).toExternalForm();
-        Image image = new Image(iconOlympicStr);
-        if(iconOlympic != null) iconOlympic.setImage(image);
+        loadCountries();
+        loadSports();
         athleteSplitButton.setOnMouseClicked(event -> athleteSplitButton.show());
         sportSplitButton.setOnMouseClicked(mouseEvent -> sportSplitButton.show());
-        teamSplitButton.setOnMouseClicked(mouseEvent -> teamSplitButton.show());
+        teamSplitButton.setOnMouseClicked(event -> teamSplitButton.show());
+
     }
 
     private void loadIcons() {
+
         URL iconMoonNavURL = Main.class.getResource("img/iconMoon.png");
         Image image = new Image(iconMoonNavURL.toExternalForm());
         if (iconModeNav != null) iconModeNav.setImage(image);
+
+        URL iconOlympicURL = Main.class.getResource("img/iconSports.png");
+        image = new Image(iconOlympicURL.toExternalForm());
+        if(iconSports != null) iconSports.setImage(image);
 
         URL iconHomeNavURL = Main.class.getResource("img/iconOlympic.png");
         image = new Image(iconHomeNavURL.toExternalForm());
@@ -100,120 +128,177 @@ public class RegisterController {
 
     private void loadGenders() {
         try {
-            // Limpar qualquer item existente em genderDrop
-            genderDrop.getItems().clear();
-
-            // Obter a lista de gêneros do banco de dados
+            // Recupera a lista de objetos Gender do DAO
             List<Gender> genders = GenderDao.getGenders();
-            ObservableList<String> genderOptions = FXCollections.observableArrayList();
 
-            // Adicionar cada descrição de gênero à lista
-            for (Gender gender : genders) {
-                genderOptions.add(gender.getDesc());
-            }
+            // Define os itens do ComboBox para a lista de objetos Gender
+            genderDrop.setItems(FXCollections.observableArrayList(genders));
 
-            // Definir itens da ComboBox de gênero
-            genderDrop.setItems(genderOptions);
+            // Define a exibição do ComboBox para mostrar a descrição do Gender usando um CellFactory personalizado
+            genderDrop.setCellFactory(param -> new ListCell<Gender>() {
+                @Override
+                protected void updateItem(Gender gender, boolean empty) {
+                    super.updateItem(gender, empty);
+                    if (empty || gender == null) {
+                        setText(null);
+                    } else {
+                        setText(gender.getDesc());  // Exibe a descrição do gender (campo `getDesc()` do objeto Gender)
+                    }
+                }
+            });
+
+            // Define o botão do ComboBox para mostrar a descrição do Gender selecionado
+            genderDrop.setButtonCell(genderDrop.getCellFactory().call(null));  // Exibe a descrição do Gender no botão
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    // Novo método para carregar os países
     private void loadCountries() {
         try {
-            nacDrop.getItems().clear();
-
+            // Recupera a lista de objetos Country do DAO
             List<Country> countries = CountryDao.getCountries();
-            ObservableList<String> countryOptions = FXCollections.observableArrayList();
 
-            for (Country country : countries) {
-                countryOptions.add(country.getName());
-            }
+            // Define os itens do ComboBox para os objetos de Country
+            countryDrop.setItems(FXCollections.observableArrayList(countries));
 
-            nacDrop.setItems(countryOptions);
+            // Define a exibição personalizada do ComboBox para mostrar o nome do país
+            countryDrop.setCellFactory(param -> new ListCell<Country>() {
+                @Override
+                protected void updateItem(Country country, boolean empty) {
+                    super.updateItem(country, empty);
+                    if (empty || country == null) {
+                        setText(null);
+                    } else {
+                        setText(country.getName());  // Exibe o nome do país
+                    }
+                }
+            });
+
+            // Define o botão do ComboBox para mostrar o nome do país selecionado
+            countryDrop.setButtonCell(countryDrop.getCellFactory().call(null));  // Exibe o nome do país no botão
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
+    private void loadSports() {
+        try {
+            // Recupera a lista de objetos Sport do DAO
+            SportDao sportdao = new SportDao();
+            List<Sport> sports = sportdao.getAllSportsV2();
+
+            // Define os itens do ComboBox para a lista de objetos Sport
+            sportDrop.setItems(FXCollections.observableArrayList(sports));
+
+            // Define a exibição do ComboBox para mostrar a descrição do Sport usando um CellFactory personalizado
+            sportDrop.setCellFactory(param -> new ListCell<Sport>() {
+                @Override
+                protected void updateItem(Sport sport, boolean empty) {
+                    super.updateItem(sport, empty);
+                    if (empty || sport == null) {
+                        setText(null);
+                    } else {
+                        setText(sport.getName());  // Exibe o nome do esporte (campo `getName()` do objeto Sport)
+                    }
+                }
+            });
+
+            // Define o botão do ComboBox para mostrar o nome do Sport selecionado
+            sportDrop.setButtonCell(sportDrop.getCellFactory().call(null));  // Exibe o nome do esporte no botão
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     @FXML
-    public void registerAthlete(ActionEvent event) {
+    private void registerTeam() {
         try {
-            // Obter os valores dos campos
-            String userName = userNameText.getText();
-            String selectedGender = genderDrop.getValue();
-            String selectedCountry = nacDrop.getValue();
-            float weight = Float.parseFloat(weightText.getText());
-            int height = Integer.parseInt(heightText.getText());
-            java.sql.Date dateOfBirth = java.sql.Date.valueOf(datePicker.getValue());
+            // Recupera os valores do formulário
+            String name = teamNameText.getText();
+            Country selectedCountry = countryDrop.getValue();  // Objeto completo de Country
+            Gender selectedGender = genderDrop.getValue();    // Objeto completo de Gender
+            Sport selectedSport = sportDrop.getValue();       // Objeto completo de Sport
+            int yearFounded = Integer.parseInt(yearFoundedText.getText());
+            int minParticipants = Integer.parseInt(minParticipantsText.getText());
+            int maxParticipants = Integer.parseInt(maxParticipantsText.getText());
 
-            // Obter o id do gênero e do país usando as listas carregadas
-            Gender gender = GenderDao.getGenders().stream()
-                    .filter(g -> g.getDesc().equals(selectedGender))
-                    .findFirst().orElse(null);
-
-            Country country = CountryDao.getCountries().stream()
-                    .filter(c -> c.getName().equals(selectedCountry))
-                    .findFirst().orElse(null);
-
-            if (gender != null && country != null) {
-                // Criar o atleta com um id inicial (0 porque será gerado automaticamente)
-                Athlete athlete = new Athlete(0, "", userName, country, gender, height, weight, dateOfBirth);
-
-                // Registrar o atleta no banco de dados e obter o id gerado
-                int generatedId = AthleteDao.addAthlete(athlete);
-
-                // A senha do atleta será o id gerado
-                String generatedPassword = String.valueOf(generatedId); // Definir a senha como o ID gerado
-
-                // Atualizar o atleta no banco de dados com a nova senha (que é o id gerado)
-                AthleteDao.updateAthletePassword(generatedId, generatedPassword); // Passa o id e a senha gerada
-
-                // Exibir uma mensagem de sucesso ou redirecionar para outra tela
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Sucesso!");
-                alert.setHeaderText("Atleta registrado com sucesso! ID gerado: " + generatedId);
-                Optional<ButtonType> result = alert.showAndWait();
-                if (result.isPresent() && result.get() == ButtonType.OK) {
-                    returnHomeMenu(event);
-                }
-            } else {
-                Alert alerta = new Alert(Alert.AlertType.ERROR);
-                alerta.setTitle("Erro!");
-                alerta.setHeaderText("Por favor, selecione um gênero e um país válidos.");
-                alerta.show();
+            // Validação de campos obrigatórios
+            if (name.isEmpty() || selectedCountry == null || selectedGender == null || selectedSport == null) {
+                showAlert("Validation Error", "Please fill all required fields!", Alert.AlertType.ERROR);
+                return;
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+
+            // Criar o novo time usando os objetos completos
+            Team newTeam = new Team(
+                    0,  // O ID será gerado automaticamente
+                    name,
+                    selectedCountry,  // Passando o objeto completo de Country
+                    selectedGender,   // Passando o objeto completo de Gender
+                    selectedSport,    // Passando o objeto completo de Sport
+                    yearFounded,
+                    minParticipants,
+                    maxParticipants
+            );
+
+            // Inserir o novo time no banco de dados
+            TeamDao.addTeam(newTeam);
+
+            // Exibir mensagem de sucesso
+            showAlert("Success", "Team registered successfully!", Alert.AlertType.INFORMATION);
         } catch (NumberFormatException e) {
-            System.out.println("Por favor, insira valores válidos para peso e altura.");
-        } catch (Exception e) {
-            e.printStackTrace();
+            showAlert("Validation Error", "Invalid number format!", Alert.AlertType.ERROR);
+        } catch (SQLException e) {
+            showAlert("Database Error", "An error occurred while saving the team.", Alert.AlertType.ERROR);
         }
     }
 
-    public void logout(ActionEvent event) throws Exception {
-        mostrarLogin(event);
-    }
-    public void mostrarLogin(ActionEvent event) throws IOException {
-        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
-        Parent root = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/loginView.fxml")));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
-        if (isDarkMode) {
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+
+
+    @FXML
+    public void addRule() {
+        // Obtendo a descrição da regra do TextArea
+        String ruleDescription = rulesTextArea.getText().trim();
+
+        if (!ruleDescription.isEmpty()) {
+            // Adicionando a descrição da regra à lista
+            rules.add(ruleDescription);
+
+            // Limpar o TextArea após adicionar
+            rulesTextArea.clear();
+
+            // Exibir uma mensagem informando que a regra foi adicionada
+            showAlert("Success", "Rule added successfully!", Alert.AlertType.INFORMATION);
         } else {
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
+            // Exibir um alerta se a descrição da regra estiver vazia
+            showAlert("Error", "Rule description cannot be empty!", Alert.AlertType.ERROR);
         }
-        stage.setScene(scene);
-        stage.show();
     }
 
-    private String generatePassword() {
-        // Implementar lógica para gerar uma senha, ou coletar do usuário
-        return "defaultPassword"; // Exemplo de senha padrão
+    private void showAlert(String title, String message, Alert.AlertType alertType) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
+
+
+
+
+    private void loadTypes() {
+        ObservableList<String> types = FXCollections.observableArrayList("Individual", "Collective");
+        typeDrop.setItems(types);
+    }
+    private void loadScoringMeasures() {
+        ObservableList<String> scoringMeasures = FXCollections.observableArrayList("Points", "Time");
+        scoringDrop.setItems(scoringMeasures);
+    }
+    private void loadOneGameOptions() {
+        ObservableList<String> gameOptions = FXCollections.observableArrayList("One", "Multiple");
+        oneGameDrop.setItems(gameOptions);
+    }
+
 
     public void returnHomeMenu(ActionEvent event) throws IOException {
         HomeController.returnHomeMenu(event);
@@ -332,6 +417,22 @@ public class RegisterController {
         if(isDarkMode){
             scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
         }else{
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
+        }
+        stage.setScene(scene);
+        stage.show();
+    }
+    public void logout(ActionEvent event) throws Exception {
+        mostrarLogin(event);
+    }
+    public void mostrarLogin(ActionEvent event) throws IOException {
+        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
+        Parent root = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/loginView.fxml")));
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
+        if (isDarkMode) {
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+        } else {
             scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
         }
         stage.setScene(scene);
