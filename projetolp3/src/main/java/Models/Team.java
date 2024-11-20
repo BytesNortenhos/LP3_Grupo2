@@ -260,4 +260,13 @@ public class Team {
     public void setTeamList(ArrayList<TeamList> teamList) {
         this.teamList = teamList;
     }
+    @Override
+    public String toString() {
+        return "Team { idTeam: " + idTeam +
+                ", name: '" + name + '\'' +
+                ", genre: " + (genre != null ? genre.getIdGender() + " - " + genre.getDesc() : "N/A") +
+                ", sport: " + (sport != null ? sport.getIdSport() + " - " + sport.getName() : "N/A") +
+                " }";
+    }
+
 }

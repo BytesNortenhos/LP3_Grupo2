@@ -163,13 +163,14 @@ public class SportDao {
     }
 
     public static void updateSport(Sport sport) throws SQLException {
-        String query = "UPDATE tblSport SET type = ?, idGender = ?, name = ?, description = ?, minParticipants = ?, scoringMeasure = ?, oneGame = ? WHERE idSport = ?";
+        String query = "UPDATE tblSport SET type = ?, idGender = ?, name = ?, description = ?, minParticipants = ?, scoringMeasure = ?, oneGame = ?, resultMin = ?, resultMax = ? WHERE idSport = ?";
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
             conn = ConnectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
+            // Define os valores para a atualização
             stmt.setString(1, sport.getType());
             stmt.setInt(2, sport.getGenre().getIdGender());
             stmt.setString(3, sport.getName());
@@ -177,7 +178,11 @@ public class SportDao {
             stmt.setInt(5, sport.getMinParticipants());
             stmt.setString(6, sport.getScoringMeasure());
             stmt.setString(7, sport.getOneGame());
-            stmt.setInt(8, sport.getIdSport());
+            stmt.setInt(8, sport.getResultMin()); // Define o valor de resultMin
+            stmt.setInt(9, sport.getResultMax()); // Define o valor de resultMax
+            stmt.setInt(10, sport.getIdSport()); // Define o identificador do esporte
+
+            // Executa a atualização
             stmt.executeUpdate();
         } finally {
             if (stmt != null) {
@@ -234,7 +239,7 @@ public class SportDao {
         // Caso não encontre o esporte, retorna null
         return null;
     }
-    public  Sport getSportByIdV2(int idSport) throws SQLException {
+    public Sport getSportByIdV2(int idSport) throws SQLException {
         // Consulta otimizada para obter os dados do esporte com seus registros olímpicos e gênero
         String query = """
         SELECT s.idSport, s.type, s.idGender, s.name, s.description, 
@@ -297,13 +302,14 @@ public class SportDao {
     public static List<Sport> getAllSportsV2() throws SQLException {
         List<Sport> sports = new ArrayList<>();
 
-        // Atualize a consulta SQL para incluir a verificação apenas nas tabelas tblTeam e tblRegistration
+        // Atualize a consulta SQL para incluir os novos campos resultMin e resultMax
         String query = "SELECT s.idSport, s.name, s.type, s.idGender, g.description AS genderDescription, " +
-                "s.minParticipants, s.description AS sportDescription, s.scoringMeasure, s.oneGame " +
+                "s.minParticipants, s.description AS sportDescription, s.scoringMeasure, s.oneGame, " +
+                "s.resultMin, s.resultMax " +  // Incluindo os campos resultMin e resultMax
                 "FROM tblSport s " +
                 "INNER JOIN tblGender g ON s.idGender = g.idGender " +
-                "LEFT JOIN tblTeam t ON s.idSport = t.idSport " +  // Verifica se há equipes associadas
-                "LEFT JOIN tblRegistration r ON s.idSport = r.idSport " +  // Verifica se há registros associados na tabela tblRegistration
+                "LEFT JOIN tblTeam t ON s.idSport = t.idSport " +
+                "LEFT JOIN tblRegistration r ON s.idSport = r.idSport " +
                 "WHERE t.idSport IS NULL AND r.idSport IS NULL";  // Filtra para esportes sem registros nas tabelas tblTeam e tblRegistration
 
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query);
@@ -319,13 +325,18 @@ public class SportDao {
                 String sportDescription = rs.getString("sportDescription");
                 String scoringMeasure = rs.getString("scoringMeasure");
                 String oneGame = rs.getString("oneGame");
+                int resultMin = rs.getInt("resultMin");  // Buscando o valor de resultMin
+                int resultMax = rs.getInt("resultMax");  // Buscando o valor de resultMax
 
+                // Criando o objeto Gender
                 Gender gender = new Gender(idGender, genderDescription);
 
-                // Criando o objeto Sport com todos os dados, incluindo scoringMeasure e oneGame
+                // Criando o objeto Sport com todos os dados
                 Sport sport = new Sport(idSport, name, type, gender, sportDescription, scoringMeasure);
                 sport.setMinParticipants(minParticipants);
                 sport.setOneGame(oneGame);  // Atribuindo o valor de oneGame
+                sport.setResultMin(resultMin);  // Atribuindo o valor de resultMin
+                sport.setResultMax(resultMax);  // Atribuindo o valor de resultMax
 
                 sports.add(sport);
             }
@@ -335,14 +346,6 @@ public class SportDao {
 
         return sports;
     }
-
-
-
-
-
-
-
-
 
     public static void updateSportV2(Sport sport) throws SQLException {
         String query = "UPDATE tblSport SET name = ?, description = ?, minParticipants = ? WHERE idSport = ?";

@@ -78,6 +78,7 @@
             <!-- Campos de edição -->
             <TextField styleClass="userNameText" fx:id="teamNameText" promptText="Nome da equipa" />
             <TextField styleClass="userNameText" fx:id="teamPlayersText" style="-fx-translate-y: -60px;" promptText="Número Mínimo de Jogadores" />
+            <TextField styleClass="userNameText" fx:id="teamMaxPlayersText" style="-fx-translate-y: -60px;" promptText="Número Maximo de Jogadores" />
 
             <!-- Botão para Atualizar -->
             <Button styleClass="buttonEntrar" style="-fx-translate-y: 20px;" onAction="#updateTeam" text="Atualizar Informações" />

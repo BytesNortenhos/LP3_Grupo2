@@ -70,12 +70,12 @@ public class EditTeamController {
     private ComboBox<Sport> sportsListDropdown;
 
     @FXML
-    private TextField nameText, descText, minText, typeText, genderText;
+    private TextField nameText, descText, minText, typeText, maxText, genderText;
     @FXML
     private ComboBox<Team> teamsListDropdown;
 
     @FXML
-    private TextField teamNameText, teamDescText, teamPlayersText;
+    private TextField teamNameText, teamDescText, teamPlayersText, teamMaxPlayersText;
     @FXML
     private SplitMenuButton teamSplitButton;
 
@@ -97,7 +97,6 @@ public class EditTeamController {
     private SplitMenuButton athleteSplitButton;
     @FXML
     private SplitMenuButton sportSplitButton;
-
 
 
 
@@ -132,6 +131,7 @@ public class EditTeamController {
             // Preencher os campos com os dados da equipe
             teamNameText.setText(selectedTeam.getName());
             teamPlayersText.setText(String.valueOf(selectedTeam.getMinParticipants()));
+            teamMaxPlayersText.setText(String.valueOf(selectedTeam.getMaxParticipants()));
         }
     }
 
@@ -177,6 +177,7 @@ public class EditTeamController {
             nameText.setText(selectedSport.getName());
             descText.setText(selectedSport.getDesc());
             minText.setText(String.valueOf(selectedSport.getMinParticipants()));
+            maxText.setText(String.valueOf(selectedSport.getMinParticipants()));
             scoringDrop.setValue(selectedSport.getScoringMeasure());
 
             // Exibindo o tipo selecionado no ComboBox
@@ -206,6 +207,7 @@ public class EditTeamController {
             // Capturar os dados do formulário
             String name = teamNameText.getText();
             int playersCount = Integer.parseInt(teamPlayersText.getText());
+            int playersMaxCount = Integer.parseInt(teamMaxPlayersText.getText());
 
             Team selectedTeam = teamsListDropdown.getSelectionModel().getSelectedItem();
 
@@ -218,6 +220,7 @@ public class EditTeamController {
             // Atualizar o objeto da equipe
             selectedTeam.setName(name);
             selectedTeam.setMinParticipants(playersCount);
+            selectedTeam.setMaxParticipants(playersMaxCount);
 
             // Atualizar no banco
             TeamDao.updateTeam(selectedTeam);

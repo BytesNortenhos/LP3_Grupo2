@@ -306,11 +306,28 @@ public class Sport {
     public List<Rule> getRules() {
         return rules;
     }
+    public int getResultMin() {
+        return resultMin;
+    }
+
+    public void setResultMin(int resultMin) {
+        this.resultMin = resultMin;
+    }
+
+    public int getResultMax() {
+        return resultMax;
+    }
+
+    public void setResultMax(int resultMax) {
+        this.resultMax = resultMax;
+    }
+
 
     /**
      * Set rules
      * @param rules {List<Rule>} List of rules
      */
+
     public void setRules(List<Rule> rules) {
         this.rules = rules;
     }

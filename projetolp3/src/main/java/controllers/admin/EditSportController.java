@@ -92,6 +92,11 @@ public class EditSportController {
     @FXML
     private SplitMenuButton sportSplitButton;
 
+    @FXML
+    private TextField resultMinText;
+    @FXML
+    private TextField resultMaxText;
+
 
 
 
@@ -146,6 +151,7 @@ public class EditSportController {
         Sport selectedSport = sportsListDropdown.getSelectionModel().getSelectedItem();
 
         if (selectedSport != null) {
+            // Preenche os campos de texto com os valores do esporte selecionado
             nameText.setText(selectedSport.getName());
             descText.setText(selectedSport.getDesc());
             minText.setText(String.valueOf(selectedSport.getMinParticipants()));
@@ -156,7 +162,6 @@ public class EditSportController {
 
             // Exibindo o gênero selecionado no ComboBox
             if (selectedSport.getGenre() != null) {
-                // Atribuindo o gênero do esporte à ComboBox
                 if (selectedSport.getGenre().getIdGender() == 1) {
                     genderDrop.setValue("Masculino");
                 } else if (selectedSport.getGenre().getIdGender() == 2) {
@@ -166,8 +171,13 @@ public class EditSportController {
 
             // Exibindo a opção de OneGame no ComboBox
             oneGameDrop.setValue(selectedSport.getOneGame());  // "One" ou "Multiple"
+
+            // Exibindo os valores de resultMin e resultMax
+            resultMinText.setText(String.valueOf(selectedSport.getResultMin()));
+            resultMaxText.setText(String.valueOf(selectedSport.getResultMax()));
         }
     }
+
 
 
 
@@ -183,6 +193,8 @@ public class EditSportController {
             String selectedGender = genderDrop.getValue(); // Captura o gênero selecionado
             String selectedOneGame = oneGameDrop.getValue(); // Captura a seleção de OneGame
             Sport selectedSport = sportsListDropdown.getSelectionModel().getSelectedItem();
+            String resultMin = resultMinText.getText();
+            String resultMax = resultMaxText.getText();
 
             // Validar seleção
             if (selectedSport == null) {
@@ -209,6 +221,11 @@ public class EditSportController {
             selectedSport.getGenre().setIdGender(genderId); // Atualiza o gênero
             selectedSport.setScoringMeasure(selectedScoringMeasure); // Atualiza a medida de pontuação
             selectedSport.setOneGame(selectedOneGame); // Atualiza o valor de OneGame
+            int min = Integer.parseInt(resultMin);
+            int max = Integer.parseInt(resultMax);
+            selectedSport.setResultMin(min);
+            selectedSport.setResultMax(max);
+
 
             // Atualizar no banco
             SportDao.updateSport(selectedSport);
@@ -327,6 +344,20 @@ public class EditSportController {
     public void mostrarEditaModalidades(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
         Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/sportEdit.fxml")));
+        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
+        scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
+        if(isDarkMode){
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+        }else{
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
+        }
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public void mostrarEditaEquipas(ActionEvent event) throws IOException {
+        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
+        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/teamEdit.fxml")));
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
         scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
         if(isDarkMode){

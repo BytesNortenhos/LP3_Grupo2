@@ -66,21 +66,22 @@
         </HBox>
     </top>
     <center>
-        <VBox alignment="CENTER">
+        <VBox alignment="CENTER" spacing="10">
             <Label styleClass="loginText" text="EDITAR MODALIDADES" />
             <ImageView fx:id="iconSports" styleClass="iconOlympic" fitWidth="72" fitHeight="72" preserveRatio="true" />
 
             <!-- Campo para Carregar Modalidade -->
             <HBox alignment="TOP_LEFT" spacing="10">
-                <ComboBox fx:id="sportsListDropdown" styleClass="registerDrop" promptText="Carregar Modalidade" onAction="#onSportSelected" prefWidth="350" style="-fx-margin-left: 20px;" />
+                <ComboBox fx:id="sportsListDropdown" styleClass="registerDrop" promptText="Carregar Modalidade" onAction="#onSportSelected" prefWidth="350" />
             </HBox>
 
             <!-- Campos de edição -->
             <TextField styleClass="userNameText" fx:id="nameText" promptText="Nome da modalidade" />
-            <TextField styleClass="userNameText" fx:id="descText" style="-fx-translate-y: -60px;" promptText="Descrição da modalidade" />
-            <HBox style="-fx-translate-y: -40px; -fx-max-width: 350px">
+            <TextField styleClass="userNameText" fx:id="descText" promptText="Descrição da modalidade" />
+
+            <HBox spacing="10" style="-fx-max-width: 350px;">
                 <ComboBox fx:id="genderDrop" styleClass="registerDrop" promptText="Género" />
-                <ComboBox fx:id="typeDrop" styleClass="registerDrop" promptText="Tipo" style="-fx-translate-x: 10px">
+                <ComboBox fx:id="typeDrop" styleClass="registerDrop" promptText="Tipo" style="-fx-translate-x: 10px;">
                     <items>
                         <FXCollections fx:factory="observableArrayList">
                             <String fx:value="Individual" />
@@ -89,9 +90,10 @@
                     </items>
                 </ComboBox>
             </HBox>
-            <HBox style="-fx-translate-y: -20px; -fx-max-width: 350px;">
+
+            <HBox spacing="10" style="-fx-max-width: 350px;">
                 <TextField styleClass="registerTextSmall" fx:id="minText" promptText="Minímo de participantes" />
-                <ComboBox fx:id="scoringDrop" styleClass="registerDrop" promptText="Tipo de pontos" style="-fx-translate-x: 10px">
+                <ComboBox fx:id="scoringDrop" styleClass="registerDrop" promptText="Tipo de pontos" style="-fx-translate-x: 10px;">
                     <items>
                         <FXCollections fx:factory="observableArrayList">
                             <String fx:value="Points" />
@@ -100,6 +102,7 @@
                     </items>
                 </ComboBox>
             </HBox>
+
             <ComboBox fx:id="oneGameDrop" styleClass="registerDropBig" promptText="Número de jogos">
                 <items>
                     <FXCollections fx:factory="observableArrayList">
@@ -109,8 +112,13 @@
                 </items>
             </ComboBox>
 
+            <HBox spacing="10" style="-fx-max-width: 350px; -fx-margin-top: 20px;"> <!-- Adicionada margem superior -->
+                <TextField fx:id="resultMinText" styleClass="registerTextSmall" promptText="Resultado mínimo" />
+                <TextField fx:id="resultMaxText" styleClass="registerTextSmall" promptText="Resultado máximo" />
+            </HBox>
+
             <!-- Botão para Atualizar -->
-            <Button styleClass="buttonEntrar" style="-fx-translate-y: 20px;" onAction="#updateSport">Atualizar Informações</Button>
+            <Button styleClass="buttonEntrar" onAction="#updateSport" style="-fx-margin-top: 20px;">Atualizar Informações</Button>
         </VBox>
     </center>
-    </BorderPane>
+</BorderPane>
