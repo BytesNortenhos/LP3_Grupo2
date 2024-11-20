@@ -33,6 +33,7 @@
                     <MenuItem text="Visualizar modalidades" onAction="#mostrarModalidades"/>
                     <MenuItem text="Iniciar modalidades" onAction="#mostrarIniciarModalidades"/>
                     <MenuItem text="Registar modalidade" onAction="#mostrarRegistaModalidades"/>
+                    <MenuItem text="Editar modalidade" onAction="#mostrarEditaModalidades"/>
                 </items>
             </SplitMenuButton>
             <SplitMenuButton fx:id="athleteSplitButton" styleClass="dropdownButton" text="Gerir atleta">

@@ -64,7 +64,14 @@ public class Sport {
         this.winnerOlympic = winnerOlympic;
         this.rules = rules;
     }
-
+    // Constructor including the description
+    public Sport(int idSport, String name, String type, Gender genre, String desc) {
+        this.idSport = idSport;
+        this.name = name;
+        this.type = type;
+        this.genre = genre;
+        this.desc = desc;  // Initialize description
+    }
     public Sport(String type, Gender genre, String name, String desc, int minParticipants,
                  String scoringMeasure, String oneGame) {
         this.type = type;
@@ -75,7 +82,19 @@ public class Sport {
         this.scoringMeasure = scoringMeasure;
         this.oneGame = oneGame;
     }
-
+    /**
+     * Constructor of Sport with essential details.
+     * @param idSport {int} Sport ID
+     * @param name {String} Name of the Sport
+     * @param type {String} Type of the Sport
+     * @param genre {Gender} Genre of the Sport
+     */
+    public Sport(int idSport, String name, String type, Gender genre) {
+        this.idSport = idSport;
+        this.name = name;
+        this.type = type;
+        this.genre = genre;
+    }
     /**
      * Constructor for creating a Sport object with essential details.
      * This constructor initializes a Sport with the provided idSport and name.
@@ -88,7 +107,15 @@ public class Sport {
         this.idSport = idSport;
         this.name = name;
     }
-
+    // Construtor atualizado para incluir scoringMeasure
+    public Sport(int idSport, String name, String type, Gender genre, String desc, String scoringMeasure) {
+        this.idSport = idSport;
+        this.name = name;
+        this.type = type;
+        this.genre = genre;
+        this.desc = desc;
+        this.scoringMeasure = scoringMeasure;  // Atribuição do scoringMeasure
+    }
 
     /**
      * Get Sport ID
@@ -265,4 +292,8 @@ public class Sport {
     public void setRules(List<Rule> rules) {
         this.rules = rules;
     }
-}
+    @Override
+    public String toString() {
+        return String.format("Sport: {ID: %d, Type: %s, Gender: %s, Name: %s}",
+                idSport, type, (genre != null ? genre.getDesc() : "Unknown"), name);
+    }  }

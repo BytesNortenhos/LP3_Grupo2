@@ -294,5 +294,89 @@ public class SportDao {
         }
         return sports;
     }
+    public static List<Sport> getAllSportsV2() throws SQLException {
+        List<Sport> sports = new ArrayList<>();
 
-}
+        // Atualize a consulta SQL para incluir a verificação apenas nas tabelas tblTeam e tblRegistration
+        String query = "SELECT s.idSport, s.name, s.type, s.idGender, g.description AS genderDescription, " +
+                "s.minParticipants, s.description AS sportDescription, s.scoringMeasure, s.oneGame " +
+                "FROM tblSport s " +
+                "INNER JOIN tblGender g ON s.idGender = g.idGender " +
+                "LEFT JOIN tblTeam t ON s.idSport = t.idSport " +  // Verifica se há equipes associadas
+                "LEFT JOIN tblRegistration r ON s.idSport = r.idSport " +  // Verifica se há registros associados na tabela tblRegistration
+                "WHERE t.idSport IS NULL AND r.idSport IS NULL";  // Filtra para esportes sem registros nas tabelas tblTeam e tblRegistration
+
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query);
+
+        if (rs != null) {
+            while (rs.next()) {
+                int idSport = rs.getInt("idSport");
+                String name = rs.getString("name");
+                String type = rs.getString("type");
+                int idGender = rs.getInt("idGender");
+                String genderDescription = rs.getString("genderDescription");
+                int minParticipants = rs.getInt("minParticipants");
+                String sportDescription = rs.getString("sportDescription");
+                String scoringMeasure = rs.getString("scoringMeasure");
+                String oneGame = rs.getString("oneGame");
+
+                Gender gender = new Gender(idGender, genderDescription);
+
+                // Criando o objeto Sport com todos os dados, incluindo scoringMeasure e oneGame
+                Sport sport = new Sport(idSport, name, type, gender, sportDescription, scoringMeasure);
+                sport.setMinParticipants(minParticipants);
+                sport.setOneGame(oneGame);  // Atribuindo o valor de oneGame
+
+                sports.add(sport);
+            }
+        } else {
+            System.out.println("ResultSet is null. No results for Sport found.");
+        }
+
+        return sports;
+    }
+
+
+
+
+
+
+
+
+
+    public static void updateSportV2(Sport sport) throws SQLException {
+        String query = "UPDATE tblSport SET name = ?, description = ?, minParticipants = ? WHERE idSport = ?";
+
+        try {
+            // Obter conexão utilizando ConnectionsUtlis.dbConnect()
+            Connection conn = ConnectionsUtlis.dbConnect();
+
+            // Preparar a instrução SQL
+            PreparedStatement stmt = conn.prepareStatement(query);
+
+            // Configurar os parâmetros do PreparedStatement
+            stmt.setString(1, sport.getName());
+            stmt.setString(2, sport.getDesc());
+            stmt.setInt(3, sport.getMinParticipants());
+            stmt.setInt(4, sport.getIdSport());
+
+            // Executar a atualização
+            int rowsAffected = stmt.executeUpdate();
+
+            // Informar o resultado
+            if (rowsAffected > 0) {
+                System.out.println("Sport updated successfully!");
+            } else {
+                System.out.println("No sport found with the provided ID.");
+            }
+
+            // Fechar o PreparedStatement
+            stmt.close();
+
+        } catch (SQLException e) {
+            // Tratar exceção SQL
+            System.err.println("Error updating sport: " + e.getMessage());
+            throw e;
+        }
+    }}
+
