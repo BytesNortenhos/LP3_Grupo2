@@ -62,13 +62,25 @@
         <VBox>
             <Label styleClass="labelHome">Inicio</Label>
             <Label fx:id="textWelcome" styleClass="textWelcome"/>
-            <VBox fx:id="mainContainerAthlete">
-                <Label fx:id="goldMedals" styleClass="textMedals"/>
-                <Label fx:id="silverMedals" styleClass="textMedals"/>
-                <Label fx:id="bronzeMedals" styleClass="textMedals"/>
-                <Label fx:id="certificate" styleClass="textMedals"/>
-<!--                <Label fx:id="olympicRecord" styleClass="textMedals"/>-->
-            </VBox>
+            <HBox>
+                <VBox>
+                    <Label styleClass="textWelcome">Veja abaixo todas as suas conquistas:</Label>
+                </VBox>
+                <Label style="-fx-translate-x: 250px" styleClass="textSportsAthlete" fx:id="textSportsAthlete" visible="false">Atualmente está inscrito nas seguintes modalidades:</Label>
+            </HBox>
+            <HBox>
+                <VBox translateY="20">
+                    <Label fx:id="goldMedals" styleClass="textMedals"/>
+                    <Label fx:id="silverMedals" styleClass="textMedals"/>
+                    <Label fx:id="bronzeMedals" styleClass="textMedals"/>
+                    <Label fx:id="certificate" styleClass="textMedals"/>
+                    <!--                <Label fx:id="olympicRecord" styleClass="textMedals"/>-->
+                </VBox>
+                <ScrollPane fx:id="scrollPaneAthlete" styleClass="scrollPaneAthlete" hbarPolicy="NEVER" vbarPolicy="NEVER">
+                    <VBox fx:id="sportsContainerAthlete">
+                    </VBox>
+                </ScrollPane>
+            </HBox>
         </VBox>
     </center>
 </BorderPane>

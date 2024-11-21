@@ -81,7 +81,7 @@
 
     -fx-text-fill: #F7EED8;
 }
-.textWelcome{
+.textWelcome, .textSportsAthlete{
     -fx-translate-x: 30px;
     -fx-translate-y: 10px;
     -fx-font-family: 'Inter';
@@ -368,7 +368,7 @@
     -fx-font-family: 'Inter';
     -fx-font-style: normal;
     -fx-font-weight: 400;
-    -fx-translate-x: 20px;
+    -fx-translate-x: 30px;
 }
 
 .yearDropStart {
@@ -423,4 +423,18 @@
     -fx-border-radius: 20px;
     -fx-border-width: 2px;
     -fx-max-width: 200px;
+}
+.scrollPaneAthlete{
+    -fx-background-color: #1E1E1E;
+    -fx-translate-x: 200px;
+    -fx-padding: 30px;
+    -fx-min-height: 600px;
+    -fx-max-height: 600px;
+    -fx-min-width: 700px;
+    -fx-max-width: 700px;
+    -fx-translate-y: 10px;
+}
+#sportsContainerAthlete{
+    -fx-background-color: #1E1E1E;
+    /*-fx-min-height: 450px;*/
 }

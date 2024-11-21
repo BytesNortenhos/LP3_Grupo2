@@ -22,6 +22,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
@@ -46,8 +47,6 @@ public class HomeControllerAthlete {
     @FXML
     private Label bronzeMedals;
     @FXML
-    private Label olympicRecord;
-    @FXML
     private Label certificate;
     @FXML
     private Label textWelcome;
@@ -62,7 +61,9 @@ public class HomeControllerAthlete {
     @FXML
     private ImageView iconLogoutNav;
     @FXML
-    private ImageView iconGoldMedal;
+    private Label textSportsAthlete;
+    @FXML
+    private VBox sportsContainerAthlete;
 
     URL cssDarkURL = Main.class.getResource("css/dark.css");
     URL cssLightURL = Main.class.getResource("css/light.css");
@@ -73,14 +74,63 @@ public class HomeControllerAthlete {
     private SplitMenuButton theamsSplitButton;
     @FXML
     private SplitMenuButton sportSplitButton;
+    @FXML
+    private ScrollPane scrollPaneAthlete;
 
     public void initialize() throws SQLException {
+        sportsContainerAthlete.minHeightProperty().bind(scrollPaneAthlete.heightProperty());
+        sportsContainerAthlete.minWidthProperty().bind(scrollPaneAthlete.widthProperty());
+        scrollPaneAthlete.addEventFilter(ScrollEvent.SCROLL, event -> {
+            if (event.getDeltaX() != 0) {
+                event.consume();
+            }
+        });
         loadIcons();
         idAthlete = LoginController.idAthlete;
         displayWelcomeMessasge();
         displayMedals();
         theamsSplitButton.setOnMouseClicked(event -> theamsSplitButton.show());
         sportSplitButton.setOnMouseClicked(mouseEvent -> sportSplitButton.show());
+
+        List<List> registrations = null;
+        try {
+            registrations = getPendingRegistrations();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        if (!registrations.isEmpty()) {
+            displayRequests(registrations);
+        }
+    }
+    private List<List> getPendingRegistrations() throws SQLException {
+        RegistrationDao registrationDao = new RegistrationDao();
+        List<List> registrations = registrationDao.getUserRegistration(idAthlete);
+        return registrations;
+    }
+    private void displayRequests(List<List> registrations) {
+        textSportsAthlete.setVisible(true);
+        sportsContainerAthlete.setVisible(true);
+        sportsContainerAthlete.getChildren().clear();
+        sportsContainerAthlete.setSpacing(20);
+        for (List registration : registrations) {
+            VBox requestItem = createRequestItem(registration);
+            sportsContainerAthlete.getChildren().add(requestItem);
+        }
+    }
+    private VBox createRequestItem(List request) {
+        VBox requestItem = new VBox();
+        requestItem.setSpacing(20);
+        requestItem.getStyleClass().add("request-item");
+
+        Label nameLabel = new Label(request.get(6).toString());
+        nameLabel.getStyleClass().add("name-label");
+
+        Label typeLabel = new Label(request.get(7).toString());
+        typeLabel.getStyleClass().add("type-label");
+
+        requestItem.getChildren().addAll(nameLabel,typeLabel);
+        return requestItem;
     }
     public void loadIcons(){
         URL iconMoonNavURL = Main.class.getResource("img/iconMoon.png");
@@ -95,14 +145,11 @@ public class HomeControllerAthlete {
         image = new Image(iconLogoutNavURL.toExternalForm());
         if(iconLogoutNav != null) iconLogoutNav.setImage(image);
 
-        URL iconGoldMedalURL = Main.class.getResource("img/iconGoldMedal.png");
-        image = new Image(iconGoldMedalURL.toExternalForm());
-        if(iconGoldMedal != null) iconGoldMedal.setImage(image);
     }
 
     private void displayWelcomeMessasge() throws SQLException{
         AthleteDao athleteDao = new AthleteDao();
-        textWelcome.setText("Bem vindo "+athleteDao.getAthlheteNameByID(idAthlete)+"! Veja abaixo todas as suas conquistas:");
+        textWelcome.setText("Bem vindo "+athleteDao.getAthlheteNameByID(idAthlete)+"!");
     }
     private void displayMedals() throws SQLException {
         MedalDao medalDao = new MedalDao();

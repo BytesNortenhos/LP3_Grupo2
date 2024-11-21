@@ -393,4 +393,29 @@ public class RegistrationDao {
         }
         return 0;
     }
+    public List<List> getUserRegistration(int idAthlete) throws SQLException{
+        List<List> userRegistrations = new ArrayList<>();
+        String query = "SELECT r.*, s.idSport, s.name, s.type" +
+                " FROM tblRegistration r" +
+                " JOIN tblSport s ON r.idSport = s.idSport" +
+                " WHERE r.idAthlete = ? AND r.idStatus = 3;";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idAthlete);
+        if (rs != null) {
+            while (rs.next()) {
+                List<String> registration = new ArrayList<>();
+                registration.add(rs.getString("idRegistration"));
+                registration.add(rs.getString("idAthlete"));
+                registration.add(rs.getString("idTeam"));
+                registration.add(rs.getString("idSport"));
+                registration.add(rs.getString("idStatus"));
+                registration.add(rs.getString("year"));
+                registration.add(rs.getString("name"));
+                registration.add(rs.getString("type"));
+                userRegistrations.add(registration);
+            }
+        } else {
+            System.out.println("No sports found with the specified name.");
+        }
+        return userRegistrations;
+    }
 }
