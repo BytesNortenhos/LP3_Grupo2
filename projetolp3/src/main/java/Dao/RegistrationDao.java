@@ -278,8 +278,8 @@ public class RegistrationDao {
             }
         }
     }
-    public static void updateRegistrationStatus(int registrationId, int newStatus) throws SQLException {
-        String query = "UPDATE tblRegistration SET idStatus = ? WHERE idRegistration = ?";
+    public static void updateRegistrationStatus(int registrationId, int newStatus, int idTeam) throws SQLException {
+        String query = "UPDATE tblRegistration SET idStatus = ?, idTeam = ? WHERE idRegistration = ?";
         Connection conn = null;
         PreparedStatement stmt = null;
 
@@ -287,8 +287,9 @@ public class RegistrationDao {
             conn = ConnectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
-            stmt.setInt(1, newStatus);  // novo status (2 para rejeitar, 3 para aceitar)
-            stmt.setInt(2, registrationId); // id da inscrição
+            stmt.setInt(1, newStatus);
+            stmt.setInt(2, idTeam);
+            stmt.setInt(3, registrationId);
 
             stmt.executeUpdate(); // Executa a atualização
         } finally {
@@ -368,9 +369,9 @@ public class RegistrationDao {
         }
         return years;
     }
-    public boolean verfiyTeam(int idSport) throws SQLException{
-        String query = "SELECT * FROM tblTeam WHERE idSport = ?";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport);
+    public boolean verfiyTeam(String idCountry, int idSport) throws SQLException{
+        String query = "SELECT idTeam FROM tblTeam WHERE idCountry = ? AND idSport = ?";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idCountry, idSport);
         try {
             if (rs != null && rs.next()) {
                 return true;
@@ -379,5 +380,17 @@ public class RegistrationDao {
             e.printStackTrace();
         }
         return false;
+    }
+    public int getIdTeam(String idCountry, int idSport) throws SQLException{
+        String query = "SELECT idTeam FROM tblTeam WHERE idCountry = ? AND idSport = ?";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idCountry, idSport);
+        try {
+            if (rs != null && rs.next()) {
+                return rs.getInt("idTeam");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 }

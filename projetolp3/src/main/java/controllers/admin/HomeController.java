@@ -178,8 +178,7 @@ public class HomeController {
 
         acceptButton.setOnAction(event -> {
             try {
-                RegistrationDao.updateRegistrationStatus(request.getIdRegistration(), 3);
-                verifyTeam(request.getSport(), request.getAthlete().getCountry(), request.getAthlete().getGenre());
+                verifyTeam(request);
                 Platform.runLater(() -> mainContainer.getChildren().remove(requestItem));
             } catch (Exception e) {
                 e.printStackTrace();
@@ -188,7 +187,7 @@ public class HomeController {
 
         rejectButton.setOnAction(event -> {
             try {
-                RegistrationDao.updateRegistrationStatus(request.getIdRegistration(), 2);
+                RegistrationDao.updateRegistrationStatus(request.getIdRegistration(), 2, 0);
                 Platform.runLater(() -> mainContainer.getChildren().remove(requestItem));
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -203,13 +202,16 @@ public class HomeController {
         requestItem.getChildren().addAll(nameLabel, ageLabel, sportLabel, countryLabel, buttonContainer);
         return requestItem;
     }
-    public void verifyTeam(Sport sport, Country country, Gender gender) throws SQLException{
+    public void verifyTeam(Registration request) throws SQLException{
         RegistrationDao registrationDao = new RegistrationDao();
-        if(registrationDao.verfiyTeam(sport.getIdSport())){
-            popWindow(sport, country, gender);
+        if(!registrationDao.verfiyTeam(request.getAthlete().getCountry().getIdCountry(), request.getSport().getIdSport())){
+            popWindow(request);
+        }
+        else{
+            RegistrationDao.updateRegistrationStatus(request.getIdRegistration(), 3, registrationDao.getIdTeam(request.getAthlete().getCountry().getIdCountry(), request.getSport().getIdSport()));
         }
     }
-    private void popWindow(Sport sport, Country country, Gender gender) {
+    private void popWindow(Registration request) {
         Stage popupStage = new Stage();
         popupStage.setTitle("Criar equipa");
 
@@ -252,8 +254,7 @@ public class HomeController {
                     alerta.setHeaderText("A equipa tem de ter um mínimo de participantes superior a 1!");
                     alerta.show();
                 }
-                teamCreate(sport, country, gender, minParticipants, maxParticipants);
-
+                teamCreate(request, minParticipants, maxParticipants);
                 popupStage.close();
             } catch (NumberFormatException | SQLException e) {
                 e.printStackTrace();
@@ -267,16 +268,18 @@ public class HomeController {
         popupStage.setScene(scene);
         popupStage.show();
     }
-    public void teamCreate(Sport sport, Country country, Gender gender, int minParticipants, int maxParticipants) throws SQLException {
+    public void teamCreate(Registration request, int minParticipants, int maxParticipants) throws SQLException {
         TeamDao teamDao = new TeamDao();
         String g = "";
-        if(gender.getIdGender()==1){
+        if(request.getAthlete().getGenre().getIdGender()==1){
             g = "Men's";
         }else{
             g = "Women's";
         }
-        String name = country.getName() + " " + g + " " + sport.getName() + " Team";
-        teamDao.addTeam(new Team(0, name, country, gender, sport, 2024, minParticipants, maxParticipants));
+        String name = request.getAthlete().getCountry().getName() + " " + g + " " + request.getSport().getName() + " Team";
+        teamDao.addTeam(new Team(0, name, request.getAthlete().getCountry(), request.getAthlete().getGenre(), request.getSport(), 2024, minParticipants, maxParticipants));
+        RegistrationDao registrationDao = new RegistrationDao();
+        RegistrationDao.updateRegistrationStatus(request.getIdRegistration(), 3, registrationDao.getIdTeam(request.getAthlete().getCountry().getIdCountry(), request.getSport().getIdSport()));
         Alert alerta = new Alert(Alert.AlertType.INFORMATION);
         alerta.setTitle("Sucesso!");
         alerta.setHeaderText("Equipa criada com sucesso!");
