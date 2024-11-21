@@ -29,7 +29,8 @@ public class AthleteDao {
                 CountryDao countryDao = new CountryDao();
                 Country country = countryDao.getCountryById(idCountry);
                 int idGender = rs.getInt("idGender");
-                Gender gender = GenderDao.getGenderById(idGender);
+                GenderDao genderDao = new GenderDao();
+                Gender gender = genderDao.getGenderById(idGender);
                 int height = rs.getInt("height");
                 float weight = rs.getFloat("weight");
                 java.sql.Date dateOfBirth = rs.getDate("dateOfBirth");
@@ -147,7 +148,8 @@ public class AthleteDao {
             CountryDao countryDao = new CountryDao();
             Country country = countryDao.getCountryById(idCountry);
             int idGender = rs.getInt("idGender");
-            Gender gender = GenderDao.getGenderById(idGender);
+            GenderDao genderDao = new GenderDao();
+            Gender gender = genderDao.getGenderById(idGender);
             int height = rs.getInt("height");
             float weight = rs.getFloat("weight");
             java.sql.Date dateOfBirth = rs.getDate("dateOfBirth");

@@ -45,7 +45,7 @@
     -fx-border-width: 2px;
     -fx-max-width: 350px;
 }
-.buttonEntrar{
+.buttonEntrar, .popup-button{
     -fx-cursor: hand;
     -fx-min-height:20px;
     -fx-font-size: 20px;
@@ -59,7 +59,7 @@
     -fx-border-radius: 20px;
     -fx-border-width: 2px;
 }
-.buttonEntrar:hover{
+.buttonEntrar:hover, .popup-button:hover{
     -fx-text-fill: #1E1E1E;
     -fx-background-color: #D5D1C7;
     -fx-control-inner-background: #1E1E1E;
@@ -404,4 +404,23 @@
 /* Hover effect on the ComboBox */
 .yearDropStart:hover {
     -fx-border-color: lightgray;
+}
+.popup-vbox{
+    -fx-background-color: #1E1E1E;
+}
+.popup-label{
+    -fx-font-size: 20px;
+    -fx-text-fill: #F7EED8;
+}
+.popup-text{
+    -fx-font-size: 17px;
+    -fx-text-fill: #F7EED8;
+    -fx-background-color: #3A3A38;
+    -fx-control-inner-background: #1E1E1E;
+    -fx-prompt-text-fill: #F7EED8;
+    -fx-border-color: #9B9898;
+    -fx-background-radius: 20px;
+    -fx-border-radius: 20px;
+    -fx-border-width: 2px;
+    -fx-max-width: 200px;
 }

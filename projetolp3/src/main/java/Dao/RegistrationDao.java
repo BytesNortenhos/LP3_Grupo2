@@ -21,7 +21,7 @@ public class RegistrationDao {
 
         String query = """
     SELECT r.idRegistration, r.idAthlete, r.idTeam, r.idSport, r.idStatus,
-           a.name AS athleteName, a.height AS athleteHeight, a.weight AS athleteWeight, a.dateOfBirth AS athleteDOB, a.idCountry AS athleteCountryId,
+           a.name AS athleteName, a.height AS athleteHeight, a.weight AS athleteWeight, a.dateOfBirth AS athleteDOB, a.idCountry AS athleteCountryId, a.idGender AS athleteGenderId,
            t.name AS teamName, t.idCountry AS teamCountryId, t.yearFounded AS teamYearFounded,
            s.type AS sportType, s.name AS sportName, s.description AS sportDescription, s.idGender AS sportGenderId,
            rs.description AS statusDescription
@@ -49,7 +49,8 @@ public class RegistrationDao {
                         rs.getInt("athleteHeight"),
                         rs.getFloat("athleteWeight"),
                         rs.getDate("athleteDOB"),
-                        rs.getString("athleteCountryId")
+                        rs.getString("athleteCountryId"),
+                        rs.getInt("athleteGenderId")
                 );
 
                 Team team = new Team(
@@ -366,5 +367,17 @@ public class RegistrationDao {
             System.out.println("No sports found with the specified name.");
         }
         return years;
+    }
+    public boolean verfiyTeam(int idSport) throws SQLException{
+        String query = "SELECT * FROM tblTeam WHERE idSport = ?";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport);
+        try {
+            if (rs != null && rs.next()) {
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

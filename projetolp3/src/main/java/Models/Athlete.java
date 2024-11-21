@@ -1,6 +1,7 @@
 package Models;
 import AuxilierXML.*;
 import Dao.CountryDao;
+import Dao.GenderDao;
 import jakarta.xml.bind.annotation.*;
 
 import java.sql.SQLException;
@@ -38,7 +39,7 @@ public class Athlete extends Person {
         this.weight = weight;
         this.dateOfBirth = dateOfBirth;
     }
-    public Athlete(int id, String name, int height, float weight, Date dateOfBirth, String idCountry) throws SQLException {
+    public Athlete(int id, String name, int height, float weight, Date dateOfBirth, String idCountry, int idGender) throws SQLException {
         super(id);
         this.name = name;
         this.height = height;
@@ -46,6 +47,8 @@ public class Athlete extends Person {
         this.dateOfBirth = dateOfBirth;
         CountryDao countryDao = new CountryDao();
         this.country = countryDao.getCountryById(idCountry);
+        GenderDao genderDao = new GenderDao();
+        this.genre = genderDao.getGenderById(idGender);
     }
     public int getIdAthlete() {
         return super.getId();

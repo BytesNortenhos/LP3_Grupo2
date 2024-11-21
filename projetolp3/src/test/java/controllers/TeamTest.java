@@ -39,8 +39,8 @@ public class TeamTest {
 
 
             Team team = new Team(0,name, country, gender, sport, yearFounded,minParticipants,maxParticipants);
-
-            TeamDao.addTeam(team);
+            TeamDao teamDao = new TeamDao();
+            teamDao.addTeam(team);
 
             // Verificar se foi inserido
             boolean teamEncontrado = false;

@@ -48,7 +48,7 @@ public class TeamDao {
         return teams;
     }
 
-    public static void addTeam(Team team) throws SQLException {
+    public void addTeam(Team team) throws SQLException {
         String query = "INSERT INTO tblTeam (name, idCountry, idGender, idSport, yearFounded, minParticipants, maxParticipants) VALUES (?, ?, ?, ?, ?, ?, ?)";
         Connection conn = null;
         PreparedStatement stmt = null;

@@ -4,9 +4,13 @@ import AuxilierXML.Athletes;
 import AuxilierXML.Sports;
 import AuxilierXML.Teams;
 import AuxilierXML.UploadXmlDAO;
+import Dao.GenderDao;
 import Dao.RegistrationDao;
+import Dao.TeamDao;
+import Models.*;
 import Utils.XMLUtils;
 import bytesnortenhos.projetolp3.Main;
+import controllers.LoginController;
 import controllers.ViewsController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -39,8 +43,6 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
-import Models.Registration;
 
 public class HomeController {
     @FXML
@@ -177,8 +179,9 @@ public class HomeController {
         acceptButton.setOnAction(event -> {
             try {
                 RegistrationDao.updateRegistrationStatus(request.getIdRegistration(), 3);
+                verifyTeam(request.getSport(), request.getAthlete().getCountry(), request.getAthlete().getGenre());
                 Platform.runLater(() -> mainContainer.getChildren().remove(requestItem));
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         });
@@ -200,7 +203,85 @@ public class HomeController {
         requestItem.getChildren().addAll(nameLabel, ageLabel, sportLabel, countryLabel, buttonContainer);
         return requestItem;
     }
+    public void verifyTeam(Sport sport, Country country, Gender gender) throws SQLException{
+        RegistrationDao registrationDao = new RegistrationDao();
+        if(registrationDao.verfiyTeam(sport.getIdSport())){
+            popWindow(sport, country, gender);
+        }
+    }
+    private void popWindow(Sport sport, Country country, Gender gender) {
+        Stage popupStage = new Stage();
+        popupStage.setTitle("Criar equipa");
 
+
+        VBox vbox = new VBox(10);
+        vbox.setPadding(new Insets(10));
+        vbox.getStyleClass().add("popup-vbox");
+
+
+        Label minParticipantsLabel = new Label("Min Participants:");
+        minParticipantsLabel.getStyleClass().add("popup-label");
+        TextField minParticipantsField = new TextField();
+        minParticipantsField.getStyleClass().add("popup-text");
+
+        Label maxParticipantsLabel = new Label("Max Participants:");
+        maxParticipantsLabel.getStyleClass().add("popup-label");
+        TextField maxParticipantsField = new TextField();
+        maxParticipantsField.getStyleClass().add("popup-text");
+
+        Button submitButton = new Button("Submit");
+        submitButton.getStyleClass().add("popup-button");
+        submitButton.setOnAction(event -> {
+            try {
+                String minParticipantsText = minParticipantsField.getText();
+                String maxParticipantsText = maxParticipantsField.getText();
+
+                if (!minParticipantsText.matches("\\d+") || !maxParticipantsText.matches("\\d+")) {
+                    Alert alerta = new Alert(Alert.AlertType.ERROR);
+                    alerta.setTitle("Erro!");
+                    alerta.setHeaderText("Por favor, insira apenas números nos campos de participantes!");
+                    alerta.show();
+                    return;
+                }
+
+                int minParticipants = Integer.parseInt(minParticipantsText);
+                int maxParticipants = Integer.parseInt(maxParticipantsText);
+                if(minParticipants < 2){
+                    Alert alerta = new Alert(Alert.AlertType.ERROR);
+                    alerta.setTitle("Erro!");
+                    alerta.setHeaderText("A equipa tem de ter um mínimo de participantes superior a 1!");
+                    alerta.show();
+                }
+                teamCreate(sport, country, gender, minParticipants, maxParticipants);
+
+                popupStage.close();
+            } catch (NumberFormatException | SQLException e) {
+                e.printStackTrace();
+            }
+        });
+
+        vbox.getChildren().addAll( minParticipantsLabel, minParticipantsField, maxParticipantsLabel, maxParticipantsField, submitButton);
+
+        Scene scene = new Scene(vbox, 300, 250);
+        scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+        popupStage.setScene(scene);
+        popupStage.show();
+    }
+    public void teamCreate(Sport sport, Country country, Gender gender, int minParticipants, int maxParticipants) throws SQLException {
+        TeamDao teamDao = new TeamDao();
+        String g = "";
+        if(gender.getIdGender()==1){
+            g = "Men's";
+        }else{
+            g = "Women's";
+        }
+        String name = country.getName() + " " + g + " " + sport.getName() + " Team";
+        teamDao.addTeam(new Team(0, name, country, gender, sport, 2024, minParticipants, maxParticipants));
+        Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+        alerta.setTitle("Sucesso!");
+        alerta.setHeaderText("Equipa criada com sucesso!");
+        alerta.show();
+    }
     public boolean changeMode(ActionEvent event){
         isDarkMode = !isDarkMode;
         if(isDarkMode){
