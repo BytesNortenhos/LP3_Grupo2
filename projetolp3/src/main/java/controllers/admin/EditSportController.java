@@ -193,12 +193,18 @@ public class EditSportController {
             String selectedGender = genderDrop.getValue(); // Captura o gênero selecionado
             String selectedOneGame = oneGameDrop.getValue(); // Captura a seleção de OneGame
             Sport selectedSport = sportsListDropdown.getSelectionModel().getSelectedItem();
-            String resultMin = resultMinText.getText();
-            String resultMax = resultMaxText.getText();
+            int resultMin = Integer.parseInt(resultMinText.getText());
+            int resultMax = Integer.parseInt(resultMaxText.getText());
 
             // Validar seleção
             if (selectedSport == null) {
                 showAlert("Validation Error", "Selecione uma modalidade para atualizar!", Alert.AlertType.ERROR);
+                return;
+            }
+
+            // Verificar se resultMin é maior que resultMax
+            if (resultMin > resultMax) {
+                showAlert("Validation Error", "O valor mínimo do resultado não pode ser maior que o valor máximo!", Alert.AlertType.ERROR);
                 return;
             }
 
@@ -221,22 +227,20 @@ public class EditSportController {
             selectedSport.getGenre().setIdGender(genderId); // Atualiza o gênero
             selectedSport.setScoringMeasure(selectedScoringMeasure); // Atualiza a medida de pontuação
             selectedSport.setOneGame(selectedOneGame); // Atualiza o valor de OneGame
-            int min = Integer.parseInt(resultMin);
-            int max = Integer.parseInt(resultMax);
-            selectedSport.setResultMin(min);
-            selectedSport.setResultMax(max);
-
+            selectedSport.setResultMin(resultMin);
+            selectedSport.setResultMax(resultMax);
 
             // Atualizar no banco
             SportDao.updateSport(selectedSport);
 
-            showAlert("Success", "Modalidade  atualizada com sucesso!", Alert.AlertType.INFORMATION);
+            showAlert("Success", "Modalidade atualizada com sucesso!", Alert.AlertType.INFORMATION);
         } catch (NumberFormatException e) {
-            showAlert("Validation Error", "Formato inválido para o número mínimo de participantes!", Alert.AlertType.ERROR);
+            showAlert("Validation Error", "Formato inválido para um dos campos numéricos!", Alert.AlertType.ERROR);
         } catch (SQLException e) {
             showAlert("Database Error", "Erro ao atualizar esporte: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
+
 
 
 

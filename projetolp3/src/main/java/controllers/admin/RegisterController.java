@@ -3,6 +3,8 @@ package controllers.admin;
 import Dao.AthleteDao; // Importar a classe AthleteDao
 import Dao.CountryDao; // Importar a classe CountryDao
 import Dao.GenderDao;
+import java.time.LocalDate;
+import java.time.Period;
 import Models.Athlete; // Importar a classe Athlete
 import Models.Country; // Importar a classe Country
 import Models.Gender;
@@ -144,9 +146,52 @@ public class RegisterController {
             String userName = userNameText.getText();
             String selectedGender = genderDrop.getValue();
             String selectedCountry = nacDrop.getValue();
-            float weight = Float.parseFloat(weightText.getText());
-            int height = Integer.parseInt(heightText.getText());
-            java.sql.Date dateOfBirth = java.sql.Date.valueOf(datePicker.getValue());
+            LocalDate dateOfBirth = datePicker.getValue();
+
+            // Verificar data de nascimento
+            if (dateOfBirth == null || dateOfBirth.isAfter(LocalDate.now())) {
+                showAlert("Erro", "A data de nascimento não pode ser posterior à data atual!", Alert.AlertType.ERROR);
+                return;
+            }
+
+            // Verificar idade mínima
+            int idade = Period.between(dateOfBirth, LocalDate.now()).getYears();
+            if (idade < 13) {
+                showAlert("Erro", "A idade mínima para registo é de 13 anos!", Alert.AlertType.ERROR);
+                return;
+            }
+
+            // Validar peso
+            float weight;
+            try {
+                weight = Float.parseFloat(weightText.getText());
+                if (weight < 30 || weight > 200) {
+                    showAlert("Erro", "Por favor insira um peso realista (entre 30kg e 200kg).", Alert.AlertType.ERROR);
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                showAlert("Erro", "O peso inserido não é válido!", Alert.AlertType.ERROR);
+                return;
+            }
+
+            // Validar altura
+            int height;
+            try {
+                height = Integer.parseInt(heightText.getText());
+                if (height < 100 || height > 250) {
+                    showAlert("Erro", "Por favor insira uma altura realista (entre 100cm e 250cm).", Alert.AlertType.ERROR);
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                showAlert("Erro", "A altura inserida não é válida!", Alert.AlertType.ERROR);
+                return;
+            }
+
+            // Validar seleção de gênero e país
+            if (selectedGender == null || selectedCountry == null) {
+                showAlert("Erro", "Por favor, selecione um gênero e um país válidos.", Alert.AlertType.ERROR);
+                return;
+            }
 
             // Obter o id do gênero e do país usando as listas carregadas
             Gender gender = GenderDao.getGenders().stream()
@@ -159,7 +204,7 @@ public class RegisterController {
 
             if (gender != null && country != null) {
                 // Criar o atleta com um id inicial (0 porque será gerado automaticamente)
-                Athlete athlete = new Athlete(0, "", userName, country, gender, height, weight, dateOfBirth);
+                Athlete athlete = new Athlete(0, "", userName, country, gender, height, weight, java.sql.Date.valueOf(dateOfBirth));
 
                 // Registrar o atleta no banco de dados e obter o id gerado
                 int generatedId = AthleteDao.addAthlete(athlete);
@@ -171,27 +216,29 @@ public class RegisterController {
                 AthleteDao.updateAthletePassword(generatedId, generatedPassword); // Passa o id e a senha gerada
 
                 // Exibir uma mensagem de sucesso ou redirecionar para outra tela
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Sucesso!");
-                alert.setHeaderText("Atleta registrado com sucesso! ID gerado: " + generatedId);
-                Optional<ButtonType> result = alert.showAndWait();
-                if (result.isPresent() && result.get() == ButtonType.OK) {
-                    returnHomeMenu(event);
-                }
+                showAlert("Sucesso!", "Atleta registado com sucesso! ID gerado: " + generatedId, Alert.AlertType.INFORMATION);
+
+                // Redirecionar após o sucesso
+                returnHomeMenu(event);
             } else {
-                Alert alerta = new Alert(Alert.AlertType.ERROR);
-                alerta.setTitle("Erro!");
-                alerta.setHeaderText("Por favor, selecione um gênero e um país válidos.");
-                alerta.show();
+                showAlert("Erro", "Gênero ou país inválido. Por favor, selecione valores válidos.", Alert.AlertType.ERROR);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (NumberFormatException e) {
-            System.out.println("Por favor, insira valores válidos para peso e altura.");
+            showAlert("Erro", "Ocorreu um erro ao aceder à base de dados: " + e.getMessage(), Alert.AlertType.ERROR);
         } catch (Exception e) {
-            e.printStackTrace();
+            showAlert("Erro", "Ocorreu um erro inesperado: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
+
+    // Método para exibir alertas
+    private void showAlert(String titulo, String mensagem, Alert.AlertType tipo) {
+        Alert alerta = new Alert(tipo);
+        alerta.setTitle(titulo);
+        alerta.setHeaderText(null);
+        alerta.setContentText(mensagem);
+        alerta.showAndWait();
+    }
+
 
     public void logout(ActionEvent event) throws Exception {
         mostrarLogin(event);

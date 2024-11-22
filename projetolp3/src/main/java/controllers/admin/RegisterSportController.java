@@ -167,12 +167,12 @@ public class RegisterSportController {
 
             // Validar campos obrigatórios
             if (name.isEmpty() || type == null || selectedGenderDesc == null) {
-                showAlert("Validation Error", "Please fill all required fields!", Alert.AlertType.ERROR);
+                showAlert("Erro de Validação", "Por favor, preencha todos os campos obrigatórios!", Alert.AlertType.ERROR);
                 return;
             }
 
-            // Determinar ID do gênero com base na descrição
-            int genderId = selectedGenderDesc.equals("Male") ? 1 : 2;
+            // Determinar ID do genero com base na descrição
+            int genderId = selectedGenderDesc.equals("Masculino") ? 1 : 2;
             Gender selectedGender = new Gender(genderId, selectedGenderDesc);
 
             // Criar o objeto Sport
@@ -201,16 +201,17 @@ public class RegisterSportController {
             }
 
             rules.clear(); // Limpar as regras após o registro
-            showAlert("Success", "Sport and rules registered successfully!", Alert.AlertType.INFORMATION);
+            showAlert("Sucesso", "Modalidade e regras registradas com sucesso!", Alert.AlertType.INFORMATION);
 
         } catch (NumberFormatException e) {
-            showAlert("Validation Error", "Invalid number format for Minimum Participants!", Alert.AlertType.ERROR);
+            showAlert("Erro de Validação", "Formato inválido para o número mínimo de participantes!", Alert.AlertType.ERROR);
         } catch (SQLException e) {
-            showAlert("Database Error", "An error occurred while accessing the database: " + e.getMessage(), Alert.AlertType.ERROR);
+            showAlert("Erro na BD", "Ocorreu um erro ao acessar a BD: " + e.getMessage(), Alert.AlertType.ERROR);
         } catch (Exception e) {
-            showAlert("Error", "An unexpected error occurred: " + e.getMessage(), Alert.AlertType.ERROR);
+            showAlert("Erro", "Ocorreu um erro inesperado: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
+
 
 
     @FXML
