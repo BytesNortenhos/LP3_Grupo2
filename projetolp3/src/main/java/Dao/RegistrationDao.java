@@ -448,4 +448,19 @@ public class RegistrationDao {
         }
         return teams;
     }
+
+    public List<Integer> getAthletesByTeam(int idTeam, int idSport, int year) throws SQLException{
+        List<Integer> athletes = new ArrayList<>();
+        String query = "SELECT idAthlete " +
+                "FROM tblRegistration " +
+                "WHERE idAthlete IS NOT NULL AND idTeam = ? AND idSport = ? AND idStatus = 3 AND year = ?;";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idTeam, idSport, year);
+        if (rs != null) {
+            while (rs.next()) {
+                int athlete = rs.getInt("idAthlete");
+                athletes.add(athlete);
+            }
+        }
+        return athletes;
+    }
 }

@@ -29,6 +29,7 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.foreign.MemoryLayout;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.Year;
@@ -404,7 +405,7 @@ public class StartSportsController {
             IdsParticipants = registrationDao.getRegisteredTeams(idSport, year);
             if (sportDao.getOneGame(idSport).equals("One")) {
                 System.out.println("Collective One");
-                CollectiveOne(idSport, IdsParticipants);
+                CollectiveOne(idSport, IdsParticipants, year);
             }
             if (sportDao.getOneGame(idSport).equals("Multiple")) {
                 System.out.println("Collective Multiple");
@@ -412,7 +413,7 @@ public class StartSportsController {
             }
         }
 
-
+        //ALTERAR TBLREGISTRATION PARA IDSTATUS 4
 
         return true;
     }
@@ -458,12 +459,12 @@ public class StartSportsController {
         }
 
         //Atribuir Medalhas
-        medalDao.addTopMedal(IdsParticipants.getFirst(), year, 1);
-        medalDao.addTopMedal(IdsParticipants.get(1), year, 2);
-        medalDao.addTopMedal(IdsParticipants.get(2), year, 3);
+        medalDao.addTopMedalAthlete(IdsParticipants.getFirst(), year, 1);
+        medalDao.addTopMedalAthlete(IdsParticipants.get(1), year, 2);
+        medalDao.addTopMedalAthlete(IdsParticipants.get(2), year, 3);
         for (int i = 3; i < IdsParticipants.size(); i++) {
             try {
-                medalDao.addTopMedal(IdsParticipants.get(i), year, 4);
+                medalDao.addTopMedalAthlete(IdsParticipants.get(i), year, 4);
             } catch (SQLException e) {
             }
         }
@@ -471,8 +472,8 @@ public class StartSportsController {
         //Verificar Recorde Olímpico
     }
 
-    public void CollectiveOne(int idSport, List<Integer> IdsParticipants) throws SQLException {
-        /*List<Integer> resultados = new ArrayList<>();
+    public void CollectiveOne(int idSport, List<Integer> IdsParticipants, int year) throws SQLException {
+        List<Integer> resultados = new ArrayList<>();
         Random random = new Random();
 
         //Gerar Resultados
@@ -499,33 +500,62 @@ public class StartSportsController {
         System.out.println(IdsParticipants);
         System.out.println(resultados);
 
-
-
+        //Atribuír Resultados
+        List<Integer> athletes = new ArrayList<>();
         for (int i = 0; i < resultados.size(); i++) {
             int idTeam = IdsParticipants.get(i);
             int resultadoInserir = resultados.get(i);
             java.sql.Date date = new java.sql.Date(System.currentTimeMillis());
             try {
                 resultDao.addResultTeam(idSport, idTeam, date, resultadoInserir, 2);
+                athletes.clear();
+                athletes = registrationDao.getAthletesByTeam(idTeam, idSport, year);
+                for (int j = 0; j < athletes.size(); j++) {
+                    resultDao.addResultAthleteTeam(idSport, athletes.get(j), idTeam, date, resultadoInserir, 2);
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
 
         //Atribuir Medalhas
-        /*medalDao.addTopMedal(IdsParticipants.getFirst(), year, 1);
-        medalDao.addTopMedal(IdsParticipants.get(1), year, 2);
-        medalDao.addTopMedal(IdsParticipants.get(2), year, 3);
+        medalDao.addTopMedalTeam(IdsParticipants.getFirst(), year, 1);
+        athletes.clear();
+        athletes = registrationDao.getAthletesByTeam(IdsParticipants.getFirst(), idSport, year);
+        for (int i = 0; i < athletes.size(); i++) {
+            medalDao.addTopMedalAthleteTeam(athletes.get(i), IdsParticipants.getFirst(), year, 1);
+        }
+        medalDao.addTopMedalTeam(IdsParticipants.get(1), year, 2);
+        athletes.clear();
+        athletes = registrationDao.getAthletesByTeam(IdsParticipants.get(1), idSport, year);
+        for (int i = 0; i < athletes.size(); i++) {
+            medalDao.addTopMedalAthleteTeam(athletes.get(i), IdsParticipants.get(1), year, 2);
+        }
+        medalDao.addTopMedalTeam(IdsParticipants.get(2), year, 3);
+        athletes.clear();
+        athletes = registrationDao.getAthletesByTeam(IdsParticipants.get(2), idSport, year);
+        for (int i = 0; i < athletes.size(); i++) {
+            medalDao.addTopMedalAthleteTeam(athletes.get(i), IdsParticipants.get(2), year, 3);
+        }
         for (int i = 3; i < IdsParticipants.size(); i++) {
             try {
-                medalDao.addTopMedal(IdsParticipants.get(i), year, 4);
+                medalDao.addTopMedalTeam(IdsParticipants.get(i), year, 4);
+                athletes.clear();
+                athletes = registrationDao.getAthletesByTeam(IdsParticipants.get(i), idSport, year);
+                for (int j = 0; j < athletes.size(); j++) {
+                    medalDao.addTopMedalAthleteTeam(athletes.get(j), IdsParticipants.get(i), year, 4);
+                }
             } catch (SQLException e) {
             }
-        }*/
+        }
 
-        //Verificar Recorde Olímpico*/
+        //Verificar Recorde Olímpico
     }
-    public void individualMultiple(int idSport, List<Integer> IdsParticipants) throws SQLException {}
-    public void CollectiveMultiple(int idSport, List<Integer> IdsParticipants) throws SQLException {}
+
+    public void individualMultiple(int idSport, List<Integer> IdsParticipants) throws SQLException {
+    }
+
+    public void CollectiveMultiple(int idSport, List<Integer> IdsParticipants) throws SQLException {
+    }
 
 }

@@ -191,7 +191,7 @@ public class MedalDao {
         return medals;
     }
 
-    public void addTopMedal(int idAthelete, int year, int idMedalType) throws SQLException {
+    public void addTopMedalAthlete(int idAthelete, int year, int idMedalType) throws SQLException {
         String query = "INSERT INTO tblMedal (idAthlete, year, idMedalType) VALUES (?, ?, ?)";
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -202,6 +202,51 @@ public class MedalDao {
             stmt.setInt(1, idAthelete);
             stmt.setInt(2, year);
             stmt.setInt(3, idMedalType);
+            stmt.executeUpdate();
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+    }
+
+    public void addTopMedalTeam(int idTeam, int year, int idMedalType) throws SQLException {
+        String query = "INSERT INTO tblMedal (idTeam, year, idMedalType) VALUES (?, ?, ?)";
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        try {
+            conn = ConnectionsUtlis.dbConnect();
+            stmt = conn.prepareStatement(query);
+
+            stmt.setInt(1, idTeam);
+            stmt.setInt(2, year);
+            stmt.setInt(3, idMedalType);
+            stmt.executeUpdate();
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+    }
+
+    public void addTopMedalAthleteTeam(int idAthlete, int idTeam, int year, int idMedalType) throws SQLException {
+        String query = "INSERT INTO tblMedal (idAthlete, idTeam, year, idMedalType) VALUES (?, ?, ?, ?)";
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        try {
+            conn = ConnectionsUtlis.dbConnect();
+            stmt = conn.prepareStatement(query);
+
+            stmt.setInt(1, idAthlete);
+            stmt.setInt(2, idTeam);
+            stmt.setInt(3, year);
+            stmt.setInt(4, idMedalType);
             stmt.executeUpdate();
         } finally {
             if (stmt != null) {

@@ -114,6 +114,31 @@ public class ResultDao {
         }
     }
 
+    public void addResultAthleteTeam(int idSport, int idAthlete, int idTeam, Date date, int result, int idLocal) throws SQLException {
+        String query = "INSERT INTO tblResult (idSport, idAthlete, idTeam, date, result, idLocal) VALUES (?, ?, ?, ?, ?, ?)";
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        try {
+            conn = ConnectionsUtlis.dbConnect();
+            stmt = conn.prepareStatement(query);
+
+            stmt.setInt(1, idSport);
+            stmt.setInt(2, idAthlete);
+            stmt.setInt(3, idTeam);
+            stmt.setDate(4, date);
+            stmt.setInt(5, result);
+            stmt.setInt(6, idLocal);
+            stmt.executeUpdate();
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+    }
+
     public static void removeResult(int idResult) throws SQLException {
         String query = "DELETE FROM tblResult WHERE idResult = ?";
         Connection conn = null;
