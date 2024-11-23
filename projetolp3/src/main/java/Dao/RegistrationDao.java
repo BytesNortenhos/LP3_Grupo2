@@ -418,4 +418,34 @@ public class RegistrationDao {
         }
         return userRegistrations;
     }
+
+    public List<Integer> getRegisteredAthletes(int idSport, int year) throws SQLException {
+        List<Integer> athletes = new ArrayList<>();
+        String query = "SELECT idAthlete " +
+                "FROM tblRegistration " +
+                "WHERE idStatus = 3 AND idSport = ? AND year = ?;";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, year);
+        if (rs != null) {
+            while (rs.next()) {
+                int IdAthlete = rs.getInt("idAthlete");
+                athletes.add(IdAthlete);
+            }
+        }
+        return athletes;
+    }
+
+    public List<Integer> getRegisteredTeams(int idSport, int year) throws SQLException {
+        List<Integer> teams = new ArrayList<>();
+        String query = "SELECT idTeam " +
+                "FROM tblRegistration " +
+                "WHERE idStatus = 3 AND idSport = ? AND year = ?;";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, year);
+        if (rs != null) {
+            while (rs.next()) {
+                int IdTeam = rs.getInt("idTeam");
+                teams.add(IdTeam);
+            }
+        }
+        return teams;
+    }
 }
