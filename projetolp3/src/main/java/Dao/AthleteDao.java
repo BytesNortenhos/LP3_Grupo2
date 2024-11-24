@@ -203,4 +203,26 @@ public class AthleteDao {
         return null;
     }
 
+    public void updateAthleteImage(int idAthlete, String path, String extensao) throws SQLException {
+        String query = "UPDATE tblAthlete SET image = ? WHERE idAthlete = ?";
+        Connection conn = null;
+        PreparedStatement stmt = null;
+
+        try {
+            conn = ConnectionsUtlis.dbConnect();
+            stmt = conn.prepareStatement(query);
+            stmt.setString(1, path + idAthlete + extensao);
+            stmt.setInt(2, idAthlete);
+            stmt.executeUpdate();
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+
+            if (conn != null) {
+                conn.close();
+            }
+        }
+    }
+
 }

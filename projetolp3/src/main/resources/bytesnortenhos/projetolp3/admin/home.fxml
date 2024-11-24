@@ -33,6 +33,12 @@
                 </graphic>
             </Button>
             <Pane HBox.hgrow="ALWAYS"/>
+            <SplitMenuButton fx:id="testeSplitButton" styleClass="dropdownButton" text="Alterar IMG">
+                <items>
+                    <MenuItem text="Alterar Imagem Atlete - teste" onAction="#updateImageAthlete"/>
+                    <MenuItem text="Alterar Imagem Event - teste" onAction="#updateImageEvent"/>
+                </items>
+            </SplitMenuButton>
             <SplitMenuButton fx:id="xmlSplitButton" styleClass="dropdownButton" text="Carregar XML">
                 <items>
                     <MenuItem text="Carregar equipas" onAction="#loadTeams"/>

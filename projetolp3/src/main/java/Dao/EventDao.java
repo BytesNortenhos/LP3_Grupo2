@@ -111,4 +111,26 @@ public class EventDao {
         }
         return null;
     }
+
+    public void updateEventImage(int year, String path, String extensao) throws SQLException {
+        String query = "UPDATE tblEvent SET Logo = ? WHERE year = ?";
+        Connection conn = null;
+        PreparedStatement stmt = null;
+
+        try {
+            conn = ConnectionsUtlis.dbConnect();
+            stmt = conn.prepareStatement(query);
+            stmt.setString(1, path + year + extensao);
+            stmt.setInt(2, year);
+            stmt.executeUpdate();
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+
+            if (conn != null) {
+                conn.close();
+            }
+        }
+    }
 }
