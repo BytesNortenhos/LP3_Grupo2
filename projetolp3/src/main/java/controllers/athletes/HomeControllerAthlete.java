@@ -1,8 +1,13 @@
 package controllers.athletes;
 
+import Dao.AthleteDao;
+import Dao.MedalDao;
+import Dao.OlympicRecordDao;
 import Dao.RegistrationDao;
+import Models.Medal;
 import Models.Registration;
 import bytesnortenhos.projetolp3.Main;
+import controllers.LoginController;
 import controllers.ViewsController;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -17,6 +22,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
@@ -35,10 +41,15 @@ import java.util.stream.Collectors;
 
 public class HomeControllerAthlete {
     @FXML
-    private FlowPane mainContainer;
+    private Label goldMedals;
     @FXML
-    private Label noRequestsLabel;
-    private static Stage stage;
+    private Label silverMedals;
+    @FXML
+    private Label bronzeMedals;
+    @FXML
+    private Label certificate;
+    @FXML
+    private Label textWelcome;
     private static Scene scene;
     @FXML
     private BorderPane parent;
@@ -49,34 +60,77 @@ public class HomeControllerAthlete {
     private ImageView iconHomeNav;
     @FXML
     private ImageView iconLogoutNav;
+    @FXML
+    private Label textSportsAthlete;
+    @FXML
+    private VBox sportsContainerAthlete;
+
     URL cssDarkURL = Main.class.getResource("css/dark.css");
     URL cssLightURL = Main.class.getResource("css/light.css");
     String cssDark = ((URL) cssDarkURL).toExternalForm();
     String cssLight = ((URL) cssLightURL).toExternalForm();
+    int idAthlete = 0;
     @FXML
     private SplitMenuButton theamsSplitButton;
     @FXML
     private SplitMenuButton sportSplitButton;
     @FXML
-    private ComboBox<String> athleteDrop;
+    private ScrollPane scrollPaneAthlete;
 
-    public void initialize() {
+    public void initialize() throws SQLException {
+        sportsContainerAthlete.minHeightProperty().bind(scrollPaneAthlete.heightProperty());
+        sportsContainerAthlete.minWidthProperty().bind(scrollPaneAthlete.widthProperty());
+        scrollPaneAthlete.addEventFilter(ScrollEvent.SCROLL, event -> {
+            if (event.getDeltaX() != 0) {
+                event.consume();
+            }
+        });
         loadIcons();
-
-//        List<Registration> registrations = null;
-//        try {
-//            registrations = getPendingRegistrations();
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//        if (registrations.isEmpty()) {
-//            showNoRequestsMessage();
-//        } else {
-//            displayRequests(registrations);
-//        }
+        idAthlete = LoginController.idAthlete;
+        displayWelcomeMessasge();
+        displayMedals();
         theamsSplitButton.setOnMouseClicked(event -> theamsSplitButton.show());
         sportSplitButton.setOnMouseClicked(mouseEvent -> sportSplitButton.show());
+
+        List<List> registrations = null;
+        try {
+            registrations = getPendingRegistrations();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        if (!registrations.isEmpty()) {
+            displayRequests(registrations);
+        }
+    }
+    private List<List> getPendingRegistrations() throws SQLException {
+        RegistrationDao registrationDao = new RegistrationDao();
+        List<List> registrations = registrationDao.getUserRegistration(idAthlete);
+        return registrations;
+    }
+    private void displayRequests(List<List> registrations) {
+        textSportsAthlete.setVisible(true);
+        sportsContainerAthlete.setVisible(true);
+        sportsContainerAthlete.getChildren().clear();
+        sportsContainerAthlete.setSpacing(20);
+        for (List registration : registrations) {
+            VBox requestItem = createRequestItem(registration);
+            sportsContainerAthlete.getChildren().add(requestItem);
+        }
+    }
+    private VBox createRequestItem(List request) {
+        VBox requestItem = new VBox();
+        requestItem.setSpacing(20);
+        requestItem.getStyleClass().add("request-item");
+
+        Label nameLabel = new Label(request.get(6).toString());
+        nameLabel.getStyleClass().add("name-label");
+
+        Label typeLabel = new Label(request.get(7).toString());
+        typeLabel.getStyleClass().add("type-label");
+
+        requestItem.getChildren().addAll(nameLabel,typeLabel);
+        return requestItem;
     }
     public void loadIcons(){
         URL iconMoonNavURL = Main.class.getResource("img/iconMoon.png");
@@ -90,103 +144,22 @@ public class HomeControllerAthlete {
         URL iconLogoutNavURL = Main.class.getResource("img/iconLogoutDark.png");
         image = new Image(iconLogoutNavURL.toExternalForm());
         if(iconLogoutNav != null) iconLogoutNav.setImage(image);
+
     }
-//    private List<Registration> getPendingRegistrations() throws SQLException {
-//        RegistrationDao registrationDao = new RegistrationDao();
-//        List<Registration> registrations = registrationDao.getRegistrations();
-//        return registrations.stream()
-//                .filter(reg -> reg.getStatus().getIdStatus() == 1)
-//                .collect(Collectors.toList());
-//    }
-//
-//    private void showNoRequestsMessage() {
-//        noRequestsLabel.setVisible(true);
-//    }
-//
-//    private void displayRequests(List<Registration> registrations) {
-//        noRequestsLabel.setVisible(false);
-//        mainContainer.setVisible(true);
-//        mainContainer.getChildren().clear();
-//        for (Registration registration : registrations) {
-//            VBox requestItem = createRequestItem(registration);
-//            mainContainer.getChildren().add(requestItem);
-//        }
-//    }
-//
-//    private VBox createRequestItem(Registration request) {
-//        VBox requestItem = new VBox();
-//        requestItem.setSpacing(10);
-//        requestItem.getStyleClass().add("request-item");
-//
-//        Label nameLabel = new Label(request.getAthlete().getName());
-//        nameLabel.getStyleClass().add("name-label");
-//
-//        java.sql.Date birthDate = request.getAthlete().getDateOfBirth();
-//        LocalDate birthLocalDate = birthDate.toLocalDate();
-//        LocalDate currentDate = LocalDate.now();
-//        int age = Period.between(birthLocalDate, currentDate).getYears();
-//
-//        Label ageLabel = new Label("Idade: " + age);
-//        ageLabel.getStyleClass().add("age-label");
-//
-//        Label sportLabel = new Label("Modalidade: " + request.getSport().getName());
-//        sportLabel.getStyleClass().add("sport-label");
-//
-//        Label teamLabel = new Label("Equipa: " + request.getTeam().getName());
-//        teamLabel.getStyleClass().add("team-label");
-//
-//        ImageView acceptImageView = new ImageView();
-//        URL iconAcceptURL = Main.class.getResource("img/iconAccept.png");
-//        if (iconAcceptURL != null) {
-//            String iconAcceptStr = iconAcceptURL.toExternalForm();
-//            Image image = new Image(iconAcceptStr);
-//            acceptImageView.setImage(image);
-//            acceptImageView.setFitWidth(80);
-//            acceptImageView.setFitHeight(80);
-//        }
-//        Button acceptButton = new Button();
-//        acceptButton.setGraphic(acceptImageView);
-//        acceptButton.getStyleClass().add("acceptButton");
-//
-//        ImageView rejectImageView = new ImageView();
-//        URL iconRejectURL = Main.class.getResource("img/iconReject.png");
-//        if (iconRejectURL != null) {
-//            String iconRejectStr = iconRejectURL.toExternalForm();
-//            Image image = new Image(iconRejectStr);
-//            rejectImageView.setImage(image);
-//            rejectImageView.setFitWidth(80);
-//            rejectImageView.setFitHeight(80);
-//        }
-//        Button rejectButton = new Button();
-//        rejectButton.setGraphic(rejectImageView);
-//        rejectButton.getStyleClass().add("rejectButton");
-//
-//        acceptButton.setOnAction(event -> {
-//            try {
-//                RegistrationDao.updateRegistrationStatus(request.getIdRegistration(), 3);
-//                Platform.runLater(() -> mainContainer.getChildren().remove(requestItem));
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-//        });
-//
-//        rejectButton.setOnAction(event -> {
-//            try {
-//                RegistrationDao.updateRegistrationStatus(request.getIdRegistration(), 2);
-//                Platform.runLater(() -> mainContainer.getChildren().remove(requestItem));
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-//        });
-//
-//        HBox buttonContainer = new HBox(10);
-//        buttonContainer.getChildren().addAll(acceptButton, rejectButton);
-//        buttonContainer.setAlignment(Pos.CENTER_RIGHT);
-//        buttonContainer.setPadding(new Insets(10));
-//
-//        requestItem.getChildren().addAll(nameLabel, sportLabel, ageLabel, buttonContainer);
-//        return requestItem;
-//    }
+
+    private void displayWelcomeMessasge() throws SQLException{
+        AthleteDao athleteDao = new AthleteDao();
+        textWelcome.setText("Bem vindo "+athleteDao.getAthlheteNameByID(idAthlete)+"!");
+    }
+    private void displayMedals() throws SQLException {
+        MedalDao medalDao = new MedalDao();
+        OlympicRecordDao olympicRecordDao = new OlympicRecordDao();
+        goldMedals.setText((medalDao.countGoldMedals(idAthlete))+" medalhas de ouro🥇");
+        silverMedals.setText((medalDao.countSilverMedals(idAthlete))+" medalhas de prata🥈");
+        bronzeMedals.setText((medalDao.countBronzeMedals(idAthlete))+" medalhas de bronze🥉");
+        certificate.setText((medalDao.countCertificate(idAthlete))+" certificados📜");
+    }
+
 
     public boolean changeMode(ActionEvent event){
         isDarkMode = !isDarkMode;

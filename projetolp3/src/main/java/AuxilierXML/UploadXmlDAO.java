@@ -1,13 +1,22 @@
 package AuxilierXML;
 import Utils.ConnectionsUtlis;
 import Utils.PasswordUtils;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 
 import javax.sql.rowset.CachedRowSet;
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Type;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.Optional;
 
 public class UploadXmlDAO {
     /**
@@ -24,7 +33,19 @@ public class UploadXmlDAO {
 
         try {
             for (Sport sport : sports.getSportList()) {
-                //-> Insert athlete
+                String queryGetSport = "SELECT name FROM tblSport WHERE name LIKE ?";
+                stmt = conn.prepareStatement(queryGetSport);
+                stmt.setString(1, sport.getName());
+                ResultSet rsSport = stmt.executeQuery();
+
+                if(rsSport.next()) {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Aviso!");
+                    alert.setHeaderText("A modalidade " + sport.getName() + " já existe na base de dados.");
+                    Optional<ButtonType> result = alert.showAndWait();
+                    continue;
+                }
+
                 String query = "INSERT INTO tblSport (type, idGender, name, description, minParticipants, scoringMeasure, oneGame) VALUES (?, ?, ?, ?, ?, ?, ?)";
                 stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
@@ -197,6 +218,19 @@ public class UploadXmlDAO {
             conn = ConnectionsUtlis.dbConnect();
 
             for (Team team : teams.getTeamList()) {
+                String queryGetTeam = "SELECT name FROM tblTeam WHERE name LIKE ?";
+                stmt = conn.prepareStatement(queryGetTeam);
+                stmt.setString(1, team.getName());
+                ResultSet rsTeam = stmt.executeQuery();
+
+                if(rsTeam.next()) {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Aviso!");
+                    alert.setHeaderText("A equipa " + team.getName() + " já existe na base de dados.");
+                    Optional<ButtonType> result = alert.showAndWait();
+                    continue;
+                }
+
                 int tempSportId = 0;
                 int tempGenderId = (team.getXmlGenre().equals("Men") ? 1 : 2);
                 String queryGetSport = "SELECT idSport FROM tblSport WHERE name LIKE ? AND idGender = ?";
@@ -273,6 +307,19 @@ public class UploadXmlDAO {
 
         try {
             for (Athlete athlete : athletes.getAthleteList()) {
+                String queryGetAthlete = "SELECT name FROM tblAthlete WHERE name LIKE ?";
+                stmt = conn.prepareStatement(queryGetAthlete);
+                stmt.setString(1, athlete.getName());
+                ResultSet rsAthlete = stmt.executeQuery();
+
+                if(rsAthlete.next()) {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Aviso!");
+                    alert.setHeaderText("O atleta " + athlete.getName() + " já existe na base de dados.");
+                    Optional<ButtonType> result = alert.showAndWait();
+                    continue;
+                }
+
                 //-> Insert athlete
                 String query = "INSERT INTO tblAthlete (password, name, idCountry, idGender, height, weight, dateOfBirth) VALUES (?, ?, ?, ?, ?, ?, ?)";
                 stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
@@ -366,5 +413,26 @@ public class UploadXmlDAO {
         }
 
         return (int) ChronoUnit.MILLIS.between(LocalTime.MIDNIGHT, parsedTime);
+    }
+
+    public boolean saveXML(String pathXML, String pathXSD) {
+        String pathSave = "src/main/java/DataXML_uploads/";
+
+        File fileXML = new File(pathXML);
+        File fileXSD = new File(pathXSD);
+
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy_HH-mm-ss");
+        String formattedDateTime = currentDateTime.format(formatter);
+
+        try {
+            Files.copy(fileXML.toPath(), Path.of(pathSave, formattedDateTime + "_" + fileXML.getName()), StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(fileXSD.toPath(), Path.of(pathSave, formattedDateTime + "_" + fileXSD.getName()), StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+
+        return true;
     }
 }

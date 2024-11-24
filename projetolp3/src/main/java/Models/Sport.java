@@ -125,9 +125,10 @@ public class Sport {
      * @param idSport {int} The ID of the sport.
      * @param name {String} The name of the sport.
      */
-    public Sport(int idSport, String name) {
+    public Sport(int idSport, String name, String type) {
         this.idSport = idSport;
         this.name = name;
+        this.type = type;
     }
     // Construtor atualizado para incluir scoringMeasure
     public Sport(int idSport, String name, String type, Gender genre, String desc, String scoringMeasure) {

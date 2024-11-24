@@ -3,8 +3,6 @@ package controllers.admin;
 import Dao.AthleteDao; // Importar a classe AthleteDao
 import Dao.CountryDao; // Importar a classe CountryDao
 import Dao.GenderDao;
-import java.time.LocalDate;
-import java.time.Period;
 import Models.Athlete; // Importar a classe Athlete
 import Models.Country; // Importar a classe Country
 import Models.Gender;
@@ -58,8 +56,7 @@ public class RegisterController {
     private SplitMenuButton athleteSplitButton;
     @FXML
     private SplitMenuButton sportSplitButton;
-    @FXML
-    private SplitMenuButton teamSplitButton;
+
     @FXML
     private ComboBox<String> genderDrop; // ComboBox de gênero
     @FXML
@@ -83,7 +80,6 @@ public class RegisterController {
         if(iconOlympic != null) iconOlympic.setImage(image);
         athleteSplitButton.setOnMouseClicked(event -> athleteSplitButton.show());
         sportSplitButton.setOnMouseClicked(mouseEvent -> sportSplitButton.show());
-        teamSplitButton.setOnMouseClicked(mouseEvent -> teamSplitButton.show());
     }
 
     private void loadIcons() {
@@ -146,52 +142,9 @@ public class RegisterController {
             String userName = userNameText.getText();
             String selectedGender = genderDrop.getValue();
             String selectedCountry = nacDrop.getValue();
-            LocalDate dateOfBirth = datePicker.getValue();
-
-            // Verificar data de nascimento
-            if (dateOfBirth == null || dateOfBirth.isAfter(LocalDate.now())) {
-                showAlert("Erro", "A data de nascimento não pode ser posterior à data atual!", Alert.AlertType.ERROR);
-                return;
-            }
-
-            // Verificar idade mínima
-            int idade = Period.between(dateOfBirth, LocalDate.now()).getYears();
-            if (idade < 13) {
-                showAlert("Erro", "A idade mínima para registo é de 13 anos!", Alert.AlertType.ERROR);
-                return;
-            }
-
-            // Validar peso
-            float weight;
-            try {
-                weight = Float.parseFloat(weightText.getText());
-                if (weight < 30 || weight > 200) {
-                    showAlert("Erro", "Por favor insira um peso realista (entre 30kg e 200kg).", Alert.AlertType.ERROR);
-                    return;
-                }
-            } catch (NumberFormatException e) {
-                showAlert("Erro", "O peso inserido não é válido!", Alert.AlertType.ERROR);
-                return;
-            }
-
-            // Validar altura
-            int height;
-            try {
-                height = Integer.parseInt(heightText.getText());
-                if (height < 100 || height > 250) {
-                    showAlert("Erro", "Por favor insira uma altura realista (entre 100cm e 250cm).", Alert.AlertType.ERROR);
-                    return;
-                }
-            } catch (NumberFormatException e) {
-                showAlert("Erro", "A altura inserida não é válida!", Alert.AlertType.ERROR);
-                return;
-            }
-
-            // Validar seleção de gênero e país
-            if (selectedGender == null || selectedCountry == null) {
-                showAlert("Erro", "Por favor, selecione um gênero e um país válidos.", Alert.AlertType.ERROR);
-                return;
-            }
+            float weight = Float.parseFloat(weightText.getText());
+            int height = Integer.parseInt(heightText.getText());
+            java.sql.Date dateOfBirth = java.sql.Date.valueOf(datePicker.getValue());
 
             // Obter o id do gênero e do país usando as listas carregadas
             Gender gender = GenderDao.getGenders().stream()
@@ -203,10 +156,8 @@ public class RegisterController {
                     .findFirst().orElse(null);
 
             if (gender != null && country != null) {
-                // Criar o atleta com um id inicial (0 porque será gerado automaticamente)
-                Athlete athlete = new Athlete(0, "", userName, country, gender, height, weight, java.sql.Date.valueOf(dateOfBirth));
+                Athlete athlete = new Athlete(0, "", userName, country, gender, height, weight, dateOfBirth);
 
-                // Registrar o atleta no banco de dados e obter o id gerado
                 int generatedId = AthleteDao.addAthlete(athlete);
 
                 // A senha do atleta será o id gerado
@@ -216,29 +167,27 @@ public class RegisterController {
                 AthleteDao.updateAthletePassword(generatedId, generatedPassword); // Passa o id e a senha gerada
 
                 // Exibir uma mensagem de sucesso ou redirecionar para outra tela
-                showAlert("Sucesso!", "Atleta registado com sucesso! ID gerado: " + generatedId, Alert.AlertType.INFORMATION);
-
-                // Redirecionar após o sucesso
-                returnHomeMenu(event);
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Sucesso!");
+                alert.setHeaderText("Atleta registrado com sucesso! ID gerado: " + generatedId);
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.isPresent() && result.get() == ButtonType.OK) {
+                    returnHomeMenu(event);
+                }
             } else {
-                showAlert("Erro", "Gênero ou país inválido. Por favor, selecione valores válidos.", Alert.AlertType.ERROR);
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setTitle("Erro!");
+                alerta.setHeaderText("Por favor, selecione um gênero e um país válidos.");
+                alerta.show();
             }
         } catch (SQLException e) {
-            showAlert("Erro", "Ocorreu um erro ao aceder à base de dados: " + e.getMessage(), Alert.AlertType.ERROR);
+            e.printStackTrace();
+        } catch (NumberFormatException e) {
+            System.out.println("Por favor, insira valores válidos para peso e altura.");
         } catch (Exception e) {
-            showAlert("Erro", "Ocorreu um erro inesperado: " + e.getMessage(), Alert.AlertType.ERROR);
+            e.printStackTrace();
         }
     }
-
-    // Método para exibir alertas
-    private void showAlert(String titulo, String mensagem, Alert.AlertType tipo) {
-        Alert alerta = new Alert(tipo);
-        alerta.setTitle(titulo);
-        alerta.setHeaderText(null);
-        alerta.setContentText(mensagem);
-        alerta.showAndWait();
-    }
-
 
     public void logout(ActionEvent event) throws Exception {
         mostrarLogin(event);
@@ -318,19 +267,6 @@ public class RegisterController {
         stage.setScene(scene);
         stage.show();
     }
-    public void mostrarEditaModalidades(ActionEvent event) throws IOException {
-        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
-        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/sportEdit.fxml")));
-        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
-        scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
-        if(isDarkMode){
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
-        }else{
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
-        }
-        stage.setScene(scene);
-        stage.show();
-    }
     public void mostrarModalidades(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
         Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/sportsView.fxml")));
@@ -357,33 +293,7 @@ public class RegisterController {
         stage.setScene(scene);
         stage.show();
     }
-    public void mostrarRegistaEquipas(ActionEvent event) throws IOException {
-        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
-        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/teamRegister.fxml")));
-        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
-        scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
-        if(isDarkMode){
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
-        }else{
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
-        }
-        stage.setScene(scene);
-        stage.show();
-    }
 
-    public void mostrarEditaEquipas(ActionEvent event) throws IOException {
-        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
-        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/teamEdit.fxml")));
-        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
-        scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
-        if(isDarkMode){
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
-        }else{
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
-        }
-        stage.setScene(scene);
-        stage.show();
-    }
     @FXML
     public void loadTeams(ActionEvent event) throws IOException {
         FileChooser fileChooser = new FileChooser();

@@ -21,7 +21,7 @@ public class RegistrationDao {
 
         String query = """
     SELECT r.idRegistration, r.idAthlete, r.idTeam, r.idSport, r.idStatus,
-           a.name AS athleteName, a.height AS athleteHeight, a.weight AS athleteWeight, a.dateOfBirth AS athleteDOB,
+           a.name AS athleteName, a.height AS athleteHeight, a.weight AS athleteWeight, a.dateOfBirth AS athleteDOB, a.idCountry AS athleteCountryId, a.idGender AS athleteGenderId,
            t.name AS teamName, t.idCountry AS teamCountryId, t.yearFounded AS teamYearFounded,
            s.type AS sportType, s.name AS sportName, s.description AS sportDescription, s.idGender AS sportGenderId,
            rs.description AS statusDescription
@@ -29,7 +29,8 @@ public class RegistrationDao {
     LEFT JOIN tblAthlete a ON r.idAthlete = a.idAthlete
     LEFT JOIN tblTeam t ON r.idTeam = t.idTeam
     LEFT JOIN tblSport s ON r.idSport = s.idSport
-    LEFT JOIN tblRegistrationStatus rs ON r.idStatus = rs.idStatus
+    LEFT JOIN tblRegistrationStatus rs ON r.idStatus = rs.idStatus 
+    WHERE r.idStatus = 1
     """;
 
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query);
@@ -47,7 +48,9 @@ public class RegistrationDao {
                         rs.getString("athleteName"),
                         rs.getInt("athleteHeight"),
                         rs.getFloat("athleteWeight"),
-                        rs.getDate("athleteDOB")
+                        rs.getDate("athleteDOB"),
+                        rs.getString("athleteCountryId"),
+                        rs.getInt("athleteGenderId")
                 );
 
                 Team team = new Team(
@@ -164,7 +167,7 @@ public class RegistrationDao {
 
 
     public static void addRegistrationSolo(Registration registration) throws SQLException {
-        String checkQuery = "SELECT COUNT(*) FROM tblRegistration WHERE idAthlete = ? AND idSport = ? AND idStatus = ? AND year = ?";
+        String checkQuery = "SELECT COUNT(*) FROM tblRegistration WHERE idAthlete = ? AND idSport = ? AND idStatus = 3 AND year = ?";
         String insertQuery = "INSERT INTO tblRegistration (idAthlete, idSport, idStatus, year) VALUES (?, ?, ?, ?)";
 
         Connection conn = null;
@@ -174,13 +177,11 @@ public class RegistrationDao {
 
         try {
             conn = ConnectionsUtlis.dbConnect();
-
             // Prepare the check statement to check if the record already exists
             checkStmt = conn.prepareStatement(checkQuery);
             checkStmt.setInt(1, registration.getAthlete().getIdAthlete());
             checkStmt.setInt(2, registration.getSport().getIdSport());
-            checkStmt.setInt(3, registration.getStatus().getIdStatus());
-            checkStmt.setInt(4, registration.getYear());
+            checkStmt.setInt(3, registration.getYear());
 
             // Execute the check query to see if the record already exists
             rs = checkStmt.executeQuery();
@@ -277,8 +278,8 @@ public class RegistrationDao {
             }
         }
     }
-    public static void updateRegistrationStatus(int registrationId, int newStatus) throws SQLException {
-        String query = "UPDATE tblRegistration SET idStatus = ? WHERE idRegistration = ?";
+    public static void updateRegistrationStatus(int registrationId, int newStatus, int idTeam) throws SQLException {
+        String query = "UPDATE tblRegistration SET idStatus = ?, idTeam = ? WHERE idRegistration = ?";
         Connection conn = null;
         PreparedStatement stmt = null;
 
@@ -286,8 +287,9 @@ public class RegistrationDao {
             conn = ConnectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
-            stmt.setInt(1, newStatus);  // novo status (2 para rejeitar, 3 para aceitar)
-            stmt.setInt(2, registrationId); // id da inscrição
+            stmt.setInt(1, newStatus);
+            stmt.setInt(2, idTeam);
+            stmt.setInt(3, registrationId);
 
             stmt.executeUpdate(); // Executa a atualização
         } finally {
@@ -350,5 +352,70 @@ public class RegistrationDao {
         return registrations;
     }
 
+    public List<String> getYears() throws SQLException {
+        List<String> years = new ArrayList<>();
+        String query = "SELECT DISTINCT year " +
+                "FROM tblRegistration " +
+                "ORDER BY year DESC;";
 
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query);
+        if (rs != null) {
+            while (rs.next()) {
+                String year = rs.getString("year");
+                years.add(year);
+            }
+        } else {
+            System.out.println("No sports found with the specified name.");
+        }
+        return years;
+    }
+    public boolean verfiyTeam(String idCountry, int idSport) throws SQLException{
+        String query = "SELECT idTeam FROM tblTeam WHERE idCountry = ? AND idSport = ?";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idCountry, idSport);
+        try {
+            if (rs != null && rs.next()) {
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    public int getIdTeam(String idCountry, int idSport) throws SQLException{
+        String query = "SELECT idTeam FROM tblTeam WHERE idCountry = ? AND idSport = ?";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idCountry, idSport);
+        try {
+            if (rs != null && rs.next()) {
+                return rs.getInt("idTeam");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+    public List<List> getUserRegistration(int idAthlete) throws SQLException{
+        List<List> userRegistrations = new ArrayList<>();
+        String query = "SELECT r.*, s.idSport, s.name, s.type" +
+                " FROM tblRegistration r" +
+                " JOIN tblSport s ON r.idSport = s.idSport" +
+                " WHERE r.idAthlete = ? AND r.idStatus = 3;";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idAthlete);
+        if (rs != null) {
+            while (rs.next()) {
+                List<String> registration = new ArrayList<>();
+                registration.add(rs.getString("idRegistration"));
+                registration.add(rs.getString("idAthlete"));
+                registration.add(rs.getString("idTeam"));
+                registration.add(rs.getString("idSport"));
+                registration.add(rs.getString("idStatus"));
+                registration.add(rs.getString("year"));
+                registration.add(rs.getString("name"));
+                registration.add(rs.getString("type"));
+                userRegistrations.add(registration);
+            }
+        } else {
+            System.out.println("No sports found with the specified name.");
+        }
+        return userRegistrations;
+    }
 }

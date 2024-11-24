@@ -48,7 +48,7 @@ public class TeamDao {
         return teams;
     }
 
-    public static boolean addTeam(Team team) throws SQLException {
+    public boolean addTeam(Team team) throws SQLException {
         String query = "INSERT INTO tblTeam (name, idCountry, idGender, idSport, yearFounded, minParticipants, maxParticipants) VALUES (?, ?, ?, ?, ?, ?, ?)";
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -79,7 +79,6 @@ public class TeamDao {
         return isAdded;
     }
 
-
     public static void removeTeam(int idTeam) throws SQLException {
         String query = "DELETE FROM tblTeam WHERE idTeam = ?";
         Connection conn = null;
@@ -99,12 +98,10 @@ public class TeamDao {
         }
     }
 
-    public static boolean updateTeam(Team team) throws SQLException {
+    public static void updateTeam(Team team) throws SQLException {
         String query = "UPDATE tblTeam SET name = ?, idCountry = ?, idGender = ?, idSport = ?, yearFounded = ?, minParticipants = ?, maxParticipants = ? WHERE idTeam = ?";
         Connection conn = null;
         PreparedStatement stmt = null;
-        boolean isUpdated = false;
-
         try {
             conn = ConnectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
@@ -117,9 +114,7 @@ public class TeamDao {
             stmt.setInt(6, team.getMinParticipants());
             stmt.setInt(7, team.getMaxParticipants());
             stmt.setInt(8, team.getIdTeam());
-
-            int rowsAffected = stmt.executeUpdate();
-            isUpdated = rowsAffected > 0; // Se pelo menos uma linha foi alterada, retorna true.
+            stmt.executeUpdate();
         } finally {
             if (stmt != null) {
                 stmt.close();
@@ -128,9 +123,7 @@ public class TeamDao {
                 conn.close();
             }
         }
-        return isUpdated;
     }
-
 
     public static Team getTeamById(int idTeam) throws SQLException {
         String query = "SELECT t.idTeam, t.name AS teamName, c.idCountry, c.name AS countryName, c.continent, " +

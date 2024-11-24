@@ -26,9 +26,11 @@ public class AthleteDao {
                 String password = rs.getString("password");
                 String name = rs.getString("name");
                 String idCountry = rs.getString("idCountry");
-                Country country = CountryDao.getCountryById(idCountry);
+                CountryDao countryDao = new CountryDao();
+                Country country = countryDao.getCountryById(idCountry);
                 int idGender = rs.getInt("idGender");
-                Gender gender = GenderDao.getGenderById(idGender);
+                GenderDao genderDao = new GenderDao();
+                Gender gender = genderDao.getGenderById(idGender);
                 int height = rs.getInt("height");
                 float weight = rs.getFloat("weight");
                 java.sql.Date dateOfBirth = rs.getDate("dateOfBirth");
@@ -143,9 +145,11 @@ public class AthleteDao {
             String password = rs.getString("password");
             String name = rs.getString("name");
             String idCountry = rs.getString("idCountry");
-            Country country = CountryDao.getCountryById(idCountry);
+            CountryDao countryDao = new CountryDao();
+            Country country = countryDao.getCountryById(idCountry);
             int idGender = rs.getInt("idGender");
-            Gender gender = GenderDao.getGenderById(idGender);
+            GenderDao genderDao = new GenderDao();
+            Gender gender = genderDao.getGenderById(idGender);
             int height = rs.getInt("height");
             float weight = rs.getFloat("weight");
             java.sql.Date dateOfBirth = rs.getDate("dateOfBirth");
@@ -190,6 +194,35 @@ public class AthleteDao {
             }
         }
     }
+    public String getAthlheteNameByID(int idAthlete) throws SQLException {
+        String query = "SELECT name FROM tblAthlete WHERE idAthlete = ?";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idAthlete);
+        if (rs != null && rs.next()) {
+            return rs.getString("name");
+        }
+        return null;
+    }
 
+    public void updateAthleteImage(int idAthlete, String path, String extensao) throws SQLException {
+        String query = "UPDATE tblAthlete SET image = ? WHERE idAthlete = ?";
+        Connection conn = null;
+        PreparedStatement stmt = null;
+
+        try {
+            conn = ConnectionsUtlis.dbConnect();
+            stmt = conn.prepareStatement(query);
+            stmt.setString(1, path + idAthlete + extensao);
+            stmt.setInt(2, idAthlete);
+            stmt.executeUpdate();
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+
+            if (conn != null) {
+                conn.close();
+            }
+        }
+    }
 
 }

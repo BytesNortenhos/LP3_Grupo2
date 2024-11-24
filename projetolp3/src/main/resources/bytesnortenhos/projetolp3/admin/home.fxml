@@ -22,63 +22,72 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.layout.FlowPane?>
 
-<BorderPane fx:id="parent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="background" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.admin.HomeController">
-  <top>
-    <HBox styleClass="navBar" prefHeight="40.0" prefWidth="400.0">
-      <Button styleClass="iconHomeNav">
-        <graphic>
-          <ImageView fx:id="iconHomeNav" fitWidth="55" fitHeight="55" preserveRatio="true" />
-        </graphic>
-      </Button>
-      <Pane HBox.hgrow="ALWAYS" />
-      <SplitMenuButton fx:id="xmlSplitButton" styleClass="dropdownButton" text="Carregar XML">
-        <items>
-          <MenuItem text="Carregar equipas" onAction="#loadTeams"/>
-          <MenuItem text="Carregar modalidades" onAction="#loadSports"/>
-          <MenuItem text="Carregar atletas" onAction="#loadAthletes"/>
-        </items>
-      </SplitMenuButton>
-      <SplitMenuButton fx:id="sportSplitButton" styleClass="dropdownButton" text="Gerir modalidade">
-        <items>
-          <MenuItem text="Visualizar modalidades" onAction="#mostrarModalidades"/>
-          <MenuItem text="Iniciar modalidades" onAction="#mostrarIniciarModalidades"/>
-          <MenuItem text="Registar modalidade" onAction="#mostrarRegistaModalidades"/>
-          <MenuItem text="Editar modalidade" onAction="#mostrarEditaModalidades"/>
-
-        </items>
-      </SplitMenuButton>
-        <SplitMenuButton fx:id="teamSplitButton" styleClass="dropdownButton" text="Gerir equipa">
-          <items>
-            <MenuItem text="Editar Equipa" onAction="#mostrarEditaEquipas"/>
-          </items>
-        </SplitMenuButton>
-      <SplitMenuButton fx:id="athleteSplitButton" styleClass="dropdownButton" text="Gerir atleta">
-        <items>
-          <MenuItem text="Registar atleta" onAction="#mostrarRegistar"/>
-        </items>
-      </SplitMenuButton>
-      <Button mnemonicParsing="false" onAction="#changeMode" styleClass="iconMoonNav">
-        <graphic>
-          <ImageView fx:id="iconModeNav" fitWidth="55" fitHeight="55" preserveRatio="true" />
-        </graphic>
-      </Button>
-      <Button mnemonicParsing="false" onAction="#logout" styleClass="iconLogoutNav">
-        <graphic>
-          <ImageView fx:id="iconLogoutNav" fitWidth="55" fitHeight="55" preserveRatio="true" />
-        </graphic>
-      </Button>
-    </HBox>
-  </top>
-  <center>
-    <VBox>
-      <Label styleClass="labelHome">Inicio</Label>
-      <Label styleClass="textWelcome">Lista de membros com aprovação pendente para inscrição em modalidades</Label>
-      <ScrollPane fitToWidth="true" pannable="true" styleClass="scrollStyle">
-        <FlowPane fx:id="mainContainer" alignment="CENTER" hgap="50" vgap="20" prefWrapLength="1010" xmlns:fx="http://javafx.com/fxml" prefHeight="600">
-          <Label fx:id="noRequestsLabel" text="Não existem pedidos pendentes!" visible="false" />
-          <!-- Requests will be dynamically added here -->
-        </FlowPane>
-      </ScrollPane>
-    </VBox>
-  </center>
+<BorderPane fx:id="parent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            prefHeight="400.0" prefWidth="600.0" styleClass="background" xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.admin.HomeController">
+    <top>
+        <HBox styleClass="navBar" prefHeight="40.0" prefWidth="400.0">
+            <Button styleClass="iconHomeNav">
+                <graphic>
+                    <ImageView fx:id="iconHomeNav" fitWidth="55" fitHeight="55" preserveRatio="true"/>
+                </graphic>
+            </Button>
+            <Pane HBox.hgrow="ALWAYS"/>
+            <SplitMenuButton fx:id="xmlSplitButton" styleClass="dropdownButton" text="Carregar XML">
+                <items>
+                    <MenuItem text="Carregar equipas" onAction="#loadTeams"/>
+                    <MenuItem text="Carregar modalidades" onAction="#loadSports"/>
+                    <MenuItem text="Carregar atletas" onAction="#loadAthletes"/>
+                </items>
+            </SplitMenuButton>
+            <SplitMenuButton fx:id="sportSplitButton" styleClass="dropdownButton" text="Gerir modalidade">
+                <items>
+                    <MenuItem text="Visualizar modalidades" onAction="#mostrarModalidades"/>
+                    <MenuItem text="Iniciar modalidades" onAction="#mostrarIniciarModalidades"/>
+                    <MenuItem text="Registar modalidade" onAction="#mostrarRegistaModalidades"/>
+                    <MenuItem text="Editar modalidade" onAction="#mostrarEditaModalidades"/>
+                </items>
+            </SplitMenuButton>
+            <SplitMenuButton fx:id="teamSplitButton" styleClass="dropdownButton" text="Gerir equipa">
+                <items>
+                    <MenuItem text="Editar Equipa" onAction="#mostrarEditaEquipas"/>
+                </items>
+            </SplitMenuButton>
+            <SplitMenuButton fx:id="athleteSplitButton" styleClass="dropdownButton" text="Gerir atleta">
+                <items>
+                    <MenuItem text="Registar atleta" onAction="#mostrarRegistar"/>
+                </items>
+            </SplitMenuButton>
+            <SplitMenuButton fx:id="testeSplitButton" styleClass="dropdownButton" text="Alterar IMG">
+                <items>
+                    <MenuItem text="Alterar Imagem Atlete - teste" onAction="#updateImageAthlete"/>
+                    <MenuItem text="Alterar Imagem Event - teste" onAction="#updateImageEvent"/>
+                </items>
+            </SplitMenuButton>
+            <Button mnemonicParsing="false" onAction="#changeMode" styleClass="iconMoonNav">
+                <graphic>
+                    <ImageView fx:id="iconModeNav" fitWidth="55" fitHeight="55" preserveRatio="true"/>
+                </graphic>
+            </Button>
+            <Button mnemonicParsing="false" onAction="#logout" styleClass="iconLogoutNav">
+                <graphic>
+                    <ImageView fx:id="iconLogoutNav" fitWidth="55" fitHeight="55" preserveRatio="true"/>
+                </graphic>
+            </Button>
+        </HBox>
+    </top>
+    <center>
+        <VBox>
+            <Label styleClass="labelHome">Inicio</Label>
+            <Label styleClass="textWelcome">Lista de membros com aprovação pendente para inscrição em modalidades</Label>
+            <Label styleClass="textWelcome">Ao iniciar a modalidade, caso não exista será criada uma equipa para o país!</Label>
+            <ScrollPane fitToWidth="true" pannable="true" styleClass="scrollStyle">
+                <FlowPane fx:id="mainContainer" alignment="CENTER" hgap="50" vgap="20" prefWrapLength="1040"
+                          prefHeight="600">
+                    <Label fx:id="noRequestsLabel" text="Não existem pedidos pendentes!" visible="false"/>
+                    <!-- Requests will be dynamically added aqui -->
+                </FlowPane>
+            </ScrollPane>
+        </VBox>
+    </center>
 </BorderPane>

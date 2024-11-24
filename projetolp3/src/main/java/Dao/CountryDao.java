@@ -93,7 +93,7 @@ public class CountryDao {
         }
     }
 
-    public static Country getCountryById(String idCountry) throws SQLException {
+    public Country getCountryById(String idCountry) throws SQLException {
         String query = "SELECT * FROM tblCountry WHERE idCountry = ?";
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idCountry);
         if (rs != null && rs.next()) {

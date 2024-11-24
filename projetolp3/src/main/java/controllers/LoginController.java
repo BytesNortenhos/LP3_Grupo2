@@ -19,7 +19,6 @@ public class LoginController {
     public static int cargo = 0;
 
     public static String gender = "";
-
     public static int idAthlete;
     public static String idCountry;
 

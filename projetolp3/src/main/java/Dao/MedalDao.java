@@ -14,7 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MedalDao {
-    public static List<Medal> getMedals() throws SQLException {
+
+    public List<Medal> getMedals() throws SQLException {
         List<Medal> medals = new ArrayList<>();
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(
                 "SELECT m.idMedal, m.idAthlete, m.idTeam, m.year," +
@@ -24,22 +25,60 @@ public class MedalDao {
         if (rs != null) {
             while (rs.next()) {
                 int idMedal = rs.getInt("idMedal");
+                System.out.println(idMedal);
                 int idAthlete = rs.getInt("idAthlete");
                 int idTeam = rs.getInt("idTeam");
                 int year = rs.getInt("year");
                 MedalType medalType = new MedalType(rs.getInt("idMedalType"), rs.getString("medalTypeDescription"));
                 AthleteDao athleteDao = new AthleteDao();
                 Athlete athlete = athleteDao.getAthleteById(idAthlete);
-                Team team = TeamDao.getTeamById(idTeam);
+                TeamDao teamDao = new TeamDao();
+                Team team = teamDao.getTeamByIdV2(idTeam);
                 Medal medal = new Medal(idMedal, athlete, team, year, medalType);
                 medals.add(medal);
             }
         } else {
             System.out.println("ResultSet is null. No results for Medal found.");
         }
+        System.out.println(medals);
         return medals;
     }
-
+        public int countGoldMedals(int idAthlete) throws SQLException {
+        int quantidade = 0;
+            CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(
+                    "SELECT COUNT(*) AS quantidade FROM tblMedal WHERE idAthlete = ? AND idMedalType = 1;", idAthlete);
+            if (rs != null && rs.next()) {
+                quantidade = rs.getInt("quantidade");
+            }
+            return quantidade;
+        }
+    public int countSilverMedals(int idAthlete) throws SQLException {
+        int quantidade = 0;
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(
+                "SELECT COUNT(*) AS quantidade FROM tblMedal WHERE idAthlete = ? AND idMedalType = 2;", idAthlete);
+        if (rs != null && rs.next()) {
+            quantidade = rs.getInt("quantidade");
+        }
+        return quantidade;
+    }
+    public int countBronzeMedals(int idAthlete) throws SQLException {
+        int quantidade = 0;
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(
+                "SELECT COUNT(*) AS quantidade FROM tblMedal WHERE idAthlete = ? AND idMedalType = 3;", idAthlete);
+        if (rs != null && rs.next()) {
+            quantidade = rs.getInt("quantidade");
+        }
+        return quantidade;
+    }
+    public int countCertificate(int idAthlete) throws SQLException {
+        int quantidade = 0;
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(
+                "SELECT COUNT(*) AS quantidade FROM tblMedal WHERE idAthlete = ? AND idMedalType = 4;", idAthlete);
+        if (rs != null && rs.next()) {
+            quantidade = rs.getInt("quantidade");
+        }
+        return quantidade;
+    }
     public static void addMedal(Medal medal) throws SQLException {
         String query = "INSERT INTO tblMedal (idAthlete, idTeam, year, idMedalType) VALUES (?, ?, ?, ?)";
         Connection conn = null;
