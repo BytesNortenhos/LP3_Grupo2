@@ -166,7 +166,7 @@ public class RegistrationDao {
     }
 
 
-    public static void addRegistrationSolo(Registration registration) throws SQLException {
+    public static int addRegistrationSolo(Registration registration) throws SQLException {
         String checkQuery = "SELECT COUNT(*) FROM tblRegistration WHERE idAthlete = ? AND idSport = ? AND idStatus = 3 AND year = ?";
         String insertQuery = "INSERT INTO tblRegistration (idAthlete, idSport, idStatus, year) VALUES (?, ?, ?, ?)";
 
@@ -174,6 +174,7 @@ public class RegistrationDao {
         PreparedStatement checkStmt = null;
         PreparedStatement insertStmt = null;
         ResultSet rs = null;
+        ResultSet generatedKeys = null;
 
         try {
             conn = ConnectionsUtlis.dbConnect();
@@ -190,12 +191,12 @@ public class RegistrationDao {
                 int count = rs.getInt(1);  // Get the count of existing records
                 if (count > 0) {
                     System.out.println("The registration already exists!"); // Show message if already exists
-                    return;  // Exit the method to avoid inserting the duplicate
+                    return -1;  // Exit the method to avoid inserting the duplicate
                 }
             }
 
             // If no existing registration, proceed with the insertion
-            insertStmt = conn.prepareStatement(insertQuery);
+            insertStmt = conn.prepareStatement(insertQuery, PreparedStatement.RETURN_GENERATED_KEYS);
 
             int idAthlete = registration.getAthlete().getIdAthlete();
             int idSport = registration.getSport().getIdSport();
@@ -216,6 +217,15 @@ public class RegistrationDao {
 
             insertStmt.executeUpdate();
             System.out.println("Registration successfully added!"); // Show success message only if inserted
+
+            generatedKeys = insertStmt.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                int idGenerated = generatedKeys.getInt(1);
+                System.out.println("Generated ID: " + idGenerated); // Debugging: Print the generated ID
+                return idGenerated; // Return the generated ID
+            } else {
+                throw new SQLException("Insertion failed, no ID obtained.");
+            }
 
         } finally {
             if (rs != null) {
