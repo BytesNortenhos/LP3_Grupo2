@@ -438,6 +438,14 @@ public class HomeController {
                             alerta.setHeaderText("Ocorreu um erro ao adicionar os dados à Base de Dados!");
                             alerta.show();
                         }
+
+                        boolean xmlSaved = uploadXmlDAO.saveXML(xmlPath, xsdPath);
+                        if (!xmlSaved) {
+                            Alert alerta = new Alert(Alert.AlertType.ERROR);
+                            alerta.setTitle("Erro!");
+                            alerta.setHeaderText("Ocorreu um erro ao guardar o ficheiro XML/XSD!");
+                            alerta.show();
+                        }
                     } catch (SQLException e) {
                         Alert alerta = new Alert(Alert.AlertType.ERROR);
                         alerta.setTitle("Erro!");
@@ -526,6 +534,14 @@ public class HomeController {
                             alerta.setHeaderText("Ocorreu um erro ao adicionar os dados à Base de Dados!");
                             alerta.show();
                         }
+
+                        boolean xmlSaved = uploadXmlDAO.saveXML(xmlPath, xsdPath);
+                        if (!xmlSaved) {
+                            Alert alerta = new Alert(Alert.AlertType.ERROR);
+                            alerta.setTitle("Erro!");
+                            alerta.setHeaderText("Ocorreu um erro ao guardar o ficheiro XML/XSD!");
+                            alerta.show();
+                        }
                     } catch (SQLException e) {
                         Alert alerta = new Alert(Alert.AlertType.ERROR);
                         alerta.setTitle("Erro!");
@@ -592,6 +608,14 @@ public class HomeController {
                             Alert alerta = new Alert(Alert.AlertType.ERROR);
                             alerta.setTitle("Erro!");
                             alerta.setHeaderText("Ocorreu um erro ao adicionar os dados à Base de Dados!");
+                            alerta.show();
+                        }
+
+                        boolean xmlSaved = uploadXmlDAO.saveXML(xmlPath, xsdPath);
+                        if (!xmlSaved) {
+                            Alert alerta = new Alert(Alert.AlertType.ERROR);
+                            alerta.setTitle("Erro!");
+                            alerta.setHeaderText("Ocorreu um erro ao guardar o ficheiro XML/XSD!");
                             alerta.show();
                         }
                     } catch (SQLException e) {

@@ -5,8 +5,14 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 
 import javax.sql.rowset.CachedRowSet;
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Type;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -407,5 +413,26 @@ public class UploadXmlDAO {
         }
 
         return (int) ChronoUnit.MILLIS.between(LocalTime.MIDNIGHT, parsedTime);
+    }
+
+    public boolean saveXML(String pathXML, String pathXSD) {
+        String pathSave = "src/main/java/DataXML_uploads/";
+
+        File fileXML = new File(pathXML);
+        File fileXSD = new File(pathXSD);
+
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy_HH-mm-ss");
+        String formattedDateTime = currentDateTime.format(formatter);
+
+        try {
+            Files.copy(fileXML.toPath(), Path.of(pathSave, formattedDateTime + "_" + fileXML.getName()), StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(fileXSD.toPath(), Path.of(pathSave, formattedDateTime + "_" + fileXSD.getName()), StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+
+        return true;
     }
 }
