@@ -45,7 +45,7 @@
     -fx-border-width: 2px;
     -fx-max-width: 350px;
 }
-.buttonEntrar{
+.buttonEntrar, .popup-button{
     -fx-cursor: hand;
     -fx-min-height:20px;
     -fx-font-size: 20px;
@@ -59,7 +59,7 @@
     -fx-border-radius: 20px;
     -fx-border-width: 2px;
 }
-.buttonEntrar:hover{
+.buttonEntrar:hover, .popup-button:hover{
     -fx-text-fill: #1E1E1E;
     -fx-background-color: #D5D1C7;
     -fx-control-inner-background: #1E1E1E;
@@ -81,7 +81,7 @@
 
     -fx-text-fill: #F7EED8;
 }
-.textWelcome{
+.textWelcome, .textSportsAthlete{
     -fx-translate-x: 30px;
     -fx-translate-y: 10px;
     -fx-font-family: 'Inter';
@@ -109,7 +109,7 @@
     line-height: 120%;
     -fx-text-fill: #F7EED8;
 }
-.age-label, .sport-label, .type-label, .description-label, .gender-label, .minPart-label, .scoringMeasure-label, .oneGame-label, .numPart-label {
+.age-label, .sport-label, .country-label, .type-label, .description-label, .gender-label, .minPart-label, .scoringMeasure-label, .oneGame-label, .numPart-label {
     -fx-font-family: 'Inter';
     -fx-font-style: normal;
     -fx-font-weight: 400;
@@ -135,12 +135,19 @@
     -fx-min-width: 1000px;
     -fx-background-color: #1E1E1E
 }
+#mainContainerAthlete{
+    -fx-background-color: #1E1E1E;
+    -fx-translate-y: 30px;
+    -fx-padding: 10px;
+}
 #mainContainer, .scrollStyle, #sportsContainer, #startSportsContainer{
     -fx-background-color: #1E1E1E;
 }
-#mainContainer{
-    -fx-min-width: 100%;
-    -fx-min-height: 100%;
+#mainContainer, #sportsContainer{
+    -fx-padding: 0 0 50px 0;
+}
+#startSportsContainer{
+    -fx-padding: 0 0 70px 0;
 }
 #noRequestsLabel, #noSportsLabel{
     -fx-text-fill: red;
@@ -241,40 +248,38 @@
 }
 
 .registerDropBig {
-    -fx-background-color: #3A3A38; /* Dark background color */
+    -fx-background-color: #3A3A38;
     -fx-min-width: 350px;
     -fx-max-width: 350px;
-    -fx-background-radius: 20; /* Rounded corners */
+    -fx-background-radius: 20;
     -fx-border-radius: 20;
-    -fx-border-color: gray; /* Border color */
+    -fx-border-color: gray;
     -fx-border-width: 2px;
     -fx-padding: 0 10 0 10;
     -fx-font-size: 16px;
 }
 
-/* Text color and style for ComboBox */
 .registerDropBig .list-cell {
-    -fx-text-fill: #F7EED8; /* Light text color */
+    -fx-text-fill: #F7EED8;
     -fx-background-color: #3A3A38;
 }
 .registerDropBig .list-cell:hover {
-    -fx-text-fill: #3A3A38; /* Light text color */
+    -fx-text-fill: #3A3A38;
     -fx-background-color: #F7EED8;
 }
 
-/* Styling the ComboBox arrow */
 .registerDropBig .arrow-button {
     -fx-background-color: transparent;
     -fx-padding: 0 5 0 5;
 }
 
 .registerDropBig .arrow {
-    -fx-background-color: #F7EED8; /* Color of the dropdown arrow */
+    -fx-background-color: #F7EED8;
 }
 
 /* Hover effect on the ComboBox */
 .registerDropBig:hover {
-    -fx-border-color: lightgray; /* Change border color on hover */
+    -fx-border-color: lightgray;
 }
 
 .registerTextSmall{
@@ -356,4 +361,80 @@
     -fx-font-family: 'Inter';
     -fx-font-style: normal;
     -fx-font-weight: 400;
+}
+.textMedals{
+    -fx-font-size: 50px;
+    -fx-text-fill: #F7EED8;
+    -fx-font-family: 'Inter';
+    -fx-font-style: normal;
+    -fx-font-weight: 400;
+    -fx-translate-x: 30px;
+}
+
+.yearDropStart {
+    -fx-background-color: #3A3A38;
+    -fx-min-width: 350px;
+    -fx-max-width: 350px;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-border-color: gray;
+    -fx-border-width: 2px;
+    -fx-padding: 0 10 0 10;
+    -fx-font-size: 16px;
+}
+
+.yearDropStart .list-cell {
+    -fx-text-fill: #F7EED8;
+    -fx-background-color: #3A3A38;
+}
+.yearDropStart .list-cell:hover {
+    -fx-text-fill: #3A3A38;
+    -fx-background-color: #F7EED8;
+}
+
+.yearDropStart .arrow-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0 5 0 5;
+}
+
+.yearDropStart .arrow {
+    -fx-background-color: #F7EED8;
+}
+
+/* Hover effect on the ComboBox */
+.yearDropStart:hover {
+    -fx-border-color: lightgray;
+}
+.popup-vbox{
+    -fx-background-color: #1E1E1E;
+}
+.popup-label{
+    -fx-font-size: 20px;
+    -fx-text-fill: #F7EED8;
+}
+.popup-text{
+    -fx-font-size: 17px;
+    -fx-text-fill: #F7EED8;
+    -fx-background-color: #3A3A38;
+    -fx-control-inner-background: #1E1E1E;
+    -fx-prompt-text-fill: #F7EED8;
+    -fx-border-color: #9B9898;
+    -fx-background-radius: 20px;
+    -fx-border-radius: 20px;
+    -fx-border-width: 2px;
+    -fx-max-width: 200px;
+}
+.scrollPaneAthlete{
+    -fx-background-color: #1E1E1E;
+    -fx-translate-x: 200px;
+    -fx-padding: 30px;
+    -fx-min-height: 600px;
+    -fx-max-height: 600px;
+    -fx-min-width: 700px;
+    -fx-max-width: 700px;
+    -fx-translate-y: 10px;
+}
+#sportsContainerAthlete{
+    -fx-background-color: #1E1E1E;
+    /*-fx-min-height: 450px;*/
 }

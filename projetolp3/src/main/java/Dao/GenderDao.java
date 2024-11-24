@@ -88,7 +88,7 @@ public class GenderDao {
         }
     }
 
-    public static Gender getGenderById(int idGender) throws SQLException {
+    public Gender getGenderById(int idGender) throws SQLException {
         String query = "SELECT * FROM tblGender WHERE idGender = ?";
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idGender);
         if (rs != null && rs.next()) {

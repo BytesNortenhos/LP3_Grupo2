@@ -156,10 +156,8 @@ public class RegisterController {
                     .findFirst().orElse(null);
 
             if (gender != null && country != null) {
-                // Criar o atleta com um id inicial (0 porque será gerado automaticamente)
                 Athlete athlete = new Athlete(0, "", userName, country, gender, height, weight, dateOfBirth);
 
-                // Registrar o atleta no banco de dados e obter o id gerado
                 int generatedId = AthleteDao.addAthlete(athlete);
 
                 // A senha do atleta será o id gerado

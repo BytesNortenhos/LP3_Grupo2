@@ -4,9 +4,11 @@ import AuxilierXML.Athletes;
 import AuxilierXML.Sports;
 import AuxilierXML.Teams;
 import AuxilierXML.UploadXmlDAO;
-import Dao.RegistrationDao;
+import Dao.*;
+import Models.*;
 import Utils.XMLUtils;
 import bytesnortenhos.projetolp3.Main;
+import controllers.LoginController;
 import controllers.ViewsController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -30,17 +32,20 @@ import javafx.stage.Stage;
 import javafx.application.Platform;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
 
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
-import Models.Registration;
 
 public class HomeController {
     @FXML
@@ -108,9 +113,7 @@ public class HomeController {
     private List<Registration> getPendingRegistrations() throws SQLException {
         RegistrationDao registrationDao = new RegistrationDao();
         List<Registration> registrations = registrationDao.getRegistrations();
-        return registrations.stream()
-                .filter(reg -> reg.getStatus().getIdStatus() == 1)
-                .collect(Collectors.toList());
+        return registrations;
     }
 
     private void showNoRequestsMessage() {
@@ -147,8 +150,8 @@ public class HomeController {
         Label sportLabel = new Label("Modalidade: " + request.getSport().getName());
         sportLabel.getStyleClass().add("sport-label");
 
-        Label teamLabel = new Label("Equipa: " + request.getTeam().getName());
-        teamLabel.getStyleClass().add("team-label");
+        Label countryLabel = new Label("País: " + request.getAthlete().getCountry().getName());
+        countryLabel.getStyleClass().add("country-label");
 
         ImageView acceptImageView = new ImageView();
         URL iconAcceptURL = Main.class.getResource("img/iconAccept.png");
@@ -178,16 +181,16 @@ public class HomeController {
 
         acceptButton.setOnAction(event -> {
             try {
-                RegistrationDao.updateRegistrationStatus(request.getIdRegistration(), 3);
+                verifyTeam(request);
                 Platform.runLater(() -> mainContainer.getChildren().remove(requestItem));
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         });
 
         rejectButton.setOnAction(event -> {
             try {
-                RegistrationDao.updateRegistrationStatus(request.getIdRegistration(), 2);
+                RegistrationDao.updateRegistrationStatus(request.getIdRegistration(), 2, 0);
                 Platform.runLater(() -> mainContainer.getChildren().remove(requestItem));
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -199,10 +202,92 @@ public class HomeController {
         buttonContainer.setAlignment(Pos.CENTER_RIGHT);
         buttonContainer.setPadding(new Insets(10));
 
-        requestItem.getChildren().addAll(nameLabel, sportLabel, ageLabel, buttonContainer);
+        requestItem.getChildren().addAll(nameLabel, ageLabel, sportLabel, countryLabel, buttonContainer);
         return requestItem;
     }
+    public void verifyTeam(Registration request) throws SQLException{
+        RegistrationDao registrationDao = new RegistrationDao();
+        if(!registrationDao.verfiyTeam(request.getAthlete().getCountry().getIdCountry(), request.getSport().getIdSport())){
+            popWindow(request);
+        }
+        else{
+            RegistrationDao.updateRegistrationStatus(request.getIdRegistration(), 3, registrationDao.getIdTeam(request.getAthlete().getCountry().getIdCountry(), request.getSport().getIdSport()));
+        }
+    }
+    private void popWindow(Registration request) {
+        Stage popupStage = new Stage();
+        popupStage.setTitle("Criar equipa");
 
+
+        VBox vbox = new VBox(10);
+        vbox.setPadding(new Insets(10));
+        vbox.getStyleClass().add("popup-vbox");
+
+
+        Label minParticipantsLabel = new Label("Min Participants:");
+        minParticipantsLabel.getStyleClass().add("popup-label");
+        TextField minParticipantsField = new TextField();
+        minParticipantsField.getStyleClass().add("popup-text");
+
+        Label maxParticipantsLabel = new Label("Max Participants:");
+        maxParticipantsLabel.getStyleClass().add("popup-label");
+        TextField maxParticipantsField = new TextField();
+        maxParticipantsField.getStyleClass().add("popup-text");
+
+        Button submitButton = new Button("Submit");
+        submitButton.getStyleClass().add("popup-button");
+        submitButton.setOnAction(event -> {
+            try {
+                String minParticipantsText = minParticipantsField.getText();
+                String maxParticipantsText = maxParticipantsField.getText();
+
+                if (!minParticipantsText.matches("\\d+") || !maxParticipantsText.matches("\\d+")) {
+                    Alert alerta = new Alert(Alert.AlertType.ERROR);
+                    alerta.setTitle("Erro!");
+                    alerta.setHeaderText("Por favor, insira apenas números nos campos de participantes!");
+                    alerta.show();
+                    return;
+                }
+
+                int minParticipants = Integer.parseInt(minParticipantsText);
+                int maxParticipants = Integer.parseInt(maxParticipantsText);
+                if(minParticipants < 2){
+                    Alert alerta = new Alert(Alert.AlertType.ERROR);
+                    alerta.setTitle("Erro!");
+                    alerta.setHeaderText("A equipa tem de ter um mínimo de participantes superior a 1!");
+                    alerta.show();
+                }
+                teamCreate(request, minParticipants, maxParticipants);
+                popupStage.close();
+            } catch (NumberFormatException | SQLException e) {
+                e.printStackTrace();
+            }
+        });
+
+        vbox.getChildren().addAll( minParticipantsLabel, minParticipantsField, maxParticipantsLabel, maxParticipantsField, submitButton);
+
+        Scene scene = new Scene(vbox, 300, 250);
+        scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+        popupStage.setScene(scene);
+        popupStage.show();
+    }
+    public void teamCreate(Registration request, int minParticipants, int maxParticipants) throws SQLException {
+        TeamDao teamDao = new TeamDao();
+        String g = "";
+        if(request.getAthlete().getGenre().getIdGender()==1){
+            g = "Men's";
+        }else{
+            g = "Women's";
+        }
+        String name = request.getAthlete().getCountry().getName() + " " + g + " " + request.getSport().getName() + " Team";
+        teamDao.addTeam(new Team(0, name, request.getAthlete().getCountry(), request.getAthlete().getGenre(), request.getSport(), 2024, minParticipants, maxParticipants));
+        RegistrationDao registrationDao = new RegistrationDao();
+        RegistrationDao.updateRegistrationStatus(request.getIdRegistration(), 3, registrationDao.getIdTeam(request.getAthlete().getCountry().getIdCountry(), request.getSport().getIdSport()));
+        Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+        alerta.setTitle("Sucesso!");
+        alerta.setHeaderText("Equipa criada com sucesso!");
+        alerta.show();
+    }
     public boolean changeMode(ActionEvent event){
         isDarkMode = !isDarkMode;
         if(isDarkMode){
@@ -356,6 +441,14 @@ public class HomeController {
                             alerta.setHeaderText("Ocorreu um erro ao adicionar os dados à Base de Dados!");
                             alerta.show();
                         }
+
+                        boolean xmlSaved = uploadXmlDAO.saveXML(xmlPath, xsdPath);
+                        if (!xmlSaved) {
+                            Alert alerta = new Alert(Alert.AlertType.ERROR);
+                            alerta.setTitle("Erro!");
+                            alerta.setHeaderText("Ocorreu um erro ao guardar o ficheiro XML/XSD!");
+                            alerta.show();
+                        }
                     } catch (SQLException e) {
                         Alert alerta = new Alert(Alert.AlertType.ERROR);
                         alerta.setTitle("Erro!");
@@ -444,6 +537,14 @@ public class HomeController {
                             alerta.setHeaderText("Ocorreu um erro ao adicionar os dados à Base de Dados!");
                             alerta.show();
                         }
+
+                        boolean xmlSaved = uploadXmlDAO.saveXML(xmlPath, xsdPath);
+                        if (!xmlSaved) {
+                            Alert alerta = new Alert(Alert.AlertType.ERROR);
+                            alerta.setTitle("Erro!");
+                            alerta.setHeaderText("Ocorreu um erro ao guardar o ficheiro XML/XSD!");
+                            alerta.show();
+                        }
                     } catch (SQLException e) {
                         Alert alerta = new Alert(Alert.AlertType.ERROR);
                         alerta.setTitle("Erro!");
@@ -512,6 +613,14 @@ public class HomeController {
                             alerta.setHeaderText("Ocorreu um erro ao adicionar os dados à Base de Dados!");
                             alerta.show();
                         }
+
+                        boolean xmlSaved = uploadXmlDAO.saveXML(xmlPath, xsdPath);
+                        if (!xmlSaved) {
+                            Alert alerta = new Alert(Alert.AlertType.ERROR);
+                            alerta.setTitle("Erro!");
+                            alerta.setHeaderText("Ocorreu um erro ao guardar o ficheiro XML/XSD!");
+                            alerta.show();
+                        }
                     } catch (SQLException e) {
                         Alert alerta = new Alert(Alert.AlertType.ERROR);
                         alerta.setTitle("Erro!");
@@ -536,5 +645,134 @@ public class HomeController {
             alerta.setHeaderText("Selecione 2 ficheiros! 1 .xml e 1 xsd.xml");
             alerta.show();
         }
+    }
+
+    public void updateImageAthlete(ActionEvent event) throws SQLException {
+        String pathSave = "src/main/java/ImagesAthlete/";
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Resource Files");
+
+        FileChooser.ExtensionFilter imageFilter = new FileChooser.ExtensionFilter("Image Files (*.png, *.jpeg, *.jpg)", "*.png", "*.jpeg", "*.jpg");
+        fileChooser.getExtensionFilters().addAll(imageFilter);
+
+        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
+        List<File> selectedFiles = fileChooser.showOpenMultipleDialog(stage);
+
+        if (selectedFiles != null) {
+            long pngCount = selectedFiles.stream().filter(file -> file.getName().endsWith(".png")).count();
+            long jpgCount = selectedFiles.stream().filter(file -> file.getName().endsWith(".jpg")).count();
+            long jpegCount = selectedFiles.stream().filter(file -> file.getName().endsWith(".jpeg")).count();
+
+            if (selectedFiles.size() == 1 && (pngCount == 1 || jpgCount == 1 || jpegCount == 1)) {
+                File selectedFile = selectedFiles.get(0);
+
+                int tempAthleteId = 1000;
+                boolean saved = saveAthleteImage(tempAthleteId, pathSave, selectedFile.getAbsolutePath());
+                if (saved) {
+                    Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+                    alerta.setTitle("Sucesso!");
+                    alerta.setHeaderText("A imagem foi guardada com sucesso!");
+                    alerta.show();
+
+                    AthleteDao athleteDao = new AthleteDao();
+                    athleteDao.updateAthleteImage(tempAthleteId, pathSave, "." + selectedFile.getName().split("\\.")[1]);
+                } else {
+                    Alert alerta = new Alert(Alert.AlertType.ERROR);
+                    alerta.setTitle("Erro!");
+                    alerta.setHeaderText("Ocorreu um erro ao guardar a imagem!");
+                    alerta.show();
+                }
+
+            } else {
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setTitle("Erro!");
+                alerta.setHeaderText("Selecione 1 ficheiro! Extensões válidas: .png, .jpeg, .jpg");
+                alerta.show();
+            }
+        } else {
+            Alert alerta = new Alert(Alert.AlertType.ERROR);
+            alerta.setTitle("Erro!");
+            alerta.setHeaderText("Selecione 1 ficheiro! Extensões válidas: .png, .jpeg, .jpg");
+            alerta.show();
+        }
+    }
+
+    public boolean saveAthleteImage(int tempAthleteId, String pathSave, String pathImage) {
+        File fileImage = new File(pathImage);
+        String filename = String.valueOf(tempAthleteId) + "." + fileImage.getName().split("\\.")[1];
+
+        try {
+            Files.copy(fileImage.toPath(), Path.of(pathSave, filename), StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+
+        return true;
+    }
+
+    public void updateImageEvent(ActionEvent event) throws SQLException {
+        String pathSave = "src/main/java/ImagesEvent/";
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Resource Files");
+
+        FileChooser.ExtensionFilter imageFilter = new FileChooser.ExtensionFilter("Image Files (*.png, *.jpeg, *.jpg)", "*.png", "*.jpeg", "*.jpg");
+        fileChooser.getExtensionFilters().addAll(imageFilter);
+
+        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
+        List<File> selectedFiles = fileChooser.showOpenMultipleDialog(stage);
+
+        if (selectedFiles != null) {
+            long pngCount = selectedFiles.stream().filter(file -> file.getName().endsWith(".png")).count();
+            long jpgCount = selectedFiles.stream().filter(file -> file.getName().endsWith(".jpg")).count();
+            long jpegCount = selectedFiles.stream().filter(file -> file.getName().endsWith(".jpeg")).count();
+
+            if (selectedFiles.size() == 1 && (pngCount == 1 || jpgCount == 1 || jpegCount == 1)) {
+                File selectedFile = selectedFiles.get(0);
+
+                int tempEventYear = 1900;
+                boolean saved = saveEventImage(tempEventYear, pathSave, selectedFile.getAbsolutePath());
+                if (saved) {
+                    Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+                    alerta.setTitle("Sucesso!");
+                    alerta.setHeaderText("A imagem foi guardada com sucesso!");
+                    alerta.show();
+
+
+                    EventDao eventDao = new EventDao();
+                    eventDao.updateEventImage(tempEventYear, pathSave, "." + selectedFile.getName().split("\\.")[1]);
+                } else {
+                    Alert alerta = new Alert(Alert.AlertType.ERROR);
+                    alerta.setTitle("Erro!");
+                    alerta.setHeaderText("Ocorreu um erro ao guardar a imagem!");
+                    alerta.show();
+                }
+
+            } else {
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setTitle("Erro!");
+                alerta.setHeaderText("Selecione 1 ficheiro! Extensões válidas: .png, .jpeg, .jpg");
+                alerta.show();
+            }
+        } else {
+            Alert alerta = new Alert(Alert.AlertType.ERROR);
+            alerta.setTitle("Erro!");
+            alerta.setHeaderText("Selecione 1 ficheiro! Extensões válidas: .png, .jpeg, .jpg");
+            alerta.show();
+        }
+    }
+
+    public boolean saveEventImage(int tempEventYear, String pathSave, String pathImage) {
+        File fileImage = new File(pathImage);
+        String filename = String.valueOf(tempEventYear) + "." + fileImage.getName().split("\\.")[1];
+
+        try {
+            Files.copy(fileImage.toPath(), Path.of(pathSave, filename), StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+
+        return true;
     }
 }

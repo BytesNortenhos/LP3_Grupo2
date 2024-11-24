@@ -32,13 +32,13 @@
                 <items>
                     <MenuItem text="Inscrição Individual" onAction="#mostrarRegistaModalidades"/>
                     <MenuItem text="Inscrição Equipa" onAction="#mostrarRegistaModalidadesEquipa"/>
-                    <MenuItem text="Visualizar modalidades" onAction="#mostrarRegistaModalidades"/>
+<!--                    <MenuItem text="Visualizar modalidades" onAction="#mostrarModalidades"/>-->
                 </items>
             </SplitMenuButton>
             <SplitMenuButton fx:id="theamsSplitButton" styleClass="dropdownButton" text="Equipas">
                 <items>
-                    <!-- ><MenuItem text="Inscrição Equipa" onAction="#mostrarRegistaModalidadesEquipa"/> -->
-                    <MenuItem text="Visualizar equipas" onAction="#mostrarRegistaModalidades"/>
+                     <MenuItem text="Inscrição" onAction="#mostrarRegistaEquipas"/>
+<!--                    <MenuItem text="Visualizar equipas" onAction="#mostrarRegistaModalidades"/>-->
                 </items>
             </SplitMenuButton>
             <Button mnemonicParsing="false" onAction="#changeMode" styleClass="iconMoonNav">
