@@ -48,6 +48,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class HomeController {
+    public SplitMenuButton testeSplitButton;
     @FXML
     private FlowPane mainContainer;
     @FXML

@@ -243,7 +243,8 @@ public class RegisterTeamController {
             );
 
             // Inserir o novo time no banco de dados
-            TeamDao.addTeam(newTeam);
+            TeamDao teamdao = new TeamDao();
+            teamdao.addTeam(newTeam);
 
             // Exibir mensagem de sucesso
             showAlert("Success", "Team registered successfully!", Alert.AlertType.INFORMATION);
