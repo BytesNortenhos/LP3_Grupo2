@@ -186,6 +186,8 @@ public class StartSportsController {
                                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                                 alert.setTitle("Sucesso!");
                                 alert.setHeaderText("Modalidade inicada com sucesso!");
+                                List<List> sports = getSports(year);
+                                displaySports(sports, year);
                                 Optional<ButtonType> result = alert.showAndWait();
 //                           if (result.isPresent() && result.get() == ButtonType.OK) {
 //                               Platform.runLater(() -> startSportsContainer.getChildren().remove(requestItem));
@@ -439,12 +441,12 @@ public class StartSportsController {
             }
         }
 
-        //ALTERAR TBLREGISTRATION PARA IDSTATUS 4
+        registrationDao.setStatusFinished(idSport, year);
 
         return true;
     }
 
-    public void individualOne(int idSport, List<Integer> IdsParticipants, int year) throws SQLException {
+    public boolean individualOne(int idSport, List<Integer> IdsParticipants, int year) throws SQLException {
         List<Integer> resultados = new ArrayList<>();
         Random random = new Random();
 
@@ -496,9 +498,11 @@ public class StartSportsController {
         }
 
         //Verificar Recorde Olímpico
+
+        return true;
     }
 
-    public void CollectiveOne(int idSport, List<Integer> IdsParticipants, int year) throws SQLException {
+    public boolean CollectiveOne(int idSport, List<Integer> IdsParticipants, int year) throws SQLException {
         List<Integer> resultados = new ArrayList<>();
         Random random = new Random();
 
@@ -576,12 +580,16 @@ public class StartSportsController {
         }
 
         //Verificar Recorde Olímpico
+
+        return true;
     }
 
-    public void individualMultiple(int idSport, List<Integer> IdsParticipants) throws SQLException {
+    public boolean individualMultiple(int idSport, List<Integer> IdsParticipants) throws SQLException {
+        return true;
     }
 
-    public void CollectiveMultiple(int idSport, List<Integer> IdsParticipants) throws SQLException {
+    public boolean CollectiveMultiple(int idSport, List<Integer> IdsParticipants) throws SQLException {
+        return true;
     }
 
 }

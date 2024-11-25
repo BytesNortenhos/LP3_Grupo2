@@ -488,4 +488,26 @@ public class RegistrationDao {
         }
         return athletes;
     }
+
+    public boolean setStatusFinished(int idSport, int year) throws SQLException{
+        String query = "UPDATE tblRegistration SET idStatus = 4 WHERE idSport = ? AND year = ?";
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        try {
+            conn = ConnectionsUtlis.dbConnect();
+            stmt = conn.prepareStatement(query);
+
+            stmt.setInt(1, idSport);
+            stmt.setInt(2, year);
+            stmt.executeUpdate();
+            return true;
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+    }
 }
