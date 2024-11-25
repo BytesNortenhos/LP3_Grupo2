@@ -49,6 +49,22 @@ public class TeamDao {
         return teams;
     }
 
+    public List<List> getTeamsNamesAndId() throws SQLException {
+        List<List> teams = new ArrayList<>();
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT idTeam, name FROM tblTeam;");
+        if (rs != null) {
+            while (rs.next()) {
+                List<String> team = new ArrayList<>();
+                team.add(rs.getString("idTeam"));
+                team.add(rs.getString("name"));
+                teams.add(team);
+            }
+        } else {
+            System.out.println("ResultSet is null. No results for Team found.");
+        }
+        return teams;
+    }
+
     public int addTeam(Team team) throws SQLException {
         String query = "INSERT INTO tblTeam (name, idCountry, idGender, idSport, yearFounded, minParticipants, maxParticipants) VALUES (?, ?, ?, ?, ?, ?, ?)";
         Connection conn = null;
@@ -138,7 +154,28 @@ public class TeamDao {
             }
         }
     }
+    public static void updateTeams(String idTeam, String name, int playersCount, int playersMaxCount) throws SQLException {
+        String query = "UPDATE tblTeam SET name = ?, minParticipants = ?, maxParticipants = ? WHERE idTeam = ?";
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        try {
+            conn = ConnectionsUtlis.dbConnect();
+            stmt = conn.prepareStatement(query);
 
+            stmt.setString(1,name);
+            stmt.setInt(2, playersCount);
+            stmt.setInt(3, playersMaxCount);
+            stmt.setString(4, idTeam);
+            stmt.executeUpdate();
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+    }
     public static Team getTeamById(int idTeam) throws SQLException {
         String query = "SELECT t.idTeam, t.name AS teamName, c.idCountry, c.name AS countryName, c.continent, " +
                 "g.idGender AS genderId, g.description AS genderDesc, " +

@@ -48,8 +48,6 @@ public class SportRegisterController {
     String cssDark = ((URL) cssDarkURL).toExternalForm();
     String cssLight = ((URL) cssLightURL).toExternalForm();
     @FXML
-    private SplitMenuButton theamsSplitButton;
-    @FXML
     private SplitMenuButton sportSplitButton;
     @FXML
     private ComboBox sportsDrop;
@@ -61,7 +59,6 @@ public class SportRegisterController {
         loadIcons();
         loadSports();
         loadEvents();
-        theamsSplitButton.setOnMouseClicked(event -> theamsSplitButton.show());
         sportSplitButton.setOnMouseClicked(mouseEvent -> sportSplitButton.show());
     }
 

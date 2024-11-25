@@ -22,12 +22,12 @@
 <BorderPane fx:id="parent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="background" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.admin.EditSportController">
     <top>
         <HBox styleClass="navBar" prefHeight="40.0" prefWidth="400.0">
-            <Button styleClass="iconHomeNav" onAction="#returnHomeMenu">
-                <graphic >
-                    <ImageView fx:id="iconHomeNav" fitWidth="55" fitHeight="55" preserveRatio="true" />
+            <Button styleClass="iconHomeNav">
+                <graphic>
+                    <ImageView fx:id="iconHomeNav" fitWidth="55" fitHeight="55" preserveRatio="true"/>
                 </graphic>
             </Button>
-            <Pane HBox.hgrow="ALWAYS" />
+            <Pane HBox.hgrow="ALWAYS"/>
             <SplitMenuButton fx:id="xmlSplitButton" styleClass="dropdownButton" text="Carregar XML">
                 <items>
                     <MenuItem text="Carregar equipas" onAction="#loadTeams"/>
@@ -53,14 +53,20 @@
                     <MenuItem text="Registar atleta" onAction="#mostrarRegistar"/>
                 </items>
             </SplitMenuButton>
+            <SplitMenuButton fx:id="testeSplitButton" styleClass="dropdownButton" text="Alterar IMG">
+                <items>
+                    <MenuItem text="Alterar Imagem Atlete - teste" />
+                    <MenuItem text="Alterar Imagem Event - teste"/>
+                </items>
+            </SplitMenuButton>
             <Button mnemonicParsing="false" onAction="#changeMode" styleClass="iconMoonNav">
                 <graphic>
-                    <ImageView fx:id="iconModeNav" fitWidth="55" fitHeight="55" preserveRatio="true" />
+                    <ImageView fx:id="iconModeNav" fitWidth="55" fitHeight="55" preserveRatio="true"/>
                 </graphic>
             </Button>
             <Button mnemonicParsing="false" onAction="#logout" styleClass="iconLogoutNav">
                 <graphic>
-                    <ImageView fx:id="iconLogoutNav" fitWidth="55" fitHeight="55" preserveRatio="true" />
+                    <ImageView fx:id="iconLogoutNav" fitWidth="55" fitHeight="55" preserveRatio="true"/>
                 </graphic>
             </Button>
         </HBox>
@@ -70,16 +76,13 @@
             <Label styleClass="loginText" text="EDITAR MODALIDADES" />
             <ImageView fx:id="iconSports" styleClass="iconOlympic" fitWidth="72" fitHeight="72" preserveRatio="true" />
 
-            <!-- Campo para Carregar Modalidade -->
-            <HBox alignment="TOP_LEFT" spacing="10">
-                <ComboBox fx:id="sportsListDropdown" styleClass="registerDrop" promptText="Carregar Modalidade" onAction="#onSportSelected" prefWidth="350" />
-            </HBox>
 
             <!-- Campos de edição -->
-            <TextField styleClass="userNameText" fx:id="nameText" promptText="Nome da modalidade" />
-            <TextField styleClass="userNameText" fx:id="descText" promptText="Descrição da modalidade" />
+            <ComboBox fx:id="sportsListDropdown" translateY="-60" styleClass="registerDropBig" promptText="Carregar Modalidade" onAction="#onSportSelected" prefWidth="350" />
+            <TextField styleClass="sportText" translateY="-50" fx:id="nameText" promptText="Nome da modalidade" />
+            <TextField styleClass="sportText" translateY="-40" fx:id="descText" promptText="Descrição da modalidade" />
 
-            <HBox spacing="10" style="-fx-max-width: 350px;">
+            <HBox style="-fx-max-width: 350px;" translateY="-30">
                 <ComboBox fx:id="genderDrop" styleClass="registerDrop" promptText="Género" />
                 <ComboBox fx:id="typeDrop" styleClass="registerDrop" promptText="Tipo" style="-fx-translate-x: 10px;">
                     <items>
@@ -91,7 +94,7 @@
                 </ComboBox>
             </HBox>
 
-            <HBox spacing="10" style="-fx-max-width: 350px;">
+            <HBox spacing="10" style="-fx-max-width: 350px;" translateY="-20">
                 <TextField styleClass="registerTextSmall" fx:id="minText" promptText="Minímo de participantes" />
                 <ComboBox fx:id="scoringDrop" styleClass="registerDrop" promptText="Tipo de pontos" style="-fx-translate-x: 10px;">
                     <items>
@@ -103,7 +106,7 @@
                 </ComboBox>
             </HBox>
 
-            <ComboBox fx:id="oneGameDrop" styleClass="registerDropBig" promptText="Número de jogos">
+            <ComboBox fx:id="oneGameDrop" styleClass="registerDropBig" promptText="Número de jogos" translateY="-10">
                 <items>
                     <FXCollections fx:factory="observableArrayList">
                         <String fx:value="One" />
@@ -112,13 +115,13 @@
                 </items>
             </ComboBox>
 
-            <HBox spacing="10" style="-fx-max-width: 350px; -fx-margin-top: 20px;"> <!-- Adicionada margem superior -->
+            <HBox spacing="10" style="-fx-max-width: 350px;" > <!-- Adicionada margem superior -->
                 <TextField fx:id="resultMinText" styleClass="registerTextSmall" promptText="Resultado mínimo" />
                 <TextField fx:id="resultMaxText" styleClass="registerTextSmall" promptText="Resultado máximo" />
             </HBox>
 
             <!-- Botão para Atualizar -->
-            <Button styleClass="buttonEntrar" onAction="#updateSport" style="-fx-margin-top: 20px;">Atualizar Informações</Button>
+            <Button styleClass="buttonEntrar" onAction="#updateSport" translateY="20">Atualizar Informações</Button>
         </VBox>
     </center>
 </BorderPane>

@@ -56,6 +56,18 @@
     -fx-border-width: 2px;
     -fx-max-width: 350px;
 }
+.sportText{
+    -fx-font-size: 17px;
+    -fx-text-fill: #F7EED8;
+    -fx-background-color: #3A3A38;
+    -fx-control-inner-background: #1E1E1E;
+    -fx-prompt-text-fill: #F7EED8;
+    -fx-border-color: #9B9898;
+    -fx-background-radius: 20px;
+    -fx-border-radius: 20px;
+    -fx-border-width: 2px;
+    -fx-max-width: 350px;
+}
 .buttonEntrar, .popup-button, .buttonViewAthleteHistory{
     -fx-cursor: hand;
     -fx-min-height:20px;

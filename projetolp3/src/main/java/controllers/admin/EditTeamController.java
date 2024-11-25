@@ -72,7 +72,7 @@ public class EditTeamController {
     @FXML
     private TextField nameText, descText, minText, typeText, maxText, genderText;
     @FXML
-    private ComboBox<Team> teamsListDropdown;
+    private ComboBox<String> teamsListDropdown;
 
     @FXML
     private TextField teamNameText, teamDescText, teamPlayersText, teamMaxPlayersText;
@@ -111,12 +111,15 @@ public class EditTeamController {
     }
     private void loadAvailableTeams() {
         try {
-            // Obter as equipes do banco de dados
             TeamDao teamdao = new TeamDao();
-            List<Team> teams = teamdao.getTeams();
+            List<List> teams = teamdao.getTeamsNamesAndId();
 
-            // Adicionar ao ComboBox
-            ObservableList<Team> teamOptions = FXCollections.observableArrayList(teams);
+            List<String> teamNames = new ArrayList<>();
+            for (List team : teams) {
+                teamNames.add(team.get(1).toString());
+            }
+
+            ObservableList<String> teamOptions = FXCollections.observableArrayList(teamNames);
             teamsListDropdown.setItems(teamOptions);
         } catch (SQLException e) {
             showAlert("Database Error", "Erro ao carregar equipes: " + e.getMessage(), Alert.AlertType.ERROR);
@@ -125,13 +128,25 @@ public class EditTeamController {
 
     @FXML
     private void onTeamSelected() {
-        Team selectedTeam = teamsListDropdown.getSelectionModel().getSelectedItem();
+        try {
+            TeamDao teamdao = new TeamDao();
+            String selectedTeamName = teamsListDropdown.getSelectionModel().getSelectedItem();
 
-        if (selectedTeam != null) {
-            // Preencher os campos com os dados da equipe
-            teamNameText.setText(selectedTeam.getName());
-            teamPlayersText.setText(String.valueOf(selectedTeam.getMinParticipants()));
-            teamMaxPlayersText.setText(String.valueOf(selectedTeam.getMaxParticipants()));
+            if (selectedTeamName != null) {
+                List<List> teams = teamdao.getTeamsNamesAndId();
+                for (List team : teams) {
+                    if (team.get(1).toString().equals(selectedTeamName)) {
+                        Team teamSelected = teamdao.getTeamByIdV2(Integer.parseInt(team.get(0).toString()));
+                        // Preencher os campos com os dados da equipe
+                        teamNameText.setText(teamSelected.getName());
+                        teamPlayersText.setText(String.valueOf(teamSelected.getMinParticipants()));
+                        teamMaxPlayersText.setText(String.valueOf(teamSelected.getMaxParticipants()));
+                        break;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            showAlert("Database Error", "Erro ao carregar equipes: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
@@ -157,10 +172,8 @@ public class EditTeamController {
     @FXML
     private void loadAvailableSports() {
         try {
-            // Obter os esportes do banco de dados
             List<Sport> sports = SportDao.getAllSportsV2();
 
-            // Adicionar ao ComboBox
             ObservableList<Sport> sportsOptions = FXCollections.observableArrayList(sports);
             sportsListDropdown.setItems(sportsOptions);
         } catch (SQLException e) {
@@ -204,12 +217,23 @@ public class EditTeamController {
     @FXML
     private void updateTeam() {
         try {
+            TeamDao teamdao = new TeamDao();
             // Capturar os dados do formulário
             String name = teamNameText.getText();
+            String idTeam = "0";
             int playersCount = Integer.parseInt(teamPlayersText.getText());
             int playersMaxCount = Integer.parseInt(teamMaxPlayersText.getText());
 
-            Team selectedTeam = teamsListDropdown.getSelectionModel().getSelectedItem();
+            String selectedTeam = teamsListDropdown.getSelectionModel().getSelectedItem();
+
+            if (selectedTeam != null) {
+                List<List> teams = teamdao.getTeamsNamesAndId();
+                for (List team : teams) {
+                    if (team.get(1).toString().equals(selectedTeam)) {
+                        idTeam = team.get(0).toString();
+                    }
+                }
+            }
 
             // Validar seleção
             if (selectedTeam == null) {
@@ -217,14 +241,10 @@ public class EditTeamController {
                 return;
             }
 
-            // Atualizar o objeto da equipe
-            selectedTeam.setName(name);
-            selectedTeam.setMinParticipants(playersCount);
-            selectedTeam.setMaxParticipants(playersMaxCount);
 
             // Atualizar no banco
-            TeamDao.updateTeam(selectedTeam);
-
+            TeamDao.updateTeams(idTeam, name, playersCount, playersMaxCount);
+//
             showAlert("Success", "Equipe atualizada com sucesso!", Alert.AlertType.INFORMATION);
         } catch (NumberFormatException e) {
             showAlert("Validation Error", "Formato inválido para o número de jogadores!", Alert.AlertType.ERROR);

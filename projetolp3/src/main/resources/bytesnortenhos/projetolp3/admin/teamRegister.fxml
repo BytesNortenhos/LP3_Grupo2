@@ -22,12 +22,12 @@
 <BorderPane fx:id="parent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="background" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.admin.RegisterTeamController">
     <top>
         <HBox styleClass="navBar" prefHeight="40.0" prefWidth="400.0">
-            <Button styleClass="iconHomeNav" onAction="#returnHomeMenu">
-                <graphic >
-                    <ImageView fx:id="iconHomeNav" fitWidth="55" fitHeight="55" preserveRatio="true" />
+            <Button styleClass="iconHomeNav">
+                <graphic>
+                    <ImageView fx:id="iconHomeNav" fitWidth="55" fitHeight="55" preserveRatio="true"/>
                 </graphic>
             </Button>
-            <Pane HBox.hgrow="ALWAYS" />
+            <Pane HBox.hgrow="ALWAYS"/>
             <SplitMenuButton fx:id="xmlSplitButton" styleClass="dropdownButton" text="Carregar XML">
                 <items>
                     <MenuItem text="Carregar equipas" onAction="#loadTeams"/>
@@ -53,14 +53,20 @@
                     <MenuItem text="Registar atleta" onAction="#mostrarRegistar"/>
                 </items>
             </SplitMenuButton>
+            <SplitMenuButton fx:id="testeSplitButton" styleClass="dropdownButton" text="Alterar IMG">
+                <items>
+                    <MenuItem text="Alterar Imagem Atlete - teste" />
+                    <MenuItem text="Alterar Imagem Event - teste"/>
+                </items>
+            </SplitMenuButton>
             <Button mnemonicParsing="false" onAction="#changeMode" styleClass="iconMoonNav">
                 <graphic>
-                    <ImageView fx:id="iconModeNav" fitWidth="55" fitHeight="55" preserveRatio="true" />
+                    <ImageView fx:id="iconModeNav" fitWidth="55" fitHeight="55" preserveRatio="true"/>
                 </graphic>
             </Button>
             <Button mnemonicParsing="false" onAction="#logout" styleClass="iconLogoutNav">
                 <graphic>
-                    <ImageView fx:id="iconLogoutNav" fitWidth="55" fitHeight="55" preserveRatio="true" />
+                    <ImageView fx:id="iconLogoutNav" fitWidth="55" fitHeight="55" preserveRatio="true"/>
                 </graphic>
             </Button>
         </HBox>

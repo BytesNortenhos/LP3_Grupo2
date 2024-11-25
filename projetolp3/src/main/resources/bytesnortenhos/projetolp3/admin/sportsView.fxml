@@ -17,7 +17,7 @@
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.admin.SportsController">
     <top>
         <HBox styleClass="navBar" prefHeight="40.0" prefWidth="400.0">
-            <Button styleClass="iconHomeNav" onAction="#returnHomeMenu">
+            <Button styleClass="iconHomeNav">
                 <graphic>
                     <ImageView fx:id="iconHomeNav" fitWidth="55" fitHeight="55" preserveRatio="true"/>
                 </graphic>
@@ -46,6 +46,12 @@
             <SplitMenuButton fx:id="athleteSplitButton" styleClass="dropdownButton" text="Gerir atleta">
                 <items>
                     <MenuItem text="Registar atleta" onAction="#mostrarRegistar"/>
+                </items>
+            </SplitMenuButton>
+            <SplitMenuButton fx:id="testeSplitButton" styleClass="dropdownButton" text="Alterar IMG">
+                <items>
+                    <MenuItem text="Alterar Imagem Atlete - teste" />
+                    <MenuItem text="Alterar Imagem Event - teste"/>
                 </items>
             </SplitMenuButton>
             <Button mnemonicParsing="false" onAction="#changeMode" styleClass="iconMoonNav">

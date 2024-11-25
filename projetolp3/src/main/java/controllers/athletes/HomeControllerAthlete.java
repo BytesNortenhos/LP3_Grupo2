@@ -68,8 +68,6 @@ public class HomeControllerAthlete {
     String cssLight = ((URL) cssLightURL).toExternalForm();
     int idAthlete = 0;
     @FXML
-    private SplitMenuButton theamsSplitButton;
-    @FXML
     private SplitMenuButton sportSplitButton;
     @FXML
     private ScrollPane scrollPaneAthlete;
@@ -86,7 +84,6 @@ public class HomeControllerAthlete {
         idAthlete = LoginController.idAthlete;
         displayWelcomeMessasge();
         displayMedals();
-        theamsSplitButton.setOnMouseClicked(event -> theamsSplitButton.show());
         sportSplitButton.setOnMouseClicked(mouseEvent -> sportSplitButton.show());
 
         List<List> registrations = null;
