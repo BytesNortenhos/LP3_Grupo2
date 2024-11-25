@@ -1,9 +1,6 @@
 package controllers.athletes;
 
-import Dao.AthleteDao;
-import Dao.MedalDao;
-import Dao.OlympicRecordDao;
-import Dao.RegistrationDao;
+import Dao.*;
 import Models.Medal;
 import Models.Registration;
 import bytesnortenhos.projetolp3.Main;
@@ -260,5 +257,58 @@ public class HomeControllerAthlete {
         }
         stage.setScene(scene);
         stage.show();
+    }
+
+    public void historyPopUp(ActionEvent event) throws IOException, SQLException {
+        ResultDao resultDao = new ResultDao();
+        Stage popupStage = new Stage();
+        popupStage.setTitle("Histórico de participações");
+
+
+        VBox vbox = new VBox(400);
+        vbox.setPadding(new Insets(10));
+        vbox.getStyleClass().add("popup-vbox");
+        List<List> results = resultDao.getResultByAthlete(idAthlete);
+        displayResults(vbox, results);
+        Scene scene = new Scene(vbox, 500, 450);
+        scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+        popupStage.setScene(scene);
+        popupStage.show();
+    }
+    private void displayResults(VBox vbox, List<List> results) {
+        vbox.getChildren().clear();
+
+        for (List result : results) {
+            VBox resultItem = createResultItem(result);
+            vbox.getChildren().add(resultItem);
+        }
+    }
+    private VBox createResultItem(List result) {
+        VBox resultItem = new VBox();
+        resultItem.setSpacing(10);
+
+        Label nameLabel = new Label("Modalidade: " + (result.get(1) != null ? result.get(1).toString() : "N/A"));
+        nameLabel.getStyleClass().add("name-label");
+
+        Label resultLabel = new Label("Resultado: " + (result.get(0) != null ? result.get(0).toString() : "N/A"));
+        resultLabel.getStyleClass().add("result-label");
+
+        Label typeLabel = new Label("Tipo de modalidade: " + (result.get(2) != null ? result.get(2).toString() : "N/A"));
+        typeLabel.getStyleClass().add("type-label");
+
+        if (result.get(3) != null) {
+            Label teamLabel = new Label("Equipa: " + result.get(3).toString());
+            teamLabel.getStyleClass().add("team-label");
+            resultItem.getChildren().add(teamLabel);
+        }
+
+        Label dateLabel = new Label("Data: " + (result.get(4) != null ? result.get(4).toString() : "N/A"));
+        dateLabel.getStyleClass().add("date-label");
+
+        Label localLabel = new Label("Local: " + (result.get(5) != null ? result.get(5).toString() : "N/A"));
+        localLabel.getStyleClass().add("local-label");
+
+        resultItem.getChildren().addAll(nameLabel, resultLabel, typeLabel, dateLabel, localLabel);
+        return resultItem;
     }
 }

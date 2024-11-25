@@ -151,7 +151,6 @@ public class RegisterController {
     @FXML
     public void registerAthlete(ActionEvent event) {
         try {
-            // Obter os valores dos campos
             String userName = userNameText.getText();
             String selectedGender = genderDrop.getValue();
             String selectedCountry = nacDrop.getValue();
@@ -159,7 +158,6 @@ public class RegisterController {
             int height = Integer.parseInt(heightText.getText());
             java.sql.Date dateOfBirth = java.sql.Date.valueOf(datePicker.getValue());
 
-            // Obter o id do gênero e do país usando as listas carregadas
             Gender gender = GenderDao.getGenders().stream()
                     .filter(g -> g.getDesc().equals(selectedGender))
                     .findFirst().orElse(null);
@@ -173,13 +171,10 @@ public class RegisterController {
 
                 int generatedId = AthleteDao.addAthlete(athlete);
 
-                // A senha do atleta será o id gerado
-                String generatedPassword = String.valueOf(generatedId); // Definir a senha como o ID gerado
+                String generatedPassword = String.valueOf(generatedId);
 
-                // Atualizar o atleta no banco de dados com a nova senha (que é o id gerado)
-                AthleteDao.updateAthletePassword(generatedId, generatedPassword); // Passa o id e a senha gerada
+                AthleteDao.updateAthletePassword(generatedId, generatedPassword);
 
-                // Exibir uma mensagem de sucesso ou redirecionar para outra tela
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Sucesso!");
                 alert.setHeaderText("Atleta registrado com sucesso! ID gerado: " + generatedId);

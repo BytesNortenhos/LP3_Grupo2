@@ -206,5 +206,29 @@ public class ResultDao {
         return null;
     }
 
+    public List<List> getResultByAthlete(int idAthlete) throws SQLException{
+        String query = "SELECT r.*, s.name as sportName, s.type as sportType, t.name as teamName, l.name as localName FROM tblResult as r " +
+                "LEFT JOIN tblSport as s ON r.idSport = s.idSport " +
+                "LEFT JOIN tblTeam as t ON r.idTeam = t.idTeam " +
+                "LEFT JOIN tblLocal as l on r.idLocal = l.idLocal " +
+                "WHERE r.idAthlete = ?;";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idAthlete);
+        List<List> results = new ArrayList<>();
+        if (rs != null) {
+            while (rs.next()) {
 
+                List<Object> result = new ArrayList<>();
+                result.add(rs.getInt("result"));
+                result.add(rs.getString("sportName"));
+                result.add(rs.getString("sportType"));
+                result.add(rs.getString("teamName"));
+                result.add(rs.getDate("date"));
+                result.add(rs.getString("localName"));
+                results.add(result);
+            }
+        } else {
+            System.out.println("ResultSet is null. No results found.");
+        }
+        return results;
+    }
 }

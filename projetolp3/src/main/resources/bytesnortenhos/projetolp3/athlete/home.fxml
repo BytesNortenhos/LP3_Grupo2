@@ -74,6 +74,7 @@
                     <Label fx:id="silverMedals" styleClass="textMedals"/>
                     <Label fx:id="bronzeMedals" styleClass="textMedals"/>
                     <Label fx:id="certificate" styleClass="textMedals"/>
+                    <Button styleClass="buttonViewAthleteHistory" onAction="#historyPopUp">Visualizar histórico</Button>
                     <!--                <Label fx:id="olympicRecord" styleClass="textMedals"/>-->
                 </VBox>
                 <ScrollPane fx:id="scrollPaneAthlete" styleClass="scrollPaneAthlete" hbarPolicy="NEVER" vbarPolicy="NEVER">
