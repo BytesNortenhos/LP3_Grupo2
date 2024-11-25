@@ -1,18 +1,18 @@
 package controllers;
 
-import Dao.AthleteDao;
-import Dao.GenderDao;
-import Dao.OlympicRecordDao;
-import Dao.SportDao;
+import Dao.*;
 import Models.*;
 import Utils.ConnectionsUtlis;
+import com.sun.source.tree.AssertTree;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.SQLOutput;
+import java.util.ArrayList;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class SportTest {
 
@@ -99,6 +99,90 @@ public class SportTest {
                     fail("Erro ao atualizar");
                 }
             }
+        }
+    }
+
+    @Test
+    void testGetNumberParticipantsSport() throws SQLException {
+
+        SportDao spd = new SportDao();
+        List<Sport> sports = spd.getSports();
+        Sport sportEncontrado = null;
+        int idSport = 5;
+        int year = 2024;
+        int expectedNumber = 4;
+
+        for (Sport sp : sports) {
+            if (sp.getIdSport() == idSport) {
+                sportEncontrado = sp;
+            }
+        }
+
+        //Adicionar um atleta
+        Gender gender = GenderDao.getGenders().stream()
+                .filter(g -> g.getDesc().equals("Male"))
+                .findFirst().orElse(null);
+
+        Country country = CountryDao.getCountries().stream()
+                .filter(c -> c.getName().equals("Portugal"))
+                .findFirst().orElse(null);
+
+        Athlete atleta1 = new Athlete(0, "Teste123", "João Teste", country, gender, 195, 90, java.sql.Date.valueOf("2000-08-22"));
+        Athlete atleta2 = new Athlete(0, "Teste123", "Dinis Teste", country, gender, 175, 65, java.sql.Date.valueOf("2004-04-30"));
+        Athlete atleta3 = new Athlete(0, "Teste123", "Samuel Teste", country, gender, 170, 70, java.sql.Date.valueOf("2005-06-24"));
+        Athlete atleta4 = new Athlete(0, "Teste123", "Roberto Teste", country, gender, 180, 75, java.sql.Date.valueOf("2004-02-16"));
+
+        List<Athlete> athletesAdicionados = new ArrayList<>();
+        athletesAdicionados.add(atleta1);
+        athletesAdicionados.add(atleta2);
+        athletesAdicionados.add(atleta3);
+        athletesAdicionados.add(atleta4);
+
+        for (Athlete at : athletesAdicionados) {
+            at.setIdAthlete(AthleteDao.addAthlete(at));
+        }
+
+        //Guardar status de registo
+        RegistrationStatus status3 = RegistrationStatusDao.getRegistrationStatuses().stream()
+                .filter(s -> s.getIdStatus() == 3)
+                .findFirst().orElse(null);
+
+        RegistrationStatus status4 = RegistrationStatusDao.getRegistrationStatuses().stream()
+                .filter(s -> s.getIdStatus() == 4)
+                .findFirst().orElse(null);
+
+
+        //Adicionar registo
+        Registration registration1 = new Registration(0, atleta1, null, sportEncontrado, status3, year);
+        Registration registration2 = new Registration(0, atleta2, null, sportEncontrado, status3, year);
+        Registration registration3 = new Registration(0, atleta3, null, sportEncontrado, status4, year);
+        Registration registration4 = new Registration(0, atleta4, null, sportEncontrado, status4, year);
+
+        List<Registration> registrationsAdicionados = new ArrayList<>();
+        registrationsAdicionados.add(registration1);
+        registrationsAdicionados.add(registration2);
+        registrationsAdicionados.add(registration3);
+        registrationsAdicionados.add(registration4);
+
+        for (Registration reg : registrationsAdicionados) {
+            reg.setIdRegistration(RegistrationDao.addRegistrationSolo(reg));
+        }
+
+
+        int numberParticipants = spd.getNumberParticipantsSport(idSport, year);
+        assertEquals(expectedNumber, numberParticipants);
+        System.out.println("ExpectedNumber: " + expectedNumber + "\nNumberParticipants: " + numberParticipants);
+        System.out.println("Sucesso");
+
+
+        //Remover os registos
+        for(Registration reg: registrationsAdicionados){
+            RegistrationDao.removeRegistration(reg.getIdRegistration());
+        }
+
+        //Remover os atletas
+        for(Athlete at: athletesAdicionados){
+            AthleteDao.removeAthlete(at.getIdAthlete());
         }
 
     }
