@@ -507,7 +507,7 @@ public class StartSportsController {
             int resultadoInserir = resultados.get(i);
             java.sql.Date date = new java.sql.Date(System.currentTimeMillis());
             try {
-                resultDao.addResultTeam(idSport, idTeam, date, resultadoInserir, 2);
+                //resultDao.addResultTeam(idSport, idTeam, date, resultadoInserir, 2);
                 athletes.clear();
                 athletes = registrationDao.getAthletesByTeam(idTeam, idSport, year);
                 for (int j = 0; j < athletes.size(); j++) {
@@ -519,19 +519,19 @@ public class StartSportsController {
         }
 
         //Atribuir Medalhas
-        medalDao.addTopMedalTeam(IdsParticipants.getFirst(), year, 1);
+        //medalDao.addTopMedalTeam(IdsParticipants.getFirst(), year, 1);
         athletes.clear();
         athletes = registrationDao.getAthletesByTeam(IdsParticipants.getFirst(), idSport, year);
         for (int i = 0; i < athletes.size(); i++) {
             medalDao.addTopMedalAthleteTeam(athletes.get(i), IdsParticipants.getFirst(), year, 1);
         }
-        medalDao.addTopMedalTeam(IdsParticipants.get(1), year, 2);
+        //medalDao.addTopMedalTeam(IdsParticipants.get(1), year, 2);
         athletes.clear();
         athletes = registrationDao.getAthletesByTeam(IdsParticipants.get(1), idSport, year);
         for (int i = 0; i < athletes.size(); i++) {
             medalDao.addTopMedalAthleteTeam(athletes.get(i), IdsParticipants.get(1), year, 2);
         }
-        medalDao.addTopMedalTeam(IdsParticipants.get(2), year, 3);
+        //medalDao.addTopMedalTeam(IdsParticipants.get(2), year, 3);
         athletes.clear();
         athletes = registrationDao.getAthletesByTeam(IdsParticipants.get(2), idSport, year);
         for (int i = 0; i < athletes.size(); i++) {
@@ -539,7 +539,7 @@ public class StartSportsController {
         }
         for (int i = 3; i < IdsParticipants.size(); i++) {
             try {
-                medalDao.addTopMedalTeam(IdsParticipants.get(i), year, 4);
+                //medalDao.addTopMedalTeam(IdsParticipants.get(i), year, 4);
                 athletes.clear();
                 athletes = registrationDao.getAthletesByTeam(IdsParticipants.get(i), idSport, year);
                 for (int j = 0; j < athletes.size(); j++) {

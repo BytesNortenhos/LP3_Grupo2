@@ -26,7 +26,6 @@ public class MedalDao {
         if (rs != null) {
             while (rs.next()) {
                 int idMedal = rs.getInt("idMedal");
-                System.out.println(idMedal);
                 int idAthlete = rs.getInt("idAthlete");
                 int idTeam = rs.getInt("idTeam");
                 int year = rs.getInt("year");
@@ -41,7 +40,6 @@ public class MedalDao {
         } else {
             System.out.println("ResultSet is null. No results for Medal found.");
         }
-        System.out.println(medals);
         return medals;
     }
         public int countGoldMedals(int idAthlete) throws SQLException {
