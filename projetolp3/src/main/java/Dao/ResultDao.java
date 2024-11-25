@@ -5,6 +5,7 @@ import Utils.ConnectionsUtlis;
 
 import javax.sql.rowset.CachedRowSet;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -54,6 +55,79 @@ public class ResultDao {
             stmt.setDate(4, result.getDate());
             stmt.setString(5, result.getResult());
             stmt.setInt(6, result.getLocal().getIdLocal());
+            stmt.executeUpdate();
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+    }
+
+    public void addResultAthlete(int idSport, int idAthlete, Date date, int result, int idLocal) throws SQLException {
+        String query = "INSERT INTO tblResult (idSport, idAthlete, date, result, idLocal) VALUES (?, ?, ?, ?, ?)";
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        try {
+            conn = ConnectionsUtlis.dbConnect();
+            stmt = conn.prepareStatement(query);
+
+            stmt.setInt(1, idSport);
+            stmt.setInt(2, idAthlete);
+            stmt.setDate(3, date);
+            stmt.setInt(4, result);
+            stmt.setInt(5, idLocal);
+            stmt.executeUpdate();
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+    }
+
+    public void addResultTeam(int idSport, int idTeam, Date date, int result, int idLocal) throws SQLException {
+        String query = "INSERT INTO tblResult (idSport, idTeam, date, result, idLocal) VALUES (?, ?, ?, ?, ?)";
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        try {
+            conn = ConnectionsUtlis.dbConnect();
+            stmt = conn.prepareStatement(query);
+
+            stmt.setInt(1, idSport);
+            stmt.setInt(2, idTeam);
+            stmt.setDate(3, date);
+            stmt.setInt(4, result);
+            stmt.setInt(5, idLocal);
+            stmt.executeUpdate();
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+    }
+
+    public void addResultAthleteTeam(int idSport, int idAthlete, int idTeam, Date date, int result, int idLocal) throws SQLException {
+        String query = "INSERT INTO tblResult (idSport, idAthlete, idTeam, date, result, idLocal) VALUES (?, ?, ?, ?, ?, ?)";
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        try {
+            conn = ConnectionsUtlis.dbConnect();
+            stmt = conn.prepareStatement(query);
+
+            stmt.setInt(1, idSport);
+            stmt.setInt(2, idAthlete);
+            stmt.setInt(3, idTeam);
+            stmt.setDate(4, date);
+            stmt.setInt(5, result);
+            stmt.setInt(6, idLocal);
             stmt.executeUpdate();
         } finally {
             if (stmt != null) {

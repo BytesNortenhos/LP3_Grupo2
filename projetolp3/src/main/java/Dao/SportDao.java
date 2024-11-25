@@ -49,6 +49,7 @@ public class SportDao {
         }
         return sports;
     }
+
     public List<List> getSportsToShow() throws SQLException {
         List<List> sports = new ArrayList<>();
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT s.*, " +
@@ -73,6 +74,7 @@ public class SportDao {
         }
         return sports;
     }
+
     public List<List> getSportsToStart(int year) throws SQLException {
         List<List> sports = new ArrayList<>();
         String query = "SELECT DISTINCT s.idSport, s.type, s.idGender, s.name, s.description," +
@@ -102,6 +104,7 @@ public class SportDao {
         }
         return sports;
     }
+
     public int getNumberParticipantsSport(int idSport, int year) throws SQLException {
         String query = "SELECT COUNT(*) AS quantidade " +
                 "FROM tblRegistration " +
@@ -115,6 +118,18 @@ public class SportDao {
         }
         return quantidade;
     }
+
+    public boolean verifyRanges(int idSport) throws SQLException {
+        String query = "SELECT resultMin, resultMax " +
+                "FROM tblSport " +
+                "WHERE idSport = ? AND (resultMin IS NOT NULL AND resultMax IS NOT NULL)";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport);
+        if (rs != null && rs.next()) {
+            return true;
+        }
+        return false;
+    }
+
     public boolean BootedSport(int idSport) throws SQLException {
         String query = "SELECT COUNT(*) AS quantidade " +
                 "FROM tblResult " +
@@ -269,18 +284,19 @@ public class SportDao {
         // Caso não encontre o esporte, retorna null
         return null;
     }
+
     public Sport getSportByIdV2(int idSport) throws SQLException {
         // Consulta otimizada para obter os dados do esporte com seus registros olímpicos e gênero
         String query = """
-        SELECT s.idSport, s.type, s.idGender, s.name, s.description, 
-               s.minParticipants, s.scoringMeasure, s.oneGame, 
-               g.description AS genderDescription, 
-               r.year AS olympicYear, r.timeMS, r.medals 
-        FROM tblSport s 
-        JOIN tblGender g ON s.idGender = g.idGender 
-        LEFT JOIN tblOlympicRecord r ON s.idSport = r.idSport 
-        WHERE s.idSport = ?
-    """;
+                    SELECT s.idSport, s.type, s.idGender, s.name, s.description, 
+                           s.minParticipants, s.scoringMeasure, s.oneGame, 
+                           g.description AS genderDescription, 
+                           r.year AS olympicYear, r.timeMS, r.medals 
+                    FROM tblSport s 
+                    JOIN tblGender g ON s.idGender = g.idGender 
+                    LEFT JOIN tblOlympicRecord r ON s.idSport = r.idSport 
+                    WHERE s.idSport = ?
+                """;
 
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport);
         if (rs != null && rs.next()) {
@@ -412,5 +428,46 @@ public class SportDao {
             System.err.println("Error updating sport: " + e.getMessage());
             throw e;
         }
-    }}
+    }
+
+    public String getType(int idSport) throws SQLException {
+        String tipo = "";
+        String query = "SELECT type " +
+                "FROM tblSport " +
+                "WHERE idSport = ?;";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport);
+        if (rs != null && rs.next()) {
+            tipo = rs.getString("type");
+        }
+        return tipo;
+    }
+
+    public String getOneGame(int idSport) throws SQLException {
+        String oneGame = "";
+        String query = "SELECT oneGame " +
+                "FROM tblSport " +
+                "WHERE idSport = ?";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport);
+        if (rs != null && rs.next()) {
+            oneGame = rs.getString("oneGame");
+        }
+        return oneGame;
+    }
+
+    public List<Integer> getRange(int idSport) throws SQLException {
+        List<Integer> range = new ArrayList<>();
+        String query = "SELECT resultMin, resultMax " +
+                "FROM tblSport " +
+                "WHERE idSport = ?";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport);
+        if (rs != null && rs.next()) {
+            int min = rs.getInt("resultMin");
+            int max = rs.getInt("resultMax");
+            range.add(min);
+            range.add(max);
+        }
+        return range;
+    }
+}
+
 

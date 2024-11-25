@@ -9,6 +9,7 @@ import Models.Team;
 import javax.sql.rowset.CachedRowSet;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,15 +49,18 @@ public class TeamDao {
         return teams;
     }
 
-    public boolean addTeam(Team team) throws SQLException {
+    public int addTeam(Team team) throws SQLException {
         String query = "INSERT INTO tblTeam (name, idCountry, idGender, idSport, yearFounded, minParticipants, maxParticipants) VALUES (?, ?, ?, ?, ?, ?, ?)";
         Connection conn = null;
         PreparedStatement stmt = null;
+        ResultSet rs = null;
+        int generatedId = -1;
+
         boolean isAdded = false;
 
         try {
             conn = ConnectionsUtlis.dbConnect();
-            stmt = conn.prepareStatement(query);
+            stmt = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
 
             stmt.setString(1, team.getName());
             stmt.setString(2, team.getCountry().getIdCountry());
@@ -68,6 +72,16 @@ public class TeamDao {
 
             int rowsAffected = stmt.executeUpdate();
             isAdded = rowsAffected > 0; // Retorna true se pelo menos uma linha foi inserida.
+
+            stmt.executeUpdate();
+
+            rs = stmt.getGeneratedKeys();
+            if (rs.next()) {
+                generatedId = rs.getInt(1);
+                System.out.println("Generated Team ID: " + generatedId); // Debugging
+            } else {
+                System.out.println("No generated keys.");
+            }
         } finally {
             if (stmt != null) {
                 stmt.close();
@@ -76,7 +90,7 @@ public class TeamDao {
                 conn.close();
             }
         }
-        return isAdded;
+        return generatedId;
     }
 
     public static void removeTeam(int idTeam) throws SQLException {

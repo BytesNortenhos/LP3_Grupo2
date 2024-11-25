@@ -8,6 +8,7 @@ import Models.Medal;
 
 import javax.sql.rowset.CachedRowSet;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -25,7 +26,6 @@ public class MedalDao {
         if (rs != null) {
             while (rs.next()) {
                 int idMedal = rs.getInt("idMedal");
-                System.out.println(idMedal);
                 int idAthlete = rs.getInt("idAthlete");
                 int idTeam = rs.getInt("idTeam");
                 int year = rs.getInt("year");
@@ -40,7 +40,6 @@ public class MedalDao {
         } else {
             System.out.println("ResultSet is null. No results for Medal found.");
         }
-        System.out.println(medals);
         return medals;
     }
         public int countGoldMedals(int idAthlete) throws SQLException {
@@ -189,4 +188,72 @@ public class MedalDao {
         }
         return medals;
     }
+
+    public void addTopMedalAthlete(int idAthelete, int year, int idMedalType) throws SQLException {
+        String query = "INSERT INTO tblMedal (idAthlete, year, idMedalType) VALUES (?, ?, ?)";
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        try {
+            conn = ConnectionsUtlis.dbConnect();
+            stmt = conn.prepareStatement(query);
+
+            stmt.setInt(1, idAthelete);
+            stmt.setInt(2, year);
+            stmt.setInt(3, idMedalType);
+            stmt.executeUpdate();
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+    }
+
+    public void addTopMedalTeam(int idTeam, int year, int idMedalType) throws SQLException {
+        String query = "INSERT INTO tblMedal (idTeam, year, idMedalType) VALUES (?, ?, ?)";
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        try {
+            conn = ConnectionsUtlis.dbConnect();
+            stmt = conn.prepareStatement(query);
+
+            stmt.setInt(1, idTeam);
+            stmt.setInt(2, year);
+            stmt.setInt(3, idMedalType);
+            stmt.executeUpdate();
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+    }
+
+    public void addTopMedalAthleteTeam(int idAthlete, int idTeam, int year, int idMedalType) throws SQLException {
+        String query = "INSERT INTO tblMedal (idAthlete, idTeam, year, idMedalType) VALUES (?, ?, ?, ?)";
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        try {
+            conn = ConnectionsUtlis.dbConnect();
+            stmt = conn.prepareStatement(query);
+
+            stmt.setInt(1, idAthlete);
+            stmt.setInt(2, idTeam);
+            stmt.setInt(3, year);
+            stmt.setInt(4, idMedalType);
+            stmt.executeUpdate();
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+    }
+
 }

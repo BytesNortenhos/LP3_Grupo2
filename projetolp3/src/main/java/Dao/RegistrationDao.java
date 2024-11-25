@@ -93,15 +93,17 @@ public class RegistrationDao {
     }
 
 
-    public static void addRegistrationTeam(Registration registration) throws SQLException {
+    public int addRegistrationTeam(Registration registration) throws SQLException {
         // Query para verificar se a inscrição já existe
-        String checkQuery = "SELECT COUNT(*) FROM tblRegistration WHERE idAthlete = ? AND idTeam = ? AND idStatus = ? AND year = ?";
-        String insertQuery = "INSERT INTO tblRegistration (idAthlete, idTeam, idStatus, year) VALUES (?, ?, ?, ?)";
+        String checkQuery = "SELECT COUNT(*) FROM tblRegistration WHERE idAthlete = ? AND idTeam = ? AND idSport = ? AND idStatus = ? AND year = ?";
+        String insertQuery = "INSERT INTO tblRegistration (idAthlete, idTeam, idSport, idStatus, year) VALUES (?, ?, ?, ?, ?)";
 
         Connection conn = null;
         PreparedStatement checkStmt = null;
         PreparedStatement insertStmt = null;
         ResultSet rs = null;
+        ResultSet generatedKeys = null;
+
 
         try {
             conn = ConnectionsUtlis.dbConnect();
@@ -111,7 +113,8 @@ public class RegistrationDao {
             checkStmt.setInt(1, registration.getAthlete().getIdAthlete());
             checkStmt.setInt(2, registration.getTeam().getIdTeam());
             checkStmt.setInt(3, registration.getStatus().getIdStatus());
-            checkStmt.setInt(4, registration.getYear());
+            checkStmt.setInt(4, registration.getSport().getIdSport());
+            checkStmt.setInt(5, registration.getYear());
 
             // Executa a consulta para verificar se a inscrição já existe
             rs = checkStmt.executeQuery();
@@ -120,33 +123,45 @@ public class RegistrationDao {
                 int count = rs.getInt(1);  // Obtém a contagem de registros existentes
                 if (count > 0) {
                     System.out.println("A inscrição já existe!");  // Exibe mensagem se já existir
-                    return;  // Sai do método para evitar inserir o registro duplicado
+                    return -1;  // Sai do método para evitar inserir o registro duplicado
                 }
             }
 
             // Se não houver registro existente, procede com a inserção
-            insertStmt = conn.prepareStatement(insertQuery);
+            insertStmt = conn.prepareStatement(insertQuery, PreparedStatement.RETURN_GENERATED_KEYS);
 
             int idAthlete = registration.getAthlete().getIdAthlete();
             int idTeam = registration.getTeam().getIdTeam();
             int idStatus = registration.getStatus().getIdStatus();
+            int idSport = registration.getSport().getIdSport();
             int year = registration.getYear();
 
             // Debugging: Imprime os valores antes de inserir
             System.out.println("Inserindo nova inscrição:");
             System.out.println("idAthlete: " + idAthlete);
             System.out.println("idTeam: " + idTeam);
+            System.out.println("idSport: " + idSport);
             System.out.println("idStatus: " + idStatus);
             System.out.println("year: " + year);
 
             // Set parameters correctly for the insert statement
             insertStmt.setInt(1, idAthlete);  // Corresponds to the first placeholder
-            insertStmt.setInt(2, idTeam);     // Corresponds to the second placeholder
-            insertStmt.setInt(3, idStatus);   // Corresponds to the third placeholder
-            insertStmt.setInt(4, year);       // Corresponds to the fourth placeholder
+            insertStmt.setInt(2, idTeam);
+            insertStmt.setInt(3, idSport); // Corresponds to the second placeholder
+            insertStmt.setInt(4, idStatus); // Corresponds to the third placeholder
+            insertStmt.setInt(5, year);       // Corresponds to the fourth placeholder
 
             insertStmt.executeUpdate();
             System.out.println("Inscrição realizada com sucesso!");  // Mensagem de sucesso após a inserção
+
+            generatedKeys = insertStmt.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                int idGenerated = generatedKeys.getInt(1);
+                System.out.println("Generated ID: " + idGenerated); // Debugging: Print the generated ID
+                return idGenerated; // Return the generated ID
+            } else {
+                throw new SQLException("Insertion failed, no ID obtained.");
+            }
 
         } finally {
             // Fechando os recursos
@@ -166,7 +181,7 @@ public class RegistrationDao {
     }
 
 
-    public static void addRegistrationSolo(Registration registration) throws SQLException {
+    public static int addRegistrationSolo(Registration registration) throws SQLException {
         String checkQuery = "SELECT COUNT(*) FROM tblRegistration WHERE idAthlete = ? AND idSport = ? AND idStatus = 3 AND year = ?";
         String insertQuery = "INSERT INTO tblRegistration (idAthlete, idSport, idStatus, year) VALUES (?, ?, ?, ?)";
 
@@ -174,6 +189,7 @@ public class RegistrationDao {
         PreparedStatement checkStmt = null;
         PreparedStatement insertStmt = null;
         ResultSet rs = null;
+        ResultSet generatedKeys = null;
 
         try {
             conn = ConnectionsUtlis.dbConnect();
@@ -190,12 +206,12 @@ public class RegistrationDao {
                 int count = rs.getInt(1);  // Get the count of existing records
                 if (count > 0) {
                     System.out.println("The registration already exists!"); // Show message if already exists
-                    return;  // Exit the method to avoid inserting the duplicate
+                    return -1;  // Exit the method to avoid inserting the duplicate
                 }
             }
 
             // If no existing registration, proceed with the insertion
-            insertStmt = conn.prepareStatement(insertQuery);
+            insertStmt = conn.prepareStatement(insertQuery, PreparedStatement.RETURN_GENERATED_KEYS);
 
             int idAthlete = registration.getAthlete().getIdAthlete();
             int idSport = registration.getSport().getIdSport();
@@ -216,6 +232,15 @@ public class RegistrationDao {
 
             insertStmt.executeUpdate();
             System.out.println("Registration successfully added!"); // Show success message only if inserted
+
+            generatedKeys = insertStmt.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                int idGenerated = generatedKeys.getInt(1);
+                System.out.println("Generated ID: " + idGenerated); // Debugging: Print the generated ID
+                return idGenerated; // Return the generated ID
+            } else {
+                throw new SQLException("Insertion failed, no ID obtained.");
+            }
 
         } finally {
             if (rs != null) {
@@ -417,5 +442,50 @@ public class RegistrationDao {
             System.out.println("No sports found with the specified name.");
         }
         return userRegistrations;
+    }
+
+    public List<Integer> getRegisteredAthletes(int idSport, int year) throws SQLException {
+        List<Integer> athletes = new ArrayList<>();
+        String query = "SELECT idAthlete " +
+                "FROM tblRegistration " +
+                "WHERE idStatus = 3 AND idSport = ? AND year = ?;";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, year);
+        if (rs != null) {
+            while (rs.next()) {
+                int IdAthlete = rs.getInt("idAthlete");
+                athletes.add(IdAthlete);
+            }
+        }
+        return athletes;
+    }
+
+    public List<Integer> getRegisteredTeams(int idSport, int year) throws SQLException {
+        List<Integer> teams = new ArrayList<>();
+        String query = "SELECT DISTINCT idTeam " +
+                "FROM tblRegistration " +
+                "WHERE idStatus = 3 AND idSport = ? AND year = ?;";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, year);
+        if (rs != null) {
+            while (rs.next()) {
+                int IdTeam = rs.getInt("idTeam");
+                teams.add(IdTeam);
+            }
+        }
+        return teams;
+    }
+
+    public List<Integer> getAthletesByTeam(int idTeam, int idSport, int year) throws SQLException{
+        List<Integer> athletes = new ArrayList<>();
+        String query = "SELECT idAthlete " +
+                "FROM tblRegistration " +
+                "WHERE idAthlete IS NOT NULL AND idTeam = ? AND idSport = ? AND idStatus = 3 AND year = ?;";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idTeam, idSport, year);
+        if (rs != null) {
+            while (rs.next()) {
+                int athlete = rs.getInt("idAthlete");
+                athletes.add(athlete);
+            }
+        }
+        return athletes;
     }
 }
