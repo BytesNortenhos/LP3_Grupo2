@@ -41,7 +41,10 @@ public class SportDao {
                 List<WinnerOlympic> winnerOlympics = WinnerOlympicDao.getWinnerOlympicsBySportV2(idSport);
                 List<Rule> rules = RuleDao.getRulesBySportV2(idSport);
 
-                Sport sport = new Sport(idSport, type, gender, name, description, minParticipants, scoringMeasure, oneGame, olympicRecord, winnerOlympics, rules);
+                int resultMin = rs.getInt("resultMin");
+                int resultMax = rs.getInt("resultMax");
+
+                Sport sport = new Sport(idSport, type, gender, name, description, minParticipants, scoringMeasure, oneGame, olympicRecord, winnerOlympics, rules, resultMin, resultMax);
                 sports.add(sport);
             }
         } else {
