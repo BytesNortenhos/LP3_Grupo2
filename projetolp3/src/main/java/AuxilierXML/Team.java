@@ -121,4 +121,24 @@ public class Team {
     public void setOlympicParticipations(List<ParticipationTeam> olympicParticipations) {
         this.olympicParticipations = olympicParticipations;
     }
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Name: ").append(name).append("\n");
+        sb.append("Country: ").append(xmlCountry).append("\n");
+        sb.append("Genre: ").append(xmlGenre).append("\n");
+        sb.append("Sport: ").append(xmlSport).append("\n");
+        sb.append("Foundation Year: ").append(yearFounded).append("\n");
+
+        if (olympicParticipations != null && !olympicParticipations.isEmpty()) {
+            for (ParticipationTeam participation : olympicParticipations) {
+                sb.append(participation.toString()).append("\n");
+            }
+        } else {
+            sb.append("No Olympic Participations\n");
+        }
+        sb.append("---------------------------\n");
+        return sb.toString();
+    }
+
 }

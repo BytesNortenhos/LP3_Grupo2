@@ -99,4 +99,14 @@ public class ParticipationAthlete {
     public void setBronze(int bronze) {
         this.bronze = bronze;
     }
+    @Override
+    public String toString() {
+        return "Participação Olímpica{" +
+                "Ano=" + year +
+                ", Ouro=" + gold +
+                ", Prata=" + silver +
+                ", Bronze=" + bronze +
+                '}';
+    }
+
 }

@@ -33,4 +33,21 @@ public class Athletes {
     public void setAthleteList(List<Athlete> athleteList) {
         this.athleteList = athleteList;
     }
+    @Override
+    public String toString() {
+        StringBuilder athletesString = new StringBuilder();
+
+        if (athleteList != null && !athleteList.isEmpty()) {
+            athletesString.append("Lista de Atletas:\n");
+            for (Athlete athlete : athleteList) {
+                athletesString.append(athlete.toString()).append("\n"); // Chama o toString de cada atleta
+            }
+        } else {
+            athletesString.append("Nenhum atleta registrado.");
+        }
+
+        return athletesString.toString();
+    }
 }
+
+

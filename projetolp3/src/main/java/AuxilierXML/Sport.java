@@ -210,4 +210,53 @@ public class Sport {
     public void setTempDatabaseId(int tempDatabaseId) {
         this.tempDatabaseId = tempDatabaseId;
     }
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        // Adicionando informações do sport
+        sb.append("Tipo: ").append(type).append("\n");
+        sb.append("Nome: ").append(name).append("\n");
+        sb.append("Descrição: ").append(desc).append("\n");
+        sb.append("Mínimo de Participantes: ").append(minParticipants).append("\n");
+        sb.append("Medição de Pontuação: ").append(scoringMeasure).append("\n");
+        sb.append("Um Jogo: ").append(oneGame).append("\n");
+        sb.append("Genero: ").append(xmlGenre).append("\n");
+
+        // Adicionando detalhes sobre os registros olímpicos
+        if (xmlOlympicRecord != null && !xmlOlympicRecord.isEmpty()) {
+            sb.append("Registros Olímpicos:\n");
+            for (OlympicRecord record : xmlOlympicRecord) {
+                sb.append("  - ").append(record.toString()).append("\n");
+            }
+        } else {
+            sb.append("Nenhum Registro Olímpico.\n");
+        }
+
+        // Adicionando detalhes sobre os vencedores olímpicos
+        if (xmlWinnerOlympic != null && !xmlWinnerOlympic.isEmpty()) {
+            sb.append("Vencedores Olímpicos:\n");
+            for (WinnerOlympic winner : xmlWinnerOlympic) {
+                sb.append("  - ").append(winner.toString()).append("\n");
+            }
+        } else {
+            sb.append("Nenhum Vencedor Olímpico.\n");
+        }
+
+        // Adicionando as regras
+        if (xmlRules != null && !xmlRules.isEmpty()) {
+            sb.append("Regras:\n");
+            for (String rule : xmlRules) {
+                sb.append("  - ").append(rule).append("\n");
+            }
+        } else {
+            sb.append("Nenhuma Regra Definida.\n");
+        }
+
+        // Adicionando o ID temporário da base de dados
+        sb.append("ID Temporário: ").append(tempDatabaseId).append("\n");
+
+        return sb.toString();
+    }
+
 }

@@ -160,4 +160,37 @@ public class Athlete extends Person {
     public void setXmlGenre(String xmlGenre) {
         this.xmlGenre = xmlGenre;
     }
+    @Override
+    public String toString() {
+        // Formatando a data de nascimento em um formato legível
+        String formattedDateOfBirth = (dateOfBirth != null) ? dateOfBirth.toString() : "N/A";
+
+        // Formatando a lista de participações olímpicas, se existir
+        StringBuilder olympicParticipationsString = new StringBuilder();
+        if (olympicParticipations != null && !olympicParticipations.isEmpty()) {
+            olympicParticipations.forEach(participation -> {
+                olympicParticipationsString.append(participation.toString()).append("\n");
+            });
+        } else {
+            olympicParticipationsString.append("Nenhuma participação olímpica registrada");
+        }
+
+        return String.format("Atleta: %s\n" +
+                        "Nome: %s\n" +
+                        "País: %s\n" +
+                        "Gênero: %s\n" +
+                        "Altura: %d cm\n" +
+                        "Peso: %.2f kg\n" +
+                        "Data de Nascimento: %s\n" +
+                        "Participações Olímpicas: \n%s",
+                super.toString(), // Chama o toString da classe pai (Person)
+                name,
+                xmlCountry,
+                xmlGenre,
+                height,
+                weight,
+                formattedDateOfBirth,
+                olympicParticipationsString.toString());
+    }
+
 }

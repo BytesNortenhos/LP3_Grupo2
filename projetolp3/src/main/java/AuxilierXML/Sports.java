@@ -25,4 +25,21 @@ public class Sports {
     public void setSportList(List<Sport> sportList) {
         this.sportList = sportList;
     }
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Lista de Desportos:\n");
+
+        if (sportList != null && !sportList.isEmpty()) {
+            for (Sport sport : sportList) {
+                sb.append("  - ").append(sport.toString()).append("\n");
+            }
+        } else {
+            sb.append("Nenhum desporto encontrado.\n");
+        }
+
+        return sb.toString();
+    }
+
 }
