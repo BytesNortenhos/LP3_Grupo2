@@ -20,7 +20,7 @@ public class WinnerOlympicDao {
                 int year = rs.getInt("year");
                 int idAthlete = rs.getInt("idAthlete");
                 int idTeam = rs.getInt("idTeam");
-                int timeMS = rs.getInt("timeMS");
+                int result = rs.getInt("result");
                 int idMedal = rs.getInt("medalId");
                 SportDao sportDao = new SportDao();
                 Sport sport = sportDao.getSportById(idSport);
@@ -29,7 +29,7 @@ public class WinnerOlympicDao {
                 Team team = TeamDao.getTeamById(idTeam);
                 Medal medal = MedalDao.getMedalById(idMedal);
 
-                WinnerOlympic winner = new WinnerOlympic(sport, year, athlete, team, timeMS, medal);
+                WinnerOlympic winner = new WinnerOlympic(sport, year, athlete, team, result, medal);
                 winners.add(winner);
             }
         } else {
@@ -39,7 +39,7 @@ public class WinnerOlympicDao {
     }
 
     public static void addWinnerOlympic(WinnerOlympic winner) throws SQLException {
-        String query = "INSERT INTO tblWinnerOlympic (idSport, year, idAthlete, idTeam, timeMS, idMedal) VALUES (?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO tblWinnerOlympic (idSport, year, idAthlete, idTeam, result, idMedal) VALUES (?, ?, ?, ?, ?, ?)";
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
@@ -50,7 +50,7 @@ public class WinnerOlympicDao {
             stmt.setInt(2, winner.getYear());
             stmt.setInt(3, winner.getAthlete().getIdAthlete());
             stmt.setInt(4, winner.getTeam().getIdTeam());
-            stmt.setInt(5, winner.getTimeMS());
+            stmt.setInt(5, winner.getresult());
             stmt.setInt(6, winner.getMedal().getIdMedal());
             stmt.executeUpdate();
         } finally {
@@ -84,7 +84,7 @@ public class WinnerOlympicDao {
     }
 
     public static void updateWinnerOlympic(WinnerOlympic winner) throws SQLException {
-        String query = "UPDATE tblWinnerOlympic SET idAthlete = ?, idTeam = ?, timeMS = ?, idMedal = ? WHERE idSport = ? AND year = ?";
+        String query = "UPDATE tblWinnerOlympic SET idAthlete = ?, idTeam = ?, result = ?, idMedal = ? WHERE idSport = ? AND year = ?";
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
@@ -93,7 +93,7 @@ public class WinnerOlympicDao {
 
             stmt.setInt(1, winner.getAthlete().getIdAthlete());
             stmt.setInt(2, winner.getTeam().getIdTeam());
-            stmt.setInt(3, winner.getTimeMS());
+            stmt.setInt(3, winner.getresult());
             stmt.setInt(4, winner.getMedal().getIdMedal());
             stmt.setInt(5, winner.getSport().getIdSport());
             stmt.setInt(6, winner.getYear());
@@ -114,7 +114,7 @@ public class WinnerOlympicDao {
         if (rs != null && rs.next()) {
             int idAthlete = rs.getInt("idAthlete");
             int idTeam = rs.getInt("idTeam");
-            int timeMS = rs.getInt("timeMS");
+            int result = rs.getInt("result");
             int idMedal = rs.getInt("medalId");
             SportDao sportDao = new SportDao();
             Sport sport = sportDao.getSportById(idSport);
@@ -122,7 +122,7 @@ public class WinnerOlympicDao {
             Athlete athlete = athleteDao.getAthleteById(idAthlete);
             Team team = TeamDao.getTeamById(idTeam);
             Medal medal = MedalDao.getMedalById(idMedal);
-            return new WinnerOlympic(sport, year, athlete, team, timeMS, medal);
+            return new WinnerOlympic(sport, year, athlete, team, result, medal);
         }
         return null;
     }
@@ -141,7 +141,7 @@ public class WinnerOlympicDao {
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport);
         while (rs.next()) {
             int year = rs.getInt("year");
-            int timeMS = rs.getInt("timeMS");
+            int result = rs.getInt("result");
 
             SportDao sportDao = new SportDao();
             Sport sport = sportDao.getSportByIdV2(idSport);
@@ -159,7 +159,7 @@ public class WinnerOlympicDao {
             MedalType medalType = new MedalType(idMedal, descMedalType);
             Medal medal = new Medal(idMedal, athlete, team, year, medalType);
 
-            WinnerOlympic winnerOlympic = new WinnerOlympic(sport, year, athlete, team, timeMS, medal);
+            WinnerOlympic winnerOlympic = new WinnerOlympic(sport, year, athlete, team, result, medal);
             winnerOlympics.add(winnerOlympic);
         }
         return winnerOlympics;
@@ -179,7 +179,7 @@ public class WinnerOlympicDao {
 
         while (rs.next()) {
             int year = rs.getInt("year");
-            int timeMS = rs.getInt("timeMS");
+            int result = rs.getInt("result");
 
             int idAthlete = rs.getInt("idAthlete");
             int idTeam = rs.getInt("idTeam");
@@ -191,7 +191,7 @@ public class WinnerOlympicDao {
             Medal medal = new Medal(idMedal, idAthlete, idTeam, year, medalType);
 
             // Agora usamos o novo construtor que aceita IDs ao invés de objetos
-            WinnerOlympic winnerOlympic = new WinnerOlympic(idSport, year, idAthlete, idTeam, timeMS, medal);
+            WinnerOlympic winnerOlympic = new WinnerOlympic(idSport, year, idAthlete, idTeam, result, medal);
             winnerOlympics.add(winnerOlympic);
         }
         return winnerOlympics;

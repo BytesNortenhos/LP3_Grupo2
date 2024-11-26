@@ -1,7 +1,7 @@
 package Models;
 
 public class WinnerOlympic extends RecordOrWinner {
-    private int timeMS;
+    private int result;
     private Medal medal;
 
     /**
@@ -10,12 +10,12 @@ public class WinnerOlympic extends RecordOrWinner {
      * @param year {int} Year
      * @param athlete {Athlete} Athlete
      * @param team {Team} Team
-     * @param timeMS {int} Time in ms
+     * @param result {int} Time in ms
      * @param medal {Medal} Medal
      */
-    public WinnerOlympic(Sport sport, int year, Athlete athlete, Team team, int timeMS, Medal medal) {
+    public WinnerOlympic(Sport sport, int year, Athlete athlete, Team team, int result, Medal medal) {
         super(sport, year, athlete, team);
-        this.timeMS = timeMS;
+        this.result = result;
         this.medal = medal;
     }
     /**
@@ -24,28 +24,28 @@ public class WinnerOlympic extends RecordOrWinner {
      * @param year {int} Year
      * @param idAthlete {int} Athlete ID
      * @param idTeam {int} Team ID
-     * @param timeMS {int} Time in milliseconds
+     * @param result {int} Time in milliseconds
      * @param medal {Medal} Medal
      */
-    public WinnerOlympic(int idSport, int year, int idAthlete, int idTeam, int timeMS, Medal medal) {
+    public WinnerOlympic(int idSport, int year, int idAthlete, int idTeam, int result, Medal medal) {
         super(idSport, year, idAthlete, idTeam);  // Calls the constructor in RecordOrWinner with IDs
-        this.timeMS = timeMS;
+        this.result = result;
         this.medal = medal; // Creates a Medal object with just the ID, or you could store idMedal as a variable
     }
     /**
      * Get time in ms
      * @return int
      */
-    public int getTimeMS() {
-        return timeMS;
+    public int getresult() {
+        return result;
     }
 
     /**
      * Set time in ms
-     * @param timeMS {int} Time in ms
+     * @param result {int} Time in ms
      */
-    public void setTimeMS(int timeMS) {
-        this.timeMS = timeMS;
+    public void setresult(int result) {
+        this.result = result;
     }
 
     /**

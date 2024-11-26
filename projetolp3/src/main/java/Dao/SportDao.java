@@ -17,7 +17,7 @@ public class SportDao {
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT s.*," +
                 "g.description AS genderDescription," +
                 "r.year AS olympicYear," +
-                "r.timeMS," +
+                "r.result," +
                 "r.medals " +
                 "FROM tblSport s " +
                 "JOIN tblGender g ON s.idGender = g.idGender " +
@@ -247,7 +247,7 @@ public class SportDao {
         String query = "SELECT s.*, " +
                 "g.description AS genderDescription, " +
                 "r.year AS olympicYear, " +
-                "r.timeMS, " +
+                "r.result, " +
                 "r.medals " +
                 "FROM tblSport s " +
                 "JOIN tblGender g ON s.idGender = g.idGender " +
@@ -294,7 +294,7 @@ public class SportDao {
                     SELECT s.idSport, s.type, s.idGender, s.name, s.description, 
                            s.minParticipants, s.scoringMeasure, s.oneGame, 
                            g.description AS genderDescription, 
-                           r.year AS olympicYear, r.timeMS, r.medals 
+                           r.year AS olympicYear, r.result, r.medals 
                     FROM tblSport s 
                     JOIN tblGender g ON s.idGender = g.idGender 
                     LEFT JOIN tblOlympicRecord r ON s.idSport = r.idSport 

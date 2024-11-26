@@ -23,7 +23,7 @@ public class OlympicRecordDao {
                 int year = rs.getInt("year");
                 int idAthlete = rs.getInt("idAthlete");
                 int idTeam = rs.getInt("idTeam");
-                int timeMS = rs.getInt("timeMS");
+                int result = rs.getInt("result");
                 int medals = rs.getInt("medals");
 
                 SportDao sportDao = new SportDao();
@@ -32,7 +32,7 @@ public class OlympicRecordDao {
                 Athlete athlete = athleteDao.getAthleteById(idAthlete);
                 Team team = TeamDao.getTeamById(idTeam);
 
-                OlympicRecord record = new OlympicRecord(sport, year, athlete, team, timeMS, medals);
+                OlympicRecord record = new OlympicRecord(sport, year, athlete, team, result, medals);
                 records.add(record);
             }
         } else {
@@ -42,7 +42,7 @@ public class OlympicRecordDao {
     }
 
     public static void addOlympicRecord(OlympicRecord record) throws SQLException {
-        String query = "INSERT INTO tblOlympicRecord (idSport, year, idAthlete, idTeam, timeMS, medals) VALUES (?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO tblOlympicRecord (idSport, year, idAthlete, idTeam, result, medals) VALUES (?, ?, ?, ?, ?, ?)";
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
@@ -53,7 +53,7 @@ public class OlympicRecordDao {
             stmt.setInt(2, record.getYear());
             stmt.setInt(3, record.getAthlete().getIdAthlete());
             stmt.setInt(4, record.getTeam().getIdTeam());
-            stmt.setInt(5, record.getTimeMS());
+            stmt.setInt(5, record.getresult());
             stmt.setInt(6, record.getMedals());
             stmt.executeUpdate();
         } finally {
@@ -87,7 +87,7 @@ public class OlympicRecordDao {
     }
 
     public static void updateOlympicRecord(OlympicRecord record) throws SQLException {
-        String query = "UPDATE tblOlympicRecord SET idAthlete = ?, idTeam = ?, timeMS = ?, medals = ? WHERE idSport = ? AND year = ?";
+        String query = "UPDATE tblOlympicRecord SET idAthlete = ?, idTeam = ?, result = ?, medals = ? WHERE idSport = ? AND year = ?";
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
@@ -96,7 +96,7 @@ public class OlympicRecordDao {
 
             stmt.setInt(1, record.getAthlete().getIdAthlete());
             stmt.setInt(2, record.getTeam().getIdTeam());
-            stmt.setInt(3, record.getTimeMS());
+            stmt.setInt(3, record.getresult());
             stmt.setInt(4, record.getMedals());
             stmt.setInt(5, record.getSport().getIdSport());
             stmt.setInt(6, record.getYear());
@@ -117,7 +117,7 @@ public class OlympicRecordDao {
         if (rs != null && rs.next()) {
             int idAthlete = rs.getInt("idAthlete");
             int idTeam = rs.getInt("idTeam");
-            int timeMS = rs.getInt("timeMS");
+            int result = rs.getInt("result");
             int medals = rs.getInt("medals");
 
             SportDao sportDao = new SportDao();
@@ -126,7 +126,7 @@ public class OlympicRecordDao {
             Athlete athlete = athleteDao.getAthleteById(idAthlete);
             TeamDao teamDao = new TeamDao();
             Team team = teamDao.getTeamByIdV2(idTeam);
-            return new OlympicRecord(sport, year, athlete, team, timeMS, medals);
+            return new OlympicRecord(sport, year, athlete, team, result, medals);
         }
         return null;
     }
@@ -136,10 +136,10 @@ public class OlympicRecordDao {
         if (rs != null && rs.next()) {
             int idAthlete = rs.getInt("idAthlete");
             int idTeam = rs.getInt("idTeam");
-            int timeMS = rs.getInt("timeMS");
+            int result = rs.getInt("result");
             int medals = rs.getInt("medals");
 
-            return new OlympicRecord(idSport, year, idAthlete, idTeam, timeMS, medals);
+            return new OlympicRecord(idSport, year, idAthlete, idTeam, result, medals);
         }
         return null;
     }
