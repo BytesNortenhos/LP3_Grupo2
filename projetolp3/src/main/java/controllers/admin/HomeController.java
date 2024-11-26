@@ -450,22 +450,28 @@ public class HomeController {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource Files");
 
+        // Filtro apenas para arquivos XML
         FileChooser.ExtensionFilter xmlFilter = new FileChooser.ExtensionFilter("XML Files (*.xml)", "*.xml");
-        FileChooser.ExtensionFilter xsdFilter = new FileChooser.ExtensionFilter("XSD Files (*.xsd)", "*.xsd");
-        fileChooser.getExtensionFilters().addAll(xmlFilter, xsdFilter);
+        fileChooser.getExtensionFilters().add(xmlFilter);
 
         // Obtém a janela do Stage a partir do evento
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
         List<File> selectedFiles = fileChooser.showOpenMultipleDialog(stage);
 
         if (selectedFiles != null) {
-            // Verifica os tipos de arquivos
-            long xsdCount = selectedFiles.stream().filter(file -> file.getName().endsWith("xsd.xml")).count();
-            long xmlCount = selectedFiles.stream().filter(file -> file.getName().endsWith(".xml") && !file.getName().endsWith("_xsd.xml")).count();
+            // Valida se os arquivos têm os nomes esperados
+            boolean hasXmlFile = selectedFiles.stream()
+                    .anyMatch(file -> file.getName().equalsIgnoreCase("teams.xml"));
+            boolean hasXsdFile = selectedFiles.stream()
+                    .anyMatch(file -> file.getName().equalsIgnoreCase("teams_xsd.xml"));
 
-            if (selectedFiles.size() == 2 && xmlCount == 1 && xsdCount == 1) {
-                String xsdPath = selectedFiles.stream().filter(file -> file.getName().endsWith("xsd.xml")).findFirst().get().getAbsolutePath();
-                String xmlPath = selectedFiles.stream().filter(file -> file.getName().endsWith(".xml") && !file.getName().endsWith("_xsd.xml")).findFirst().get().getAbsolutePath();
+            if (hasXmlFile && hasXsdFile) {
+                String xsdPath = selectedFiles.stream()
+                        .filter(file -> file.getName().equalsIgnoreCase("teams_xsd.xml"))
+                        .findFirst().get().getAbsolutePath();
+                String xmlPath = selectedFiles.stream()
+                        .filter(file -> file.getName().equalsIgnoreCase("teams.xml"))
+                        .findFirst().get().getAbsolutePath();
 
                 // Valida o XML e exibe os dados que serão inseridos
                 showPreviewBeforeInsertion(xmlPath, xsdPath);
@@ -473,18 +479,20 @@ public class HomeController {
                 // Alerta caso os arquivos não sejam válidos
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Erro!");
-                alert.setHeaderText("Selecione apenas 2 ficheiros! 1 .xml e 1 xsd.xml");
+                alert.setHeaderText("Arquivos incorretos selecionados!");
+                alert.setContentText("Certifique-se de selecionar os arquivos:\n- teams.xml\n- teams_xsd.xml");
                 alert.show();
             }
         } else {
             // Alerta caso o usuário não selecione arquivos
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Nenhum Arquivo Selecionado");
-            alert.setHeaderText("Por favor, selecione dois arquivos.");
-            alert.setContentText("Você precisa selecionar um arquivo XML e um arquivo XSD.");
+            alert.setHeaderText("Por favor, selecione os arquivos corretos.");
+            alert.setContentText("Você precisa selecionar um arquivo teams.xml e um arquivo teams_xsd.xml.");
             alert.show();
         }
     }
+
 
     // Método para exibir uma prévia antes de inserir na base de dados
     private void showPreviewBeforeInsertion(String xmlPath, String xsdPath) {
@@ -643,45 +651,60 @@ public class HomeController {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource Files");
 
+        // Permite selecionar apenas arquivos XML
         FileChooser.ExtensionFilter xmlFilter = new FileChooser.ExtensionFilter("XML Files (*.xml)", "*.xml");
-        fileChooser.getExtensionFilters().addAll(xmlFilter);
+        fileChooser.getExtensionFilters().add(xmlFilter);
 
+        // Obtém a janela do Stage a partir do evento
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
         List<File> selectedFiles = fileChooser.showOpenMultipleDialog(stage);
 
         if (selectedFiles != null) {
-            long xsdCount = selectedFiles.stream().filter(file -> file.getName().endsWith("xsd.xml")).count();
-            long xmlCount = selectedFiles.stream().filter(file -> file.getName().endsWith(".xml") && !file.getName().endsWith("_xsd.xml")).count();
+            // Verifica se os arquivos têm os nomes esperados
+            boolean hasXmlFile = selectedFiles.stream()
+                    .anyMatch(file -> file.getName().equalsIgnoreCase("sports.xml"));
+            boolean hasXsdFile = selectedFiles.stream()
+                    .anyMatch(file -> file.getName().equalsIgnoreCase("sports_xsd.xml"));
 
-            if (selectedFiles.size() == 2 && xmlCount == 1 && xsdCount == 1) {
-                System.out.println("Selected files are valid: " + selectedFiles);
+            if (hasXmlFile && hasXsdFile) {
+                String xsdPath = selectedFiles.stream()
+                        .filter(file -> file.getName().equalsIgnoreCase("sports_xsd.xml"))
+                        .findFirst().get().getAbsolutePath();
+                String xmlPath = selectedFiles.stream()
+                        .filter(file -> file.getName().equalsIgnoreCase("sports.xml"))
+                        .findFirst().get().getAbsolutePath();
 
-                String xsdPath = selectedFiles.stream().filter(file -> file.getName().endsWith("xsd.xml")).findFirst().get().getAbsolutePath();
-                String xmlPath = selectedFiles.stream().filter(file -> file.getName().endsWith(".xml") && !file.getName().endsWith("_xsd.xml")).findFirst().get().getAbsolutePath();
-
+                // Valida o XML contra o XSD
                 XMLUtils xmlUtils = new XMLUtils();
                 boolean xmlValid = xmlUtils.validateXML(xsdPath, xmlPath);
 
                 if (xmlValid) {
+                    // Obtém os dados do arquivo XML e exibe a pré-visualização
                     Sports sports = xmlUtils.getSportsDataXML(xmlPath);
-                    showPreviewBeforeInsertionSports(sports, xmlPath, xsdPath); // Chama o método para mostrar a pré-visualização
+                    showPreviewBeforeInsertionSports(sports, xmlPath, xsdPath);
                 } else {
-                    Alert alerta = new Alert(Alert.AlertType.ERROR);
-                    alerta.setTitle("Erro!");
-                    alerta.setHeaderText("Baseado no XSD, o XML está incorreto!");
-                    alerta.show();
+                    // Alerta caso a validação falhe
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Erro!");
+                    alert.setHeaderText("O XML não é válido com base no arquivo XSD fornecido.");
+                    alert.setContentText("Verifique o conteúdo do arquivo sports.xml e sports_xsd.xml.");
+                    alert.show();
                 }
             } else {
-                Alert alerta = new Alert(Alert.AlertType.ERROR);
-                alerta.setTitle("Erro!");
-                alerta.setHeaderText("Selecione apenas 2 ficheiros! 1 .xml e 1 xsd.xml");
-                alerta.show();
+                // Alerta caso os arquivos selecionados não sejam os esperados
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Erro!");
+                alert.setHeaderText("Arquivos incorretos selecionados!");
+                alert.setContentText("Certifique-se de selecionar:\n- sports.xml\n- sports_xsd.xml");
+                alert.show();
             }
         } else {
-            Alert alerta = new Alert(Alert.AlertType.ERROR);
-            alerta.setTitle("Erro!");
-            alerta.setHeaderText("Selecione 2 ficheiros! 1 .xml e 1 xsd.xml");
-            alerta.show();
+            // Alerta caso o usuário não selecione nenhum arquivo
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Nenhum Arquivo Selecionado");
+            alert.setHeaderText("Por favor, selecione os arquivos corretos.");
+            alert.setContentText("Você precisa selecionar um arquivo sports.xml e um arquivo sports_xsd.xml.");
+            alert.show();
         }
     }
 
@@ -732,48 +755,60 @@ public class HomeController {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource Files");
 
+        // Permite selecionar apenas arquivos XML
         FileChooser.ExtensionFilter xmlFilter = new FileChooser.ExtensionFilter("XML Files (*.xml)", "*.xml");
-        fileChooser.getExtensionFilters().addAll(xmlFilter);
-        //FileChooser.ExtensionFilter xsdFilter = new FileChooser.ExtensionFilter("XSD Files (*.xsd)", "*.xsd");
-        //fileChooser.getExtensionFilters().addAll(xmlFilter, xsdFilter);
+        fileChooser.getExtensionFilters().add(xmlFilter);
 
+        // Obtém a janela do Stage a partir do evento
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
         List<File> selectedFiles = fileChooser.showOpenMultipleDialog(stage);
 
         if (selectedFiles != null) {
-            long xsdCount = selectedFiles.stream().filter(file -> file.getName().endsWith("xsd.xml")).count();
-            long xmlCount = selectedFiles.stream().filter(file -> file.getName().endsWith(".xml") && !file.getName().endsWith("_xsd.xml")).count();
-            //long xsdCount = selectedFiles.stream().filter(file -> file.getName().endsWith(".xsd")).count();
+            // Verifica se os arquivos têm os nomes esperados
+            boolean hasXmlFile = selectedFiles.stream()
+                    .anyMatch(file -> file.getName().equalsIgnoreCase("athletes.xml"));
+            boolean hasXsdFile = selectedFiles.stream()
+                    .anyMatch(file -> file.getName().equalsIgnoreCase("athletes_xsd.xml"));
 
-            if (selectedFiles.size() == 2 && xmlCount == 1 && xsdCount == 1) {
-                System.out.println("Selected files are valid: " + selectedFiles);
+            if (hasXmlFile && hasXsdFile) {
+                String xsdPath = selectedFiles.stream()
+                        .filter(file -> file.getName().equalsIgnoreCase("athletes_xsd.xml"))
+                        .findFirst().get().getAbsolutePath();
+                String xmlPath = selectedFiles.stream()
+                        .filter(file -> file.getName().equalsIgnoreCase("athletes.xml"))
+                        .findFirst().get().getAbsolutePath();
 
-                String xsdPath = selectedFiles.stream().filter(file -> file.getName().endsWith("xsd.xml")).findFirst().get().getAbsolutePath();
-                String xmlPath = selectedFiles.stream().filter(file -> file.getName().endsWith(".xml") && !file.getName().endsWith("_xsd.xml")).findFirst().get().getAbsolutePath();
-
+                // Valida o XML contra o XSD
                 XMLUtils xmlUtils = new XMLUtils();
                 boolean xmlValid = xmlUtils.validateXML(xsdPath, xmlPath);
 
                 if (xmlValid) {
+                    // Obtém os dados do arquivo XML e exibe a pré-visualização
                     Athletes athletes = xmlUtils.getAthletesDataXML(xmlPath);
-                    showPreviewBeforeInsertionAthletes(athletes, xmlPath, xsdPath); // Chama o método para mostrar a pré-visualização
+                    showPreviewBeforeInsertionAthletes(athletes, xmlPath, xsdPath);
                 } else {
-                    Alert alerta = new Alert(Alert.AlertType.ERROR);
-                    alerta.setTitle("Erro!");
-                    alerta.setHeaderText("Baseado no XSD, o XML está incorreto!");
-                    alerta.show();
+                    // Alerta caso a validação falhe
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Erro!");
+                    alert.setHeaderText("O XML não é válido com base no arquivo XSD fornecido.");
+                    alert.setContentText("Verifique o conteúdo do arquivo athletes.xml e athletes_xsd.xml.");
+                    alert.show();
                 }
             } else {
-                Alert alerta = new Alert(Alert.AlertType.ERROR);
-                alerta.setTitle("Erro!");
-                alerta.setHeaderText("Selecione apenas 2 ficheiros! 1 .xml e 1 xsd.xml");
-                alerta.show();
+                // Alerta caso os arquivos selecionados não sejam os esperados
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Erro!");
+                alert.setHeaderText("Arquivos incorretos selecionados!");
+                alert.setContentText("Certifique-se de selecionar:\n- athletes.xml\n- athletes_xsd.xml");
+                alert.show();
             }
         } else {
-            Alert alerta = new Alert(Alert.AlertType.ERROR);
-            alerta.setTitle("Erro!");
-            alerta.setHeaderText("Selecione 2 ficheiros! 1 .xml e 1 xsd.xml");
-            alerta.show();
+            // Alerta caso o usuário não selecione nenhum arquivo
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Nenhum Arquivo Selecionado");
+            alert.setHeaderText("Por favor, selecione os arquivos corretos.");
+            alert.setContentText("Você precisa selecionar um arquivo athletes.xml e um arquivo athletes_xsd.xml.");
+            alert.show();
         }
     }
 
