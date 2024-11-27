@@ -50,6 +50,12 @@ public class Athlete extends Person {
         GenderDao genderDao = new GenderDao();
         this.genre = genderDao.getGenderById(idGender);
     }
+    public Athlete(int id, String name, String country) throws SQLException {
+        super(id);
+        this.name = name;
+        CountryDao countryDao = new CountryDao();
+        this.country = countryDao.getCountryById(country);
+    }
     public int getIdAthlete() {
         return super.getId();
     }

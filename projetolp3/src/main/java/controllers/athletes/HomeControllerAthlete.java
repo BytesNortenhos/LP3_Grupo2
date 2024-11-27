@@ -274,7 +274,7 @@ public class HomeControllerAthlete {
     }
     private void displayResults(VBox vbox, List<List> results) {
         vbox.getChildren().clear();
-
+        vbox.setSpacing(20);
         for (List result : results) {
             VBox resultItem = createResultItem(result);
             vbox.getChildren().add(resultItem);
@@ -283,7 +283,6 @@ public class HomeControllerAthlete {
     private VBox createResultItem(List result) {
         VBox resultItem = new VBox();
         resultItem.setSpacing(10);
-
         Label nameLabel = new Label("Modalidade: " + (result.get(1) != null ? result.get(1).toString() : "N/A"));
         nameLabel.getStyleClass().add("name-label");
 
