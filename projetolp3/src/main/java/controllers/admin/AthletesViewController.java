@@ -1,8 +1,10 @@
 package controllers.admin;
 
+import Dao.AthleteDao;
 import Dao.CountryDao;
 import Dao.RegistrationDao;
 import Dao.SportDao;
+import Models.Athlete;
 import bytesnortenhos.projetolp3.Main;
 import controllers.ViewsController;
 import javafx.collections.FXCollections;
@@ -58,17 +60,18 @@ public class AthletesViewController {
     private SplitMenuButton teamSplitButton;
 
     @FXML
-    private FlowPane sportsContainer;
+    private FlowPane showAthletesContainer;
     @FXML
     private Label noSportsLabel;
     @FXML
     private ComboBox<String> countryDrop;
 
+    private String country;
+
     public void initialize() throws SQLException {
         loadIcons();
         loadCountrys();
         athleteSplitButton.setOnMouseClicked(event -> {
-            // Open the dropdown menu when clicking on the button's text
             athleteSplitButton.show();
         });
         sportSplitButton.setOnMouseClicked(mouseEvent -> {
@@ -77,18 +80,6 @@ public class AthletesViewController {
         teamSplitButton.setOnMouseClicked(mouseEvent -> {
             sportSplitButton.show();
         });
-//        List<List> sports = null;
-//        try {
-//            sports = getSports();
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//        if (sports.isEmpty()) {
-//            showNoSportsMessage();
-//        } else {
-//            displaySports(sports);
-//        }
     }
     public void loadCountrys() throws SQLException {
         countryDrop.getItems().clear();
@@ -112,56 +103,64 @@ public class AthletesViewController {
         if (iconLogoutNav != null) iconLogoutNav.setImage(image);
     }
 
-    private List<List> getSports() throws SQLException {
-        SportDao sportDao = new SportDao();
-        return sportDao.getSportsToShow();
+    private List<Athlete> getAthletes() throws SQLException {
+        AthleteDao athleteDao = new AthleteDao();
+        return athleteDao.getAthletes();
     }
 
     private void showNoSportsMessage() {
         noSportsLabel.setVisible(true);
 
     }
+    public void showAthlete(ActionEvent event) throws SQLException {
+        showAthletesContainer.getChildren().clear();
+        List<Athlete> athletes = null;
+        try {
+            athletes = getAthletes();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
-    private void displaySports(List<List> sports) throws SQLException {
+        if (athletes.isEmpty()) {
+            showNoSportsMessage();
+        } else {
+            displayAthletes(athletes);
+        }
+    }
+    private void displayAthletes(List<Athlete> athletes) throws SQLException {
         noSportsLabel.setVisible(false);
-        sportsContainer.setVisible(true);
-        sportsContainer.getChildren().clear();
-        for (List sport : sports) {
-            VBox sportsItem = createSportsItem(sport);
-            sportsContainer.getChildren().add(sportsItem);
+        showAthletesContainer.setVisible(true);
+        showAthletesContainer.getChildren().clear();
+        for (Athlete athlete : athletes) {
+            if(Objects.equals(athlete.getCountry().getName(), countryDrop.getValue())){
+                VBox athleteItem = createSportsItem(athlete);
+                showAthletesContainer.getChildren().add(athleteItem);
+            }
 
         }
     }
 
-    private VBox createSportsItem(List sport) throws SQLException {
+    private VBox createSportsItem(Athlete athlete) throws SQLException {
         VBox requestItem = new VBox();
         requestItem.setSpacing(10);
         requestItem.getStyleClass().add("request-item");
 
-        Label nameLabel = new Label(sport.get(3).toString());
+        Label nameLabel = new Label(athlete.getName());
         nameLabel.getStyleClass().add("name-label");
 
-        Label typeLabel = new Label(sport.get(1).toString());
-        typeLabel.getStyleClass().add("type-label");
-
-        Label description = new Label(sport.get(4).toString());
-        description.setWrapText(true);
-        description.getStyleClass().add("description-label");
-
-
-        Label genderLabel = new Label(sport.get(2).toString());
+        Label genderLabel = new Label(athlete.getGenre().getDesc());
         genderLabel.getStyleClass().add("gender-label");
 
-        Label minPart = new Label("Minímo de participantes: " + sport.get(5).toString());
-        minPart.getStyleClass().add("minPart-label");
+        Label heightLabel = new Label("Altura: " + athlete.getHeight() + "cm");
+        heightLabel.getStyleClass().add("height-label");
 
-        Label scoringMeasure = new Label("Medida de pontuação: " + sport.get(6).toString());
-        scoringMeasure.getStyleClass().add("scoringMeasure-label");
+        Label weightLabel = new Label("Peso: " + athlete.getWeight() + "kg");
+        weightLabel.getStyleClass().add("weight-label");
 
-        Label oneGame = new Label("Quantidade de jogos: " + sport.get(7).toString());
-        oneGame.getStyleClass().add("oneGame-label");
+        Label birthLabel = new Label("Data de nascimento: " + athlete.getDateOfBirth());
+        birthLabel.getStyleClass().add("birth-label");
 
-        requestItem.getChildren().addAll(nameLabel, description, typeLabel, genderLabel, minPart, scoringMeasure, oneGame);
+        requestItem.getChildren().addAll(nameLabel, genderLabel, heightLabel, weightLabel, birthLabel);
         requestItem.setPrefWidth(500); // Ensure this width allows two items per line
         return requestItem;
     }
