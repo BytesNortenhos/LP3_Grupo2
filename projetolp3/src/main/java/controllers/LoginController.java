@@ -16,35 +16,35 @@ import java.util.List;
 import java.util.Optional;
 
 public class LoginController {
-    public static int cargo = 0;
+    public static int role = 0;
 
     public static String gender = "";
     public static int idAthlete;
     public static String idCountry;
 
 
-    public boolean verificaLogin(int idTemp, String senhaTemp, ActionEvent event) throws Exception {
+    public boolean loginVerify(int idTemp, String tempPass, ActionEvent event) throws Exception {
         PasswordUtils passwordUtils = new PasswordUtils();
-        senhaTemp = passwordUtils.encriptarPassword(senhaTemp);
+        tempPass = passwordUtils.encriptarPassword(tempPass);
         AdminDao adminDao = new AdminDao();
-        boolean loginSucesso = false;
+        boolean sucessLogin = false;
         if (idTemp < 1000) {
             Admin admin = adminDao.getAdminById(idTemp);
-            if (admin != null && senhaTemp.equals(admin.getPassword())) {
-                cargo = 1;
-                loginSucesso = true;
+            if (admin != null && tempPass.equals(admin.getPassword())) {
+                role = 1;
+                sucessLogin = true;
             }
         } else {
             AthleteDao athleteDao = new AthleteDao();
             Athlete athlete = athleteDao.getAthleteById(idTemp);
-            if (athlete != null && senhaTemp.equals(athlete.getPassword())) {
-                cargo = 2;
+            if (athlete != null && tempPass.equals(athlete.getPassword())) {
+                role = 2;
                 gender = athlete.getGenre().getDesc();
                 idCountry = athlete.getCountry().getIdCountry();
                 idAthlete = idTemp;
-                loginSucesso = true;
+                sucessLogin = true;
             }
         }
-        return loginSucesso;
+        return sucessLogin;
     }
 }

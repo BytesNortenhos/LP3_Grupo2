@@ -103,4 +103,22 @@ public class CountryDao {
         }
         return null;
     }
+
+    public List<String> getCountrys() throws SQLException {
+        List<String> years = new ArrayList<>();
+        String query = "SELECT DISTINCT name " +
+                "FROM tblCountry " +
+                "ORDER BY name;";
+
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query);
+        if (rs != null) {
+            while (rs.next()) {
+                String year = rs.getString("name");
+                years.add(year);
+            }
+        } else {
+            System.out.println("No sports found with the specified name.");
+        }
+        return years;
+    }
 }

@@ -58,14 +58,6 @@ public class ViewsController {
         image = new Image(iconMoonStr);
         if(iconMode != null) iconMode.setImage(image);
     }
-    public void SwitchLoginToMenu(ActionEvent event) throws IOException {
-        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
-        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/home.fxml")));
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
-        stage.setScene(scene);
-        stage.show();
-    }
     public boolean changeMode(ActionEvent event){
         isDarkMode = !isDarkMode;
         if(isDarkMode){
@@ -94,7 +86,7 @@ public class ViewsController {
         iconMode.setImage(image);
     }
     @FXML
-    private void handleEntrarButtonAction(ActionEvent event) throws Exception {
+    private void handleEnterButtonAction(ActionEvent event) throws Exception {
         String idTemp = idText.getText();
         if (idTemp.matches("\\d+")) {
             int id = Integer.parseInt(idTemp);
@@ -104,14 +96,14 @@ public class ViewsController {
             }else{
                 password = passwordText.getText();
             }
-            boolean sucesso = loginController.verificaLogin(id, password, event);
-            if (sucesso) {
+            boolean sucess = loginController.loginVerify(id, password, event);
+            if (sucess) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Sucesso!");
                 alert.setHeaderText("Login efetuado com sucesso!");
                 Optional<ButtonType> result = alert.showAndWait();
                 if (result.isPresent() && result.get() == ButtonType.OK) {
-                    verificaCargo(event);
+                    roleVerify(event);
                 }
             }
             else {
@@ -122,13 +114,13 @@ public class ViewsController {
             }
         }
     }
-    public static void verificaCargo(ActionEvent event) throws Exception {
-        switch (LoginController.cargo) {
+    public static void roleVerify(ActionEvent event) throws Exception {
+        switch (LoginController.role) {
             case 0:
-                mostrarLoginView(event);
+                showLoginView(event);
                 break;
             case 1:
-                mostrarAdminView(event);
+                showAdminView(event);
                 break;
             case 2:
                 showAthleteView(event);
@@ -138,7 +130,7 @@ public class ViewsController {
         }
         gender = LoginController.gender;
     }
-    private static void mostrarLoginView(ActionEvent event) throws Exception {
+    private static void showLoginView(ActionEvent event) throws Exception {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
         Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/login.fxml")));
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
@@ -146,7 +138,7 @@ public class ViewsController {
         stage.setScene(scene);
         stage.show();
     }
-    private static void mostrarAdminView(ActionEvent event) throws Exception {
+    private static void showAdminView(ActionEvent event) throws Exception {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
         Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/home.fxml")));
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();

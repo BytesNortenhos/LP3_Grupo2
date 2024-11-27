@@ -34,7 +34,6 @@ import java.util.List;
 import java.util.Objects;
 
 public class RegisterSportController {
-    private static Stage stage;
     private static Scene scene;
     URL cssDarkURL = Main.class.getResource("css/dark.css");
     URL cssLightURL = Main.class.getResource("css/light.css");
@@ -60,32 +59,24 @@ public class RegisterSportController {
 
     private static boolean isDarkMode = true;
 
-    @FXML
-    private TextField txtName;
-    @FXML
-    private TextField txtDescription;
-    @FXML
-    private TextField txtMinParticipants;
 
 
     @FXML
-    private TextField nameText;  // Atualizado para 'nameText' conforme o FXML
+    private TextField nameText;
     @FXML
-    private TextField descText;  // Atualizado para 'descText' conforme o FXML
+    private TextField descText;
 
-    @FXML
-    private TextArea rulesText; // Campo para inserção de regras
 
     private List<String> rules = new ArrayList<>();
 
     @FXML
-    private ComboBox<String> genderDrop; // ComboBox de gênero
+    private ComboBox<String> genderDrop;
     @FXML
-    private ComboBox<String> typeDrop;  // ComboBox para tipo
+    private ComboBox<String> typeDrop;
     @FXML
-    private ComboBox<String> scoringDrop; // ComboBox para medida de pontuação
+    private ComboBox<String> scoringDrop;
     @FXML
-    private ComboBox<String> oneGameDrop; // ComboBox para "One Game"
+    private ComboBox<String> oneGameDrop;
 
     @FXML
     private SplitMenuButton athleteSplitButton;
@@ -98,7 +89,6 @@ public class RegisterSportController {
         loadIcons();
         loadGenders();
 
-        // Adicionar os valores nas ComboBoxes específicas
         loadTypes();
         loadScoringMeasures();
         loadOneGameOptions();
@@ -129,55 +119,42 @@ public class RegisterSportController {
 
     private void loadGenders() {
         try {
-            // Limpar qualquer item existente em genderDrop
             genderDrop.getItems().clear();
 
-            // Obter a lista de gêneros do banco de dados
             List<Gender> genders = GenderDao.getGenders();
             ObservableList<String> genderOptions = FXCollections.observableArrayList();
 
-            // Adicionar cada descrição de gênero à lista
             for (Gender gender : genders) {
                 genderOptions.add(gender.getDesc());
             }
 
-            // Definir itens da ComboBox de gênero
             genderDrop.setItems(genderOptions);
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    // Novo método para carregar os países
-
-
-
-
     @FXML
     private void registerSport() {
         try {
-            // Capturar dados do formulário
-            String name = nameText.getText(); // Atualizado para 'nameText'
+            String name = nameText.getText();
             String type = typeDrop.getValue();
-            String description = descText.getText(); // Atualizado para 'descText'
-            int minParticipants = Integer.parseInt(minText.getText()); // Atualizado para 'minText'
+            String description = descText.getText();
+            int minParticipants = Integer.parseInt(minText.getText());
             String scoringMeasure = scoringDrop.getValue();
             String oneGame = oneGameDrop.getValue();
             String selectedGenderDesc = genderDrop.getValue();
 
-            // Validar campos obrigatórios
             if (name.isEmpty() || type == null || selectedGenderDesc == null) {
                 showAlert("Erro de Validação", "Por favor, preencha todos os campos obrigatórios!", Alert.AlertType.ERROR);
                 return;
             }
 
-            // Determinar ID do genero com base na descrição
             int genderId = selectedGenderDesc.equals("Masculino") ? 1 : 2;
             Gender selectedGender = new Gender(genderId, selectedGenderDesc);
 
-            // Criar o objeto Sport
             Sport newSport = new Sport(
-                    0, // ID será gerado
+                    0,
                     type,
                     selectedGender,
                     name,
@@ -185,22 +162,19 @@ public class RegisterSportController {
                     minParticipants,
                     scoringMeasure,
                     oneGame,
-                    null, // OlympicRecord
-                    null, // WinnerOlympic
-                    null  // Rules
+                    null,
+                    null,
+                    null
             );
 
-            // Registrar o esporte e obter o ID gerado
-            int sportId = SportDao.addSport(newSport); // Certifique-se que retorna o ID gerado
+            int sportId = SportDao.addSport(newSport);
 
-            // Registrar as regras associadas
             for (String ruleDesc : rules) {
-                // Criar a regra usando apenas o sportId
-                Rule newRule = new Rule(0, sportId, ruleDesc); // Passe apenas o ID do esporte
+                Rule newRule = new Rule(0, sportId, ruleDesc);
                 RuleDao.addRule(newRule);
             }
 
-            rules.clear(); // Limpar as regras após o registro
+            rules.clear();
             showAlert("Sucesso", "Modalidade e regras registradas com sucesso!", Alert.AlertType.INFORMATION);
 
         } catch (NumberFormatException e) {
@@ -216,17 +190,13 @@ public class RegisterSportController {
 
     @FXML
     public void addRule() {
-        // Obtendo a descrição da regra do TextArea
         String ruleDescription = rulesTextArea.getText().trim();
 
         if (!ruleDescription.isEmpty()) {
-            // Adicionando a descrição da regra à lista
             rules.add(ruleDescription);
 
-            // Limpar o TextArea após adicionar
             rulesTextArea.clear();
 
-            // Exibir uma mensagem informando que a regra foi adicionada
             showAlert("Success", "Rule added successfully!", Alert.AlertType.INFORMATION);
         } else {
             // Exibir um alerta se a descrição da regra estiver vazia
@@ -288,7 +258,7 @@ public class RegisterSportController {
         Image image = new Image(iconMoonURL.toExternalForm());
         iconModeNav.setImage(image);
     }
-    public void mostrarRegistar(ActionEvent event) throws IOException {
+    public void showRegister(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
         Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/register.fxml")));
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
@@ -301,7 +271,20 @@ public class RegisterSportController {
         stage.setScene(scene);
         stage.show();
     }
-    public void mostrarRegistaModalidades(ActionEvent event) throws IOException {
+    public void showAthletes(ActionEvent event) throws IOException {
+        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
+        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/athletesView.fxml")));
+        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
+        scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
+        if(isDarkMode){
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+        }else{
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
+        }
+        stage.setScene(scene);
+        stage.show();
+    }
+    public void showSportsRegister(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
         Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/sportRegister.fxml")));
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
@@ -314,7 +297,7 @@ public class RegisterSportController {
         stage.setScene(scene);
         stage.show();
     }
-    public void mostrarEditaModalidades(ActionEvent event) throws IOException {
+    public void showSportsEdit(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
         Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/sportEdit.fxml")));
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
@@ -327,7 +310,7 @@ public class RegisterSportController {
         stage.setScene(scene);
         stage.show();
     }
-    public void mostrarModalidades(ActionEvent event) throws IOException {
+    public void showSports(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
         Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/sportsView.fxml")));
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
@@ -340,7 +323,7 @@ public class RegisterSportController {
         stage.setScene(scene);
         stage.show();
     }
-    public void mostrarIniciarModalidades(ActionEvent event) throws IOException {
+    public void showStartSports(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
         Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/startSport.fxml")));
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
@@ -353,21 +336,9 @@ public class RegisterSportController {
         stage.setScene(scene);
         stage.show();
     }
-    public void mostrarRegistaEquipas(ActionEvent event) throws IOException {
-        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
-        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/teamRegister.fxml")));
-        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
-        scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
-        if(isDarkMode){
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
-        }else{
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
-        }
-        stage.setScene(scene);
-        stage.show();
-    }
 
-    public void mostrarEditaEquipas(ActionEvent event) throws IOException {
+
+    public void showTeamsEdit(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
         Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/teamEdit.fxml")));
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
@@ -381,9 +352,9 @@ public class RegisterSportController {
         stage.show();
     }
     public void logout(ActionEvent event) throws Exception {
-        mostrarLogin(event);
+        showLogin(event);
     }
-    public void mostrarLogin(ActionEvent event) throws IOException {
+    public void showLogin(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
         Parent root = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/loginView.fxml")));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
