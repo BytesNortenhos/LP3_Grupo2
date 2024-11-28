@@ -108,12 +108,89 @@ public class SportDao {
         return sports;
     }
 
+    public boolean verifyIfIsTeam(int idSport, int year) throws SQLException{
+        String query = "SELECT idTeam " +
+                "FROM tblRegistration " +
+                "WHERE idSport = ? " +
+                "AND year = ? " +
+                "AND (idStatus = 3 OR idStatus = 4)" +
+                "AND idTeam IS NOT NULL;";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, year);
+        if (rs != null && rs.next()) {
+            return true;
+        }
+        return false;
+    }
+
+    public List<List> getTeamsAndthletes(int idSport, int year) throws SQLException{
+        List<List> teams = new ArrayList<>();
+        String query = "SELECT t.idTeam, t.name AS teamName, a.idAthlete, a.name AS athleteName " +
+                "FROM tblTeam t " +
+                "JOIN tblRegistration r ON t.idTeam = r.idTeam " +
+                "JOIN tblAthlete a ON a.idAthlete = r.idAthlete " +
+                "WHERE r.idSport = ? " +
+                "AND r.year = ? " +
+                "AND (r.idStatus = 3 OR r.idStatus = 4);";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, year);
+        if (rs != null) {
+            while (rs.next()) {
+                List<String> team = new ArrayList<>();
+                team.add(rs.getString("idTeam"));
+                team.add(rs.getString("teamName"));
+                team.add(rs.getString("idAthlete"));
+                team.add(rs.getString("athleteName"));
+                teams.add(team);
+            }
+        } else {
+            System.out.println("ResultSet is null. No results for Sport found.");
+        }
+        return teams;
+    }
+    public List<Athlete> getAthletesBySport(int idSport, int year) throws SQLException {
+        List<Athlete> athletes = new ArrayList<>();
+        String query = "SELECT a.* " +
+                "FROM tblAthlete a " +
+                "JOIN tblRegistration r ON a.idAthlete = r.idAthlete " +
+                "WHERE r.idSport = ? " +
+                "AND r.year = ? " +
+                "AND (r.idStatus = 3 OR r.idStatus = 4);";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, year);
+        if (rs != null) {
+            try {
+                while (rs.next()) {
+                    int idAthlete = rs.getInt("idAthlete");
+                    String name = rs.getString("name");
+                    String country = rs.getString("idCountry");
+                    Athlete athlete = new Athlete(idAthlete, name, country);
+                    athletes.add(athlete);
+                }
+            }
+            catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return athletes;
+    }
     public int getNumberParticipantsSport(int idSport, int year) throws SQLException {
         String query = "SELECT COUNT(*) AS quantidade " +
                 "FROM tblRegistration " +
                 "WHERE idSport = ? " +
                 "AND year = ? " +
                 "AND (idStatus = 3 OR idStatus = 4) ;";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, year);
+        int quantidade = 0;
+        if (rs != null && rs.next()) {
+            quantidade = rs.getInt("quantidade");
+        }
+        return quantidade;
+    }
+
+    public int getNumberTeamsSport(int idSport, int year) throws SQLException {
+        String query = "SELECT COUNT(DISTINCT idTeam) AS quantidade " +
+                "FROM tblRegistration " +
+                "WHERE idSport = ? " +
+                "AND year = ? " +
+                "AND (idStatus = 3 OR idStatus = 4);";
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, year);
         int quantidade = 0;
         if (rs != null && rs.next()) {

@@ -44,8 +44,8 @@ public class AthleteTest {
             // Verificar se foi inserido
             boolean atletaEncontrado = false;
             int idAtletaEncontado = 0;
-
-            for (Athlete a : AthleteDao.getAthletes()) {
+            AthleteDao athleteDao = new AthleteDao();
+            for (Athlete a : athleteDao.getAthletes()) {
                 if (a.getName().equals(name)) {
                     atletaEncontrado = true;
                     idAtletaEncontado = a.getIdAthlete();
@@ -81,7 +81,8 @@ public class AthleteTest {
 
             int idAtleta = 0;
             Athlete atletaEncontrado = null;
-            for (Athlete a : AthleteDao.getAthletes()) {
+            AthleteDao athleteDao = new AthleteDao();
+            for (Athlete a : athleteDao.getAthletes()) {
                 if (a.getName().equals("Usain Bolt")) {
                     idAtleta = a.getIdAthlete();
                     atletaEncontrado = a;
@@ -96,8 +97,7 @@ public class AthleteTest {
             } else {
                 fail();
             }
-
-            for (Athlete a : AthleteDao.getAthletes()) {
+            for (Athlete a : athleteDao.getAthletes()) {
                 if (a.getIdAthlete() == idAtleta) {
                     if(a.getPassword().equals(password) && a.getName().equals(name) && a.getHeight() == height
                             && a.getWeight() == weight && a.getDateOfBirth().equals(dateOfBirth) && a.getGenre().getIdGender() == gender.getIdGender()

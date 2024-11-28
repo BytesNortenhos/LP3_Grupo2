@@ -30,7 +30,7 @@
             <Pane HBox.hgrow="ALWAYS"/>
             <SplitMenuButton fx:id="sportSplitButton" styleClass="dropdownButton" text="Modalidade">
                 <items>
-                    <MenuItem text="Inscrição" onAction="#mostrarRegistaModalidades"/>
+                    <MenuItem text="Inscrição" onAction="#showSportsRegister"/>
                 </items>
             </SplitMenuButton>
             <Button mnemonicParsing="false" onAction="#changeMode" styleClass="iconMoonNav">

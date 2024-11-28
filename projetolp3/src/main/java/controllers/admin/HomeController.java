@@ -76,8 +76,6 @@ public class HomeController {
     private SplitMenuButton teamSplitButton;
     @FXML
     private SplitMenuButton xmlSplitButton;
-    @FXML
-    private ComboBox<String> athleteDrop;
 
     public void initialize() {
         loadIcons();
@@ -321,9 +319,9 @@ public class HomeController {
         iconModeNav.setImage(image);
     }
     public void logout(ActionEvent event) throws Exception {
-        mostrarLogin(event);
+        showLogin(event);
     }
-    public void mostrarLogin(ActionEvent event) throws IOException {
+    public void showLogin(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
         Parent root = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/loginView.fxml")));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -336,7 +334,7 @@ public class HomeController {
         stage.setScene(scene);
         stage.show();
     }
-    public void mostrarRegistar(ActionEvent event) throws IOException {
+    public void showRegister(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
         Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/register.fxml")));
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
@@ -349,8 +347,21 @@ public class HomeController {
         stage.setScene(scene);
         stage.show();
     }
+    public void showAthletes(ActionEvent event) throws IOException {
+        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
+        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/athletesView.fxml")));
+        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
+        scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
+        if(isDarkMode){
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+        }else{
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
+        }
+        stage.setScene(scene);
+        stage.show();
+    }
 
-    public void mostrarModalidades(ActionEvent event) throws IOException {
+    public void showSports(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
         Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/sportsView.fxml")));
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
@@ -363,7 +374,7 @@ public class HomeController {
         stage.setScene(scene);
         stage.show();
     }
-    public void mostrarIniciarModalidades(ActionEvent event) throws IOException {
+    public void showStartSports(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
         Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/startSport.fxml")));
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
@@ -389,7 +400,7 @@ public class HomeController {
         stage.setScene(scene);
         stage.show();
     }
-    public void mostrarRegistaModalidades(ActionEvent event) throws IOException {
+    public void showSportsRegister(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
         Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/sportRegister.fxml")));
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
@@ -403,7 +414,7 @@ public class HomeController {
         stage.show();
     }
 
-    public void mostrarEditaModalidades(ActionEvent event) throws IOException {
+    public void showSportsEdit(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
         Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/sportEdit.fxml")));
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
@@ -417,21 +428,9 @@ public class HomeController {
         stage.show();
     }
 
-    public void mostrarRegistaEquipas(ActionEvent event) throws IOException {
-        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
-        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/teamRegister.fxml")));
-        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
-        scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
-        if(isDarkMode){
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
-        }else{
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
-        }
-        stage.setScene(scene);
-        stage.show();
-    }
 
-    public void mostrarEditaEquipas(ActionEvent event) throws IOException {
+
+    public void showTeamsEdit(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
         Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/teamEdit.fxml")));
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
@@ -450,430 +449,244 @@ public class HomeController {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource Files");
 
-        // Filtro apenas para arquivos XML
         FileChooser.ExtensionFilter xmlFilter = new FileChooser.ExtensionFilter("XML Files (*.xml)", "*.xml");
-        fileChooser.getExtensionFilters().add(xmlFilter);
+        FileChooser.ExtensionFilter xsdFilter = new FileChooser.ExtensionFilter("XSD Files (*.xsd)", "*.xsd");
+        fileChooser.getExtensionFilters().addAll(xmlFilter, xsdFilter);
 
-        // Obtém a janela do Stage a partir do evento
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
         List<File> selectedFiles = fileChooser.showOpenMultipleDialog(stage);
 
         if (selectedFiles != null) {
-            // Valida se os arquivos têm os nomes esperados
-            boolean hasXmlFile = selectedFiles.stream()
-                    .anyMatch(file -> file.getName().equalsIgnoreCase("teams.xml"));
-            boolean hasXsdFile = selectedFiles.stream()
-                    .anyMatch(file -> file.getName().equalsIgnoreCase("teams_xsd.xml"));
-
-            if (hasXmlFile && hasXsdFile) {
-                String xsdPath = selectedFiles.stream()
-                        .filter(file -> file.getName().equalsIgnoreCase("teams_xsd.xml"))
-                        .findFirst().get().getAbsolutePath();
-                String xmlPath = selectedFiles.stream()
-                        .filter(file -> file.getName().equalsIgnoreCase("teams.xml"))
-                        .findFirst().get().getAbsolutePath();
-
-                // Valida o XML e exibe os dados que serão inseridos
-                showPreviewBeforeInsertion(xmlPath, xsdPath);
-            } else {
-                // Alerta caso os arquivos não sejam válidos
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Erro!");
-                alert.setHeaderText("Arquivos incorretos selecionados!");
-                alert.setContentText("Certifique-se de selecionar os arquivos:\n- teams.xml\n- teams_xsd.xml");
-                alert.show();
-            }
-        } else {
-            // Alerta caso o usuário não selecione arquivos
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Nenhum Arquivo Selecionado");
-            alert.setHeaderText("Por favor, selecione os arquivos corretos.");
-            alert.setContentText("Você precisa selecionar um arquivo teams.xml e um arquivo teams_xsd.xml.");
-            alert.show();
-        }
-    }
+            long xsdCount = selectedFiles.stream().filter(file -> file.getName().endsWith("xsd.xml")).count();
+            long xmlCount = selectedFiles.stream().filter(file -> file.getName().endsWith(".xml") && !file.getName().endsWith("_xsd.xml")).count();
 
 
-    // Método para exibir uma prévia antes de inserir na base de dados
-    private void showPreviewBeforeInsertion(String xmlPath, String xsdPath) {
-        XMLUtils xmlUtils = new XMLUtils();
-        boolean xmlValid = xmlUtils.validateXML(xsdPath, xmlPath);
+            if (selectedFiles.size() == 2 && xmlCount == 1 && xsdCount == 1) {
+                System.out.println("Selected files are valid: " + selectedFiles);
 
-        if (xmlValid) {
-            Teams teams = xmlUtils.getTeamsDataXML(xmlPath); // Processa o XML para obter os dados
+                String xsdPath = selectedFiles.stream().filter(file -> file.getName().endsWith("xsd.xml")).findFirst().get().getAbsolutePath();
+                String xmlPath = selectedFiles.stream().filter(file -> file.getName().endsWith(".xml") && !file.getName().endsWith("_xsd.xml")).findFirst().get().getAbsolutePath();
 
-            // Converte os dados para uma string compreensível
-            String teamsPreview = teams.toString(); // Certifique-se de que Teams tem um método toString() adequado
+                XMLUtils xmlUtils = new XMLUtils();
+                boolean xmlValid = xmlUtils.validateXML(xsdPath, xmlPath);
 
-            // Exibe o dialog com os dados a serem inseridos
-            Alert dialog = new Alert(Alert.AlertType.CONFIRMATION);
-            dialog.setTitle("Confirmação de Inserção");
-            dialog.setHeaderText("Os seguintes dados serão inseridos na base de dados:");
-            dialog.setContentText("Verifique os detalhes antes de confirmar.");
+                if(xmlValid) {
+                    Teams teams = xmlUtils.getTeamsDataXML(xmlPath);
+                    try {
+                        UploadXmlDAO uploadXmlDAO = new UploadXmlDAO();
+                        boolean uploaded = uploadXmlDAO.addTeams(teams);
+                        if (uploaded) {
+                            Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+                            alerta.setTitle("Sucesso!");
+                            alerta.setHeaderText("O upload foi efetuado!");
+                            alerta.show();
+                        } else {
+                            Alert alerta = new Alert(Alert.AlertType.ERROR);
+                            alerta.setTitle("Erro!");
+                            alerta.setHeaderText("Ocorreu um erro ao adicionar os dados à Base de Dados!");
+                            alerta.show();
+                        }
 
-            // Usa um TextArea para exibir os detalhes do objeto Teams
-            TextArea textArea = new TextArea(teamsPreview);
-            textArea.setEditable(false);
-            textArea.setWrapText(true);
-
-            textArea.setPrefSize(600, 400); // Tamanho da área de texto
-
-            dialog.getDialogPane().setContent(textArea);
-
-            // Botões do dialog
-            ButtonType insertButton = new ButtonType("Inserir", ButtonBar.ButtonData.OK_DONE);
-            ButtonType cancelButton = new ButtonType("Cancelar", ButtonBar.ButtonData.CANCEL_CLOSE);
-
-            dialog.getButtonTypes().setAll(insertButton, cancelButton);
-
-            // Processa a escolha do usuário
-            dialog.showAndWait().ifPresent(response -> {
-                if (response == insertButton) {
-                    // Realiza a inserção na base de dados
-                    insertIntoDatabaseTeams(teams);
+                        boolean xmlSaved = uploadXmlDAO.saveXML(xmlPath, xsdPath);
+                        if (!xmlSaved) {
+                            Alert alerta = new Alert(Alert.AlertType.ERROR);
+                            alerta.setTitle("Erro!");
+                            alerta.setHeaderText("Ocorreu um erro ao guardar o ficheiro XML/XSD!");
+                            alerta.show();
+                        }
+                    } catch (SQLException e) {
+                        Alert alerta = new Alert(Alert.AlertType.ERROR);
+                        alerta.setTitle("Erro!");
+                        alerta.setHeaderText("Ocorreu um erro ao adicionar os dados à Base de Dados!");
+                        alerta.show();
+                    }
                 } else {
-                    // Apenas fecha o dialog
-                    Alert cancelAlert = new Alert(Alert.AlertType.INFORMATION);
-                    cancelAlert.setTitle("Operação Cancelada");
-                    cancelAlert.setHeaderText("Nenhuma alteração foi feita.");
-                    cancelAlert.show();
+                    Alert alerta = new Alert(Alert.AlertType.ERROR);
+                    alerta.setTitle("Erro!");
+                    alerta.setHeaderText("Baseado no XSD, o XML está incorreto!");
+                    alerta.show();
                 }
-            });
-        } else {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Erro!");
-            alert.setHeaderText("Baseado no XSD, o XML está incorreto!");
-            alert.show();
-        }
-    }
-
-    // Método para realizar a inserção na base de dados
-    private void insertIntoDatabaseTeams(Teams teams) {
-        try {
-            UploadXmlDAO uploadXmlDAO = new UploadXmlDAO();
-            boolean uploaded = uploadXmlDAO.addTeams(teams);
-            if (uploaded) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Sucesso!");
-                alert.setHeaderText("Os dados foram inseridos na base de dados com sucesso!");
-                alert.show();
             } else {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Erro!");
-                alert.setHeaderText("Ocorreu um erro ao adicionar os dados à Base de Dados!");
-                alert.show();
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setTitle("Erro!");
+                alerta.setHeaderText("Selecione apenas 2 ficheiros! 1 .xml e 1 xsd.xml");
+                alerta.show();
             }
-        } catch (SQLException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Erro!");
-            alert.setHeaderText("Ocorreu um erro ao adicionar os dados à Base de Dados!");
-            alert.show();
-        }
-    }
-    private void showPreviewBeforeInsertionSports(String xmlPath, String xsdPath) {
-        XMLUtils xmlUtils = new XMLUtils();
-        boolean xmlValid = xmlUtils.validateXML(xsdPath, xmlPath);
-
-        if (xmlValid) {
-            Sports sports = xmlUtils.getSportsDataXML(xmlPath); // Processa o XML para obter os dados
-
-            // Converte os dados para uma string compreensível
-            String sportsPreview = sports.toString(); // Certifique-se de que Sports tem um método toString() adequado
-
-            // Exibe o dialog com os dados a serem inseridos
-            Alert dialog = new Alert(Alert.AlertType.CONFIRMATION);
-            dialog.setTitle("Confirmação de Inserção");
-            dialog.setHeaderText("Os seguintes dados serão inseridos na base de dados:");
-            dialog.setContentText("Verifique os detalhes antes de confirmar.");
-
-            // Usa um TextArea para exibir os detalhes do objeto Sports
-            TextArea textArea = new TextArea(sportsPreview);
-            textArea.setEditable(false);
-            textArea.setWrapText(true);
-
-            textArea.setPrefSize(600, 400); // Tamanho da área de texto
-
-            dialog.getDialogPane().setContent(textArea);
-
-            // Botões do dialog
-            ButtonType insertButton = new ButtonType("Inserir", ButtonBar.ButtonData.OK_DONE);
-            ButtonType cancelButton = new ButtonType("Cancelar", ButtonBar.ButtonData.CANCEL_CLOSE);
-
-            dialog.getButtonTypes().setAll(insertButton, cancelButton);
-
-            // Processa a escolha do usuário
-            dialog.showAndWait().ifPresent(response -> {
-                if (response == insertButton) {
-                    // Realiza a inserção na base de dados
-                    insertIntoDatabaseSports(sports);
-                } else {
-                    // Apenas fecha o dialog
-                    Alert cancelAlert = new Alert(Alert.AlertType.INFORMATION);
-                    cancelAlert.setTitle("Operação Cancelada");
-                    cancelAlert.setHeaderText("Nenhuma alteração foi feita.");
-                    cancelAlert.show();
-                }
-            });
         } else {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Erro!");
-            alert.setHeaderText("Baseado no XSD, o XML está incorreto!");
-            alert.show();
+            Alert alerta = new Alert(Alert.AlertType.ERROR);
+            alerta.setTitle("Erro!");
+            alerta.setHeaderText("Selecione 2 ficheiros! 1 .xml e 1 xsd.xml");
+            alerta.show();
         }
     }
 
-    // Método para realizar a inserção na base de dados
-    private void insertIntoDatabaseSports(Sports sports) {
+    private void showFilePreviewPopup(File file) {
+        Stage popupStage = new Stage();
+        popupStage.setTitle("File Preview");
+
+        TextArea filePreviewTextArea = new TextArea();
+        filePreviewTextArea.setEditable(false);
+
         try {
-            UploadXmlDAO uploadXmlDAO = new UploadXmlDAO();
-            boolean uploaded = uploadXmlDAO.addSports(sports);
-            if (uploaded) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Sucesso!");
-                alert.setHeaderText("Os dados foram inseridos na base de dados com sucesso!");
-                alert.show();
-            } else {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Erro!");
-                alert.setHeaderText("Ocorreu um erro ao adicionar os dados à Base de Dados!");
-                alert.show();
-            }
-        } catch (SQLException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Erro!");
-            alert.setHeaderText("Ocorreu um erro ao adicionar os dados à Base de Dados!");
-            alert.show();
+            String content = new String(java.nio.file.Files.readAllBytes(file.toPath()));
+            filePreviewTextArea.setText(content);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-    }
 
+        VBox vbox = new VBox(filePreviewTextArea);
+        Scene scene = new Scene(vbox, 400, 300);
+        popupStage.setScene(scene);
+        popupStage.show();
+    }
     @FXML
     public void loadSports(ActionEvent event) throws IOException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource Files");
 
-        // Permite selecionar apenas arquivos XML
         FileChooser.ExtensionFilter xmlFilter = new FileChooser.ExtensionFilter("XML Files (*.xml)", "*.xml");
-        fileChooser.getExtensionFilters().add(xmlFilter);
+        fileChooser.getExtensionFilters().addAll(xmlFilter);
 
-        // Obtém a janela do Stage a partir do evento
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
         List<File> selectedFiles = fileChooser.showOpenMultipleDialog(stage);
 
         if (selectedFiles != null) {
-            // Verifica se os arquivos têm os nomes esperados
-            boolean hasXmlFile = selectedFiles.stream()
-                    .anyMatch(file -> file.getName().equalsIgnoreCase("sports.xml"));
-            boolean hasXsdFile = selectedFiles.stream()
-                    .anyMatch(file -> file.getName().equalsIgnoreCase("sports_xsd.xml"));
+            long xsdCount = selectedFiles.stream().filter(file -> file.getName().endsWith("xsd.xml")).count();
+            long xmlCount = selectedFiles.stream().filter(file -> file.getName().endsWith(".xml") && !file.getName().endsWith("_xsd.xml")).count();
 
-            if (hasXmlFile && hasXsdFile) {
-                String xsdPath = selectedFiles.stream()
-                        .filter(file -> file.getName().equalsIgnoreCase("sports_xsd.xml"))
-                        .findFirst().get().getAbsolutePath();
-                String xmlPath = selectedFiles.stream()
-                        .filter(file -> file.getName().equalsIgnoreCase("sports.xml"))
-                        .findFirst().get().getAbsolutePath();
 
-                // Valida o XML contra o XSD
+            if (selectedFiles.size() == 2 && xmlCount == 1 && xsdCount == 1) {
+                System.out.println("Selected files are valid: " + selectedFiles);
+
+                String xsdPath = selectedFiles.stream().filter(file -> file.getName().endsWith("xsd.xml")).findFirst().get().getAbsolutePath();
+                String xmlPath = selectedFiles.stream().filter(file -> file.getName().endsWith(".xml") && !file.getName().endsWith("_xsd.xml")).findFirst().get().getAbsolutePath();
+
                 XMLUtils xmlUtils = new XMLUtils();
                 boolean xmlValid = xmlUtils.validateXML(xsdPath, xmlPath);
 
-                if (xmlValid) {
-                    // Obtém os dados do arquivo XML e exibe a pré-visualização
+                if(xmlValid) {
                     Sports sports = xmlUtils.getSportsDataXML(xmlPath);
-                    showPreviewBeforeInsertionSports(sports, xmlPath, xsdPath);
+                    try {
+                        UploadXmlDAO uploadXmlDAO = new UploadXmlDAO();
+                        boolean uploaded = uploadXmlDAO.addSports(sports);
+                        if (uploaded) {
+                            Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+                            alerta.setTitle("Sucesso!");
+                            alerta.setHeaderText("O upload foi efetuado!");
+                            alerta.show();
+                        } else {
+                            Alert alerta = new Alert(Alert.AlertType.ERROR);
+                            alerta.setTitle("Erro!");
+                            alerta.setHeaderText("Ocorreu um erro ao adicionar os dados à Base de Dados!");
+                            alerta.show();
+                        }
+
+                        boolean xmlSaved = uploadXmlDAO.saveXML(xmlPath, xsdPath);
+                        if (!xmlSaved) {
+                            Alert alerta = new Alert(Alert.AlertType.ERROR);
+                            alerta.setTitle("Erro!");
+                            alerta.setHeaderText("Ocorreu um erro ao guardar o ficheiro XML/XSD!");
+                            alerta.show();
+                        }
+                    } catch (SQLException e) {
+                        Alert alerta = new Alert(Alert.AlertType.ERROR);
+                        alerta.setTitle("Erro!");
+                        alerta.setHeaderText("Ocorreu um erro ao adicionar os dados à Base de Dados!");
+                        alerta.show();
+                    }
                 } else {
-                    // Alerta caso a validação falhe
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Erro!");
-                    alert.setHeaderText("O XML não é válido com base no arquivo XSD fornecido.");
-                    alert.setContentText("Verifique o conteúdo do arquivo sports.xml e sports_xsd.xml.");
-                    alert.show();
+                    Alert alerta = new Alert(Alert.AlertType.ERROR);
+                    alerta.setTitle("Erro!");
+                    alerta.setHeaderText("Baseado no XSD, o XML está incorreto!");
+                    alerta.show();
                 }
             } else {
-                // Alerta caso os arquivos selecionados não sejam os esperados
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Erro!");
-                alert.setHeaderText("Arquivos incorretos selecionados!");
-                alert.setContentText("Certifique-se de selecionar:\n- sports.xml\n- sports_xsd.xml");
-                alert.show();
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setTitle("Erro!");
+                alerta.setHeaderText("Selecione apenas 2 ficheiros! 1 .xml e 1 xsd.xml");
+                alerta.show();
             }
         } else {
-            // Alerta caso o usuário não selecione nenhum arquivo
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Nenhum Arquivo Selecionado");
-            alert.setHeaderText("Por favor, selecione os arquivos corretos.");
-            alert.setContentText("Você precisa selecionar um arquivo sports.xml e um arquivo sports_xsd.xml.");
-            alert.show();
+            Alert alerta = new Alert(Alert.AlertType.ERROR);
+            alerta.setTitle("Erro!");
+            alerta.setHeaderText("Selecione 2 ficheiros! 1 .xml e 1 xsd.xml");
+            alerta.show();
         }
     }
-
-    // Método para exibir a pré-visualização e confirmar a inserção na base de dados
-    private void showPreviewBeforeInsertionSports(Sports sports, String xmlPath, String xsdPath) {
-        // Converte os dados para uma string compreensível
-        String sportsPreview = sports.toString(); // Certifique-se de que Sports tem um método toString() adequado
-
-        // Exibe o dialog com os dados a serem inseridos
-        Alert dialog = new Alert(Alert.AlertType.CONFIRMATION);
-        dialog.setTitle("Confirmação de Inserção");
-        dialog.setHeaderText("Os seguintes dados serão inseridos na base de dados:");
-        dialog.setContentText("Verifique os detalhes antes de confirmar.");
-
-        // Usa um TextArea para exibir os detalhes do objeto Sports
-        TextArea textArea = new TextArea(sportsPreview);
-        textArea.setEditable(false);
-        textArea.setWrapText(true);
-
-        textArea.setPrefSize(600, 400); // Tamanho da área de texto
-
-        dialog.getDialogPane().setContent(textArea);
-
-        // Botões do dialog
-        ButtonType insertButton = new ButtonType("Inserir", ButtonBar.ButtonData.OK_DONE);
-        ButtonType cancelButton = new ButtonType("Cancelar", ButtonBar.ButtonData.CANCEL_CLOSE);
-
-        dialog.getButtonTypes().setAll(insertButton, cancelButton);
-
-        // Processa a escolha do usuário
-        dialog.showAndWait().ifPresent(response -> {
-            if (response == insertButton) {
-                // Realiza a inserção na base de dados
-                insertIntoDatabaseSports(sports);
-            } else {
-                // Apenas fecha o dialog
-                Alert cancelAlert = new Alert(Alert.AlertType.INFORMATION);
-                cancelAlert.setTitle("Operação Cancelada");
-                cancelAlert.setHeaderText("Nenhuma alteração foi feita.");
-                cancelAlert.show();
-            }
-        });
-    }
-
-
     @FXML
     public void loadAthletes(ActionEvent event) throws IOException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource Files");
 
-        // Permite selecionar apenas arquivos XML
         FileChooser.ExtensionFilter xmlFilter = new FileChooser.ExtensionFilter("XML Files (*.xml)", "*.xml");
-        fileChooser.getExtensionFilters().add(xmlFilter);
+        fileChooser.getExtensionFilters().addAll(xmlFilter);
+        //FileChooser.ExtensionFilter xsdFilter = new FileChooser.ExtensionFilter("XSD Files (*.xsd)", "*.xsd");
+        //fileChooser.getExtensionFilters().addAll(xmlFilter, xsdFilter);
 
-        // Obtém a janela do Stage a partir do evento
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
         List<File> selectedFiles = fileChooser.showOpenMultipleDialog(stage);
 
         if (selectedFiles != null) {
-            // Verifica se os arquivos têm os nomes esperados
-            boolean hasXmlFile = selectedFiles.stream()
-                    .anyMatch(file -> file.getName().equalsIgnoreCase("athletes.xml"));
-            boolean hasXsdFile = selectedFiles.stream()
-                    .anyMatch(file -> file.getName().equalsIgnoreCase("athletes_xsd.xml"));
+            long xsdCount = selectedFiles.stream().filter(file -> file.getName().endsWith("xsd.xml")).count();
+            long xmlCount = selectedFiles.stream().filter(file -> file.getName().endsWith(".xml") && !file.getName().endsWith("_xsd.xml")).count();
+            //long xsdCount = selectedFiles.stream().filter(file -> file.getName().endsWith(".xsd")).count();
 
-            if (hasXmlFile && hasXsdFile) {
-                String xsdPath = selectedFiles.stream()
-                        .filter(file -> file.getName().equalsIgnoreCase("athletes_xsd.xml"))
-                        .findFirst().get().getAbsolutePath();
-                String xmlPath = selectedFiles.stream()
-                        .filter(file -> file.getName().equalsIgnoreCase("athletes.xml"))
-                        .findFirst().get().getAbsolutePath();
+            if (selectedFiles.size() == 2 && xmlCount == 1 && xsdCount == 1) {
+                System.out.println("Selected files are valid: " + selectedFiles);
 
-                // Valida o XML contra o XSD
+                String xsdPath = selectedFiles.stream().filter(file -> file.getName().endsWith("xsd.xml")).findFirst().get().getAbsolutePath();
+                String xmlPath = selectedFiles.stream().filter(file -> file.getName().endsWith(".xml") && !file.getName().endsWith("_xsd.xml")).findFirst().get().getAbsolutePath();
+
                 XMLUtils xmlUtils = new XMLUtils();
                 boolean xmlValid = xmlUtils.validateXML(xsdPath, xmlPath);
 
-                if (xmlValid) {
-                    // Obtém os dados do arquivo XML e exibe a pré-visualização
+                if(xmlValid) {
                     Athletes athletes = xmlUtils.getAthletesDataXML(xmlPath);
-                    showPreviewBeforeInsertionAthletes(athletes, xmlPath, xsdPath);
+                    try {
+                        UploadXmlDAO uploadXmlDAO = new UploadXmlDAO();
+                        boolean uploaded = uploadXmlDAO.addAthletes(athletes);
+                        if (uploaded) {
+                            Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+                            alerta.setTitle("Sucesso!");
+                            alerta.setHeaderText("O upload foi efetuado!");
+                            alerta.show();
+                        } else {
+                            Alert alerta = new Alert(Alert.AlertType.ERROR);
+                            alerta.setTitle("Erro!");
+                            alerta.setHeaderText("Ocorreu um erro ao adicionar os dados à Base de Dados!");
+                            alerta.show();
+                        }
+
+                        boolean xmlSaved = uploadXmlDAO.saveXML(xmlPath, xsdPath);
+                        if (!xmlSaved) {
+                            Alert alerta = new Alert(Alert.AlertType.ERROR);
+                            alerta.setTitle("Erro!");
+                            alerta.setHeaderText("Ocorreu um erro ao guardar o ficheiro XML/XSD!");
+                            alerta.show();
+                        }
+                    } catch (SQLException e) {
+                        Alert alerta = new Alert(Alert.AlertType.ERROR);
+                        alerta.setTitle("Erro!");
+                        alerta.setHeaderText("Ocorreu um erro ao adicionar os dados à Base de Dados!");
+                        alerta.show();
+                    }
                 } else {
-                    // Alerta caso a validação falhe
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Erro!");
-                    alert.setHeaderText("O XML não é válido com base no arquivo XSD fornecido.");
-                    alert.setContentText("Verifique o conteúdo do arquivo athletes.xml e athletes_xsd.xml.");
-                    alert.show();
+                    Alert alerta = new Alert(Alert.AlertType.ERROR);
+                    alerta.setTitle("Erro!");
+                    alerta.setHeaderText("Baseado no XSD, o XML está incorreto!");
+                    alerta.show();
                 }
             } else {
-                // Alerta caso os arquivos selecionados não sejam os esperados
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Erro!");
-                alert.setHeaderText("Arquivos incorretos selecionados!");
-                alert.setContentText("Certifique-se de selecionar:\n- athletes.xml\n- athletes_xsd.xml");
-                alert.show();
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setTitle("Erro!");
+                alerta.setHeaderText("Selecione apenas 2 ficheiros! 1 .xml e 1 xsd.xml");
+                alerta.show();
             }
         } else {
-            // Alerta caso o usuário não selecione nenhum arquivo
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Nenhum Arquivo Selecionado");
-            alert.setHeaderText("Por favor, selecione os arquivos corretos.");
-            alert.setContentText("Você precisa selecionar um arquivo athletes.xml e um arquivo athletes_xsd.xml.");
-            alert.show();
-        }
-    }
-
-    // Método para exibir a pré-visualização e confirmar a inserção na base de dados
-    private void showPreviewBeforeInsertionAthletes(Athletes athletes, String xmlPath, String xsdPath) {
-        // Converte os dados para uma string compreensível
-        String athletesPreview = athletes.toString(); // Certifique-se de que Athletes tem um método toString() adequado
-
-        // Exibe o dialog com os dados a serem inseridos
-        Alert dialog = new Alert(Alert.AlertType.CONFIRMATION);
-        dialog.setTitle("Confirmação de Inserção");
-        dialog.setHeaderText("Os seguintes dados serão inseridos na base de dados:");
-        dialog.setContentText("Verifique os detalhes antes de confirmar.");
-
-        // Usa um TextArea para exibir os detalhes do objeto Athletes
-        TextArea textArea = new TextArea(athletesPreview);
-        textArea.setEditable(false);
-        textArea.setWrapText(true);
-
-        textArea.setPrefSize(600, 400); // Tamanho da área de texto
-
-        dialog.getDialogPane().setContent(textArea);
-
-        // Botões do dialog
-        ButtonType insertButton = new ButtonType("Inserir", ButtonBar.ButtonData.OK_DONE);
-        ButtonType cancelButton = new ButtonType("Cancelar", ButtonBar.ButtonData.CANCEL_CLOSE);
-
-        dialog.getButtonTypes().setAll(insertButton, cancelButton);
-
-        // Processa a escolha do usuário
-        dialog.showAndWait().ifPresent(response -> {
-            if (response == insertButton) {
-                // Realiza a inserção na base de dados
-                insertIntoDatabaseAthletes(athletes);
-            } else {
-                // Apenas fecha o dialog
-                Alert cancelAlert = new Alert(Alert.AlertType.INFORMATION);
-                cancelAlert.setTitle("Operação Cancelada");
-                cancelAlert.setHeaderText("Nenhuma alteração foi feita.");
-                cancelAlert.show();
-            }
-        });
-    }
-
-    // Método para realizar a inserção na base de dados
-    private void insertIntoDatabaseAthletes(Athletes athletes) {
-        try {
-            UploadXmlDAO uploadXmlDAO = new UploadXmlDAO();
-            boolean uploaded = uploadXmlDAO.addAthletes(athletes);
-            if (uploaded) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Sucesso!");
-                alert.setHeaderText("Os dados foram inseridos na base de dados com sucesso!");
-                alert.show();
-            } else {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Erro!");
-                alert.setHeaderText("Ocorreu um erro ao adicionar os dados à Base de Dados!");
-                alert.show();
-            }
-        } catch (SQLException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Erro!");
-            alert.setHeaderText("Ocorreu um erro ao adicionar os dados à Base de Dados!");
-            alert.show();
+            Alert alerta = new Alert(Alert.AlertType.ERROR);
+            alerta.setTitle("Erro!");
+            alerta.setHeaderText("Selecione 2 ficheiros! 1 .xml e 1 xsd.xml");
+            alerta.show();
         }
     }
 

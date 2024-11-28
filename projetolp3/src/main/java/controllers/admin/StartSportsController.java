@@ -13,6 +13,8 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -22,6 +24,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Screen;
@@ -85,13 +88,11 @@ public class StartSportsController {
         RegistrationDao registrationDao = new RegistrationDao();
         List<String> years = registrationDao.getYears();
         ObservableList<String> yearsOptions = FXCollections.observableArrayList();
-        for (String year : years) {
-            yearsOptions.add(year);
-        }
+        yearsOptions.addAll(years);
         yearDrop.setItems(yearsOptions);
     }
 
-    public void showSports(ActionEvent event) throws SQLException {
+    public void showSport(ActionEvent event) throws SQLException {
         startSportsContainer.getChildren().clear();
         List<List> sports = null;
         int year = Integer.parseInt(yearDrop.getValue());
@@ -143,28 +144,62 @@ public class StartSportsController {
 
     private VBox createSportsItem(List sport, int year) throws SQLException {
         VBox requestItem = new VBox();
+        System.out.println(sport);
         requestItem.setSpacing(10);
         requestItem.getStyleClass().add("request-item");
-
+        int nPart = 0;
         int idSport = Integer.parseInt(sport.get(0).toString());
-        int nPart = sportDao.getNumberParticipantsSport(idSport, year);
         int mPart = Integer.parseInt(sport.get(5).toString());
+        Label minPart = new Label();
+        Label numPart = new Label();
 
         Label nameLabel = new Label(sport.get(3).toString());
         nameLabel.getStyleClass().add("name-label");
 
-        Label typeLabel = new Label(sport.get(1).toString());
+        String sportType = sport.get(1).toString();
+
+        Label typeLabel = new Label(sportType);
         typeLabel.getStyleClass().add("type-label");
 
         Label genderLabel = new Label(sport.get(2).toString());
         genderLabel.getStyleClass().add("gender-label");
 
-        Label minPart = new Label("Minímo de participantes: " + mPart);
-        minPart.getStyleClass().add("minPart-label");
+        if(sportType.equals("Individual")){
+            nPart = sportDao.getNumberParticipantsSport(idSport, year);
+            minPart = new Label("Minímo de participantes: " + mPart);
+            minPart.getStyleClass().add("minPart-label");
 
-        Label numPart = new Label("Número de participantes: " + nPart);
-        numPart.getStyleClass().add("numPart-label");
+            numPart = new Label("Número de participantes: " + nPart);
+            numPart.getStyleClass().add("numPart-label");
+        }
+        else{
 
+            nPart = sportDao.getNumberTeamsSport(idSport, year);
+            minPart = new Label("Minímo de equipas: " + mPart);
+            minPart.getStyleClass().add("minPart-label");
+
+            numPart = new Label("Número de equipas: " + nPart);
+            numPart.getStyleClass().add("numPart-label");
+        }
+
+        ImageView athletesImageView = new ImageView();
+        URL iconAttURL = Main.class.getResource("img/iconReView.png");
+        if (iconAttURL != null) {
+            Image image = new Image(iconAttURL.toExternalForm());
+            athletesImageView.setImage(image);
+            athletesImageView.setFitWidth(80);
+            athletesImageView.setFitHeight(80);
+        }
+        Button viewRegistedButton = new Button();
+        viewRegistedButton.setGraphic(athletesImageView);
+        viewRegistedButton.getStyleClass().add("startButton");
+        viewRegistedButton.setOnAction(event -> {
+            try {
+                showRegistedAthletes(idSport, year);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        });
         if (sport.get(8).toString().equals("3")) {
             if (nPart >= mPart) {
                 ImageView startImageView = new ImageView();
@@ -178,7 +213,11 @@ public class StartSportsController {
                 Button startButton = new Button();
                 startButton.setGraphic(startImageView);
                 startButton.getStyleClass().add("startButton");
-                requestItem.getChildren().addAll(nameLabel, typeLabel, genderLabel, minPart, numPart, startButton);
+                HBox buttonContainer = new HBox(10);
+                buttonContainer.getChildren().addAll(viewRegistedButton, startButton);
+                buttonContainer.setAlignment(Pos.CENTER_LEFT);
+                buttonContainer.setPadding(new Insets(10));
+                requestItem.getChildren().addAll(nameLabel, typeLabel, genderLabel, minPart, numPart, buttonContainer);
                 startButton.setOnAction(event -> {
                     try {
                         if (sportDao.verifyRanges(idSport)) {
@@ -204,7 +243,7 @@ public class StartSportsController {
                     }
                 });
             } else {
-                requestItem.getChildren().addAll(nameLabel, typeLabel, genderLabel, minPart, numPart);
+                requestItem.getChildren().addAll(nameLabel, typeLabel, genderLabel, minPart, numPart, viewRegistedButton);
             }
         } else {
             ImageView viewImageView = new ImageView();
@@ -215,14 +254,102 @@ public class StartSportsController {
                 viewImageView.setFitWidth(80);
                 viewImageView.setFitHeight(80);
             }
-            Button viewButton = new Button();
-            viewButton.setGraphic(viewImageView);
-            viewButton.getStyleClass().add("viewButton");
-            requestItem.getChildren().addAll(nameLabel, typeLabel, genderLabel, minPart, numPart, viewButton);
+            Button viewResultsButton = new Button();
+            viewResultsButton.setGraphic(viewImageView);
+            viewResultsButton.getStyleClass().add("startButton");
+            requestItem.getChildren().addAll(nameLabel, typeLabel, genderLabel, minPart, numPart, viewResultsButton);
         }
 
         requestItem.setPrefWidth(500); // Ensure this width allows two items per line
         return requestItem;
+    }
+
+    public void showRegistedAthletes(int idSport, int year) throws SQLException {
+        SportDao sportDao = new SportDao();
+        Stage popupStage = new Stage();
+        popupStage.setTitle("Atletas inscritos");
+
+
+        VBox vbox = new VBox(600);
+        vbox.setPadding(new Insets(10));
+        vbox.getStyleClass().add("popup-vbox");
+        if(sportDao.verifyIfIsTeam(idSport, year)){
+            List<List> results = sportDao.getTeamsAndthletes(idSport, year);
+            displayTeams(vbox, results);
+            Scene scene = new Scene(vbox, 600, 450);
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+            popupStage.setScene(scene);
+            popupStage.show();
+        }
+        else{
+            List<Athlete> results = sportDao.getAthletesBySport(idSport, year);
+            displayAthletes(vbox, results);
+            Scene scene = new Scene(vbox, 600, 450);
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+            popupStage.setScene(scene);
+            popupStage.show();
+        }
+    }
+
+    public void displayTeams(VBox vbox, List<List> results) {
+        vbox.getChildren().clear();
+        vbox.setSpacing(20);
+
+        Map<String, List<String>> teamAthletesMap = new HashMap<>();
+        for (List result : results) {
+            String teamName = result.get(1) != null ? result.get(1).toString() : "N/A";
+            String athleteName = result.get(3) != null ? result.get(3).toString() : "N/A";
+            teamAthletesMap.computeIfAbsent(teamName, k -> new ArrayList<>()).add(athleteName);
+        }
+
+        for (Map.Entry<String, List<String>> entry : teamAthletesMap.entrySet()) {
+            VBox resultItem = createTeamsResult(entry.getKey(), entry.getValue());
+            vbox.getChildren().add(resultItem);
+        }
+    }
+    public void displayAthletes(VBox vbox, List<Athlete> results) {
+        vbox.getChildren().clear();
+        vbox.setSpacing(20);
+        for(Athlete athlete : results){
+            VBox resultItem = createAthleteResult(athlete.getName(), athlete.getCountry().getName());
+            vbox.getChildren().add(resultItem);
+        }
+    }
+
+    private VBox createTeamsResult(String teamName, List<String> athletes) {
+        VBox resultItem = new VBox();
+        resultItem.setSpacing(10);
+
+        Label nameLabel = new Label("Equipa: " + teamName);
+        nameLabel.getStyleClass().add("name-label");
+
+        StringBuilder athletesText = new StringBuilder("Atletas: ");
+        for (String athlete : athletes) {
+            athletesText.append(athlete).append(", ");
+        }
+        if (!athletesText.isEmpty()) {
+            athletesText.setLength(athletesText.length() - 2);
+        }
+
+        Label resultLabel = new Label(athletesText.toString());
+        resultLabel.getStyleClass().add("result-label");
+
+        resultItem.getChildren().addAll(nameLabel, resultLabel);
+        return resultItem;
+    }
+    private VBox createAthleteResult(String athletes, String country) {
+        VBox resultItem = new VBox();
+        resultItem.setSpacing(10);
+
+        Label nameLabel = new Label("Atletas registados: ");
+        nameLabel.getStyleClass().add("name-label");
+
+
+        Label resultLabel = new Label(athletes + " - " + country);
+        resultLabel.getStyleClass().add("result-label");
+
+        resultItem.getChildren().addAll(resultLabel);
+        return resultItem;
     }
 
     public boolean changeMode(ActionEvent event) {
@@ -253,21 +380,34 @@ public class StartSportsController {
         iconModeNav.setImage(image);
     }
 
-    public void mostrarRegistar(ActionEvent event) throws IOException {
+    public void showRegister(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
-        Parent root = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/register.fxml")));
+        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/register.fxml")));
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
         scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
-        if (isDarkMode) {
+        if(isDarkMode){
             scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
-        } else {
+        }else{
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
+        }
+        stage.setScene(scene);
+        stage.show();
+    }
+    public void showAthletes(ActionEvent event) throws IOException {
+        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
+        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/athletesView.fxml")));
+        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
+        scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
+        if(isDarkMode){
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+        }else{
             scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
         }
         stage.setScene(scene);
         stage.show();
     }
 
-    public void mostrarRegistaModalidades(ActionEvent event) throws IOException {
+    public void showSportsRegister(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
         Parent root = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/sportRegister.fxml")));
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
@@ -280,7 +420,7 @@ public class StartSportsController {
         stage.setScene(scene);
         stage.show();
     }
-    public void mostrarEditaEquipas(ActionEvent event) throws IOException {
+    public void showTeamsEdit(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
         Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/teamEdit.fxml")));
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
@@ -293,7 +433,7 @@ public class StartSportsController {
         stage.setScene(scene);
         stage.show();
     }
-    public void mostrarEditaModalidades(ActionEvent event) throws IOException {
+    public void showSportsEdit(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
         Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/sportEdit.fxml")));
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
@@ -307,7 +447,7 @@ public class StartSportsController {
         stage.show();
     }
 
-    public void mostrarModalidades(ActionEvent event) throws IOException {
+    public void showSports(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
         Parent root = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/sportsView.fxml")));
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
@@ -321,7 +461,7 @@ public class StartSportsController {
         stage.show();
     }
 
-    public void mostrarIniciarModalidades(ActionEvent event) throws IOException {
+    public void showStartSports(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
         Parent root = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/startSport.fxml")));
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
@@ -350,10 +490,10 @@ public class StartSportsController {
     }
 
     public void logout(ActionEvent event) throws Exception {
-        mostrarLogin(event);
+        showLogin(event);
     }
 
-    public void mostrarLogin(ActionEvent event) throws IOException {
+    public void showLogin(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
         Parent root = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/loginView.fxml")));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();

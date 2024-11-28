@@ -17,7 +17,7 @@ import java.sql.ResultSet;
 
 public class AthleteDao {
 
-    public static List<Athlete> getAthletes() throws SQLException {
+    public List<Athlete> getAthletes() throws SQLException {
         List<Athlete> athletes = new ArrayList<>();
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT * FROM tblAthlete;");
         if (rs != null) {

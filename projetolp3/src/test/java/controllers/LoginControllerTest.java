@@ -12,7 +12,7 @@ class LoginControllerTest {
         int idAtleta = 1001;
         String password = "1001";
 
-        boolean loginSucess = loginController.verificaLogin(idAtleta,password,new ActionEvent());
+        boolean loginSucess = loginController.loginVerify(idAtleta,password,new ActionEvent());
 
         assertTrue(loginSucess);
     }
@@ -23,7 +23,7 @@ class LoginControllerTest {
         int idAtleta = 1009;
         String password = "password123";
 
-        boolean loginSucess = loginController.verificaLogin(idAtleta,password,new ActionEvent());
+        boolean loginSucess = loginController.loginVerify(idAtleta,password,new ActionEvent());
 
         assertFalse(loginSucess);
     }

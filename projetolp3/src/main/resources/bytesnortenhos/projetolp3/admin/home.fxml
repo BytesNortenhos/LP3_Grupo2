@@ -42,20 +42,21 @@
             </SplitMenuButton>
             <SplitMenuButton fx:id="sportSplitButton" styleClass="dropdownButton" text="Gerir modalidade">
                 <items>
-                    <MenuItem text="Visualizar modalidades" onAction="#mostrarModalidades"/>
-                    <MenuItem text="Iniciar modalidades" onAction="#mostrarIniciarModalidades"/>
-                    <MenuItem text="Registar modalidade" onAction="#mostrarRegistaModalidades"/>
-                    <MenuItem text="Editar modalidade" onAction="#mostrarEditaModalidades"/>
+                    <MenuItem text="Visualizar modalidades" onAction="#showSports"/>
+                    <MenuItem text="Iniciar modalidades" onAction="#showStartSports"/>
+                    <MenuItem text="Registar modalidade" onAction="#showSportsRegister"/>
+                    <MenuItem text="Editar modalidade" onAction="#showSportsEdit"/>
                 </items>
             </SplitMenuButton>
             <SplitMenuButton fx:id="teamSplitButton" styleClass="dropdownButton" text="Gerir equipa">
                 <items>
-                    <MenuItem text="Editar Equipa" onAction="#mostrarEditaEquipas"/>
+                    <MenuItem text="Editar Equipa" onAction="#showTeamsEdit"/>
                 </items>
             </SplitMenuButton>
             <SplitMenuButton fx:id="athleteSplitButton" styleClass="dropdownButton" text="Gerir atleta">
                 <items>
-                    <MenuItem text="Registar atleta" onAction="#mostrarRegistar"/>
+                    <MenuItem text="Visualizar atletas" onAction="#showAthletes"/>
+                    <MenuItem text="Registar atleta" onAction="#showRegister"/>
                 </items>
             </SplitMenuButton>
             <SplitMenuButton fx:id="testeSplitButton" styleClass="dropdownButton" text="Alterar IMG">

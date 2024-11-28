@@ -185,7 +185,7 @@ public class HomeControllerAthlete {
     }
 
 
-    public void mostrarModalidades(ActionEvent event) throws IOException {
+    public void showSports(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
         Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/sportsView.fxml")));
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
@@ -199,7 +199,7 @@ public class HomeControllerAthlete {
         stage.show();
     }
 
-    public void mostrarRegistaModalidades(ActionEvent event) throws IOException {
+    public void showSportsRegister(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
         Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/athlete/sportsRegister.fxml")));
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
@@ -213,36 +213,10 @@ public class HomeControllerAthlete {
         stage.show();
     }
 
-    public void mostrarRegistaModalidadesEquipa(ActionEvent event) throws IOException {
-        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
-        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/athlete/sportsTeamRegister.fxml")));
-        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
-        scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
-        if(isDarkMode){
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
-        }else{
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
-        }
-        stage.setScene(scene);
-        stage.show();
-    }
-    public void mostrarRegistaEquipas(ActionEvent event) throws IOException {
-        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
-        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/athlete/teamsRegister.fxml")));
-        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
-        scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
-        if(isDarkMode){
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
-        }else{
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
-        }
-        stage.setScene(scene);
-        stage.show();
-    }
     public void logout(ActionEvent event) throws Exception {
-        mostrarLogin(event);
+        showLogin(event);
     }
-    public void mostrarLogin(ActionEvent event) throws IOException {
+    public void showLogin(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
         Parent root = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/loginView.fxml")));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -274,7 +248,7 @@ public class HomeControllerAthlete {
     }
     private void displayResults(VBox vbox, List<List> results) {
         vbox.getChildren().clear();
-
+        vbox.setSpacing(20);
         for (List result : results) {
             VBox resultItem = createResultItem(result);
             vbox.getChildren().add(resultItem);
@@ -283,7 +257,6 @@ public class HomeControllerAthlete {
     private VBox createResultItem(List result) {
         VBox resultItem = new VBox();
         resultItem.setSpacing(10);
-
         Label nameLabel = new Label("Modalidade: " + (result.get(1) != null ? result.get(1).toString() : "N/A"));
         nameLabel.getStyleClass().add("name-label");
 
