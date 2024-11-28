@@ -170,55 +170,91 @@ public class EditSportController {
     @FXML
     private void updateSport() {
         try {
-
             String name = nameText.getText();
+            String type = typeDrop.getValue();
             String description = descText.getText();
-            int minParticipants = Integer.parseInt(minText.getText());
-            String selectedType = typeDrop.getValue();
-            String selectedGender = genderDrop.getValue();
-            String selectedOneGame = oneGameDrop.getValue();
-            Sport selectedSport = sportsListDropdown.getSelectionModel().getSelectedItem();
-            int resultMin = Integer.parseInt(resultMinText.getText());
-            int resultMax = Integer.parseInt(resultMaxText.getText());
+            String minParticipantsText = minText.getText();
+            String scoringMeasure = scoringDrop.getValue();
+            String oneGame = oneGameDrop.getValue();
+            String selectedGenderDesc = genderDrop.getValue();
 
+            if (name.isEmpty() || type == null || selectedGenderDesc == null || description.isEmpty() || minParticipantsText.isEmpty() ||
+                    scoringMeasure == null || oneGame == null) {
+                showAlert("Erro de Validação", "Por favor, preencha todos os campos obrigatórios!", Alert.AlertType.ERROR);
+                return;
+            }
+
+            if (name.length() > 50) {
+                showAlert("Erro de Validação", "O nome da modalidade não pode ter mais de 50 caracteres!", Alert.AlertType.ERROR);
+                return;
+            }
+
+            if (description.length() > 200) {
+                showAlert("Erro de Validação", "A descrição da modalidade não pode ter mais de 200 caracteres!", Alert.AlertType.ERROR);
+                return;
+            }
+
+            int minParticipants;
+            try {
+                minParticipants = Integer.parseInt(minParticipantsText);
+                if (minParticipants < 2) {
+                    showAlert("Erro de Validação", "O número mínimo de participantes deve ser pelo menos 2!", Alert.AlertType.ERROR);
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                showAlert("Erro de Validação", "Formato inválido para o número mínimo de participantes!", Alert.AlertType.ERROR);
+                return;
+            }
+
+            int genderId = selectedGenderDesc.equals("Masculino") ? 1 : 2;
+            Gender selectedGender = new Gender(genderId, selectedGenderDesc);
+
+            Sport selectedSport = sportsListDropdown.getSelectionModel().getSelectedItem();
             if (selectedSport == null) {
-                showAlert("Validation Error", "Selecione uma modalidade para atualizar!", Alert.AlertType.ERROR);
+                showAlert("Erro de Validação", "Selecione uma modalidade para atualizar!", Alert.AlertType.ERROR);
+                return;
+            }
+
+            int resultMin = 0;
+            int resultMax = 0;
+
+            try {
+                resultMin = Integer.parseInt(resultMinText.getText());
+                resultMax = Integer.parseInt(resultMaxText.getText());
+                if (resultMin < 0 || resultMax < 0) {
+                    throw new NumberFormatException("Os valores de resultado não podem ser negativos.");
+                }
+            } catch (NumberFormatException e) {
+                showAlert("Erro de Validação", "Formato inválido ou valor de resultado inválido. Os valores de resultado devem ser números não negativos.", Alert.AlertType.ERROR);
                 return;
             }
 
             if (resultMin > resultMax) {
-                showAlert("Validation Error", "O valor mínimo do resultado não pode ser maior que o valor máximo!", Alert.AlertType.ERROR);
+                showAlert("Erro de Validação", "O valor mínimo do resultado não pode ser maior que o valor máximo!", Alert.AlertType.ERROR);
                 return;
             }
-
-            int genderId = 0;
-            if ("Masculino".equals(selectedGender)) {
-                genderId = 1;
-            } else if ("Feminino".equals(selectedGender)) {
-                genderId = 2;
-            }
-
-            String selectedScoringMeasure = scoringDrop.getValue();
 
             selectedSport.setName(name);
             selectedSport.setDesc(description);
             selectedSport.setMinParticipants(minParticipants);
-            selectedSport.setType(selectedType);
+            selectedSport.setType(type);
             selectedSport.getGenre().setIdGender(genderId);
-            selectedSport.setScoringMeasure(selectedScoringMeasure);
-            selectedSport.setOneGame(selectedOneGame);
+            selectedSport.setScoringMeasure(scoringMeasure);
+            selectedSport.setOneGame(oneGame);
             selectedSport.setResultMin(resultMin);
             selectedSport.setResultMax(resultMax);
 
             SportDao.updateSport(selectedSport);
 
-            showAlert("Success", "Modalidade atualizada com sucesso!", Alert.AlertType.INFORMATION);
-        } catch (NumberFormatException e) {
-            showAlert("Validation Error", "Formato inválido para um dos campos numéricos!", Alert.AlertType.ERROR);
+            showAlert("Sucesso", "Modalidade atualizada com sucesso!", Alert.AlertType.INFORMATION);
+
         } catch (SQLException e) {
-            showAlert("Database Error", "Erro ao atualizar esporte: " + e.getMessage(), Alert.AlertType.ERROR);
+            showAlert("Erro na BD", "Ocorreu um erro ao acessar a BD: " + e.getMessage(), Alert.AlertType.ERROR);
+        } catch (Exception e) {
+            showAlert("Erro", "Ocorreu um erro inesperado: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
+
 
     private void showAlert(String title, String message, Alert.AlertType alertType) {
         Alert alert = new Alert(alertType);

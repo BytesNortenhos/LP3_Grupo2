@@ -147,36 +147,46 @@ public class EditTeamController {
         try {
             TeamDao teamdao = new TeamDao();
             String name = teamNameText.getText();
+
+
+            if (name.length() > 50) {
+                showAlert("Erro de Validação", "O nome da equipa não pode ter mais de 50 caracteres!", Alert.AlertType.ERROR);
+                return;
+            }
+
             String idTeam = "0";
             int playersCount = Integer.parseInt(teamPlayersText.getText());
             int playersMaxCount = Integer.parseInt(teamMaxPlayersText.getText());
 
             String selectedTeam = teamsListDropdown.getSelectionModel().getSelectedItem();
 
-            if (selectedTeam != null) {
-                List<List> teams = teamdao.getTeamsNamesAndId();
-                for (List team : teams) {
-                    if (team.get(1).toString().equals(selectedTeam)) {
-                        idTeam = team.get(0).toString();
-                    }
-                }
-            }
 
             if (selectedTeam == null) {
-                showAlert("Validation Error", "Selecione uma equipe para atualizar!", Alert.AlertType.ERROR);
+                showAlert("Erro de Validação", "Selecione uma equipa para atualizar!", Alert.AlertType.ERROR);
                 return;
+            }
+
+            // Buscar o ID da equipa selecionada
+            List<List> teams = teamdao.getTeamsNamesAndId();
+            for (List team : teams) {
+                if (team.get(1).toString().equals(selectedTeam)) {
+                    idTeam = team.get(0).toString();
+                }
             }
 
 
             TeamDao.updateTeams(idTeam, name, playersCount, playersMaxCount);
-//
-            showAlert("Success", "Equipe atualizada com sucesso!", Alert.AlertType.INFORMATION);
+
+
+            showAlert("Sucesso", "Equipa atualizada com sucesso!", Alert.AlertType.INFORMATION);
+
         } catch (NumberFormatException e) {
-            showAlert("Validation Error", "Formato inválido para o número de jogadores!", Alert.AlertType.ERROR);
+            showAlert("Erro de Validação", "Formato inválido para o número de jogadores!", Alert.AlertType.ERROR);
         } catch (SQLException e) {
-            showAlert("Database Error", "Erro ao atualizar equipe: " + e.getMessage(), Alert.AlertType.ERROR);
+            showAlert("Erro na BD", "Erro ao atualizar a equipa: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
+
 
 
     private void showAlert(String title, String message, Alert.AlertType alertType) {

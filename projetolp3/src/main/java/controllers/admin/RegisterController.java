@@ -29,6 +29,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -64,8 +65,10 @@ public class RegisterController {
     private TextField userNameText;
     @FXML
     private TextField weightText;
+
     @FXML
     private TextField heightText;
+
     @FXML
     private DatePicker datePicker;
 
@@ -148,9 +151,46 @@ public class RegisterController {
             String userName = userNameText.getText();
             String selectedGender = genderDrop.getValue();
             String selectedCountry = nacDrop.getValue();
-            float weight = Float.parseFloat(weightText.getText());
-            int height = Integer.parseInt(heightText.getText());
-            java.sql.Date dateOfBirth = java.sql.Date.valueOf(datePicker.getValue());
+            String weight = weightText.getText();
+            String height = heightText.getText();
+            LocalDate dateOfBirth = datePicker.getValue();
+
+            if (userName.isEmpty() || selectedGender == null || selectedCountry == null ||
+                    weight.isEmpty() || height.isEmpty() || dateOfBirth == null) {
+                showAlert("Erro", "Todos os campos são obrigatórios.", Alert.AlertType.ERROR);
+                return;
+            }
+
+            if (!userName.matches("[a-zA-Z\\s]+")) {
+                showAlert("Erro", "O nome do atleta não pode conter números ou caracteres especiais.", Alert.AlertType.ERROR);
+                return;
+            }
+
+            float parsedWeight;
+            int parsedHeight;
+            try {
+                parsedWeight = Float.parseFloat(weight);
+                parsedHeight = Integer.parseInt(height);
+            } catch (NumberFormatException e) {
+                showAlert("Erro", "O peso e a altura devem ser valores numéricos.", Alert.AlertType.ERROR);
+                return;
+            }
+
+            int age = LocalDate.now().getYear() - dateOfBirth.getYear();
+            if (age < 13 || age > 120) {
+                showAlert("Erro", "A idade deve estar entre 13 e 120 anos.", Alert.AlertType.ERROR);
+                return;
+            }
+
+            if (parsedHeight > 250) {
+                showAlert("Erro", "A altura não pode exceder 2,50 metros.", Alert.AlertType.ERROR);
+                return;
+            }
+
+            if (parsedWeight > 400) {
+                showAlert("Erro", "O peso não pode exceder 400 kg.", Alert.AlertType.ERROR);
+                return;
+            }
 
             Gender gender = GenderDao.getGenders().stream()
                     .filter(g -> g.getDesc().equals(selectedGender))
@@ -161,7 +201,7 @@ public class RegisterController {
                     .findFirst().orElse(null);
 
             if (gender != null && country != null) {
-                Athlete athlete = new Athlete(0, "", userName, country, gender, height, weight, dateOfBirth);
+                Athlete athlete = new Athlete(0, "", userName, country, gender, parsedHeight, parsedWeight, java.sql.Date.valueOf(dateOfBirth));
 
                 int generatedId = AthleteDao.addAthlete(athlete);
 
@@ -171,24 +211,29 @@ public class RegisterController {
 
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Sucesso!");
-                alert.setHeaderText("Atleta registrado com sucesso! ID gerado: " + generatedId);
+                alert.setHeaderText("Atleta registado com sucesso! ID gerado: " + generatedId);
                 Optional<ButtonType> result = alert.showAndWait();
                 if (result.isPresent() && result.get() == ButtonType.OK) {
                     returnHomeMenu(event);
                 }
             } else {
-                Alert alerta = new Alert(Alert.AlertType.ERROR);
-                alerta.setTitle("Erro!");
-                alerta.setHeaderText("Por favor, selecione um gênero e um país válidos.");
-                alerta.show();
+                showAlert("Erro", "Por favor, selecione um género e um país válidos.", Alert.AlertType.ERROR);
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } catch (NumberFormatException e) {
-            System.out.println("Por favor, insira valores válidos para peso e altura.");
+            showAlert("Erro", "Erro ao conectar com a base de dados.", Alert.AlertType.ERROR);
         } catch (Exception e) {
             e.printStackTrace();
+            showAlert("Erro", "Ocorreu um erro inesperado.", Alert.AlertType.ERROR);
         }
+    }
+
+    private void showAlert(String title, String message, Alert.AlertType alertType) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
     public void logout(ActionEvent event) throws Exception {

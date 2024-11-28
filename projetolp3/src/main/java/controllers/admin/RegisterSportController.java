@@ -140,13 +140,36 @@ public class RegisterSportController {
             String name = nameText.getText();
             String type = typeDrop.getValue();
             String description = descText.getText();
-            int minParticipants = Integer.parseInt(minText.getText());
+            String minParticipantsText = minText.getText();
             String scoringMeasure = scoringDrop.getValue();
             String oneGame = oneGameDrop.getValue();
             String selectedGenderDesc = genderDrop.getValue();
 
-            if (name.isEmpty() || type == null || selectedGenderDesc == null) {
+            if (name.isEmpty() || type == null || selectedGenderDesc == null || description.isEmpty() || minParticipantsText.isEmpty() ||
+                    scoringMeasure == null || oneGame == null) {
                 showAlert("Erro de Validação", "Por favor, preencha todos os campos obrigatórios!", Alert.AlertType.ERROR);
+                return;
+            }
+
+            if (name.length() > 50) {
+                showAlert("Erro de Validação", "O nome da modalidade não pode ter mais de 50 caracteres!", Alert.AlertType.ERROR);
+                return;
+            }
+
+            if (description.length() > 200) {
+                showAlert("Erro de Validação", "A descrição da modalidade não pode ter mais de 200 caracteres!", Alert.AlertType.ERROR);
+                return;
+            }
+
+            int minParticipants;
+            try {
+                minParticipants = Integer.parseInt(minParticipantsText);
+                if (minParticipants < 2) {
+                    showAlert("Erro de Validação", "O número mínimo de participantes deve ser pelo menos 2!", Alert.AlertType.ERROR);
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                showAlert("Erro de Validação", "Formato inválido para o número mínimo de participantes!", Alert.AlertType.ERROR);
                 return;
             }
 
@@ -169,6 +192,23 @@ public class RegisterSportController {
 
             int sportId = SportDao.addSport(newSport);
 
+            if (rules.isEmpty()) {
+                showAlert("Erro de Validação", "Por favor, adicione pelo menos uma regra!", Alert.AlertType.ERROR);
+                return;
+            }
+
+            for (String ruleDesc : rules) {
+                if (ruleDesc.isEmpty()) {
+                    showAlert("Erro de Validação", "A descrição de cada regra não pode ser vazia!", Alert.AlertType.ERROR);
+                    return;
+                }
+
+                if (ruleDesc.length() > 200) {
+                    showAlert("Erro de Validação", "A descrição da regra não pode ter mais de 200 caracteres!", Alert.AlertType.ERROR);
+                    return;
+                }
+            }
+
             for (String ruleDesc : rules) {
                 Rule newRule = new Rule(0, sportId, ruleDesc);
                 RuleDao.addRule(newRule);
@@ -177,8 +217,6 @@ public class RegisterSportController {
             rules.clear();
             showAlert("Sucesso", "Modalidade e regras registradas com sucesso!", Alert.AlertType.INFORMATION);
 
-        } catch (NumberFormatException e) {
-            showAlert("Erro de Validação", "Formato inválido para o número mínimo de participantes!", Alert.AlertType.ERROR);
         } catch (SQLException e) {
             showAlert("Erro na BD", "Ocorreu um erro ao acessar a BD: " + e.getMessage(), Alert.AlertType.ERROR);
         } catch (Exception e) {
@@ -187,22 +225,32 @@ public class RegisterSportController {
     }
 
 
-
     @FXML
     public void addRule() {
         String ruleDescription = rulesTextArea.getText().trim();
 
-        if (!ruleDescription.isEmpty()) {
-            rules.add(ruleDescription);
-
-            rulesTextArea.clear();
-
-            showAlert("Success", "Rule added successfully!", Alert.AlertType.INFORMATION);
-        } else {
-            // Exibir um alerta se a descrição da regra estiver vazia
-            showAlert("Error", "Rule description cannot be empty!", Alert.AlertType.ERROR);
+        if (ruleDescription.isEmpty()) {
+            showAlert("Erro", "A descrição da regra não pode estar vazia!", Alert.AlertType.ERROR);
+            return;
         }
+
+        if (ruleDescription.length() > 200) {
+            showAlert("Erro", "A descrição da regra não pode ter mais de 200 caracteres!", Alert.AlertType.ERROR);
+            return;
+        }
+
+        if (rules.size() >= 10) {
+            showAlert("Erro", "Você não pode adicionar mais de 10 regras!", Alert.AlertType.ERROR);
+            return;
+        }
+
+        rules.add(ruleDescription);
+
+        rulesTextArea.clear();
+
+        showAlert("Sucesso", "Regra adicionada com sucesso!", Alert.AlertType.INFORMATION);
     }
+
 
     private void showAlert(String title, String message, Alert.AlertType alertType) {
         Alert alert = new Alert(alertType);
