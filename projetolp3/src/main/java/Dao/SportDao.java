@@ -3,6 +3,7 @@ package Dao;
 import Models.*;
 import Utils.ConnectionsUtlis;
 import java.sql.ResultSet;
+import java.time.LocalDate;
 
 import javax.sql.rowset.CachedRowSet;
 import java.sql.Connection;
@@ -223,42 +224,70 @@ public class SportDao {
         return false;
     }
     public static int addSport(Sport sport) throws SQLException {
-        String query = "INSERT INTO tblSport (type, idGender, name, description, minParticipants, scoringMeasure, oneGame) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String querySport = "INSERT INTO tblSport (type, idGender, name, description, minParticipants, scoringMeasure, oneGame) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String queryOlympicRecord = "INSERT INTO tblOlympicRecord (idSport, year) VALUES (?, ?)";
+
         Connection conn = null;
-        PreparedStatement stmt = null;
+        PreparedStatement stmtSport = null;
+        PreparedStatement stmtOlympicRecord = null;
         ResultSet rs = null;
 
         try {
             conn = ConnectionsUtlis.dbConnect();
-            stmt = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
 
-            stmt.setString(1, sport.getType());
-            stmt.setInt(2, sport.getGenre().getIdGender());
-            stmt.setString(3, sport.getName());
-            stmt.setString(4, sport.getDesc());
-            stmt.setInt(5, sport.getMinParticipants());
-            stmt.setString(6, sport.getScoringMeasure());
-            stmt.setString(7, sport.getOneGame());
+            // Start transaction
+            conn.setAutoCommit(false); // Ensure both inserts are in one transaction
 
-            // Executa a inserção
-            stmt.executeUpdate();
+            // Insert the sport into tblSport
+            stmtSport = conn.prepareStatement(querySport, PreparedStatement.RETURN_GENERATED_KEYS);
+            stmtSport.setString(1, sport.getType());
+            stmtSport.setInt(2, sport.getGenre().getIdGender());
+            stmtSport.setString(3, sport.getName());
+            stmtSport.setString(4, sport.getDesc());
+            stmtSport.setInt(5, sport.getMinParticipants());
+            stmtSport.setString(6, sport.getScoringMeasure());
+            stmtSport.setString(7, sport.getOneGame());
 
-            // Obter o ID gerado automaticamente
-            rs = stmt.getGeneratedKeys();
+            stmtSport.executeUpdate();
+
+            // Get the generated sport ID
+            rs = stmtSport.getGeneratedKeys();
             if (rs.next()) {
-                int generatedId = rs.getInt(1); // Retorna o ID gerado
-                System.out.println("Generated Sport ID: " + generatedId); // Adicionando para depuração
-                return generatedId;
+                int sportId = rs.getInt(1); // Get the generated ID
+
+                // Get the current year (current year)
+                int currentYear = LocalDate.now().getYear();
+
+                // Insert a record into tblOlympicRecord with the generated sportId and current year
+                stmtOlympicRecord = conn.prepareStatement(queryOlympicRecord);
+                stmtOlympicRecord.setInt(1, sportId);
+                stmtOlympicRecord.setInt(2, currentYear); // Pass the current year
+
+                stmtOlympicRecord.executeUpdate();
+
+                // Commit the transaction
+                conn.commit();
+
+                System.out.println("Generated Sport ID: " + sportId); // For debugging
+                return sportId;
             } else {
                 throw new SQLException("Failed to retrieve the generated ID for the sport.");
             }
+        } catch (SQLException e) {
+            if (conn != null) {
+                conn.rollback(); // Rollback the transaction in case of an error
+            }
+            throw e; // Rethrow the exception to propagate the error
         } finally {
-            // Fechar recursos
+            // Close resources
             if (rs != null) {
                 rs.close();
             }
-            if (stmt != null) {
-                stmt.close();
+            if (stmtSport != null) {
+                stmtSport.close();
+            }
+            if (stmtOlympicRecord != null) {
+                stmtOlympicRecord.close();
             }
             if (conn != null) {
                 conn.close();

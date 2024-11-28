@@ -218,6 +218,7 @@ public class RegisterSportController {
             showAlert("Sucesso", "Modalidade e regras registradas com sucesso!", Alert.AlertType.INFORMATION);
 
         } catch (SQLException e) {
+            System.out.println(e.getMessage());
             showAlert("Erro na BD", "Ocorreu um erro ao acessar a BD: " + e.getMessage(), Alert.AlertType.ERROR);
         } catch (Exception e) {
             showAlert("Erro", "Ocorreu um erro inesperado: " + e.getMessage(), Alert.AlertType.ERROR);
