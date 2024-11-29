@@ -159,17 +159,17 @@ public class OlympicRecordDao {
     }
 
     public boolean setNewOlympicRecordAthlete(int idSport, int year, int idAthlete, int resultado) throws SQLException {
-        String query = "UPDATE tblOlympicRecord SET idSport = ?, year = ?, idAthlete = ?, result = ?";
+        String query = "UPDATE tblOlympicRecord SET year = ?, idAthlete = ?, result = ? WHERE idSport = ?";
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
             conn = ConnectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
-            stmt.setInt(1, idSport);
-            stmt.setInt(2, year);
-            stmt.setInt(3, idAthlete);
-            stmt.setInt(4, resultado);
+            stmt.setInt(1, year);
+            stmt.setInt(2, idAthlete);
+            stmt.setInt(3, resultado);
+            stmt.setInt(4, idSport);
             stmt.executeUpdate();
             return true;
         } finally {
@@ -183,17 +183,17 @@ public class OlympicRecordDao {
     }
 
     public boolean setNewOlympicRecordTeam(int idSport, int year, int idTeam, int resultado) throws SQLException {
-        String query = "UPDATE tblOlympicRecord SET idSport = ?, year = ?, idTeam = ?, result = ?";
+        String query = "UPDATE tblOlympicRecord SET year = ?, idTeam = ?, result = ? WHERE idSport = ?";
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
             conn = ConnectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
-            stmt.setInt(1, idSport);
-            stmt.setInt(2, year);
-            stmt.setInt(3, idTeam);
-            stmt.setInt(4, resultado);
+            stmt.setInt(1, year);
+            stmt.setInt(2, idTeam);
+            stmt.setInt(3, resultado);
+            stmt.setInt(4, idSport);
             stmt.executeUpdate();
             return true;
         } finally {
