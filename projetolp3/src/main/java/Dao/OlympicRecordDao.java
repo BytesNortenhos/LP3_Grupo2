@@ -130,6 +130,7 @@ public class OlympicRecordDao {
         }
         return null;
     }
+
     public static OlympicRecord getOlympicRecordByIdV2(int idSport, int year) throws SQLException {
         String query = "SELECT * FROM tblOlympicRecord WHERE idSport = ? AND year = ?";
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, year);
@@ -142,5 +143,66 @@ public class OlympicRecordDao {
             return new OlympicRecord(idSport, year, idAthlete, idTeam, timeMS, medals);
         }
         return null;
+    }
+
+    public Integer getOlympicRecord(int idSport) throws SQLException {
+        String query = "SELECT result FROM tblOlympicRecord WHERE idSport = ?";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport);
+        try {
+            if (rs != null && rs.next()) {
+                return rs.getInt("result");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public boolean setNewOlympicRecordAthlete(int idSport, int year, int idAthlete, int resultado) throws SQLException {
+        String query = "UPDATE tblOlympicRecord SET idSport = ?, year = ?, idAthlete = ?, result = ?";
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        try {
+            conn = ConnectionsUtlis.dbConnect();
+            stmt = conn.prepareStatement(query);
+
+            stmt.setInt(1, idSport);
+            stmt.setInt(2, year);
+            stmt.setInt(3, idAthlete);
+            stmt.setInt(4, resultado);
+            stmt.executeUpdate();
+            return true;
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+    }
+
+    public boolean setNewOlympicRecordTeam(int idSport, int year, int idTeam, int resultado) throws SQLException {
+        String query = "UPDATE tblOlympicRecord SET idSport = ?, year = ?, idTeam = ?, result = ?";
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        try {
+            conn = ConnectionsUtlis.dbConnect();
+            stmt = conn.prepareStatement(query);
+
+            stmt.setInt(1, idSport);
+            stmt.setInt(2, year);
+            stmt.setInt(3, idTeam);
+            stmt.setInt(4, resultado);
+            stmt.executeUpdate();
+            return true;
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
     }
 }

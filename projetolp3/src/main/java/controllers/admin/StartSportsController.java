@@ -1,9 +1,6 @@
 package controllers.admin;
 
-import Dao.MedalDao;
-import Dao.RegistrationDao;
-import Dao.ResultDao;
-import Dao.SportDao;
+import Dao.*;
 import Models.*;
 import bytesnortenhos.projetolp3.Main;
 import controllers.ViewsController;
@@ -70,6 +67,7 @@ public class StartSportsController {
     RegistrationDao registrationDao = new RegistrationDao();
     ResultDao resultDao = new ResultDao();
     MedalDao medalDao = new MedalDao();
+    OlympicRecordDao olympicRecordDao = new OlympicRecordDao();
 
     public void initialize() throws SQLException {
         loadIcons();
@@ -558,6 +556,8 @@ public class StartSportsController {
     public boolean iniciarModalidades(int idSport, int year) throws SQLException {
         List<Integer> IdsParticipants;
 
+        registrationDao.setStatusRejected(idSport, year);
+
         if (sportDao.getType(idSport).equals("Individual")) {
             IdsParticipants = registrationDao.getRegisteredAthletes(idSport, year);
             if (sportDao.getOneGame(idSport).equals("One")) {
@@ -638,7 +638,12 @@ public class StartSportsController {
         }
 
         //Verificar Recorde Olímpico
-
+        Integer olympicRecord = olympicRecordDao.getOlympicRecord(idSport);
+        if (olympicRecord != null) {
+            if (resultados.getFirst() > olympicRecord){
+                olympicRecordDao.setNewOlympicRecordAthlete(idSport, year, IdsParticipants.getFirst(), resultados.getFirst());
+            }
+        }
         return true;
     }
 
@@ -720,7 +725,12 @@ public class StartSportsController {
         }
 
         //Verificar Recorde Olímpico
-
+        Integer olympicRecord = olympicRecordDao.getOlympicRecord(idSport);
+        if (olympicRecord != null) {
+            if (resultados.getFirst() > olympicRecord){
+                olympicRecordDao.setNewOlympicRecordTeam(idSport, year, IdsParticipants.getFirst(), resultados.getFirst());
+            }
+        }
         return true;
     }
 
