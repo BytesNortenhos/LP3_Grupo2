@@ -34,8 +34,32 @@ public class AthleteDao {
                 int height = rs.getInt("height");
                 float weight = rs.getFloat("weight");
                 java.sql.Date dateOfBirth = rs.getDate("dateOfBirth");
+                String image = rs.getString("image");
 
-                Athlete athlete = new Athlete(idAthlete, password, name, country, gender, height, weight, dateOfBirth);
+                Athlete athlete = new Athlete(idAthlete, password, name, country, gender, height, weight, dateOfBirth, image);
+                athletes.add(athlete);
+            }
+        } else {
+            System.out.println("ResultSet is null. No results for Athlete found.");
+        }
+        return athletes;
+    }
+    public List<List> getAthletesToShow() throws SQLException{
+        List<List> athletes = new ArrayList<>();
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT a.idAthlete ,a.name, a.height, a.weight,a.dateOfBirth, c.name as countryName, g.description as gender " +
+                "FROM tblAthlete as a " +
+                "INNER JOIN tblCountry as c ON a.idCountry = c.idCountry " +
+                "INNER JOIN tblGender as g ON a.idGender = g.idGender");
+        if (rs != null) {
+            while (rs.next()) {
+                List<String> athlete = new ArrayList<>();
+                athlete.add(rs.getString("idAthlete"));
+                athlete.add(rs.getString("name"));
+                athlete.add(rs.getString("countryName"));
+                athlete.add(rs.getString("gender"));
+                athlete.add(rs.getString("height"));
+                athlete.add(rs.getString("weight"));
+                athlete.add(rs.getString("dateOfBirth"));
                 athletes.add(athlete);
             }
         } else {
@@ -50,8 +74,8 @@ public class AthleteDao {
         PreparedStatement stmt = null;
         PasswordUtils passwordUtils = new PasswordUtils();
         String password = passwordUtils.encriptarPassword(athlete.getPassword());
-        ResultSet rs = null; // Para armazenar o id gerado
-        int generatedId = -1; // Valor padrão caso não consiga pegar o id
+        ResultSet rs = null;
+        int generatedId = -1;
 
 
         try {
@@ -153,7 +177,8 @@ public class AthleteDao {
             int height = rs.getInt("height");
             float weight = rs.getFloat("weight");
             java.sql.Date dateOfBirth = rs.getDate("dateOfBirth");
-            return new Athlete(idAthlete, password, name, country, gender, height, weight, dateOfBirth);
+            String image = rs.getString("image");
+            return new Athlete(idAthlete, password, name, country, gender, height, weight, dateOfBirth, image);
         }
         return null;
     }   public static Athlete getAthleteByIdMinimum(int idAthlete) throws SQLException {
@@ -224,5 +249,4 @@ public class AthleteDao {
             }
         }
     }
-
 }

@@ -15,8 +15,9 @@ public class Athlete extends Person {
     private Date dateOfBirth;
     private Country country;
     private Gender genre;
+    private String image;
 
-    public Athlete(int id, String password, String name, Country country, Gender genre, int height, float weight, Date dateOfBirth) {
+    public Athlete(int id, String password, String name, Country country, Gender genre, int height, float weight, Date dateOfBirth, String image) {
         super(id, password);
         this.name = name;
         this.country = country;
@@ -24,6 +25,7 @@ public class Athlete extends Person {
         this.height = height;
         this.weight = weight;
         this.dateOfBirth = dateOfBirth;
+        this.image = image;
     }
     public Athlete(int id, String password, String name, int height, float weight, Date dateOfBirth) {
         super(id, password);
@@ -82,6 +84,10 @@ public class Athlete extends Person {
 
     public Gender getGenre() {
         return genre;
+    }
+
+    public String getImage() {
+        return image;
     }
 
     public void setGenre(Gender genre) {

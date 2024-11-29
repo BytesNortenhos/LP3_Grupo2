@@ -691,7 +691,7 @@ public class HomeController {
     }
 
     public void updateImageAthlete(ActionEvent event) throws SQLException {
-        String pathSave = "src/main/java/ImagesAthlete/";
+        String pathSave = "ImagesAthlete/";
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource Files");
 

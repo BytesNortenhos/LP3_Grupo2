@@ -32,6 +32,7 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -235,32 +236,46 @@ public class HomeControllerAthlete {
         Stage popupStage = new Stage();
         popupStage.setTitle("Histórico de participações");
 
-
         VBox vbox = new VBox(400);
         vbox.setPadding(new Insets(10));
         vbox.getStyleClass().add("popup-vbox");
         List<List> results = resultDao.getResultByAthlete(idAthlete);
         displayResults(vbox, results);
+
+
         Scene scene = new Scene(vbox, 500, 450);
         scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
         popupStage.setScene(scene);
         popupStage.show();
     }
-    private void displayResults(VBox vbox, List<List> results) {
+    private void displayResults(VBox vbox, List<List> results) throws SQLException {
         vbox.getChildren().clear();
         vbox.setSpacing(20);
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.getStyleClass().add("popup-scroll-pane");
+        scrollPane.setFitToWidth(true);
+
+        VBox scrollContent = new VBox();
+        scrollContent.setSpacing(20);
+        scrollContent.setFillWidth(true);
+        scrollContent.getStyleClass().add("popup-scroll-pane");
         for (List result : results) {
             VBox resultItem = createResultItem(result);
-            vbox.getChildren().add(resultItem);
+            scrollContent.getChildren().add(resultItem);
         }
+
+        scrollPane.setContent(scrollContent);
+        vbox.getChildren().add(scrollPane);
     }
-    private VBox createResultItem(List result) {
+    private VBox createResultItem(List result) throws SQLException {
         VBox resultItem = new VBox();
         resultItem.setSpacing(10);
         Label nameLabel = new Label("Modalidade: " + (result.get(1) != null ? result.get(1).toString() : "N/A"));
         nameLabel.getStyleClass().add("name-label");
 
-        Label resultLabel = new Label("Resultado: " + (result.get(0) != null ? result.get(0).toString() : "N/A"));
+        long resultValue = Long.parseLong(result.get(0).toString());
+        double resultSeconds = resultValue / 1000.0;
+        Label resultLabel = new Label("Resultado: " + resultSeconds + " segundos");
         resultLabel.getStyleClass().add("result-label");
 
         Label typeLabel = new Label("Tipo de modalidade: " + (result.get(2) != null ? result.get(2).toString() : "N/A"));
@@ -278,7 +293,18 @@ public class HomeControllerAthlete {
         Label localLabel = new Label("Local: " + (result.get(5) != null ? result.get(5).toString() : "N/A"));
         localLabel.getStyleClass().add("local-label");
 
-        resultItem.getChildren().addAll(nameLabel, resultLabel, typeLabel, dateLabel, localLabel);
+        int pos = 0;
+        ResultDao resultDao = new ResultDao();
+        List<List> positions = resultDao.getPositionById((Integer) result.get(6), result.get(4).toString());
+        for (List position : positions) {
+            if((Integer) position.get(1) == idAthlete){
+                pos = (Integer) position.get(0);
+            }
+        }
+        Label postionLabel = new Label("Posição: " + pos + "º lugar");
+        postionLabel.getStyleClass().add("local-label");
+
+        resultItem.getChildren().addAll(nameLabel, resultLabel, typeLabel, dateLabel, localLabel, postionLabel);
         return resultItem;
     }
 }

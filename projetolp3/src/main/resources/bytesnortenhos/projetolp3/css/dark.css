@@ -132,7 +132,7 @@
     line-height: 120%;
     -fx-text-fill: #F7EED8;
 }
-.age-label, .sport-label, .country-label, .type-label, .description-label, .gender-label, .minPart-label, .scoringMeasure-label, .oneGame-label, .numPart-label, .result-label, .local-label, .date-label, .height-label, .weight-label, .birth-label {
+.age-label, .sport-label, .country-label, .type-label, .description-label, .gender-label, .minPart-label, .scoringMeasure-label, .oneGame-label, .numPart-label, .result-label, .local-label, .date-label, .height-label, .weight-label, .birth-label    {
     -fx-font-family: 'Inter';
     -fx-font-style: normal;
     -fx-font-weight: 400;
@@ -163,7 +163,7 @@
     -fx-translate-y: 30px;
     -fx-padding: 10px;
 }
-#mainContainer, .scrollStyle, #sportsContainer, #startSportsContainer, #showAthletesContainer{
+#mainContainer, .scrollStyle, #sportsContainer, #startSportsContainer, #showAthletesContainer, .popup-scroll-pane{
     -fx-background-color: #1E1E1E;
 }
 #mainContainer, #sportsContainer{
@@ -429,7 +429,12 @@
     -fx-border-color: lightgray;
 }
 .popup-vbox{
+    -fx-min-height: 100%;
     -fx-background-color: #1E1E1E;
+}
+.popup-title {
+    -fx-font-size: 30px;
+    -fx-text-fill: #F7EED8;
 }
 .popup-label{
     -fx-font-size: 20px;

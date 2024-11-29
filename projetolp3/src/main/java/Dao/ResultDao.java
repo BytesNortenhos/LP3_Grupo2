@@ -207,7 +207,7 @@ public class ResultDao {
     }
 
     public List<List> getResultByAthlete(int idAthlete) throws SQLException{
-        String query = "SELECT r.*, s.name as sportName, s.type as sportType, t.name as teamName, l.name as localName FROM tblResult as r " +
+        String query = "SELECT r.*, s.name as sportName, s.idSport as idSport, s.type as sportType, t.name as teamName, l.name as localName FROM tblResult as r " +
                 "LEFT JOIN tblSport as s ON r.idSport = s.idSport " +
                 "LEFT JOIN tblTeam as t ON r.idTeam = t.idTeam " +
                 "LEFT JOIN tblLocal as l on r.idLocal = l.idLocal " +
@@ -224,11 +224,26 @@ public class ResultDao {
                 result.add(rs.getString("teamName"));
                 result.add(rs.getDate("date"));
                 result.add(rs.getString("localName"));
+                result.add(rs.getInt("idSport"));
                 results.add(result);
             }
         } else {
             System.out.println("ResultSet is null. No results found.");
         }
         return results;
+    }
+    public List<List> getPositionById (int idSport, String date) throws SQLException {
+        List<List> positions = new ArrayList<>();
+        String query = "SELECT *, ROW_NUMBER() OVER (ORDER BY idResult) as position FROM tblResult where idSport = ? AND date LIKE ?;";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, "%" + date + "%");
+        if (rs != null) {
+            while (rs.next()) {
+                List<Object> positon = new ArrayList<>();
+                positon.add(rs.getInt("position"));
+                positon.add(rs.getInt("idAthlete"));
+                positions.add(positon);
+            }
+        }
+        return positions;
     }
 }
