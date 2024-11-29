@@ -41,10 +41,10 @@ public class IniciarModalidadesTest {
                 .filter(c -> c.getName().equals("Portugal"))
                 .findFirst().orElse(null);
 
-        Athlete atleta1 = new Athlete(0, "Teste123", "João Teste", country, gender, 195, 90, java.sql.Date.valueOf("2000-08-22"));
-        Athlete atleta2 = new Athlete(0, "Teste123", "Dinis Teste", country, gender, 175, 65, java.sql.Date.valueOf("2004-04-30"));
-        Athlete atleta3 = new Athlete(0, "Teste123", "Samuel Teste", country, gender, 170, 70, java.sql.Date.valueOf("2005-06-24"));
-        Athlete atleta4 = new Athlete(0, "Teste123", "Roberto Teste", country, gender, 180, 75, java.sql.Date.valueOf("2004-02-16"));
+        Athlete atleta1 = new Athlete(0, "Teste123", "João Teste", country, gender, 195, 90, java.sql.Date.valueOf("2000-08-22"),null);
+        Athlete atleta2 = new Athlete(0, "Teste123", "Dinis Teste", country, gender, 175, 65, java.sql.Date.valueOf("2004-04-30"),null);
+        Athlete atleta3 = new Athlete(0, "Teste123", "Samuel Teste", country, gender, 170, 70, java.sql.Date.valueOf("2005-06-24"),null);
+        Athlete atleta4 = new Athlete(0, "Teste123", "Roberto Teste", country, gender, 180, 75, java.sql.Date.valueOf("2004-02-16"),null);
 
         List<Athlete> athetesAdicionados = new ArrayList<>();
         athetesAdicionados.add(atleta1);
@@ -233,14 +233,14 @@ public class IniciarModalidadesTest {
 
         //Registar atletas para as equipas
 
-        Athlete atletaAus1 = new Athlete(0, "Teste123", "João Teste", countryAus, gender, 195, 90, java.sql.Date.valueOf("2000-08-22"));
-        Athlete atletaAus2 = new Athlete(0, "Teste123", "Dinis Teste", countryAus, gender, 175, 65, java.sql.Date.valueOf("2004-04-30"));
-        Athlete atletaBra1 = new Athlete(0, "Teste123", "Samuel Teste", countryBra, gender, 170, 70, java.sql.Date.valueOf("2005-06-24"));
-        Athlete atletaBra2 = new Athlete(0, "Teste123", "Roberto Teste", countryBra, gender, 180, 75, java.sql.Date.valueOf("2004-02-16"));
-        Athlete atletaPrt1 = new Athlete(0, "Teste123", "Gonçalo Teste", countryPrt, gender, 155, 59, java.sql.Date.valueOf("2000-03-22"));
-        Athlete atletaPrt2 = new Athlete(0, "Teste123", "Pedro Teste", countryPrt, gender, 179, 80, java.sql.Date.valueOf("2004-09-30"));
-        Athlete atletaUsa1 = new Athlete(0, "Teste123", "Tiago Teste", countryUsa, gender, 183, 86, java.sql.Date.valueOf("2005-10-24"));
-        Athlete atletaUsa2 = new Athlete(0, "Teste123", "Rui Teste", countryUsa, gender, 198, 102, java.sql.Date.valueOf("2004-01-16"));
+        Athlete atletaAus1 = new Athlete(0, "Teste123", "João Teste", countryAus, gender, 195, 90, java.sql.Date.valueOf("2000-08-22"),null);
+        Athlete atletaAus2 = new Athlete(0, "Teste123", "Dinis Teste", countryAus, gender, 175, 65, java.sql.Date.valueOf("2004-04-30"),null);
+        Athlete atletaBra1 = new Athlete(0, "Teste123", "Samuel Teste", countryBra, gender, 170, 70, java.sql.Date.valueOf("2005-06-24"),null);
+        Athlete atletaBra2 = new Athlete(0, "Teste123", "Roberto Teste", countryBra, gender, 180, 75, java.sql.Date.valueOf("2004-02-16"),null);
+        Athlete atletaPrt1 = new Athlete(0, "Teste123", "Gonçalo Teste", countryPrt, gender, 155, 59, java.sql.Date.valueOf("2000-03-22"),null);
+        Athlete atletaPrt2 = new Athlete(0, "Teste123", "Pedro Teste", countryPrt, gender, 179, 80, java.sql.Date.valueOf("2004-09-30"),null);
+        Athlete atletaUsa1 = new Athlete(0, "Teste123", "Tiago Teste", countryUsa, gender, 183, 86, java.sql.Date.valueOf("2005-10-24"),null);
+        Athlete atletaUsa2 = new Athlete(0, "Teste123", "Rui Teste", countryUsa, gender, 198, 102, java.sql.Date.valueOf("2004-01-16"),null);
 
         List<Athlete> athletesAdicionados = new ArrayList<>();
         athletesAdicionados.add(atletaAus1);

@@ -7,6 +7,7 @@ import jakarta.xml.bind.annotation.*;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 public class Athlete extends Person {
     private String name;
@@ -58,6 +59,7 @@ public class Athlete extends Person {
         CountryDao countryDao = new CountryDao();
         this.country = countryDao.getCountryById(country);
     }
+
     public int getIdAthlete() {
         return super.getId();
     }
@@ -117,4 +119,6 @@ public class Athlete extends Person {
     public void setDateOfBirth(Date dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
+
+
 }

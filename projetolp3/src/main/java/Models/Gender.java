@@ -1,5 +1,7 @@
 package Models;
 
+import java.util.Objects;
+
 public class Gender {
     private int idGender;
     private String desc;

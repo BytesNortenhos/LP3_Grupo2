@@ -70,7 +70,7 @@ public class AthleteDao {
     }
 
     public static int addAthlete(Athlete athlete) throws SQLException {
-        String query = "INSERT INTO tblAthlete (password, name, idCountry, idGender, height, weight, dateOfBirth) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO tblAthlete (password, name, idCountry, idGender, height, weight, dateOfBirth, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         Connection conn = null;
         PreparedStatement stmt = null;
         PasswordUtils passwordUtils = new PasswordUtils();
@@ -91,6 +91,7 @@ public class AthleteDao {
             stmt.setInt(5, athlete.getHeight());
             stmt.setFloat(6, athlete.getWeight());
             stmt.setDate(7, athlete.getDateOfBirth());
+            stmt.setString(8, athlete.getImage());
 
             // Executa o insert
             stmt.executeUpdate();
@@ -137,21 +138,24 @@ public class AthleteDao {
     }
 
     public static void updateAthlete(Athlete athlete) throws SQLException {
-        String query = "UPDATE tblAthlete SET password = ?, name = ?, idCountry = ?, idGender = ?, height = ?, weight = ?, dateOfBirth = ? WHERE idAthlete = ?";
+        String query = "UPDATE tblAthlete SET password = ?, name = ?, idCountry = ?, idGender = ?, height = ?, weight = ?, dateOfBirth = ?, image = ? WHERE idAthlete = ?";
         Connection conn = null;
         PreparedStatement stmt = null;
+        PasswordUtils passwordUtils = new PasswordUtils();
+        String password = passwordUtils.encriptarPassword(athlete.getPassword());
         try {
             conn = ConnectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
-            stmt.setString(1, athlete.getPassword());
+            stmt.setString(1, password);
             stmt.setString(2, athlete.getName());
             stmt.setString(3, athlete.getCountry().getIdCountry());
             stmt.setInt(4, athlete.getGenre().getIdGender());
             stmt.setInt(5, athlete.getHeight());
             stmt.setFloat(6, athlete.getWeight());
             stmt.setDate(7, athlete.getDateOfBirth());
-            stmt.setInt(8, athlete.getIdAthlete());
+            stmt.setString(8, athlete.getImage());
+            stmt.setInt(9, athlete.getIdAthlete());
             stmt.executeUpdate();
         } finally {
             if (stmt != null) {
