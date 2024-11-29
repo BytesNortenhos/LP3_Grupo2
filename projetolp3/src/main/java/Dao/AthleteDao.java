@@ -46,7 +46,7 @@ public class AthleteDao {
     }
     public List<List> getAthletesToShow() throws SQLException{
         List<List> athletes = new ArrayList<>();
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT a.idAthlete ,a.name, a.height, a.weight,a.dateOfBirth, c.name as countryName, g.description as gender " +
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT a.idAthlete ,a.name, a.height, a.weight,a.dateOfBirth, a.image, c.name as countryName, g.description as gender " +
                 "FROM tblAthlete as a " +
                 "INNER JOIN tblCountry as c ON a.idCountry = c.idCountry " +
                 "INNER JOIN tblGender as g ON a.idGender = g.idGender");
@@ -60,6 +60,7 @@ public class AthleteDao {
                 athlete.add(rs.getString("height"));
                 athlete.add(rs.getString("weight"));
                 athlete.add(rs.getString("dateOfBirth"));
+                athlete.add(rs.getString("image"));
                 athletes.add(athlete);
             }
         } else {
@@ -238,6 +239,28 @@ public class AthleteDao {
             stmt = conn.prepareStatement(query);
             stmt.setString(1, path + idAthlete + extensao);
             stmt.setInt(2, idAthlete);
+            stmt.executeUpdate();
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+
+            if (conn != null) {
+                conn.close();
+            }
+        }
+    }
+    public void updateHeightWeight(int idAthlete, int height, float weight) throws SQLException {
+        String query = "UPDATE tblAthlete SET height = ?, weight = ? WHERE idAthlete = ?";
+        Connection conn = null;
+        PreparedStatement stmt = null;
+
+        try {
+            conn = ConnectionsUtlis.dbConnect();
+            stmt = conn.prepareStatement(query);
+            stmt.setInt(1, height);
+            stmt.setFloat(2, weight);
+            stmt.setInt(3, idAthlete);
             stmt.executeUpdate();
         } finally {
             if (stmt != null) {

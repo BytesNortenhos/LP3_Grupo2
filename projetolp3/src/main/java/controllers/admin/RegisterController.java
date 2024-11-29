@@ -161,7 +161,7 @@ public class RegisterController {
                     .findFirst().orElse(null);
 
             if (gender != null && country != null) {
-                Athlete athlete = new Athlete(0, "", userName, country, gender, height, weight, dateOfBirth, "");
+                Athlete athlete = new Athlete(0, "", userName, country, gender, height, weight, dateOfBirth, "ImagesAthletes/default.png");
 
                 int generatedId = AthleteDao.addAthlete(athlete);
 

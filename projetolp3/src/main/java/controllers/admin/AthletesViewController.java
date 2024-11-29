@@ -4,7 +4,6 @@ import Dao.AthleteDao;
 import Dao.CountryDao;
 import Dao.ResultDao;
 import Models.Athlete;
-import Models.Registration;
 import bytesnortenhos.projetolp3.Main;
 import controllers.ViewsController;
 import javafx.collections.FXCollections;
@@ -25,6 +24,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -51,6 +51,9 @@ public class AthletesViewController {
     private ImageView iconHomeNav;
     @FXML
     private ImageView iconLogoutNav;
+
+    @FXML
+    private ImageView profileImage;
     URL cssDarkURL = Main.class.getResource("css/dark.css");
     URL cssLightURL = Main.class.getResource("css/light.css");
     String cssDark = ((URL) cssDarkURL).toExternalForm();
@@ -148,8 +151,22 @@ public class AthletesViewController {
         requestItem.setSpacing(10);
         requestItem.getStyleClass().add("request-item");
 
+        HBox nameContainer = new HBox(10);
+        profileImage = new ImageView();
+        URL iconImageURL = Main.class.getResource(athlete.get(7).toString());
+        if (iconImageURL != null) {
+            Image images = new Image(iconImageURL.toExternalForm());
+            profileImage.setImage(images);
+            profileImage.setFitWidth(60);
+            profileImage.setFitHeight(60);
+            Circle clip = new Circle(30, 30, 30);
+            profileImage.setClip(clip);
+        }
+
         Label nameLabel = new Label(athlete.get(1).toString());
         nameLabel.getStyleClass().add("name-label");
+        nameLabel.setTranslateY(15);
+        nameContainer.getChildren().addAll(profileImage, nameLabel);
 
         Label genderLabel = new Label(athlete.get(3).toString());
         genderLabel.getStyleClass().add("gender-label");
@@ -185,16 +202,16 @@ public class AthletesViewController {
         });
 
 
-        ImageView editImageView = new ImageView();
+        ImageView editIconView = new ImageView();
         URL iconEditURL = Main.class.getResource("img/iconEdit.png");
         if (iconEditURL != null) {
             Image image = new Image(iconEditURL.toExternalForm());
-            editImageView.setImage(image);
-            editImageView.setFitWidth(60);
-            editImageView.setFitHeight(60);
+            editIconView.setImage(image);
+            editIconView.setFitWidth(60);
+            editIconView.setFitHeight(60);
         }
         Button viewEditButton = new Button();
-        viewEditButton.setGraphic(editImageView);
+        viewEditButton.setGraphic(editIconView);
         viewEditButton.getStyleClass().add("startButton");
         viewEditButton.setOnAction(event -> {
             try {
@@ -206,12 +223,31 @@ public class AthletesViewController {
             }
         });
 
+        ImageView editImageView = new ImageView();
+        URL iconEditImageURL = Main.class.getResource("img/iconImageEdit.png");
+        if (iconEditURL != null) {
+            Image image = new Image(iconEditImageURL.toExternalForm());
+            editImageView.setImage(image);
+            editImageView.setFitWidth(60);
+            editImageView.setFitHeight(60);
+        }
+        Button viewEditImageButton = new Button();
+        viewEditImageButton.setGraphic(editImageView);
+        viewEditImageButton.getStyleClass().add("startButton");
+        viewEditImageButton.setOnAction(event -> {
+            try {
+                updateImageAthlete(event, Integer.parseInt(athlete.getFirst().toString()));
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
         HBox buttonContainer = new HBox(10);
-        buttonContainer.getChildren().addAll(viewResultsButton, viewEditButton);
+        buttonContainer.getChildren().addAll(viewResultsButton, viewEditButton, viewEditImageButton);
         buttonContainer.setAlignment(Pos.CENTER_LEFT);
         buttonContainer.setPadding(new Insets(10));
 
-        requestItem.getChildren().addAll(nameLabel, genderLabel, heightLabel, weightLabel, birthLabel, buttonContainer);
+        requestItem.getChildren().addAll(nameContainer, genderLabel, heightLabel, weightLabel, birthLabel, buttonContainer);
         requestItem.setPrefWidth(500);
         return requestItem;
     }
@@ -325,30 +361,6 @@ public class AthletesViewController {
         heightField.getStyleClass().add("popup-text");
         heightField.setText("" + athlete.getHeight());
 
-        HBox setImageContainer = new HBox(10);
-        ImageView image = new ImageView();
-        URL iconImageURL = Main.class.getResource(athlete.getImage());
-        if (iconImageURL != null) {
-            Image images = new Image(iconImageURL.toExternalForm());
-            image.setImage(images);
-            image.setFitWidth(60);
-            image.setFitHeight(60);
-            Button setImageButton = new Button("Alterar imagem");
-            setImageButton.setOnAction(event -> {
-                try {
-                    updateImageAthlete(event);
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            });
-            setImageContainer.getChildren().addAll(image, setImageButton);
-        }
-        else{
-            Label noImage = new Label("O atleta ainda não tem imagem!");
-            setImageContainer.getChildren().addAll(noImage);
-        }
-        setImageContainer.setAlignment(Pos.CENTER_LEFT);
-        setImageContainer.setPadding(new Insets(10));
 
 
 
@@ -356,33 +368,46 @@ public class AthletesViewController {
         submitButton.getStyleClass().add("popup-button");
         submitButton.setOnAction(event -> {
             try {
-                String minParticipantsText = weightField.getText();
-                String maxParticipantsText = heightField.getText();
+                String weightText = weightField.getText();
+                String heightText = heightField.getText();
 
-                if (!minParticipantsText.matches("\\d+") || !maxParticipantsText.matches("\\d+")) {
+                if (!weightText.matches("\\d+(\\.\\d+)?") || !heightText.matches("\\d+")) {
                     Alert alerta = new Alert(Alert.AlertType.ERROR);
                     alerta.setTitle("Erro!");
-                    alerta.setHeaderText("Por favor, insira apenas números nos campos de participantes!");
+                    alerta.setHeaderText("Por favor, insira apenas números nos campos acima!");
                     alerta.show();
                     return;
                 }
 
-                int minParticipants = Integer.parseInt(minParticipantsText);
-                int maxParticipants = Integer.parseInt(maxParticipantsText);
-                if(minParticipants < 2){
+                Float weight = Float.valueOf(weightText);
+                int height = Integer.parseInt(heightText);
+                if(weight < 50.0 || weight > 150.0){
                     Alert alerta = new Alert(Alert.AlertType.ERROR);
                     alerta.setTitle("Erro!");
-                    alerta.setHeaderText("A equipa tem de ter um mínimo de participantes superior a 1!");
+                    alerta.setHeaderText("Insira valores para o peso válidos!");
                     alerta.show();
                 }
-//                teamCreate(request, minParticipants, maxParticipants);
+                if(height < 140 || weight > 240){
+                    Alert alerta = new Alert(Alert.AlertType.ERROR);
+                    alerta.setTitle("Erro!");
+                    alerta.setHeaderText("Insira valores para a altura válidos!");
+                    alerta.show();
+                }
+                athleteDao.updateHeightWeight(idAthlete, height, weight);
+                Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+                alerta.setTitle("Sucesso!");
+                alerta.setHeaderText("Dados atualizados com sucesso!");
+                alerta.show();
                 popupStage.close();
+                showAthlete(event);
             } catch (NumberFormatException e) {
                 e.printStackTrace();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
         });
 
-        vbox.getChildren().addAll(titleLabel, weightLabel, weightField, heightLabel, heightField,setImageContainer, submitButton);
+        vbox.getChildren().addAll(titleLabel, weightLabel, weightField, heightLabel, heightField, submitButton);
 
         Scene scene = new Scene(vbox, 500, 450);
         scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
@@ -390,8 +415,10 @@ public class AthletesViewController {
         popupStage.show();
     }
 
-    private void updateImageAthlete(ActionEvent event) throws SQLException {
-        String pathSave = Main.class.getResource("ImagesAthlete").toExternalForm().replace("file:", "");
+    private void updateImageAthlete(ActionEvent event, int idAthlete) throws SQLException {
+        String pathSave = "src/main/resources/bytesnortenhos/projetolp3/ImagesAthlete/";
+        String pathSaveTemp =  Main.class.getResource("ImagesAthlete").toExternalForm().replace("file:", "");
+        System.out.println(pathSave);
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource Files");
         String pathToSave = "ImagesAthlete/";
@@ -410,8 +437,7 @@ public class AthletesViewController {
             if (selectedFiles.size() == 1 && (pngCount == 1 || jpgCount == 1 || jpegCount == 1)) {
                 File selectedFile = selectedFiles.get(0);
 
-                int tempAthleteId = 1000;
-                boolean saved = saveAthleteImage(tempAthleteId, pathSave, selectedFile.getAbsolutePath());
+                boolean saved = saveAthleteImage(idAthlete, pathSave, pathSaveTemp, selectedFile.getAbsolutePath());
                 if (saved) {
                     Alert alerta = new Alert(Alert.AlertType.INFORMATION);
                     alerta.setTitle("Sucesso!");
@@ -419,8 +445,8 @@ public class AthletesViewController {
                     alerta.show();
 
                     AthleteDao athleteDao = new AthleteDao();
-                    athleteDao.updateAthleteImage(tempAthleteId, pathToSave, "." + selectedFile.getName().split("\\.")[1]);
-
+                    athleteDao.updateAthleteImage(idAthlete, pathToSave, "." + selectedFile.getName().split("\\.")[1]);
+                    showAthlete(event);
                 } else {
                     Alert alerta = new Alert(Alert.AlertType.ERROR);
                     alerta.setTitle("Erro!");
@@ -442,13 +468,14 @@ public class AthletesViewController {
         }
     }
 
-    public boolean saveAthleteImage(int tempAthleteId, String pathSave, String pathImage) {
+
+    public boolean saveAthleteImage(int tempAthleteId, String pathSave, String pathSaveTemp, String pathImage) {
         File fileImage = new File(pathImage);
         String filename = String.valueOf(tempAthleteId) + "." + fileImage.getName().split("\\.")[1];
         try {
             Files.copy(fileImage.toPath(), Path.of(pathSave, filename), StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(fileImage.toPath(), Path.of(pathSaveTemp, filename), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
-            System.out.println(e.getMessage());
             return false;
         }
 
