@@ -72,8 +72,6 @@ public class TeamDao {
         ResultSet rs = null;
         int generatedId = -1;
 
-        boolean isAdded = false;
-
         try {
             conn = ConnectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
@@ -87,16 +85,14 @@ public class TeamDao {
             stmt.setInt(7, team.getMaxParticipants());
 
             int rowsAffected = stmt.executeUpdate();
-            isAdded = rowsAffected > 0; // Retorna true se pelo menos uma linha foi inserida.
-
-            stmt.executeUpdate();
-
-            rs = stmt.getGeneratedKeys();
-            if (rs.next()) {
-                generatedId = rs.getInt(1);
-                System.out.println("Generated Team ID: " + generatedId); // Debugging
-            } else {
-                System.out.println("No generated keys.");
+            if (rowsAffected > 0) {
+                rs = stmt.getGeneratedKeys();
+                if (rs.next()) {
+                    generatedId = rs.getInt(1);
+                    System.out.println("Generated Team ID: " + generatedId); // Debugging
+                } else {
+                    System.out.println("No generated keys.");
+                }
             }
         } finally {
             if (stmt != null) {
@@ -108,6 +104,7 @@ public class TeamDao {
         }
         return generatedId;
     }
+
 
     public static void removeTeam(int idTeam) throws SQLException {
         String query = "DELETE FROM tblTeam WHERE idTeam = ?";
@@ -199,6 +196,35 @@ public class TeamDao {
             SportDao sportDao = new SportDao();
             Sport sport = sportDao.getSportById(idSport);
             return new Team(idTeam, teamName, country, gender, sport, yearFounded);
+        }
+        return null;
+    }
+
+    public static Team getTeamByIdJUnit(int idTeam) throws SQLException {
+        String query = "SELECT t.idTeam, t.name AS teamName, c.idCountry, c.name AS countryName, c.continent, " +
+                "g.idGender AS genderId, g.description AS genderDesc, " +
+                "t.idSport, t.yearFounded, t.minParticipants, t.maxParticipants " +
+                "FROM tblTeam t " +
+                "INNER JOIN tblCountry c ON t.idCountry = c.idCountry " +
+                "INNER JOIN tblGender g ON t.idGender = g.idGender " +
+                "WHERE t.idTeam = ?";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idTeam);
+        if (rs != null && rs.next()) {
+            String teamName = rs.getString("teamName");
+            String idCountry = rs.getString("idCountry");
+            String countryName = rs.getString("countryName");
+            String continent = rs.getString("continent");
+            int genderId = rs.getInt("genderId");
+            String genderDesc = rs.getString("genderDesc");
+            int idSport = rs.getInt("idSport");
+            int yearFounded = rs.getInt("yearFounded");
+            Country country = new Country(idCountry, countryName, continent);
+            Gender gender = new Gender(genderId, genderDesc);
+            SportDao sportDao = new SportDao();
+            Sport sport = sportDao.getSportByIdJunit(idSport);
+            int minParticipants = rs.getInt("minParticipants");
+            int maxParticipants = rs.getInt("maxParticipants");
+            return new Team(idTeam, teamName, country, gender, sport, yearFounded, minParticipants, maxParticipants);
         }
         return null;
     }
