@@ -12,6 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EventDao {
+    /**
+     * Get all events
+     * @return List<Event>
+     * @throws SQLException
+     */
     public static List<Event> getEvents() throws SQLException {
         List<Event> events = new ArrayList<>();
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT e.year, e.logo, " +
@@ -33,6 +38,11 @@ public class EventDao {
         return events;
     }
 
+    /**
+     * Add event
+     * @param event {Event} Event
+     * @throws SQLException
+     */
     public static void addEvent(Event event) throws SQLException {
         String query = "INSERT INTO tblEvent (year, idCountry, Logo) VALUES (?, ?, ?)";
         Connection conn = null;
@@ -55,6 +65,11 @@ public class EventDao {
         }
     }
 
+    /**
+     * Remove event
+     * @param year {int} Year
+     * @throws SQLException
+     */
     public static void removeEvent(int year) throws SQLException {
         String query = "DELETE FROM tblEvent WHERE year = ?";
         Connection conn = null;
@@ -75,6 +90,11 @@ public class EventDao {
         }
     }
 
+    /**
+     * Update event
+     * @param event {Event} Event
+     * @throws SQLException
+     */
     public static void updateEvent(Event event) throws SQLException {
         String query = "UPDATE tblEvent SET idCountry = ?, Logo = ? WHERE year = ?";
         Connection conn = null;
@@ -97,6 +117,12 @@ public class EventDao {
         }
     }
 
+    /**
+     * Get event by year
+     * @param year {int} Year
+     * @return Event
+     * @throws SQLException
+     */
     public static Event getEventByYear(int year) throws SQLException {
         String query = "SELECT e.year, e.logo, " +
                 "c.idCountry, c.name AS countryName, c.continent " +
@@ -112,6 +138,13 @@ public class EventDao {
         return null;
     }
 
+    /**
+     * Update event image
+     * @param year {int} Year
+     * @param path {String} Path
+     * @param extensao {String} Extension
+     * @throws SQLException
+     */
     public void updateEventImage(int year, String path, String extensao) throws SQLException {
         String query = "UPDATE tblEvent SET Logo = ? WHERE year = ?";
         Connection conn = null;

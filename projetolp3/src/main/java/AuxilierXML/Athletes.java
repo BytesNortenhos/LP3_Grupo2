@@ -10,7 +10,7 @@ import java.util.List;
 @XmlRootElement(name = "athletes")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Athletes {
-    @XmlElement(name = "athlete")  // Isso garante que o JAXB reconheça os atletas no XML
+    @XmlElement(name = "athlete")
     private List<Athlete> athleteList;
 
     /**

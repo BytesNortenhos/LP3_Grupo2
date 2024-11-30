@@ -15,6 +15,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TeamDao {
+    /**
+     * Get all teams
+     * @return {List<Team>} List of teams
+     * @throws SQLException
+     */
     public static List<Team> getTeams() throws SQLException {
         List<Team> teams = new ArrayList<>();
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT t.idTeam, t.name AS teamName, t.idCountry, c.name AS countryName, " +
@@ -49,6 +54,11 @@ public class TeamDao {
         return teams;
     }
 
+    /**
+     * Get all teams names and ids
+     * @return {List<Team>} List of teams
+     * @throws SQLException
+     */
     public List<List> getTeamsNamesAndId() throws SQLException {
         List<List> teams = new ArrayList<>();
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT idTeam, name FROM tblTeam;");
@@ -65,6 +75,12 @@ public class TeamDao {
         return teams;
     }
 
+    /**
+     * Add team
+     * @param team {Team} Team
+     * @return {int} Generated id
+     * @throws SQLException
+     */
     public int addTeam(Team team) throws SQLException {
         String query = "INSERT INTO tblTeam (name, idCountry, idGender, idSport, yearFounded, minParticipants, maxParticipants) VALUES (?, ?, ?, ?, ?, ?, ?)";
         Connection conn = null;
@@ -109,6 +125,11 @@ public class TeamDao {
         return generatedId;
     }
 
+    /**
+     * Remove team
+     * @param idTeam {int} Id team
+     * @throws SQLException
+     */
     public static void removeTeam(int idTeam) throws SQLException {
         String query = "DELETE FROM tblTeam WHERE idTeam = ?";
         Connection conn = null;
@@ -128,6 +149,11 @@ public class TeamDao {
         }
     }
 
+    /**
+     * Update team
+     * @param team {Team} Team
+     * @throws SQLException
+     */
     public static void updateTeam(Team team) throws SQLException {
         String query = "UPDATE tblTeam SET name = ?, idCountry = ?, idGender = ?, idSport = ?, yearFounded = ?, minParticipants = ?, maxParticipants = ? WHERE idTeam = ?";
         Connection conn = null;
@@ -154,6 +180,15 @@ public class TeamDao {
             }
         }
     }
+
+    /**
+     * Update teama
+     * @param idTeam {String} Id team
+     * @param name {String} Name
+     * @param playersCount {int} Players count
+     * @param playersMaxCount {int} Players max count
+     * @throws SQLException
+     */
     public static void updateTeams(String idTeam, String name, int playersCount, int playersMaxCount) throws SQLException {
         String query = "UPDATE tblTeam SET name = ?, minParticipants = ?, maxParticipants = ? WHERE idTeam = ?";
         Connection conn = null;
@@ -176,6 +211,13 @@ public class TeamDao {
             }
         }
     }
+
+    /**
+     * Get team by id
+     * @param idTeam {int} Id team
+     * @return {Team} Team
+     * @throws SQLException
+     */
     public static Team getTeamById(int idTeam) throws SQLException {
         String query = "SELECT t.idTeam, t.name AS teamName, c.idCountry, c.name AS countryName, c.continent, " +
                 "g.idGender AS genderId, g.description AS genderDesc, " +
@@ -202,6 +244,13 @@ public class TeamDao {
         }
         return null;
     }
+
+    /**
+     * Get team to show by id athlete
+     * @param idAthlete {int} Id athlete
+     * @return {List<List>} List of teams
+     * @throws SQLException
+     */
     public List<List> getTeamToShow(int idAthlete) throws SQLException {
         List<List> teams = new ArrayList<>();
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT t.idTeam, t.name AS teamName, " +
@@ -226,6 +275,13 @@ public class TeamDao {
         }
         return teams;
     }
+
+    /**
+     * Get team by id v2
+     * @param idTeam {int} Id team
+     * @return {Team} Team
+     * @throws SQLException
+     */
     public Team getTeamByIdV2(int idTeam) throws SQLException {
         String query = "SELECT t.idTeam, t.name AS teamName, c.idCountry, c.name AS countryName, c.continent, " +
                 "g.idGender AS genderId, g.description AS genderDesc, " +
@@ -255,6 +311,12 @@ public class TeamDao {
         return null;
     }
 
+    /**
+     * Get team by id minimum
+     * @param idTeam {int} Id team
+     * @return {Team} Team
+     * @throws SQLException
+     */
     public static Team getTeamByIdMinimum(int idTeam) throws SQLException {
         String query = "SELECT t.idTeam, t.name AS teamName, c.idCountry, c.name AS countryName, " +
                 "g.idGender AS genderId, g.description AS genderDesc, " +

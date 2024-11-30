@@ -260,6 +260,11 @@ public class Team {
     public void setTeamList(ArrayList<TeamList> teamList) {
         this.teamList = teamList;
     }
+
+    /**
+     * Override toString method
+     * @return String
+     */
     @Override
     public String toString() {
         return "Team { idTeam: " + idTeam +

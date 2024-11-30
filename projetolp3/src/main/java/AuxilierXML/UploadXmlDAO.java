@@ -397,7 +397,7 @@ public class UploadXmlDAO {
 
     /**
      * Convert String HH:MM:SS.MS/HH:MM:SS to MS
-     * @param time {String} String of time (HH:MM:SS.MS/HH:MM:SS)
+     * @param time {String} String of time (HH:MM:SS/HH:MM:SS.SS)
      * @return int
      */
     public int convertToMS(String time) {
@@ -415,6 +415,12 @@ public class UploadXmlDAO {
         return (int) ChronoUnit.MILLIS.between(LocalTime.MIDNIGHT, parsedTime);
     }
 
+    /**
+     * Save XML and XSD files
+     * @param pathXML {String} Path of XML file
+     * @param pathXSD {String} Path of XSD file
+     * @return boolean
+     */
     public boolean saveXML(String pathXML, String pathXSD) {
         String pathSave = "src/main/java/DataXML_uploads/";
 

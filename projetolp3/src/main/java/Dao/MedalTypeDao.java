@@ -11,6 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MedalTypeDao {
+    /**
+     * Get all medal types
+     * @return {List<MedalType>} List of medal types
+     * @throws SQLException
+     */
     public static List<MedalType> getMedalTypes() throws SQLException {
         List<MedalType> medalTypes = new ArrayList<>();
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT * FROM tblMedalType;");
@@ -28,6 +33,11 @@ public class MedalTypeDao {
         return medalTypes;
     }
 
+    /**
+     * Add medal type
+     * @param medalType {MedalType} Medal type
+     * @throws SQLException
+     */
     public static void addMedalType(MedalType medalType) throws SQLException {
         String query = "INSERT INTO tblMedalType (descMedalType) VALUES (?)";
         Connection conn = null;
@@ -48,6 +58,11 @@ public class MedalTypeDao {
         }
     }
 
+    /**
+     * Remove medal type
+     * @param idMedalType {int} Medal type id
+     * @throws SQLException
+     */
     public static void removeMedalType(int idMedalType) throws SQLException {
         String query = "DELETE FROM tblMedalType WHERE idMedalType = ?";
         Connection conn = null;
@@ -67,6 +82,11 @@ public class MedalTypeDao {
         }
     }
 
+    /**
+     * Update medal type
+     * @param medalType {MedalType} Medal type
+     * @throws SQLException
+     */
     public static void updateMedalType(MedalType medalType) throws SQLException {
         String query = "UPDATE tblMedalType SET descMedalType = ? WHERE idMedalType = ?";
         Connection conn = null;
@@ -88,6 +108,12 @@ public class MedalTypeDao {
         }
     }
 
+    /**
+     * Get medal type by id
+     * @param idMedalType {int} Medal type id
+     * @return {MedalType} Medal type
+     * @throws SQLException
+     */
     public static MedalType getMedalTypeById(int idMedalType) throws SQLException {
         String query = "SELECT * FROM tblMedalType WHERE idMedalType = ?";
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idMedalType);

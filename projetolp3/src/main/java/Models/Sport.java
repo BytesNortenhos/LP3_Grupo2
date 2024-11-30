@@ -53,6 +53,22 @@ public class Sport {
         this.rules = rules;
     }
 
+    /**
+     * Constructor of Sport
+     * @param idSport {int} Sport ID
+     * @param type {String} Type
+     * @param genre {Gender} Genre
+     * @param name {String} Name
+     * @param desc {String} Description
+     * @param minParticipants {int} Number minimum of participants
+     * @param scoringMeasure {String} Measure of scoring
+     * @param oneGame {String} "One Game"
+     * @param olympicRecord {OlympicRecord} Olympic record
+     * @param winnerOlympic {List<WinnerOlympic>} List of olympic winners
+     * @param rules {List<Rule>} List of rules
+     * @param resultMin {int} Minimum result
+     * @param resultMax {int} Maximum result
+     */
     public Sport(int idSport, String type, Gender genre, String name, String desc, int minParticipants,
                  String scoringMeasure, String oneGame, OlympicRecord olympicRecord, List<WinnerOlympic> winnerOlympic,
                  List<Rule> rules, int resultMin, int resultMax) {
@@ -71,6 +87,20 @@ public class Sport {
         this.resultMax = resultMax;
     }
 
+    /**
+     * Constructor of Sport
+     * @param idSport {int} Sport ID
+     * @param type {String} Type
+     * @param idGender {int} Gender ID
+     * @param name {String} Name
+     * @param desc {String} Description
+     * @param minParticipants {int} Number minimum of participants
+     * @param scoringMeasure {String} Measure of scoring
+     * @param oneGame {String} "One Game"
+     * @param olympicRecord {OlympicRecord} Olympic record
+     * @param winnerOlympic {List<WinnerOlympic>} List of olympic winners
+     * @param rules {List<Rule>} List of rules
+     */
     public Sport(int idSport, String type, int idGender, String name, String desc, int minParticipants,
                  String scoringMeasure, String oneGame, OlympicRecord olympicRecord, List<WinnerOlympic> winnerOlympic,
                  List<Rule> rules) {
@@ -86,14 +116,33 @@ public class Sport {
         this.winnerOlympic = winnerOlympic;
         this.rules = rules;
     }
-    // Constructor including the description
+
+    /**
+     * Constructor of Sport
+     * @param idSport {int} Sport ID
+     * @param type {String} Type
+     * @param genre {Gender} Genre
+     * @param name {String} Name
+     * @param desc {String} Description
+     */
     public Sport(int idSport, String name, String type, Gender genre, String desc) {
         this.idSport = idSport;
         this.name = name;
         this.type = type;
         this.genre = genre;
-        this.desc = desc;  // Initialize description
+        this.desc = desc;
     }
+
+    /**
+     * Constructor of Sport
+     * @param type {String} Type
+     * @param genre {Gender} Genre
+     * @param name {String} Name
+     * @param desc {String} Description
+     * @param minParticipants {int} Number minimum of participants
+     * @param scoringMeasure {String} Measure of scoring
+     * @param oneGame {String} "One Game"
+     */
     public Sport(String type, Gender genre, String name, String desc, int minParticipants,
                  String scoringMeasure, String oneGame) {
         this.type = type;
@@ -117,20 +166,28 @@ public class Sport {
         this.type = type;
         this.genre = genre;
     }
+
     /**
-     * Constructor for creating a Sport object with essential details.
-     * This constructor initializes a Sport with the provided idSport and name.
-     * All other attributes are left with default values (e.g., null or empty).
-     *
-     * @param idSport {int} The ID of the sport.
-     * @param name {String} The name of the sport.
+     * Constructor of Sport with essential details.
+     * @param idSport {int} Sport ID
+     * @param name {String} Name of the Sport
+     * @param type {String} Type of the Sport
      */
     public Sport(int idSport, String name, String type) {
         this.idSport = idSport;
         this.name = name;
         this.type = type;
     }
-    // Construtor atualizado para incluir scoringMeasure
+
+    /**
+     * Constructor of Sport
+     * @param idSport {int} Sport ID
+     * @param name {String} Name
+     * @param type {String} Type
+     * @param genre {Gender} Genre
+     * @param desc {String} Description
+     * @param scoringMeasure {String} Measure of scoring
+     */
     public Sport(int idSport, String name, String type, Gender genre, String desc, String scoringMeasure) {
         this.idSport = idSport;
         this.name = name;
@@ -307,33 +364,54 @@ public class Sport {
     public List<Rule> getRules() {
         return rules;
     }
+
+    /**
+     * Get Result min
+     * @return int
+     */
     public int getResultMin() {
         return resultMin;
     }
 
+    /**
+     * Set Result min
+     * @param resultMin {int} Minimum result
+     */
     public void setResultMin(int resultMin) {
         this.resultMin = resultMin;
     }
 
+    /**
+     * Get Result max
+     * @return int
+     */
     public int getResultMax() {
         return resultMax;
     }
 
+    /**
+     * Set Result max
+     * @param resultMax {int} Maximum result
+     */
     public void setResultMax(int resultMax) {
         this.resultMax = resultMax;
     }
-
 
     /**
      * Set rules
      * @param rules {List<Rule>} List of rules
      */
-
     public void setRules(List<Rule> rules) {
         this.rules = rules;
     }
+
+    /**
+     * Override toString method
+     * @return String
+     */
     @Override
     public String toString() {
         return String.format("Sport: {ID: %d, Type: %s, Gender: %s, Name: %s}",
                 idSport, type, (genre != null ? genre.getDesc() : "Unknown"), name);
-    }  }
+    }
+}

@@ -19,6 +19,12 @@ public class Rule {
         this.desc = desc;
     }
 
+    /**
+     * Constructor of Rule
+     * @param idRule {int} Rule ID
+     * @param idSport {int} Sport ID
+     * @param desc {String} Description
+     */
     public Rule(int idRule, int idSport, String desc) {
         this.idRule = idRule;
         this.idSport = idSport;
@@ -73,11 +79,11 @@ public class Rule {
         this.desc = desc;
     }
 
-// Getter para o idSport
-public int getIdSport() {
+    /**
+     * Get Sport ID
+     * @return int
+     */
+    public int getIdSport() {
     return idSport;
 }
-
-// Getter para a descrição
-
 }

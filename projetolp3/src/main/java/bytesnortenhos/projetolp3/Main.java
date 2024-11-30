@@ -31,6 +31,12 @@ import java.sql.SQLException;
 public class Main extends Application {
     private static final String LOGIN_VIEW_FXML = "loginView.fxml";
     @Override
+
+    /**
+     * Start method
+     * @param primaryStage {Stage} Primary stage
+     * @throws SQLException, ClassNotFoundException
+     */
     public void start(Stage primaryStage) throws SQLException, ClassNotFoundException {
         try {
             FXMLLoader loader = new FXMLLoader(Main.class.getResource(LOGIN_VIEW_FXML));
@@ -54,11 +60,21 @@ public class Main extends Application {
         }
     }
 
+    /**
+     * Create scene
+     * @param root {Parent} Root
+     * @return Scene
+     */
     private Scene createScene(Parent root) {
         return new Scene(root);
     }
 
 
+    /**
+     * Main method
+     * @param args {String[]} Arguments
+     * @throws SQLException, ClassNotFoundException
+     */
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
         launch();
     }

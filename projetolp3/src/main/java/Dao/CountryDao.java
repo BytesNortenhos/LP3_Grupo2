@@ -11,6 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CountryDao {
+
+    /**
+     * Get all countries
+     * @return List<Country>
+     * @throws SQLException
+     */
     public static List<Country> getCountries() throws SQLException {
         List<Country> countries = new ArrayList<>();
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT * FROM tblCountry;");
@@ -29,6 +35,11 @@ public class CountryDao {
         return countries;
     }
 
+    /**
+     * Add country
+     * @param country {Country} Country
+     * @throws SQLException
+     */
     public static void addCountry(Country country) throws SQLException {
         String query = "INSERT INTO tblCountry (name, continent) VALUES (?, ?)";
         Connection conn = null;
@@ -50,6 +61,11 @@ public class CountryDao {
         }
     }
 
+    /**
+     * Remove country
+     * @param name {String} Name
+     * @throws SQLException
+     */
     public static void removeCountry(String name) throws SQLException {
         String query = "DELETE FROM tblCountry WHERE name = ?";
         Connection conn = null;
@@ -70,6 +86,11 @@ public class CountryDao {
         }
     }
 
+    /**
+     * Update country
+     * @param country {Country} Country
+     * @throws SQLException
+     */
     public static void updateCountry(Country country) throws SQLException {
         String query = "UPDATE tblCountry SET name = ?, continent = ? WHERE idCountry = ?";
         Connection conn = null;
@@ -93,6 +114,12 @@ public class CountryDao {
         }
     }
 
+    /**
+     * Get country by ID
+     * @param idCountry {String} ID
+     * @return Country
+     * @throws SQLException
+     */
     public Country getCountryById(String idCountry) throws SQLException {
         String query = "SELECT * FROM tblCountry WHERE idCountry = ?";
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idCountry);

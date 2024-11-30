@@ -22,12 +22,12 @@ public class Sport {
     @XmlElement
     private String oneGame;
     @XmlElement(name = "olympicRecord")
-    private List<OlympicRecord> xmlOlympicRecord; // Needed for JAXB
+    private List<OlympicRecord> xmlOlympicRecord;
     @XmlElement(name = "winnerOlympic")
-    private List<WinnerOlympic> xmlWinnerOlympic; // Needed for JAXB
+    private List<WinnerOlympic> xmlWinnerOlympic;
     @XmlElementWrapper(name = "rules")
     @XmlElement(name = "rule")
-    private List<String> xmlRules; // Needed for JAXB
+    private List<String> xmlRules;
     private int tempDatabaseId;
 
     /**
@@ -149,7 +149,7 @@ public class Sport {
 
     /**
      * Get XML olympic record
-     * @return List<RecordOrWinnerOlympicXML>
+     * @return List<OlympicRecord>
      */
     public List<OlympicRecord> getXmlOlympicRecord() {
         return xmlOlympicRecord;
@@ -157,7 +157,7 @@ public class Sport {
 
     /**
      * Set XML olympic record
-     * @param xmlOlympicRecord {List<RecordOrWinnerOlympicXML>} Olympic record
+     * @param xmlOlympicRecord {List<OlympicRecord>} Olympic record
      */
     public void setXmlOlympicRecord(List<OlympicRecord> xmlOlympicRecord) {
         this.xmlOlympicRecord = xmlOlympicRecord;
@@ -165,7 +165,7 @@ public class Sport {
 
     /**
      * Get XML winner olympic
-     * @return List<WinnerOlympicXML>
+     * @return List<WinnerOlympic>
      */
     public List<WinnerOlympic> getXmlWinnerOlympic() {
         return xmlWinnerOlympic;
@@ -173,7 +173,7 @@ public class Sport {
 
     /**
      * Set XML winner olympic
-     * @param xmlWinnerOlympic {List<WinnerOlympicXML>} Winner olympic
+     * @param xmlWinnerOlympic {List<WinnerOlympic>} Winner olympic
      */
     public void setXmlWinnerOlympic(List<WinnerOlympic> xmlWinnerOlympic) {
         this.xmlWinnerOlympic = xmlWinnerOlympic;

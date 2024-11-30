@@ -11,6 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LocalDao {
+    /**
+     * Get all locals
+     * @return {List<Local>} List of locals
+     * @throws SQLException
+     */
     public static List<Local> getLocals() throws SQLException {
         List<Local> locals = new ArrayList<>();
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT * FROM tblLocal;");
@@ -33,6 +38,11 @@ public class LocalDao {
         return locals;
     }
 
+    /**
+     * Add local
+     * @param local {Local} Local
+     * @throws SQLException
+     */
     public static void addLocal(Local local) throws SQLException {
         String query = "INSERT INTO tblLocal (name, type, address, city, capacity, constructionYear) " +
                 "VALUES (?, ?, ?, ?, ?, ?)";
@@ -59,6 +69,11 @@ public class LocalDao {
         }
     }
 
+    /**
+     * Remove local
+     * @param idLocal {int} Local ID
+     * @throws SQLException
+     */
     public static void removeLocal(int idLocal) throws SQLException {
         String query = "DELETE FROM tblLocal WHERE idLocal = ?";
         Connection conn = null;
@@ -78,6 +93,11 @@ public class LocalDao {
         }
     }
 
+    /**
+     * Update local
+     * @param local {Local} Local
+     * @throws SQLException
+     */
     public static void updateLocal(Local local) throws SQLException {
         String query = "UPDATE tblLocal SET name = ?, type = ?, address = ?, city = ?, capacity = ?, constructionYear = ? " +
                 "WHERE idLocal = ?";
@@ -105,6 +125,12 @@ public class LocalDao {
         }
     }
 
+    /**
+     * Get local by ID
+     * @param idLocal {int} Local ID
+     * @return {Local} Local
+     * @throws SQLException
+     */
     public static Local getLocalById(int idLocal) throws SQLException {
         String query = "SELECT * FROM tblLocal WHERE idLocal = ?";
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idLocal);

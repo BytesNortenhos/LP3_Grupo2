@@ -14,6 +14,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OlympicRecordDao {
+    /**
+     * Get all Olympic records
+     * @return {List<OlympicRecord>} List of Olympic records
+     * @throws SQLException
+     */
     public static List<OlympicRecord> getOlympicRecords() throws SQLException {
         List<OlympicRecord> records = new ArrayList<>();
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT * FROM tblOlympicRecord;");
@@ -41,6 +46,11 @@ public class OlympicRecordDao {
         return records;
     }
 
+    /**
+     * Add Olympic record
+     * @param record {OlympicRecord} Olympic record
+     * @throws SQLException
+     */
     public static void addOlympicRecord(OlympicRecord record) throws SQLException {
         String query = "INSERT INTO tblOlympicRecord (idSport, year, idAthlete, idTeam, result, medals) VALUES (?, ?, ?, ?, ?, ?)";
         Connection conn = null;
@@ -66,6 +76,12 @@ public class OlympicRecordDao {
         }
     }
 
+    /**
+     * Remove Olympic record
+     * @param idSport {int} Sport id
+     * @param year {int} Year
+     * @throws SQLException
+     */
     public static void removeOlympicRecord(int idSport, int year) throws SQLException {
         String query = "DELETE FROM tblOlympicRecord WHERE idSport = ? AND year = ?";
         Connection conn = null;
@@ -86,6 +102,11 @@ public class OlympicRecordDao {
         }
     }
 
+    /**
+     * Update Olympic record
+     * @param record {OlympicRecord} Olympic record
+     * @throws SQLException
+     */
     public static void updateOlympicRecord(OlympicRecord record) throws SQLException {
         String query = "UPDATE tblOlympicRecord SET idAthlete = ?, idTeam = ?, result = ?, medals = ? WHERE idSport = ? AND year = ?";
         Connection conn = null;
@@ -111,6 +132,13 @@ public class OlympicRecordDao {
         }
     }
 
+    /**
+     * Get Olympic record by id
+     * @param idSport {int} Sport id
+     * @param year {int} Year
+     * @return {OlympicRecord} Olympic record
+     * @throws SQLException
+     */
     public OlympicRecord getOlympicRecordById(int idSport, int year) throws SQLException {
         String query = "SELECT * FROM tblOlympicRecord WHERE idSport = ? AND year = ?";
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, year);
@@ -130,6 +158,14 @@ public class OlympicRecordDao {
         }
         return null;
     }
+
+    /**
+     * Get Olympic record by id V2
+     * @param idSport {int} Sport id
+     * @param year {int} Year
+     * @return {OlympicRecord} Olympic record
+     * @throws SQLException
+     */
     public static OlympicRecord getOlympicRecordByIdV2(int idSport, int year) throws SQLException {
         String query = "SELECT * FROM tblOlympicRecord WHERE idSport = ? AND year = ?";
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, year);

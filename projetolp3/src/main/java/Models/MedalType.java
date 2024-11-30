@@ -4,6 +4,11 @@ public class MedalType {
     private int idMedalType;
     private String descMedalType;
 
+    /**
+     * Constructor of MedalType
+     * @param idMedalType {int} ID
+     * @param descMedalType {String} Desc
+     */
     public MedalType(int idMedalType, String descMedalType) {
         this.idMedalType = idMedalType;
         this.descMedalType = descMedalType;

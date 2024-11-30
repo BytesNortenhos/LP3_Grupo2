@@ -11,6 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WinnerOlympicDao {
+    /**
+     * Get all Olympic winners
+     * @return {List<WinnerOlympic>} List of Olympic winners
+     * @throws SQLException
+     */
     public static List<WinnerOlympic> getWinnerOlympics() throws SQLException {
         List<WinnerOlympic> winners = new ArrayList<>();
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT * FROM tblWinnerOlympic");
@@ -38,6 +43,11 @@ public class WinnerOlympicDao {
         return winners;
     }
 
+    /**
+     * Add Olympic winner
+     * @param winner {WinnerOlympic} Olympic winner
+     * @throws SQLException
+     */
     public static void addWinnerOlympic(WinnerOlympic winner) throws SQLException {
         String query = "INSERT INTO tblWinnerOlympic (idSport, year, idAthlete, idTeam, result, idMedal) VALUES (?, ?, ?, ?, ?, ?)";
         Connection conn = null;
@@ -63,6 +73,12 @@ public class WinnerOlympicDao {
         }
     }
 
+    /**
+     * Remove Olympic winner
+     * @param idSport {int} Id sport
+     * @param year {int} Year
+     * @throws SQLException
+     */
     public static void removeWinnerOlympic(int idSport, int year) throws SQLException {
         String query = "DELETE FROM tblWinnerOlympic WHERE idSport = ? AND year = ?";
         Connection conn = null;
@@ -83,6 +99,11 @@ public class WinnerOlympicDao {
         }
     }
 
+    /**
+     * Update Olympic winner
+     * @param winner {WinnerOlympic} Olympic winner
+     * @throws SQLException
+     */
     public static void updateWinnerOlympic(WinnerOlympic winner) throws SQLException {
         String query = "UPDATE tblWinnerOlympic SET idAthlete = ?, idTeam = ?, result = ?, idMedal = ? WHERE idSport = ? AND year = ?";
         Connection conn = null;
@@ -108,6 +129,13 @@ public class WinnerOlympicDao {
         }
     }
 
+    /**
+     * Get Olympic winner by sport and year
+     * @param idSport {int} Id sport
+     * @param year {int} Year
+     * @return {WinnerOlympic} Olympic winner
+     * @throws SQLException
+     */
     public static WinnerOlympic getWinnerOlympicById(int idSport, int year) throws SQLException {
         String query = "SELECT * FROM tblWinnerOlympic WHERE idSport = ? AND year = ?";
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, year);
@@ -127,6 +155,12 @@ public class WinnerOlympicDao {
         return null;
     }
 
+    /**
+     * Get Olympic winners by sport
+     * @param idSport {int} Id sport
+     * @return {List<WinnerOlympic>} List of Olympic winners
+     * @throws SQLException
+     */
     public static List<WinnerOlympic> getWinnerOlympicsBySport(int idSport) throws SQLException {
         List<WinnerOlympic> winnerOlympics = new ArrayList<>();
         String query = (" SELECT wo.*, a.idAthlete,a.name AS athleteName," +
@@ -164,6 +198,13 @@ public class WinnerOlympicDao {
         }
         return winnerOlympics;
     }
+
+    /**
+     * Get Olympic winners by sport V2
+     * @param idSport {int} Id sport
+     * @return {List<WinnerOlympic>} List of Olympic winners
+     * @throws SQLException
+     */
     public static List<WinnerOlympic> getWinnerOlympicsBySportV2(int idSport) throws SQLException {
         List<WinnerOlympic> winnerOlympics = new ArrayList<>();
         String query = ("SELECT wo.*, a.idAthlete, a.name AS athleteName, " +
@@ -185,12 +226,10 @@ public class WinnerOlympicDao {
             int idTeam = rs.getInt("idTeam");
             int idMedal = rs.getInt("idMedal");
 
-            // Ainda criamos o objeto Medal porque ele é um parâmetro no construtor
             String descMedalType = rs.getString("descMedalType");
             MedalType medalType = new MedalType(idMedal, descMedalType);
             Medal medal = new Medal(idMedal, idAthlete, idTeam, year, medalType);
 
-            // Agora usamos o novo construtor que aceita IDs ao invés de objetos
             WinnerOlympic winnerOlympic = new WinnerOlympic(idSport, year, idAthlete, idTeam, result, medal);
             winnerOlympics.add(winnerOlympic);
         }

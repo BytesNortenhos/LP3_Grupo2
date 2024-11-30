@@ -12,6 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AdminDao {
+    /**
+     * Get all admins
+     * @return List<Admin>
+     * @throws SQLException
+     */
     public static List<Admin> getAdmins() throws SQLException {
         List<Admin> admins = new ArrayList<>();
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT * FROM tblAdmin;");
@@ -29,6 +34,11 @@ public class AdminDao {
         return admins;
     }
 
+    /**
+     * Add admin
+     * @param admin {Admin} Admin
+     * @throws SQLException
+     */
     public static void addAdmin(Admin admin) throws SQLException {
         String query = "INSERT INTO tblAdmin (password) VALUES (?)";
         Connection conn = null;
@@ -51,6 +61,11 @@ public class AdminDao {
         }
     }
 
+    /**
+     * Remove admin
+     * @param id {int} ID
+     * @throws SQLException
+     */
     public static void removeAdmin(int id) throws SQLException {
         String query = "DELETE FROM tblAdmin WHERE id = ?";
         Connection conn = null;
@@ -70,6 +85,11 @@ public class AdminDao {
         }
     }
 
+    /**
+     * Update admin
+     * @param admin {Admin} Admin
+     * @throws SQLException
+     */
     public static void updateAdmin(Admin admin) throws SQLException {
         String query = "UPDATE tblAdmin SET password = ? WHERE id = ?";
         Connection conn = null;
@@ -91,6 +111,12 @@ public class AdminDao {
         }
     }
 
+    /**
+     * Get admin by ID
+     * @param id {int} ID
+     * @return Admin
+     * @throws SQLException
+     */
     public Admin getAdminById(int id) throws SQLException {
         String query = "SELECT * FROM tblAdmin WHERE id = ?";
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, id);

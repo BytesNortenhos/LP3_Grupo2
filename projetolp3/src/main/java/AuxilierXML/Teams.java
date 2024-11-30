@@ -18,10 +18,18 @@ public class Teams {
      */
     public Teams() {}
 
+    /**
+     * Get team list
+     * @return List<Team>
+     */
     public List<Team> getTeamList() {
         return teamList;
     }
 
+    /**
+     * Set team list
+     * @param teamList {List<Team>} List of teams
+     */
     public void setTeamList(List<Team> teamList) {
         this.teamList = teamList;
     }

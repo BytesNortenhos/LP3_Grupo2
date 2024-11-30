@@ -10,7 +10,7 @@ import java.util.List;
 @XmlRootElement(name = "sports")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Sports {
-    @XmlElement(name = "sport")  // Isso garante que o JAXB reconheça as sports no XML
+    @XmlElement(name = "sport")
     private List<Sport> sportList;
 
     /**
@@ -18,10 +18,18 @@ public class Sports {
      */
     public Sports() {}
 
+    /**
+     * Get sport list
+     * @return List<Sport>
+     */
     public List<Sport> getSportList() {
         return sportList;
     }
 
+    /**
+     * Set sport list
+     * @param sportList {List<Sport>} List of sports
+     */
     public void setSportList(List<Sport> sportList) {
         this.sportList = sportList;
     }
