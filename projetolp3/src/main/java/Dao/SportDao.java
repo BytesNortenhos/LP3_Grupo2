@@ -407,6 +407,44 @@ public class SportDao {
         return null;
     }
 
+    public Sport getSportByIdJunit(int idSport) throws SQLException {
+        // Consulta otimizada para obter os dados do esporte com seus registros olímpicos e gênero
+        String query = """
+                    SELECT s.idSport, s.type, s.idGender, s.name, s.description, 
+                           s.minParticipants, s.scoringMeasure, s.oneGame, s.resultMin, s.resultMax,
+                           g.description AS genderDescription
+                    FROM tblSport s 
+                    JOIN tblGender g ON s.idGender = g.idGender 
+                    WHERE s.idSport = ?
+                """;
+
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport);
+        if (rs != null && rs.next()) {
+            // Carrega os dados principais do esporte
+            int idSportResult = rs.getInt("idSport");
+            String type = rs.getString("type");
+            int idGender = rs.getInt("idGender");
+            String name = rs.getString("name");
+            String description = rs.getString("description");
+            int minParticipants = rs.getInt("minParticipants");
+            String scoringMeasure = rs.getString("scoringMeasure");
+            String oneGame = rs.getString("oneGame");
+            int resultMin = rs.getInt("resultMin");
+            int resultMax = rs.getInt("resultMax");
+
+            //Retorna gender
+            GenderDao gd = new GenderDao();
+            Gender gender = gd.getGenderById(idGender);
+
+            // Retorna o objeto Sport com todos os dados carregados
+            return new Sport(idSportResult, type, gender, name, description,
+                    minParticipants, scoringMeasure, oneGame, resultMin, resultMax);
+        }
+
+        // Caso não encontre o esporte, retorna null
+        return null;
+    }
+
     public List<Sport> getSportsByName(String sportName) throws SQLException {
         List<Sport> sports = new ArrayList<>();
         // Consulta otimizada para pegar somente o nome e id do esporte

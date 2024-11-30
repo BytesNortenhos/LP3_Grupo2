@@ -71,6 +71,23 @@ public class Sport {
         this.resultMax = resultMax;
     }
 
+    public Sport(int idSport, String type, Gender genre, String name, String desc, int minParticipants,
+                 String scoringMeasure, String oneGame, int resultMin, int resultMax) {
+        this.idSport = idSport;
+        this.type = type;
+        this.genre = genre;
+        this.name = name;
+        this.desc = desc;
+        this.minParticipants = minParticipants;
+        this.scoringMeasure = scoringMeasure;
+        this.oneGame = oneGame;
+        this.olympicRecord = olympicRecord;
+        this.winnerOlympic = winnerOlympic;
+        this.rules = rules;
+        this.resultMin = resultMin;
+        this.resultMax = resultMax;
+    }
+
     public Sport(int idSport, String type, int idGender, String name, String desc, int minParticipants,
                  String scoringMeasure, String oneGame, OlympicRecord olympicRecord, List<WinnerOlympic> winnerOlympic,
                  List<Rule> rules) {
@@ -94,8 +111,9 @@ public class Sport {
         this.genre = genre;
         this.desc = desc;  // Initialize description
     }
-    public Sport(String type, Gender genre, String name, String desc, int minParticipants,
+    public Sport(int idSport, String type, Gender genre, String name, String desc, int minParticipants,
                  String scoringMeasure, String oneGame) {
+        this.idSport = idSport;
         this.type = type;
         this.genre = genre;
         this.name = name;
