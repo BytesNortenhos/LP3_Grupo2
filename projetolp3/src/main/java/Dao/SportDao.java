@@ -659,27 +659,7 @@ public class SportDao {
         return athletes;
     }
 
-    /**
-     * Gets the number of participants registered for a specified sport and year.
-     *
-     * @param idSport the ID of the sport
-     * @param year    the year of the event
-     * @return the total number of participants
-     * @throws SQLException if a database access error occurs
-     */
-    public int getNumberParticipantsSport(int idSport, int year) throws SQLException {
-        String query = "SELECT COUNT(*) AS quantidade " +
-                "FROM tblRegistration " +
-                "WHERE idSport = ? " +
-                "AND year = ? " +
-                "AND (idStatus = 3 OR idStatus = 4);";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, year);
-        int quantidade = 0;
-        if (rs != null && rs.next()) {
-            quantidade = rs.getInt("quantidade");
-        }
-        return quantidade;
-    }
+
 
     /**
      * Gets the number of distinct teams registered for a specified sport and year.
