@@ -179,7 +179,7 @@ public class MedalDao {
                 int idTeam = rs.getInt("idTeam");
                 int year = rs.getInt("year");
                 MedalType medalType = new MedalType(rs.getInt("idMedalType"), rs.getString("medalTypeDescription"));
-                Team team = TeamDao.getTeamById(idTeam);
+                Team team = TeamDao.getTeamByIdJunit(idTeam);
                 AthleteDao athleteDao = new AthleteDao();
                 Athlete athlete = athleteDao.getAthleteById(idAthlete);
                 Medal medal = new Medal(idMedal, athlete, team, year, medalType);
@@ -188,6 +188,23 @@ public class MedalDao {
         }
         return medals;
     }
+
+    public static int getMedalsByTeamId(int idTeam) throws SQLException {
+        String query = "SELECT COUNT(DISTINCT m.idMedalType) AS totalMedals " +
+                "FROM tblMedal m " +
+                "INNER JOIN tblMedalType mt ON m.idMedalType = mt.idMedalType " +
+                "WHERE m.idTeam = ?";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idTeam);
+
+        int totalMedals = 0;
+
+        if (rs != null && rs.next()) {
+            totalMedals = rs.getInt("totalMedals");
+        }
+
+        return totalMedals;
+    }
+
 
     public void addTopMedalAthlete(int idAthelete, int year, int idMedalType) throws SQLException {
         String query = "INSERT INTO tblMedal (idAthlete, year, idMedalType) VALUES (?, ?, ?)";

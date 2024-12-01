@@ -17,120 +17,101 @@ import static org.junit.jupiter.api.Assertions.*;
 public class SportTest {
 
     @Test
-    void testAddSport() throws SQLException {
+    void testCrudSport() throws SQLException {
         try (Connection connection = ConnectionsUtlis.dbConnect()) {
             // Configuração dos dados
-            String type = "Teste";
+            String type = "Individual";
 
             Gender gender = GenderDao.getGenders().stream()
                     .filter(g -> g.getDesc().equals("Male"))
                     .findFirst().orElse(null);
 
-            String name = "Teste";
-            String description = "Teste";
+            String name = "Sport Test";
+            String description = "This is a sport for test purposes";
             int minParticipants = 1;
             String scoringMeasure = "Time";
-            String oneGame = "Teste";
+            String oneGame = "One";
+            int resultMin = 1000;
+            int resultMax = 2000;
 
-            Sport sport = new Sport(0, type, gender, name, description, minParticipants, scoringMeasure, oneGame, null, null, null);
+            Sport sportAdd = new Sport(0, type, gender, name, description, minParticipants, scoringMeasure, oneGame, resultMin, resultMax);
 
-            SportDao.addSport(sport);
+            sportAdd.setIdSport(SportDao.addSportJUnit(sportAdd));
 
-            boolean sportEncontrado = false;
-            int idSport = 0;
+            SportDao sportDao = new SportDao();
+            Sport sportAdded = sportDao.getSportByIdJunit(sportAdd.getIdSport());
 
-            SportDao spd = new SportDao();
-            for (Sport s : spd.getSports()) {
-                if (s.getName().equals(name)) {
-                    sportEncontrado = true;
-                    idSport = s.getIdSport();
-                    break;
-                }
-            }
+            assertEqualsSport(sportAdd, sportAdded);
+            System.out.println("Sport inserido com sucesso");
 
-            if (sportEncontrado) {
-                SportDao.removeSport(idSport);
-                assertTrue(sportEncontrado);
-            }
-        }
-    }
+            //Dados para atualizar
 
-    @Test
-    void testUpdateSport() throws SQLException {
-        String type = "TesteUpdate";
+            String typeUpdate = "Collective";
 
-        Gender gender = GenderDao.getGenders().stream()
-                .filter(g -> g.getDesc().equals("Male"))
-                .findFirst().orElse(null);
+            Gender genderUpdate = GenderDao.getGenders().stream()
+                    .filter(g -> g.getDesc().equals("Female"))
+                    .findFirst().orElse(null);
 
-        String name = "TesteUpdate";
-        String description = "TesteUpdate";
-        int minParticipants = 3;
-        String scoringMeasure = "Points";
-        String oneGame = "TesteUp";
+            String nameUpdate = "Sport Test Update";
+            String descriptionUpdate = "This is a sport Update for test purposes";
+            int minParticipantsUpdate = 2;
+            String scoringMeasureUpdate = "Points";
+            String oneGameUpdate = "Multiple";
+            int resultMinUpdate = 4000;
+            int resultMaxUpdate = 6000;
 
-        Sport sportEncontrado = null;
-        int idSport = 5;
-        SportDao spd = new SportDao();
-        for (Sport s : spd.getSports()) {
-            if (s.getIdSport() == idSport) {
-                sportEncontrado = s;
-                break;
-            }
-        }
+            Sport sportAddUpdate = new Sport(0, typeUpdate, genderUpdate, nameUpdate, descriptionUpdate, minParticipantsUpdate, scoringMeasureUpdate, oneGameUpdate, resultMinUpdate, resultMaxUpdate);
 
-        Sport sport = new Sport(idSport,type,gender,name,description,minParticipants,scoringMeasure,oneGame,null,null,null);
+            sportAddUpdate.setIdSport(sportAdd.getIdSport());
+            SportDao.updateSport(sportAddUpdate);
 
-        if(sportEncontrado != null){
-            SportDao.updateSport(sport);
-        } else {
-            fail();
-        }
+            Sport sportAddedUpdate = sportDao.getSportByIdJunit(sportAddUpdate.getIdSport());
 
-        for (Sport s: spd.getSports()){
-            if (s.getIdSport() == idSport) {
-                if (s.getType().equals(type) && s.getGenre().getIdGender() == gender.getIdGender()
-                        && s.getName().equals(name) && s.getDesc().equals(description) && s.getMinParticipants() == minParticipants
-                        && s.getScoringMeasure().equals(scoringMeasure) && s.getOneGame().equals(oneGame)) {
+            assertEqualsSport(sportAddUpdate, sportAddedUpdate);
+            System.out.println("Sport atualizado com sucesso");
 
-                    assertTrue(true);
-                    SportDao.updateSport(sportEncontrado);
-                }else {
-                    fail("Erro ao atualizar");
-                }
-            }
+            //Remover o Sport
+            SportDao.removeSport(sportAdd.getIdSport());
         }
     }
 
     @Test
     void testGetNumberParticipantsSport() throws SQLException {
+        // Configuração dos dados
+        String type = "Individual";
 
-        SportDao spd = new SportDao();
-        List<Sport> sports = spd.getSports();
-        Sport sportEncontrado = null;
-        int idSport = 5;
-        int year = 2024;
-        int expectedNumber = 4;
-
-        for (Sport sp : sports) {
-            if (sp.getIdSport() == idSport) {
-                sportEncontrado = sp;
-            }
-        }
-
-        //Adicionar um atleta
         Gender gender = GenderDao.getGenders().stream()
                 .filter(g -> g.getDesc().equals("Male"))
                 .findFirst().orElse(null);
+
+        String name = "Sport Test";
+        String description = "This is a sport for test purposes";
+        int minParticipants = 1;
+        String scoringMeasure = "Time";
+        String oneGame = "One";
+        int resultMin = 1000;
+        int resultMax = 2000;
+
+        Sport sportAdd = new Sport(0, type, gender, name, description, minParticipants, scoringMeasure, oneGame, resultMin, resultMax);
+
+        sportAdd.setIdSport(SportDao.addSportJUnit(sportAdd));
+
+        SportDao sportDao = new SportDao();
+        Sport sportAdded = sportDao.getSportByIdJunit(sportAdd.getIdSport());
+
+        assertEqualsSport(sportAdd, sportAdded);
+        System.out.println("Sport inserido com sucesso");
+
+        //Adicionar atletas
 
         Country country = CountryDao.getCountries().stream()
                 .filter(c -> c.getName().equals("Portugal"))
                 .findFirst().orElse(null);
 
-        Athlete atleta1 = new Athlete(0, "Teste123", "João Teste", country, gender, 195, 90, java.sql.Date.valueOf("2000-08-22"));
-        Athlete atleta2 = new Athlete(0, "Teste123", "Dinis Teste", country, gender, 175, 65, java.sql.Date.valueOf("2004-04-30"));
-        Athlete atleta3 = new Athlete(0, "Teste123", "Samuel Teste", country, gender, 170, 70, java.sql.Date.valueOf("2005-06-24"));
-        Athlete atleta4 = new Athlete(0, "Teste123", "Roberto Teste", country, gender, 180, 75, java.sql.Date.valueOf("2004-02-16"));
+        Athlete atleta1 = new Athlete(0, "Teste123", "João Teste", country, gender, 195, 90, java.sql.Date.valueOf("2000-08-22"),null);
+        Athlete atleta2 = new Athlete(0, "Teste123", "Dinis Teste", country, gender, 175, 65, java.sql.Date.valueOf("2004-04-30"),null);
+        Athlete atleta3 = new Athlete(0, "Teste123", "Samuel Teste", country, gender, 170, 70, java.sql.Date.valueOf("2005-06-24"),null);
+        Athlete atleta4 = new Athlete(0, "Teste123", "Roberto Teste", country, gender, 180, 75, java.sql.Date.valueOf("2004-02-16"),null);
 
         List<Athlete> athletesAdicionados = new ArrayList<>();
         athletesAdicionados.add(atleta1);
@@ -153,10 +134,12 @@ public class SportTest {
 
 
         //Adicionar registo
-        Registration registration1 = new Registration(0, atleta1, null, sportEncontrado, status3, year);
-        Registration registration2 = new Registration(0, atleta2, null, sportEncontrado, status3, year);
-        Registration registration3 = new Registration(0, atleta3, null, sportEncontrado, status4, year);
-        Registration registration4 = new Registration(0, atleta4, null, sportEncontrado, status4, year);
+        int year = 2024;
+
+        Registration registration1 = new Registration(0, atleta1, null, sportAdded, status3, year);
+        Registration registration2 = new Registration(0, atleta2, null, sportAdded, status3, year);
+        Registration registration3 = new Registration(0, atleta3, null, sportAdded, status4, year);
+        Registration registration4 = new Registration(0, atleta4, null, sportAdded, status4, year);
 
         List<Registration> registrationsAdicionados = new ArrayList<>();
         registrationsAdicionados.add(registration1);
@@ -168,8 +151,9 @@ public class SportTest {
             reg.setIdRegistration(RegistrationDao.addRegistrationSolo(reg));
         }
 
-
-        int numberParticipants = spd.getNumberParticipantsSport(idSport, year);
+        //Testar o método
+        int expectedNumber = 4;
+        int numberParticipants = sportDao.getNumberParticipantsSport(sportAdded.getIdSport(), year);
         assertEquals(expectedNumber, numberParticipants);
         System.out.println("ExpectedNumber: " + expectedNumber + "\nNumberParticipants: " + numberParticipants);
         System.out.println("Sucesso");
@@ -185,5 +169,27 @@ public class SportTest {
             AthleteDao.removeAthlete(at.getIdAthlete());
         }
 
+        //Remover o Sport
+        SportDao.removeSport(sportAdd.getIdSport());
+
+    }
+    public static void assertEqualsSport(Sport expected, Sport actual) {
+        assertNotNull(expected);
+        assertNotNull(actual);
+
+        // Compara os atributos primitivos e strings diretamente
+        assertEquals(expected.getIdSport(), actual.getIdSport(), "ID do sport não é igual");
+        assertEquals(expected.getType(), actual.getType(), "Type do sport não é igual");
+        assertEquals(expected.getName(), actual.getName(), "Name do sport não é igual");
+        assertEquals(expected.getDesc(), actual.getDesc(), "Description do sport não é igual");
+        assertEquals(expected.getMinParticipants(), actual.getMinParticipants(), "MinParticipants do sport não é igual");
+        assertEquals(expected.getScoringMeasure(), actual.getScoringMeasure(), "ScoringMeasure do sport não é igual");
+        assertEquals(expected.getOneGame(), actual.getOneGame(), "OneGame do sport não é igual");
+
+        // Compara os objetos Gender
+        assertNotNull(expected.getGenre(), "O gênero do atleta não pode ser nulo");
+        assertNotNull(actual.getGenre(), "O gênero do atleta não pode ser nulo");
+        assertEquals(expected.getGenre().getDesc(), actual.getGenre().getDesc(), "Descrição do gênero não é igual");
     }
 }
+

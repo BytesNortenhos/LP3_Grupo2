@@ -232,6 +232,29 @@ public class ResultDao {
         }
         return results;
     }
+
+    public List<Result> getResultByAthleteJunit(int idAthlete) throws SQLException{
+        String query = "Select * From tblResult Where idAthlete = ?;";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idAthlete);
+        List<Result> results = new ArrayList<>();
+        if (rs != null) {
+            while (rs.next()) {
+                int id = rs.getInt("idResult");
+                Sport sport = new SportDao().getSportByIdJunit(rs.getInt("idSport"));
+                Athlete athlete = new AthleteDao().getAthleteById(rs.getInt("idAthlete"));
+                Date date = rs.getDate("date");
+                String Result = rs.getString("result");
+                Local local = new LocalDao().getLocalById(rs.getInt("idLocal"));
+
+                Result result = new Result(id, sport, athlete, null, date, Result, local);
+                results.add(result);
+            }
+        } else {
+            System.out.println("ResultSet is null. No results found.");
+        }
+        return results;
+    }
+
     public List<List> getPositionById (int idSport, String date) throws SQLException {
         List<List> positions = new ArrayList<>();
         String query = "SELECT *, ROW_NUMBER() OVER (ORDER BY idResult) as position FROM tblResult where idSport = ? AND date LIKE ?;";

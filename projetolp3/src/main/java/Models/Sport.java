@@ -104,6 +104,18 @@ public class Sport {
         this.scoringMeasure = scoringMeasure;
         this.oneGame = oneGame;
     }
+    public Sport(int idSport, String type, Gender genre, String name, String desc, int minParticipants,
+                 String scoringMeasure, String oneGame, int resultMin, int resultMax) {
+        this.type = type;
+        this.genre = genre;
+        this.name = name;
+        this.desc = desc;
+        this.minParticipants = minParticipants;
+        this.scoringMeasure = scoringMeasure;
+        this.oneGame = oneGame;
+        this.resultMin = resultMin;
+        this.resultMax = resultMax;
+    }
     /**
      * Constructor of Sport with essential details.
      * @param idSport {int} Sport ID

@@ -347,6 +347,25 @@ public class RegistrationDao {
         }
         return null;
     }
+
+    public static List<Registration> getRegistrationByIdAthlete(int idAthlete) throws SQLException {
+        String query = "SELECT * FROM tblRegistration WHERE idAthlete = ?";
+        List<Registration> registrations = new ArrayList<>();
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idAthlete);
+        if (rs != null && rs.next()) {
+            int idRegistration = rs.getInt("idRegistration");
+            Athlete athlete = new AthleteDao().getAthleteById(rs.getInt("idAthlete"));
+            Team team = TeamDao.getTeamByIdJunit(rs.getInt("idTeam"));
+            Sport sport = new SportDao().getSportByIdJunit(rs.getInt("idSport"));
+            RegistrationStatus regStatus = new RegistrationStatusDao().getRegistrationStatusById(rs.getInt("idStatus"));
+            int year = rs.getInt("year");
+            Registration reg = new Registration(idRegistration, athlete, team, sport, regStatus, year);
+            registrations.add(reg);
+
+        }
+        return registrations;
+    }
+
     public static List<Registration> getPendingRegistrations() throws SQLException {
         List<Registration> registrations = new ArrayList<>();
         // Query modificada para buscar apenas registros com idStatus = 1

@@ -266,6 +266,52 @@ public class SportDao {
         }
     }
 
+    public static int addSportJUnit(Sport sport) throws SQLException {
+        String query = "INSERT INTO tblSport (type, idGender, name, description, minParticipants, scoringMeasure, oneGame, resultMin, resultMax) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = ConnectionsUtlis.dbConnect();
+            stmt = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
+
+            stmt.setString(1, sport.getType());
+            stmt.setInt(2, sport.getGenre().getIdGender());
+            stmt.setString(3, sport.getName());
+            stmt.setString(4, sport.getDesc());
+            stmt.setInt(5, sport.getMinParticipants());
+            stmt.setString(6, sport.getScoringMeasure());
+            stmt.setString(7, sport.getOneGame());
+            stmt.setInt(8, sport.getResultMin());
+            stmt.setInt(9, sport.getResultMax());
+
+            // Executa a inserção
+            stmt.executeUpdate();
+
+            // Obter o ID gerado automaticamente
+            rs = stmt.getGeneratedKeys();
+            if (rs.next()) {
+                int generatedId = rs.getInt(1); // Retorna o ID gerado
+                System.out.println("Generated Sport ID: " + generatedId); // Adicionando para depuração
+                return generatedId;
+            } else {
+                throw new SQLException("Failed to retrieve the generated ID for the sport.");
+            }
+        } finally {
+            // Fechar recursos
+            if (rs != null) {
+                rs.close();
+            }
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+    }
+
 
 
     public static void removeSport(int idSport) throws SQLException {
@@ -325,6 +371,51 @@ public class SportDao {
                 "g.description AS genderDescription, " +
                 "r.year AS olympicYear, " +
                 "r.timeMS, " +
+                "r.medals " +
+                "FROM tblSport s " +
+                "JOIN tblGender g ON s.idGender = g.idGender " +
+                "LEFT JOIN tblOlympicRecord r ON s.idSport = r.idSport " +
+                "WHERE s.idSport = ?";
+
+        // Executa a consulta SQL com o idSport fornecido
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport);
+        if (rs != null && rs.next()) {
+            int idSportResult = rs.getInt("idSport");
+            String type = rs.getString("type");
+            int idGender = rs.getInt("idGender");
+            String name = rs.getString("name");
+            String description = rs.getString("description");
+            int minParticipants = rs.getInt("minParticipants");
+            String scoringMeasure = rs.getString("scoringMeasure");
+            String oneGame = rs.getString("oneGame");
+            // Criar o objeto Gender usando os dados da consulta
+            String genderDescription = rs.getString("genderDescription");
+            Gender gender = new Gender(idGender, genderDescription);
+
+            // Carregar o recorde olímpico associado ao esporte
+            OlympicRecordDao olympicRecordDao = new OlympicRecordDao();
+            OlympicRecord olympicRecord = olympicRecordDao.getOlympicRecordById(idSportResult, rs.getInt("olympicYear"));
+
+            // Carregar os vencedores olímpicos associados ao esporte
+            WinnerOlympicDao winnerOlympicDao = new WinnerOlympicDao();
+            List<WinnerOlympic> winnerOlympics = winnerOlympicDao.getWinnerOlympicsBySport(idSportResult);
+
+            // Carregar as regras associadas ao esporte
+            List<Rule> rules = RuleDao.getRulesBySport(idSportResult);
+
+            // Criar e retornar o objeto Sport com todos os dados carregados
+            return new Sport(idSportResult, type, gender, name, description, minParticipants, scoringMeasure, oneGame, olympicRecord, winnerOlympics, rules);
+        }
+
+        // Caso não encontre o esporte, retorna null
+        return null;
+    }
+
+    public Sport getSportByIdJunit(int idSport) throws SQLException {
+        // Consulta SQL para pegar os dados principais do esporte
+        String query = "SELECT s.*, " +
+                "g.description AS genderDescription, " +
+                "r.year AS olympicYear, " +
                 "r.medals " +
                 "FROM tblSport s " +
                 "JOIN tblGender g ON s.idGender = g.idGender " +
