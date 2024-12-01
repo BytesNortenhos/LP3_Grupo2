@@ -58,13 +58,29 @@ public class Registration {
         this.status = status;
         this.year = year;
     }
-    // Construtor com todos os parâmetros
+
+    /**
+     * Constructor of Registration
+     * @param idRegistration {int} Registration ID
+     * @param athlete {Athlete} Athlete
+     * @param sport {Sport} Sport
+     * @param status {RegistrationStatus} Status
+     */
     public Registration(int idRegistration, Athlete athlete, Sport sport, RegistrationStatus status) {
         this.idRegistration = idRegistration;
         this.athlete = athlete;
         this.sport = sport;
         this.status = status;
     }
+
+    /**
+     * Constructor of Registration
+     * @param idRegistration {int} Registration ID
+     * @param athlete {Athlete} Athlete
+     * @param team {Team} Team
+     * @param status {RegistrationStatus} Status
+     * @param year {int} Year of the Registration
+     */
     public Registration(int idRegistration, Athlete athlete, Team team, RegistrationStatus status, int year) {
         this.idRegistration = idRegistration;
         this.athlete = athlete;
@@ -158,7 +174,7 @@ public class Registration {
      * @return int
      */
     public int getYear() {
-        return year; // Novo método para obter o ano
+        return year;
     }
 
     /**
@@ -166,7 +182,7 @@ public class Registration {
      * @param year {int} Year
      */
     public void setYear(int year) {
-        this.year = year; // Novo método para definir o ano
+        this.year = year;
     }
 
 }

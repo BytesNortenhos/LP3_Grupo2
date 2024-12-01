@@ -8,6 +8,11 @@ public class ConnectionsUtlis{
     private static final String connStr = "jdbc:sqlserver://ctespbd.dei.isep.ipp.pt;databaseName=2024_LP3_G2_FEIRA;user=2024_LP3_G2_FEIRA;password=LP3g2!2024;encryption=true;trustServerCertificate=true;";
         private static Connection conn = null;
 
+        /**
+         * Connect to DB
+         * @return
+         * @throws SQLException
+         */
         public static Connection dbConnect() throws SQLException {
             if (conn == null || conn.isClosed()) {
                 try {
@@ -21,6 +26,10 @@ public class ConnectionsUtlis{
             return conn;
         }
 
+        /**
+         * Disconnect from DB
+         * @throws SQLException
+         */
         public static void dbDisconnect() throws SQLException {
             try {
                 if (conn != null && !conn.isClosed()) {
@@ -31,6 +40,12 @@ public class ConnectionsUtlis{
             }
         }
 
+        /**
+         * Execute query
+         * @param queryStmt {String} Query
+         * @return CachedRowSet
+         * @throws SQLException
+         */
         public static CachedRowSet dbExecuteQuery(String queryStmt) throws SQLException {
             Statement stmt = null;
             ResultSet resultSet = null;
@@ -58,6 +73,13 @@ public class ConnectionsUtlis{
             return crs;
         }
 
+        /**
+         * Execute query
+         * @param queryStmt {String} Query
+         * @param params {Object[]} Params
+         * @return CachedRowSet
+         * @throws SQLException
+         */
         public static CachedRowSet dbExecuteQuery(String queryStmt, Object... params) throws SQLException {
             PreparedStatement stmt = null;
             ResultSet resultSet = null;

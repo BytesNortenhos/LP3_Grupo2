@@ -4,7 +4,6 @@ import Models.*;
 import Utils.ConnectionsUtlis;
 import java.sql.ResultSet;
 import java.time.LocalDate;
-
 import javax.sql.rowset.CachedRowSet;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,12 +12,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SportDao {
+    /**
+     * Get all sports
+     * @return {List<Sport>} List of sports
+     * @throws SQLException
+     */
     public List<Sport> getSports() throws SQLException {
         List<Sport> sports = new ArrayList<>();
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT s.*," +
                 "g.description AS genderDescription," +
                 "r.year AS olympicYear," +
-                "r.timeMS," +
+                "r.result," +
                 "r.medals " +
                 "FROM tblSport s " +
                 "JOIN tblGender g ON s.idGender = g.idGender " +
@@ -54,10 +58,15 @@ public class SportDao {
         return sports;
     }
 
+    /**
+     * Get all sports to show
+     * @return {List<List>} List of sports
+     * @throws SQLException
+     */
     public List<List> getSportsToShow() throws SQLException {
         List<List> sports = new ArrayList<>();
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT s.*, " +
-                "g.description AS genderDescription " + // Added space before FROM
+                "g.description AS genderDescription " +
                 "FROM tblSport s " +
                 "JOIN tblGender g ON s.idGender = g.idGender;");
         if (rs != null) {
@@ -79,6 +88,12 @@ public class SportDao {
         return sports;
     }
 
+    /**
+     * Get sports to start
+     * @param year {int} Year
+     * @return {List<List>} List of sports
+     * @throws SQLException
+     */
     public List<List> getSportsToStart(int year) throws SQLException {
         List<List> sports = new ArrayList<>();
         String query = "SELECT DISTINCT s.idSport, s.type, s.idGender, s.name, s.description," +
@@ -109,69 +124,13 @@ public class SportDao {
         return sports;
     }
 
-    public boolean verifyIfIsTeam(int idSport, int year) throws SQLException{
-        String query = "SELECT idTeam " +
-                "FROM tblRegistration " +
-                "WHERE idSport = ? " +
-                "AND year = ? " +
-                "AND (idStatus = 3 OR idStatus = 4)" +
-                "AND idTeam IS NOT NULL;";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, year);
-        if (rs != null && rs.next()) {
-            return true;
-        }
-        return false;
-    }
-
-    public List<List> getTeamsAndthletes(int idSport, int year) throws SQLException{
-        List<List> teams = new ArrayList<>();
-        String query = "SELECT t.idTeam, t.name AS teamName, a.idAthlete, a.name AS athleteName " +
-                "FROM tblTeam t " +
-                "JOIN tblRegistration r ON t.idTeam = r.idTeam " +
-                "JOIN tblAthlete a ON a.idAthlete = r.idAthlete " +
-                "WHERE r.idSport = ? " +
-                "AND r.year = ? " +
-                "AND (r.idStatus = 3 OR r.idStatus = 4);";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, year);
-        if (rs != null) {
-            while (rs.next()) {
-                List<String> team = new ArrayList<>();
-                team.add(rs.getString("idTeam"));
-                team.add(rs.getString("teamName"));
-                team.add(rs.getString("idAthlete"));
-                team.add(rs.getString("athleteName"));
-                teams.add(team);
-            }
-        } else {
-            System.out.println("ResultSet is null. No results for Sport found.");
-        }
-        return teams;
-    }
-    public List<Athlete> getAthletesBySport(int idSport, int year) throws SQLException {
-        List<Athlete> athletes = new ArrayList<>();
-        String query = "SELECT a.* " +
-                "FROM tblAthlete a " +
-                "JOIN tblRegistration r ON a.idAthlete = r.idAthlete " +
-                "WHERE r.idSport = ? " +
-                "AND r.year = ? " +
-                "AND (r.idStatus = 3 OR r.idStatus = 4);";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, year);
-        if (rs != null) {
-            try {
-                while (rs.next()) {
-                    int idAthlete = rs.getInt("idAthlete");
-                    String name = rs.getString("name");
-                    String country = rs.getString("idCountry");
-                    Athlete athlete = new Athlete(idAthlete, name, country);
-                    athletes.add(athlete);
-                }
-            }
-            catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        return athletes;
-    }
+    /**
+     * Get number of participants in a sport
+     * @param idSport {int} Id sport
+     * @param year {int} Year
+     * @return int
+     * @throws SQLException
+     */
     public int getNumberParticipantsSport(int idSport, int year) throws SQLException {
         String query = "SELECT COUNT(*) AS quantidade " +
                 "FROM tblRegistration " +
@@ -186,20 +145,12 @@ public class SportDao {
         return quantidade;
     }
 
-    public int getNumberTeamsSport(int idSport, int year) throws SQLException {
-        String query = "SELECT COUNT(DISTINCT idTeam) AS quantidade " +
-                "FROM tblRegistration " +
-                "WHERE idSport = ? " +
-                "AND year = ? " +
-                "AND (idStatus = 3 OR idStatus = 4);";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, year);
-        int quantidade = 0;
-        if (rs != null && rs.next()) {
-            quantidade = rs.getInt("quantidade");
-        }
-        return quantidade;
-    }
-
+    /**
+     * Verify ranges
+     * @param idSport {int} Id sport
+     * @return boolean
+     * @throws SQLException
+     */
     public boolean verifyRanges(int idSport) throws SQLException {
         String query = "SELECT resultMin, resultMax " +
                 "FROM tblSport " +
@@ -211,6 +162,12 @@ public class SportDao {
         return false;
     }
 
+    /**
+     * Booted sport
+     * @param idSport {int} Id sport
+     * @return boolean
+     * @throws SQLException
+     */
     public boolean BootedSport(int idSport) throws SQLException {
         String query = "SELECT COUNT(*) AS quantidade " +
                 "FROM tblResult " +
@@ -223,6 +180,13 @@ public class SportDao {
         }
         return false;
     }
+
+    /**
+     * Add sport
+     * @param sport {Sport} Sport
+     * @return int
+     * @throws SQLException
+     */
     public static int addSport(Sport sport) throws SQLException {
         String querySport = "INSERT INTO tblSport (type, idGender, name, description, minParticipants, scoringMeasure, oneGame) VALUES (?, ?, ?, ?, ?, ?, ?)";
         String queryOlympicRecord = "INSERT INTO tblOlympicRecord (idSport, year) VALUES (?, ?)";
@@ -296,7 +260,11 @@ public class SportDao {
     }
 
 
-
+    /**
+     * Remove sport
+     * @param idSport {int} Id sport
+     * @throws SQLException
+     */
     public static void removeSport(int idSport) throws SQLException {
         String query = "DELETE FROM tblSport WHERE idSport = ?";
         Connection conn = null;
@@ -316,6 +284,11 @@ public class SportDao {
         }
     }
 
+    /**
+     * Update sport
+     * @param sport {Sport} Sport
+     * @throws SQLException
+     */
     public static void updateSport(Sport sport) throws SQLException {
         String query = "UPDATE tblSport SET type = ?, idGender = ?, name = ?, description = ?, minParticipants = ?, scoringMeasure = ?, oneGame = ?, resultMin = ?, resultMax = ? WHERE idSport = ?";
         Connection conn = null;
@@ -324,7 +297,6 @@ public class SportDao {
             conn = ConnectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
-            // Define os valores para a atualização
             stmt.setString(1, sport.getType());
             stmt.setInt(2, sport.getGenre().getIdGender());
             stmt.setString(3, sport.getName());
@@ -332,11 +304,10 @@ public class SportDao {
             stmt.setInt(5, sport.getMinParticipants());
             stmt.setString(6, sport.getScoringMeasure());
             stmt.setString(7, sport.getOneGame());
-            stmt.setInt(8, sport.getResultMin()); // Define o valor de resultMin
-            stmt.setInt(9, sport.getResultMax()); // Define o valor de resultMax
-            stmt.setInt(10, sport.getIdSport()); // Define o identificador do esporte
+            stmt.setInt(8, sport.getResultMin());
+            stmt.setInt(9, sport.getResultMax());
+            stmt.setInt(10, sport.getIdSport());
 
-            // Executa a atualização
             stmt.executeUpdate();
         } finally {
             if (stmt != null) {
@@ -348,19 +319,23 @@ public class SportDao {
         }
     }
 
+    /**
+     * Get sport by id
+     * @param idSport {int} Id sport
+     * @return {Sport} Sport
+     * @throws SQLException
+     */
     public Sport getSportById(int idSport) throws SQLException {
-        // Consulta SQL para pegar os dados principais do esporte
         String query = "SELECT s.*, " +
                 "g.description AS genderDescription, " +
                 "r.year AS olympicYear, " +
-                "r.timeMS, " +
+                "r.result, " +
                 "r.medals " +
                 "FROM tblSport s " +
                 "JOIN tblGender g ON s.idGender = g.idGender " +
                 "LEFT JOIN tblOlympicRecord r ON s.idSport = r.idSport " +
                 "WHERE s.idSport = ?";
 
-        // Executa a consulta SQL com o idSport fornecido
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport);
         if (rs != null && rs.next()) {
             int idSportResult = rs.getInt("idSport");
@@ -371,36 +346,35 @@ public class SportDao {
             int minParticipants = rs.getInt("minParticipants");
             String scoringMeasure = rs.getString("scoringMeasure");
             String oneGame = rs.getString("oneGame");
-            // Criar o objeto Gender usando os dados da consulta
             String genderDescription = rs.getString("genderDescription");
             Gender gender = new Gender(idGender, genderDescription);
 
-            // Carregar o recorde olímpico associado ao esporte
             OlympicRecordDao olympicRecordDao = new OlympicRecordDao();
             OlympicRecord olympicRecord = olympicRecordDao.getOlympicRecordById(idSportResult, rs.getInt("olympicYear"));
 
-            // Carregar os vencedores olímpicos associados ao esporte
             WinnerOlympicDao winnerOlympicDao = new WinnerOlympicDao();
             List<WinnerOlympic> winnerOlympics = winnerOlympicDao.getWinnerOlympicsBySport(idSportResult);
 
-            // Carregar as regras associadas ao esporte
             List<Rule> rules = RuleDao.getRulesBySport(idSportResult);
 
-            // Criar e retornar o objeto Sport com todos os dados carregados
             return new Sport(idSportResult, type, gender, name, description, minParticipants, scoringMeasure, oneGame, olympicRecord, winnerOlympics, rules);
         }
 
-        // Caso não encontre o esporte, retorna null
         return null;
     }
 
+    /**
+     * Get sport by id V2
+     * @param idSport {int} Id sport
+     * @return {Sport} Sport
+     * @throws SQLException
+     */
     public Sport getSportByIdV2(int idSport) throws SQLException {
-        // Consulta otimizada para obter os dados do esporte com seus registros olímpicos e gênero
         String query = """
                     SELECT s.idSport, s.type, s.idGender, s.name, s.description, 
                            s.minParticipants, s.scoringMeasure, s.oneGame, 
                            g.description AS genderDescription, 
-                           r.year AS olympicYear, r.timeMS, r.medals 
+                           r.year AS olympicYear, r.result, r.medals 
                     FROM tblSport s 
                     JOIN tblGender g ON s.idGender = g.idGender 
                     LEFT JOIN tblOlympicRecord r ON s.idSport = r.idSport 
@@ -409,7 +383,6 @@ public class SportDao {
 
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport);
         if (rs != null && rs.next()) {
-            // Carrega os dados principais do esporte
             int idSportResult = rs.getInt("idSport");
             String type = rs.getString("type");
             int idGender = rs.getInt("idGender");
@@ -419,23 +392,25 @@ public class SportDao {
             String scoringMeasure = rs.getString("scoringMeasure");
             String oneGame = rs.getString("oneGame");
 
-            // Carrega o registro olímpico diretamente
             OlympicRecord olympicRecord = OlympicRecordDao.getOlympicRecordByIdV2(idSportResult, rs.getInt("olympicYear"));
 
-            // Busca lista de vencedores olímpicos e regras associadas ao esporte
             List<WinnerOlympic> winnerOlympics = WinnerOlympicDao.getWinnerOlympicsBySportV2(idSportResult);
             List<Rule> rules = RuleDao.getRulesBySportV2(idSportResult);
 
-            // Retorna o objeto Sport com todos os dados carregados
             return new Sport(idSportResult, type, idGender, name, description,
                     minParticipants, scoringMeasure, oneGame, olympicRecord,
                     winnerOlympics, rules);
         }
 
-        // Caso não encontre o esporte, retorna null
         return null;
     }
 
+    /**
+     * Get sports by name
+     * @param sportName {String} Sport name
+     * @return {List<Sport>} List of sports
+     * @throws SQLException
+     */
     public List<Sport> getSportsByName(String sportName) throws SQLException {
         List<Sport> sports = new ArrayList<>();
         // Consulta otimizada para pegar somente o nome e id do esporte
@@ -447,7 +422,7 @@ public class SportDao {
                 int idSport = rs.getInt("idSport");
                 String name = rs.getString("name");
                 String type = rs.getString("type");
-                Sport sport = new Sport(idSport, name, type); // Criando o objeto Sport apenas com id e nome
+                Sport sport = new Sport(idSport, name, type);
                 sports.add(sport);
             }
         } else {
@@ -455,18 +430,23 @@ public class SportDao {
         }
         return sports;
     }
+
+    /**
+     * Get all sports V2
+     * @return {List<Sport>} List of sports
+     * @throws SQLException
+     */
     public static List<Sport> getAllSportsV2() throws SQLException {
         List<Sport> sports = new ArrayList<>();
 
-        // Atualize a consulta SQL para incluir os novos campos resultMin e resultMax
         String query = "SELECT s.idSport, s.name, s.type, s.idGender, g.description AS genderDescription, " +
                 "s.minParticipants, s.description AS sportDescription, s.scoringMeasure, s.oneGame, " +
-                "s.resultMin, s.resultMax " +  // Incluindo os campos resultMin e resultMax
+                "s.resultMin, s.resultMax " +
                 "FROM tblSport s " +
                 "INNER JOIN tblGender g ON s.idGender = g.idGender " +
                 "LEFT JOIN tblTeam t ON s.idSport = t.idSport " +
                 "LEFT JOIN tblRegistration r ON s.idSport = r.idSport " +
-                "WHERE t.idSport IS NULL AND r.idSport IS NULL";  // Filtra para esportes sem registros nas tabelas tblTeam e tblRegistration
+                "WHERE t.idSport IS NULL AND r.idSport IS NULL";
 
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query);
 
@@ -481,18 +461,16 @@ public class SportDao {
                 String sportDescription = rs.getString("sportDescription");
                 String scoringMeasure = rs.getString("scoringMeasure");
                 String oneGame = rs.getString("oneGame");
-                int resultMin = rs.getInt("resultMin");  // Buscando o valor de resultMin
-                int resultMax = rs.getInt("resultMax");  // Buscando o valor de resultMax
+                int resultMin = rs.getInt("resultMin");
+                int resultMax = rs.getInt("resultMax");
 
-                // Criando o objeto Gender
                 Gender gender = new Gender(idGender, genderDescription);
 
-                // Criando o objeto Sport com todos os dados
                 Sport sport = new Sport(idSport, name, type, gender, sportDescription, scoringMeasure);
                 sport.setMinParticipants(minParticipants);
-                sport.setOneGame(oneGame);  // Atribuindo o valor de oneGame
-                sport.setResultMin(resultMin);  // Atribuindo o valor de resultMin
-                sport.setResultMax(resultMax);  // Atribuindo o valor de resultMax
+                sport.setOneGame(oneGame);
+                sport.setResultMin(resultMin);
+                sport.setResultMax(resultMax);
 
                 sports.add(sport);
             }
@@ -503,42 +481,46 @@ public class SportDao {
         return sports;
     }
 
+    /**
+     * Update sport V2
+     * @param sport {Sport} Sport
+     * @throws SQLException
+     */
     public static void updateSportV2(Sport sport) throws SQLException {
         String query = "UPDATE tblSport SET name = ?, description = ?, minParticipants = ? WHERE idSport = ?";
 
         try {
-            // Obter conexão utilizando ConnectionsUtlis.dbConnect()
             Connection conn = ConnectionsUtlis.dbConnect();
 
-            // Preparar a instrução SQL
             PreparedStatement stmt = conn.prepareStatement(query);
 
-            // Configurar os parâmetros do PreparedStatement
             stmt.setString(1, sport.getName());
             stmt.setString(2, sport.getDesc());
             stmt.setInt(3, sport.getMinParticipants());
             stmt.setInt(4, sport.getIdSport());
 
-            // Executar a atualização
             int rowsAffected = stmt.executeUpdate();
 
-            // Informar o resultado
             if (rowsAffected > 0) {
                 System.out.println("Sport updated successfully!");
             } else {
                 System.out.println("No sport found with the provided ID.");
             }
 
-            // Fechar o PreparedStatement
             stmt.close();
 
         } catch (SQLException e) {
-            // Tratar exceção SQL
             System.err.println("Error updating sport: " + e.getMessage());
             throw e;
         }
     }
 
+    /**
+     * Get sport type
+     * @param idSport {int} Id sport
+     * @return String
+     * @throws SQLException
+     */
     public String getType(int idSport) throws SQLException {
         String tipo = "";
         String query = "SELECT type " +
@@ -551,6 +533,12 @@ public class SportDao {
         return tipo;
     }
 
+    /**
+     * Get one game
+     * @param idSport {int} Id sport
+     * @return String
+     * @throws SQLException
+     */
     public String getOneGame(int idSport) throws SQLException {
         String oneGame = "";
         String query = "SELECT oneGame " +
@@ -563,6 +551,12 @@ public class SportDao {
         return oneGame;
     }
 
+    /**
+     * Get range
+     * @param idSport {int} Id sport
+     * @return List<Integer>
+     * @throws SQLException
+     */
     public List<Integer> getRange(int idSport) throws SQLException {
         List<Integer> range = new ArrayList<>();
         String query = "SELECT resultMin, resultMax " +
@@ -577,6 +571,138 @@ public class SportDao {
         }
         return range;
     }
+    /**
+     * Verifies if the specified sport and year have associated teams.
+     *
+     * @param idSport the ID of the sport
+     * @param year    the year of the event
+     * @return {@code true} if the sport has teams for the specified year, {@code false} otherwise
+     * @throws SQLException if a database access error occurs
+     */
+    public boolean verifyIfIsTeam(int idSport, int year) throws SQLException {
+        String query = "SELECT idTeam " +
+                "FROM tblRegistration " +
+                "WHERE idSport = ? " +
+                "AND year = ? " +
+                "AND (idStatus = 3 OR idStatus = 4)" +
+                "AND idTeam IS NOT NULL;";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, year);
+        if (rs != null && rs.next()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Retrieves a list of teams and their athletes for a specified sport and year.
+     *
+     * @param idSport the ID of the sport
+     * @param year    the year of the event
+     * @return a list of lists, where each inner list contains team and athlete details
+     * @throws SQLException if a database access error occurs
+     */
+    public List<List> getTeamsAndthletes(int idSport, int year) throws SQLException {
+        List<List> teams = new ArrayList<>();
+        String query = "SELECT t.idTeam, t.name AS teamName, a.idAthlete, a.name AS athleteName " +
+                "FROM tblTeam t " +
+                "JOIN tblRegistration r ON t.idTeam = r.idTeam " +
+                "JOIN tblAthlete a ON a.idAthlete = r.idAthlete " +
+                "WHERE r.idSport = ? " +
+                "AND r.year = ? " +
+                "AND (r.idStatus = 3 OR r.idStatus = 4);";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, year);
+        if (rs != null) {
+            while (rs.next()) {
+                List<String> team = new ArrayList<>();
+                team.add(rs.getString("idTeam"));
+                team.add(rs.getString("teamName"));
+                team.add(rs.getString("idAthlete"));
+                team.add(rs.getString("athleteName"));
+                teams.add(team);
+            }
+        } else {
+            System.out.println("ResultSet is null. No results for Sport found.");
+        }
+        return teams;
+    }
+
+    /**
+     * Retrieves a list of athletes registered for a specified sport and year.
+     *
+     * @param idSport the ID of the sport
+     * @param year    the year of the event
+     * @return a list of {@link Athlete} objects representing the registered athletes
+     * @throws SQLException if a database access error occurs
+     */
+    public List<Athlete> getAthletesBySport(int idSport, int year) throws SQLException {
+        List<Athlete> athletes = new ArrayList<>();
+        String query = "SELECT a.* " +
+                "FROM tblAthlete a " +
+                "JOIN tblRegistration r ON a.idAthlete = r.idAthlete " +
+                "WHERE r.idSport = ? " +
+                "AND r.year = ? " +
+                "AND (r.idStatus = 3 OR r.idStatus = 4);";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, year);
+        if (rs != null) {
+            try {
+                while (rs.next()) {
+                    int idAthlete = rs.getInt("idAthlete");
+                    String name = rs.getString("name");
+                    String country = rs.getString("idCountry");
+                    Athlete athlete = new Athlete(idAthlete, name, country);
+                    athletes.add(athlete);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return athletes;
+    }
+
+    /**
+     * Gets the number of participants registered for a specified sport and year.
+     *
+     * @param idSport the ID of the sport
+     * @param year    the year of the event
+     * @return the total number of participants
+     * @throws SQLException if a database access error occurs
+     */
+    public int getNumberParticipantsSport(int idSport, int year) throws SQLException {
+        String query = "SELECT COUNT(*) AS quantidade " +
+                "FROM tblRegistration " +
+                "WHERE idSport = ? " +
+                "AND year = ? " +
+                "AND (idStatus = 3 OR idStatus = 4);";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, year);
+        int quantidade = 0;
+        if (rs != null && rs.next()) {
+            quantidade = rs.getInt("quantidade");
+        }
+        return quantidade;
+    }
+
+    /**
+     * Gets the number of distinct teams registered for a specified sport and year.
+     *
+     * @param idSport the ID of the sport
+     * @param year    the year of the event
+     * @return the total number of teams
+     * @throws SQLException if a database access error occurs
+     */
+    public int getNumberTeamsSport(int idSport, int year) throws SQLException {
+        String query = "SELECT COUNT(DISTINCT idTeam) AS quantidade " +
+                "FROM tblRegistration " +
+                "WHERE idSport = ? " +
+                "AND year = ? " +
+                "AND (idStatus = 3 OR idStatus = 4);";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, year);
+        int quantidade = 0;
+        if (rs != null && rs.next()) {
+            quantidade = rs.getInt("quantidade");
+        }
+        return quantidade;
+    }
+
 }
 
 

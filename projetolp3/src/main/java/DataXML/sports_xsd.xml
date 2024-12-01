@@ -52,7 +52,7 @@
 								</xs:simpleType>
 							</xs:element>
 							<!-- Olympic record information -->
-							<xs:element name="olympicRecord">
+							<xs:element name="olympicRecord" minOccurs="0">
 								<xs:complexType>
 									<xs:sequence>
 										<!-- Record time -->
@@ -67,7 +67,7 @@
 								</xs:complexType>
 							</xs:element>
 							<!-- Olympic winner information -->
-							<xs:element name="winnerOlympic">
+							<xs:element name="winnerOlympic" minOccurs="0">
 								<xs:complexType>
 									<xs:sequence>
 										<!-- Time -->

@@ -16,6 +16,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RegistrationDao {
+    /**
+     * Get all registrations
+     * @return {List<Registration>} List of registrations
+     * @throws SQLException
+     */
     public List<Registration> getRegistrations() throws SQLException {
         List<Registration> registrations = new ArrayList<>();
 
@@ -93,6 +98,12 @@ public class RegistrationDao {
     }
 
 
+    /**
+     * Add registration
+     * @param registration {Registration} Registration
+     * @return {int} Generated ID
+     * @throws SQLException
+     */
     public int addRegistrationTeam(Registration registration) throws SQLException {
         // Query para verificar se a inscrição já existe
         String checkQuery = "SELECT COUNT(*) FROM tblRegistration WHERE idAthlete = ? AND idTeam = ? AND idSport = ? AND idStatus = ? AND year = ?";
@@ -181,6 +192,12 @@ public class RegistrationDao {
     }
 
 
+    /**
+     * Add registration
+     * @param registration {Registration} Registration
+     * @return {int} Generated ID
+     * @throws SQLException
+     */
     public static int addRegistrationSolo(Registration registration) throws SQLException {
         String checkQuery = "SELECT COUNT(*) FROM tblRegistration WHERE idAthlete = ? AND idSport = ? AND idStatus = 3 AND year = ?";
         String insertQuery = "INSERT INTO tblRegistration (idAthlete, idSport, idStatus, year) VALUES (?, ?, ?, ?)";
@@ -260,7 +277,11 @@ public class RegistrationDao {
 
 
 
-
+    /**
+     * Remove registration
+     * @param idRegistration {int} Registration ID
+     * @throws SQLException
+     */
     public static void removeRegistration(int idRegistration) throws SQLException {
         String query = "DELETE FROM tblRegistration WHERE idRegistration = ?";
         Connection conn = null;
@@ -280,6 +301,11 @@ public class RegistrationDao {
         }
     }
 
+    /**
+     * Update registration
+     * @param registration {Registration} Registration
+     * @throws SQLException
+     */
     public static void updateRegistration(Registration registration) throws SQLException {
         String query = "UPDATE tblRegistration SET idAthlete = ?, idTeam = ?, idSport = ?, idStatus = ? WHERE idRegistration = ?";
         Connection conn = null;
@@ -303,6 +329,14 @@ public class RegistrationDao {
             }
         }
     }
+
+    /**
+     * Update registration status
+     * @param registrationId {int} Registration ID
+     * @param newStatus {int} New status
+     * @param idTeam {int} Team ID
+     * @throws SQLException
+     */
     public static void updateRegistrationStatus(int registrationId, int newStatus, int idTeam) throws SQLException {
         String query = "UPDATE tblRegistration SET idStatus = ?, idTeam = ? WHERE idRegistration = ?";
         Connection conn = null;
@@ -327,6 +361,12 @@ public class RegistrationDao {
         }
     }
 
+    /**
+     * Get registration by ID
+     * @param idRegistration {int} Registration ID
+     * @return {Registration} Registration
+     * @throws SQLException
+     */
     public static Registration getRegistrationById(int idRegistration) throws SQLException {
         String query = "SELECT * FROM tblRegistration WHERE idRegistration = ?";
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idRegistration);
@@ -347,6 +387,12 @@ public class RegistrationDao {
         }
         return null;
     }
+
+    /**
+     * Get pending registrations
+     * @return {List<Registration>} List of registrations
+     * @throws SQLException
+     */
     public static List<Registration> getPendingRegistrations() throws SQLException {
         List<Registration> registrations = new ArrayList<>();
         // Query modificada para buscar apenas registros com idStatus = 1
@@ -377,6 +423,11 @@ public class RegistrationDao {
         return registrations;
     }
 
+    /**
+     * Get years
+     * @return {List<String>} List of years
+     * @throws SQLException
+     */
     public List<String> getYears() throws SQLException {
         List<String> years = new ArrayList<>();
         String query = "SELECT DISTINCT year " +
@@ -394,6 +445,14 @@ public class RegistrationDao {
         }
         return years;
     }
+
+    /**
+     * Verify if the team is already registered
+     * @param idCountry {String} Country ID
+     * @param idSport {int} Sport ID
+     * @return boolean
+     * @throws SQLException
+     */
     public boolean verfiyTeam(String idCountry, int idSport) throws SQLException{
         String query = "SELECT idTeam FROM tblTeam WHERE idCountry = ? AND idSport = ?";
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idCountry, idSport);
@@ -406,6 +465,14 @@ public class RegistrationDao {
         }
         return false;
     }
+
+    /**
+     * Get team ID
+     * @param idCountry {String} Country ID
+     * @param idSport {int} Sport ID
+     * @return int
+     * @throws SQLException
+     */
     public int getIdTeam(String idCountry, int idSport) throws SQLException{
         String query = "SELECT idTeam FROM tblTeam WHERE idCountry = ? AND idSport = ?";
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idCountry, idSport);
@@ -418,6 +485,13 @@ public class RegistrationDao {
         }
         return 0;
     }
+
+    /**
+     * Get user registration
+     * @param idAthlete {int} Athlete ID
+     * @return List<List>
+     * @throws SQLException
+     */
     public List<List> getUserRegistration(int idAthlete) throws SQLException{
         List<List> userRegistrations = new ArrayList<>();
         String query = "SELECT r.*, s.idSport, s.name, s.type" +
@@ -444,6 +518,13 @@ public class RegistrationDao {
         return userRegistrations;
     }
 
+    /**
+     * Get registered athletes
+     * @param idSport {int} Sport ID
+     * @param year {int} Year
+     * @return List<Integer>
+     * @throws SQLException
+     */
     public List<Integer> getRegisteredAthletes(int idSport, int year) throws SQLException {
         List<Integer> athletes = new ArrayList<>();
         String query = "SELECT idAthlete " +
@@ -459,6 +540,13 @@ public class RegistrationDao {
         return athletes;
     }
 
+    /**
+     * Get registered teams
+     * @param idSport {int} Sport ID
+     * @param year {int} Year
+     * @return List<Integer>
+     * @throws SQLException
+     */
     public List<Integer> getRegisteredTeams(int idSport, int year) throws SQLException {
         List<Integer> teams = new ArrayList<>();
         String query = "SELECT DISTINCT idTeam " +
@@ -474,6 +562,14 @@ public class RegistrationDao {
         return teams;
     }
 
+    /**
+     * Get athletes by team
+     * @param idTeam {int} Team ID
+     * @param idSport {int} Sport ID
+     * @param year {int} Year
+     * @return List<Integer>
+     * @throws SQLException
+     */
     public List<Integer> getAthletesByTeam(int idTeam, int idSport, int year) throws SQLException{
         List<Integer> athletes = new ArrayList<>();
         String query = "SELECT idAthlete " +
@@ -489,6 +585,13 @@ public class RegistrationDao {
         return athletes;
     }
 
+    /**
+     * Get status finished
+     * @param idSport {int} Sport ID
+     * @param year {int} Year
+     * @return boolean
+     * @throws SQLException
+     */
     public boolean setStatusFinished(int idSport, int year) throws SQLException{
         String query = "UPDATE tblRegistration SET idStatus = 4 WHERE idSport = ? AND year = ?";
         Connection conn = null;

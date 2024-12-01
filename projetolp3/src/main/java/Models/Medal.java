@@ -24,6 +24,15 @@ public class Medal {
         this.year = year;
         this.medalType = medalType;
     }
+
+    /**
+     * Constructor of Medal for Team
+     * @param idMedal {int} Medal ID
+     * @param idAthlete {int} Athlete ID
+     * @param idTeam {int} Team ID
+     * @param year {int} Year
+     * @param medalType {MedalType} MedalType
+     */
     public Medal(int idMedal, int idAthlete, int idTeam, int year, MedalType medalType) {
         this.idMedal = idMedal;
         this.idAthlete = idAthlete;
@@ -31,6 +40,7 @@ public class Medal {
         this.year = year;
         this.medalType = medalType;
     }
+
     /**
      * Get Medal ID
      * @return int

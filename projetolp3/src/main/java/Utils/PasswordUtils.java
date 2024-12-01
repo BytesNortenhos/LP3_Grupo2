@@ -30,8 +30,8 @@ import java.util.List;
 public class PasswordUtils {
 
     /**
-     * Encripta a password do utilizador
-     * @param password {String} Password do utilizador
+     * Encrypt password
+     * @param password {String} Password
      * @return String
      */
     public String encriptarPassword(String password) {

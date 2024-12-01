@@ -19,8 +19,8 @@ public class XMLUtils {
     private final String absolutePath = "src/main/java/DataXML";
 
     /**
-     * Verifica se o nome do ficheiro em parâmetro existe
-     * @param xmlName {String} Nome do Ficheiro XML (sem extensão)
+     * Verify if the XML and XSD files exist
+     * @param xmlName {String} XML Name
      * @return Boolean[]
      */
     public Boolean[] checkFilesExist (String xmlName) {
@@ -41,9 +41,9 @@ public class XMLUtils {
     }
 
     /**
-     * Faz a validação do ficheiro XML com XSD
-     * @param pathXSD {String} Caminho do Ficheiro XSD
-     * @param pathXML {String} Caminho do Ficheiro XML
+     * Validate the XML file with the XSD file
+     * @param pathXSD {String} XSD File Path
+     * @param pathXML {String} XML File Path
      * @return boolean
      */
     public boolean validateXML(String pathXSD, String pathXML) {
@@ -61,8 +61,8 @@ public class XMLUtils {
     }
 
     /**
-     * Guarda os dados do XML de Sports na Base de Dados
-     * @param pathXML {String} Caminho do Ficheiro XML
+     * Get the data from the XML file of the Sports and save it in the Database
+     * @param pathXML {String} XML File Path
      * @return Sports
      */
     public Sports getSportsDataXML(String pathXML) {
@@ -125,8 +125,8 @@ public class XMLUtils {
     }
 
     /**
-     * Guarda os dados do XML de Equipas na Base de Dados
-     * @param pathXML {String} Caminho do Ficheiro XML
+     * Get the data from the XML file of the Countries and save it in the Database
+     * @param pathXML {String} XML File Path
      * @return Teams
      */
     public Teams getTeamsDataXML(String pathXML) {
@@ -164,8 +164,8 @@ public class XMLUtils {
     }
 
     /**
-     * Guarda os dados do XML de Atletas na Base de Dados (falta obter o id do atleta para colocar na tabela de medalhas)
-     * @param pathXML {String} Caminho do Ficheiro XML
+     * Get the data from the XML file of the Athletes and save it in the Database
+     * @param pathXML {String} XML File Path
      * @return Athletes
      */
     public Athletes getAthletesDataXML(String pathXML) {
