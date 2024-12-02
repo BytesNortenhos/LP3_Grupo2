@@ -64,7 +64,6 @@ public class AthletesViewController {
     private SplitMenuButton sportSplitButton;
     @FXML
     private SplitMenuButton teamSplitButton;
-
     @FXML
     private FlowPane showAthletesContainer;
     @FXML
@@ -418,7 +417,6 @@ public class AthletesViewController {
     private void updateImageAthlete(ActionEvent event, int idAthlete) throws SQLException {
         String pathSave = "src/main/resources/bytesnortenhos/projetolp3/ImagesAthlete/";
         String pathSaveTemp =  Main.class.getResource("ImagesAthlete").toExternalForm().replace("file:", "");
-        System.out.println(pathSave);
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource Files");
         String pathToSave = "ImagesAthlete/";

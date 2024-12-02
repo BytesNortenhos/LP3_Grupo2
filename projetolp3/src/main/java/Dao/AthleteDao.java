@@ -294,4 +294,13 @@ public class AthleteDao {
         }
         return athletes;
     }
+
+    public String getImageAthlete(int idAthlete) throws SQLException{
+        String query = "SELECT image FROM tblAthlete WHERE idAthlete = ?";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idAthlete);
+        if (rs != null && rs.next()) {
+            return rs.getString("image");
+        }
+        return null;
+    }
 }

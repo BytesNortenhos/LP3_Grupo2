@@ -24,11 +24,17 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
+import javafx.stage.FileChooser;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.Period;
@@ -57,11 +63,13 @@ public class HomeControllerAthlete {
     @FXML
     private ImageView iconHomeNav;
     @FXML
-    private ImageView iconLogoutNav;
+    private ImageView iconAthlete;
     @FXML
     private Label textSportsAthlete;
     @FXML
     private VBox sportsContainerAthlete;
+    @FXML
+    private SplitMenuButton athleteImageSplitButton;
 
     URL cssDarkURL = Main.class.getResource("css/dark.css");
     URL cssLightURL = Main.class.getResource("css/light.css");
@@ -81,12 +89,12 @@ public class HomeControllerAthlete {
                 event.consume();
             }
         });
-        loadIcons();
         idAthlete = LoginController.idAthlete;
+        loadIcons();
         displayWelcomeMessasge();
         displayMedals();
         sportSplitButton.setOnMouseClicked(mouseEvent -> sportSplitButton.show());
-
+        athleteImageSplitButton.setOnMouseClicked(mouseEvent -> athleteImageSplitButton.show());
         List<List> registrations = null;
         try {
             registrations = getPendingRegistrations();
@@ -127,7 +135,76 @@ public class HomeControllerAthlete {
         requestItem.getChildren().addAll(nameLabel,typeLabel);
         return requestItem;
     }
-    public void loadIcons(){
+
+    @FXML
+    private void updateImage(ActionEvent event) throws SQLException, IOException {
+        String pathSave = "src/main/resources/bytesnortenhos/projetolp3/ImagesAthlete/";
+        String pathSaveTemp = Main.class.getResource("ImagesAthlete").toExternalForm().replace("file:", "");
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Resource Files");
+        String pathToSave = "ImagesAthlete/";
+
+        FileChooser.ExtensionFilter imageFilter = new FileChooser.ExtensionFilter("Image Files (*.png, *.jpeg, *.jpg)", "*.png", "*.jpeg", "*.jpg");
+        fileChooser.getExtensionFilters().addAll(imageFilter);
+
+        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
+        List<File> selectedFiles = fileChooser.showOpenMultipleDialog(stage);
+
+        if (selectedFiles != null) {
+            long pngCount = selectedFiles.stream().filter(file -> file.getName().endsWith(".png")).count();
+            long jpgCount = selectedFiles.stream().filter(file -> file.getName().endsWith(".jpg")).count();
+            long jpegCount = selectedFiles.stream().filter(file -> file.getName().endsWith(".jpeg")).count();
+
+            if (selectedFiles.size() == 1 && (pngCount == 1 || jpgCount == 1 || jpegCount == 1)) {
+                File selectedFile = selectedFiles.get(0);
+
+                boolean saved = saveAthleteImage(idAthlete, pathSave, pathSaveTemp, selectedFile.getAbsolutePath());
+                if (saved) {
+                    Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+                    alerta.setTitle("Sucesso!");
+                    alerta.setHeaderText("A imagem foi guardada com sucesso!");
+                    alerta.show();
+
+                    AthleteDao athleteDao = new AthleteDao();
+                    athleteDao.updateAthleteImage(idAthlete, pathToSave, "." + selectedFile.getName().split("\\.")[1]);
+                    returnHomeMenu(event);
+                } else {
+                    Alert alerta = new Alert(Alert.AlertType.ERROR);
+                    alerta.setTitle("Erro!");
+                    alerta.setHeaderText("Ocorreu um erro ao guardar a imagem!");
+                    alerta.show();
+                }
+
+            } else {
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setTitle("Erro!");
+                alerta.setHeaderText("Selecione 1 ficheiro! Extensões válidas: .png, .jpeg, .jpg");
+                alerta.show();
+            }
+        } else {
+            Alert alerta = new Alert(Alert.AlertType.ERROR);
+            alerta.setTitle("Erro!");
+            alerta.setHeaderText("Selecione 1 ficheiro! Extensões válidas: .png, .jpeg, .jpg");
+            alerta.show();
+        }
+    }
+
+
+    public boolean saveAthleteImage(int tempAthleteId, String pathSave, String pathSaveTemp, String pathImage) {
+        File fileImage = new File(pathImage);
+        String filename = String.valueOf(tempAthleteId) + "." + fileImage.getName().split("\\.")[1];
+        try {
+            Files.copy(fileImage.toPath(), Path.of(pathSave, filename), StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(fileImage.toPath(), Path.of(pathSaveTemp, filename), StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            return false;
+        }
+
+        return true;
+    }
+
+
+    public void loadIcons() throws SQLException {
         URL iconMoonNavURL = Main.class.getResource("img/iconMoon.png");
         Image image = new Image(iconMoonNavURL.toExternalForm());
         if(iconModeNav != null) iconModeNav.setImage(image);
@@ -136,10 +213,17 @@ public class HomeControllerAthlete {
         image = new Image(iconHomeNavURL.toExternalForm());
         if(iconHomeNav != null) iconHomeNav.setImage(image);
 
-        URL iconLogoutNavURL = Main.class.getResource("img/iconLogoutDark.png");
-        image = new Image(iconLogoutNavURL.toExternalForm());
-        if(iconLogoutNav != null) iconLogoutNav.setImage(image);
+        AthleteDao athleteDao = new AthleteDao();
+        String athleteImage = athleteDao.getImageAthlete(idAthlete);
 
+        URL iconLogoutNavURL = Main.class.getResource(athleteImage);
+        image = new Image(iconLogoutNavURL.toExternalForm());
+        iconAthlete.setFitWidth(50);
+        iconAthlete.setFitHeight(50);
+
+        if (iconAthlete != null) {
+            iconAthlete.setImage(image);
+        }
     }
 
     private void displayWelcomeMessasge() throws SQLException{
@@ -186,15 +270,15 @@ public class HomeControllerAthlete {
     }
 
 
-    public void showSports(ActionEvent event) throws IOException {
+    public void returnHomeMenu(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
-        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/sportsView.fxml")));
+        Parent root = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/athlete/home.fxml")));
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
         scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
-        if(isDarkMode){
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
-        }else{
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
+        if (isDarkMode) {
+            scene.getStylesheets().add(Main.class.getResource("css/dark.css").toExternalForm());
+        } else {
+            scene.getStylesheets().add(Main.class.getResource("css/light.css").toExternalForm());
         }
         stage.setScene(scene);
         stage.show();
@@ -214,17 +298,14 @@ public class HomeControllerAthlete {
         stage.show();
     }
 
-    public void logout(ActionEvent event) throws Exception {
-        showLogin(event);
-    }
     public void showLogin(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
-        Parent root = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/loginView.fxml")));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/loginView.fxml")));
+        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
         scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
-        if (isDarkMode) {
+        if(isDarkMode){
             scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
-        } else {
+        }else{
             scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
         }
         stage.setScene(scene);
@@ -307,4 +388,5 @@ public class HomeControllerAthlete {
         resultItem.getChildren().addAll(nameLabel, resultLabel, typeLabel, dateLabel, localLabel, postionLabel);
         return resultItem;
     }
+
 }

@@ -211,15 +211,13 @@
     -fx-background-color: #1E1E1E;
     -fx-border-color: #1E1E1E;
 }
-/* Target the label/text part */
 .dropdownButton .label, .dropdownButton .arrow-button {
     -fx-background-color: transparent;
 }
-/*.dropdownButton:hover .label, .dropdownButton:hover .arrow-button {*/
-/*    -fx-text-fill: #F7EED8;*/
-/*    -fx-background-color: #1E1E1E;*/
-/*}*/
-
+.dropdownButton .label {
+    -fx-alignment: CENTER_RIGHT;
+    -fx-cursor: hand;
+}
 .dropdownButton:hover .label{
     -fx-text-fill: #1E1E1E;
 }
@@ -239,7 +237,6 @@
 .dropdownButton .menu-item:hover .label{
     -fx-text-fill: #F7EED8;
 }
-
 
 .registerDrop {
     -fx-background-color: #3A3A38; /* Dark background color */
@@ -477,4 +474,26 @@
 .buttonViewAthleteHistory{
     -fx-translate-y: 40px;
     -fx-translate-x: 200px;
+}
+
+/* reduzir espaço entre botões navbar */
+#athleteImageSplitButton{
+    -fx-min-width: 70px;
+    -fx-max-width: 70px;
+    -fx-pref-width: 70px;
+}
+#athleteImageSplitButton .label{
+    -fx-translate-x: 45px;
+    -fx-alignment: CENTER_RIGHT;
+}
+#athleteImageSplitButton .arrow{
+    visibility: false;
+}
+#athleteImageSplitButton .menu-item .label{
+    -fx-translate-x: -5px;
+}
+#athleteSplitButton{
+    -fx-min-width: 140px;
+    -fx-max-width: 140px;
+    -fx-pref-width: 140px;
 }
