@@ -42,16 +42,10 @@
                     <MenuItem text="Editar Equipa" onAction="#showTeamsEdit"/>
                 </items>
             </SplitMenuButton>
-            <SplitMenuButton fx:id="athleteSplitButton" styleClass="dropdownButton" text="Gerir atleta">
+            <SplitMenuButton fx:id="athleteSplitButton" styleClass="dropdownButton" text="Atletas">
                 <items>
-                    <MenuItem text="Visualizar atletas" onAction="#showAthletes"/>
+                    <MenuItem text="Gerir atletas" onAction="#showAthletes"/>
                     <MenuItem text="Registar atleta" onAction="#showRegister"/>
-                </items>
-            </SplitMenuButton>
-            <SplitMenuButton fx:id="testeSplitButton" styleClass="dropdownButton" text="Alterar IMG">
-                <items>
-                    <MenuItem text="Alterar Imagem Atlete - teste" />
-                    <MenuItem text="Alterar Imagem Event - teste"/>
                 </items>
             </SplitMenuButton>
             <Button mnemonicParsing="false" onAction="#changeMode" styleClass="iconMoonNav">
@@ -68,7 +62,7 @@
     </top>
     <center>
         <VBox>
-            <Label styleClass="labelHome">Visualizar atletas</Label>
+            <Label styleClass="labelHome">Gerir atletas</Label>
             <Label styleClass="textWelcome">Nesta área poderá visualizar todos os atletas</Label>
             <Label styleClass="textWelcome">bem como ver os seus recordes e editar os seus dados.</Label>
             <ComboBox fx:id="countryDrop" styleClass="yearDropStart" translateX="25" translateY="15" promptText="País" onAction="#showAthlete"/>

@@ -87,16 +87,14 @@ public class TeamDao {
             stmt.setInt(7, team.getMaxParticipants());
 
             int rowsAffected = stmt.executeUpdate();
-            isAdded = rowsAffected > 0; // Retorna true se pelo menos uma linha foi inserida.
-
-            stmt.executeUpdate();
-
-            rs = stmt.getGeneratedKeys();
-            if (rs.next()) {
-                generatedId = rs.getInt(1);
-                System.out.println("Generated Team ID: " + generatedId); // Debugging
-            } else {
-                System.out.println("No generated keys.");
+            if (rowsAffected > 0) {
+                rs = stmt.getGeneratedKeys();
+                if (rs.next()) {
+                    generatedId = rs.getInt(1);
+                    System.out.println("Generated Team ID: " + generatedId); // Debugging
+                } else {
+                    System.out.println("No generated keys.");
+                }
             }
         } finally {
             if (stmt != null) {
@@ -281,6 +279,40 @@ public class TeamDao {
             return new Team(idTeam, teamName, country, gender, idSport, yearFounded);
         }
         return null;
+    }
+
+    public List<List> getTeamsToShow() throws SQLException {
+        List<List> teams = new ArrayList<>();
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT t.idTeam as idTeam, t.name as teamName, t.yearFounded, t.minParticipants, t.maxParticipants, " +
+                        "c.name as countryName, g.description as gender, s.name as sport " +
+                "from tblTeam as t " +
+                "join tblCountry c on t.idCountry = c.idCountry " +
+                "join tblGender g on t.idGender = g.idGender " +
+                "join tblSport s on t.idSport = s.idSport; ");
+        if (rs != null) {
+            while (rs.next()) {
+                List<String> team = new ArrayList<>();
+                team.add(rs.getString("teamName"));
+                team.add(rs.getString("yearFounded"));
+                team.add(rs.getString("minParticipants"));
+                team.add(rs.getString("maxParticipants"));
+                team.add(rs.getString("countryName"));
+                team.add(rs.getString("gender"));
+                team.add(rs.getString("sport"));
+                team.add(rs.getString("idTeam"));
+                teams.add(team);
+            }
+        }
+        return teams;
+    }
+    public int getNAthletesOnTeam(int idTeam) throws SQLException {
+        String query = "SELECT COUNT(*) as nAthletes FROM tblRegistration WHERE idTeam = ? " +
+                "AND (idStatus = 3 OR idStatus = 4);";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idTeam);
+        if (rs != null && rs.next()) {
+            return rs.getInt("nAthletes");
+        }
+        return 0;
     }
 
 }

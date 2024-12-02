@@ -246,4 +246,5 @@ public class ResultDao {
         }
         return positions;
     }
+
 }

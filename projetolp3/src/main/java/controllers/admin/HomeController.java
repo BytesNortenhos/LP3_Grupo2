@@ -443,6 +443,19 @@ public class HomeController {
         stage.setScene(scene);
         stage.show();
     }
+    public void showTeamsView(ActionEvent event) throws IOException {
+        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
+        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/teamsView.fxml")));
+        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
+        scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
+        if(isDarkMode){
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+        }else{
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
+        }
+        stage.setScene(scene);
+        stage.show();
+    }
 
     @FXML
     public void loadTeams(ActionEvent event) throws IOException {
@@ -690,69 +703,6 @@ public class HomeController {
         }
     }
 
-    public void updateImageAthlete(ActionEvent event) throws SQLException {
-        String pathSave = "ImagesAthlete/";
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open Resource Files");
-
-        FileChooser.ExtensionFilter imageFilter = new FileChooser.ExtensionFilter("Image Files (*.png, *.jpeg, *.jpg)", "*.png", "*.jpeg", "*.jpg");
-        fileChooser.getExtensionFilters().addAll(imageFilter);
-
-        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
-        List<File> selectedFiles = fileChooser.showOpenMultipleDialog(stage);
-
-        if (selectedFiles != null) {
-            long pngCount = selectedFiles.stream().filter(file -> file.getName().endsWith(".png")).count();
-            long jpgCount = selectedFiles.stream().filter(file -> file.getName().endsWith(".jpg")).count();
-            long jpegCount = selectedFiles.stream().filter(file -> file.getName().endsWith(".jpeg")).count();
-
-            if (selectedFiles.size() == 1 && (pngCount == 1 || jpgCount == 1 || jpegCount == 1)) {
-                File selectedFile = selectedFiles.get(0);
-
-                int tempAthleteId = 1000;
-                boolean saved = saveAthleteImage(tempAthleteId, pathSave, selectedFile.getAbsolutePath());
-                if (saved) {
-                    Alert alerta = new Alert(Alert.AlertType.INFORMATION);
-                    alerta.setTitle("Sucesso!");
-                    alerta.setHeaderText("A imagem foi guardada com sucesso!");
-                    alerta.show();
-
-                    AthleteDao athleteDao = new AthleteDao();
-                    athleteDao.updateAthleteImage(tempAthleteId, pathSave, "." + selectedFile.getName().split("\\.")[1]);
-                } else {
-                    Alert alerta = new Alert(Alert.AlertType.ERROR);
-                    alerta.setTitle("Erro!");
-                    alerta.setHeaderText("Ocorreu um erro ao guardar a imagem!");
-                    alerta.show();
-                }
-
-            } else {
-                Alert alerta = new Alert(Alert.AlertType.ERROR);
-                alerta.setTitle("Erro!");
-                alerta.setHeaderText("Selecione 1 ficheiro! Extensões válidas: .png, .jpeg, .jpg");
-                alerta.show();
-            }
-        } else {
-            Alert alerta = new Alert(Alert.AlertType.ERROR);
-            alerta.setTitle("Erro!");
-            alerta.setHeaderText("Selecione 1 ficheiro! Extensões válidas: .png, .jpeg, .jpg");
-            alerta.show();
-        }
-    }
-
-    public boolean saveAthleteImage(int tempAthleteId, String pathSave, String pathImage) {
-        File fileImage = new File(pathImage);
-        String filename = String.valueOf(tempAthleteId) + "." + fileImage.getName().split("\\.")[1];
-
-        try {
-            Files.copy(fileImage.toPath(), Path.of(pathSave, filename), StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-            return false;
-        }
-
-        return true;
-    }
 
     public void updateImageEvent(ActionEvent event) throws SQLException {
         String pathSave = "src/main/java/ImagesEvent/";

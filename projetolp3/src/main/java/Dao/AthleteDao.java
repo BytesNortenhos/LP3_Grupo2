@@ -70,7 +70,7 @@ public class AthleteDao {
     }
 
     public static int addAthlete(Athlete athlete) throws SQLException {
-        String query = "INSERT INTO tblAthlete (password, name, idCountry, idGender, height, weight, dateOfBirth) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO tblAthlete (password, name, idCountry, idGender, height, weight, dateOfBirth, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         Connection conn = null;
         PreparedStatement stmt = null;
         PasswordUtils passwordUtils = new PasswordUtils();
@@ -271,5 +271,27 @@ public class AthleteDao {
                 conn.close();
             }
         }
+    }
+
+    public List<List> getPartToShow(int idTeam) throws SQLException {
+        List<List> athletes = new ArrayList<>();
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT a.name, a.height, a.weight, a.dateOfBirth, a.image " +
+                "FROM tblAthlete as a " +
+                "INNER JOIN tblRegistration as r ON a.idAthlete = r.idAthlete " +
+                "WHERE r.idTeam = ?", idTeam);
+        if (rs != null) {
+            while (rs.next()) {
+                List<String> athlete = new ArrayList<>();
+                athlete.add(rs.getString("name"));
+                athlete.add(rs.getString("height"));
+                athlete.add(rs.getString("weight"));
+                athlete.add(rs.getString("dateOfBirth"));
+                athlete.add(rs.getString("image"));
+                athletes.add(athlete);
+            }
+        } else {
+            System.out.println("ResultSet is null. No results for Athlete found.");
+        }
+        return athletes;
     }
 }

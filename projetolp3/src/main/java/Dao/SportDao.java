@@ -185,13 +185,17 @@ public class SportDao {
         return quantidade;
     }
 
-    public int getNumberTeamsSport(int idSport, int year) throws SQLException {
+    public int getNumberTeamsSport(int idSport, int year, int mPart) throws SQLException {
         String query = "SELECT COUNT(DISTINCT idTeam) AS quantidade " +
-                "FROM tblRegistration " +
+                "FROM( " +
+                "SELECT idTeam FROM tblRegistration " +
                 "WHERE idSport = ? " +
                 "AND year = ? " +
-                "AND (idStatus = 3 OR idStatus = 4);";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, year);
+                "AND (idStatus = 3 OR idStatus = 4)" +
+                "GROUP BY idTeam " +
+                "HAVING COUNT(idTeam) >= ? " +
+                ") AS subquery;";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, year,mPart);
         int quantidade = 0;
         if (rs != null && rs.next()) {
             quantidade = rs.getInt("quantidade");
@@ -223,7 +227,7 @@ public class SportDao {
         return false;
     }
     public static int addSport(Sport sport) throws SQLException {
-        String query = "INSERT INTO tblSport (type, idGender, name, description, minParticipants, scoringMeasure, oneGame) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO tblSport (type, idGender, name, description, minParticipants, scoringMeasure, oneGame, resultMin, resultMax) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -324,7 +328,6 @@ public class SportDao {
         String query = "SELECT s.*, " +
                 "g.description AS genderDescription, " +
                 "r.year AS olympicYear, " +
-                "r.timeMS, " +
                 "r.medals " +
                 "FROM tblSport s " +
                 "JOIN tblGender g ON s.idGender = g.idGender " +
@@ -371,7 +374,7 @@ public class SportDao {
                     SELECT s.idSport, s.type, s.idGender, s.name, s.description, 
                            s.minParticipants, s.scoringMeasure, s.oneGame, 
                            g.description AS genderDescription, 
-                           r.year AS olympicYear, r.timeMS, r.medals 
+                           r.year AS olympicYear, r.medals 
                     FROM tblSport s 
                     JOIN tblGender g ON s.idGender = g.idGender 
                     LEFT JOIN tblOlympicRecord r ON s.idSport = r.idSport 

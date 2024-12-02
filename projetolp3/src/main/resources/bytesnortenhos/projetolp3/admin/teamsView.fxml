@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 
 <?import javafx.scene.control.ComboBox?>
-<BorderPane fx:id="parent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="background" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.admin.StartSportsController">
+<BorderPane fx:id="parent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="background" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.admin.TemsViewController">
     <top>
         <HBox styleClass="navBar" prefHeight="40.0" prefWidth="400.0">
             <Button styleClass="iconHomeNav" onAction="#returnHomeMenu">
@@ -62,13 +62,13 @@
     </top>
     <center>
         <VBox>
-            <Label styleClass="labelHome">Iniciar modalidades</Label>
-            <Label styleClass="textWelcome">Nesta área poderá iniciar modaldiades bem como visualizar</Label>
-            <Label styleClass="textWelcome">os respectivos resultados gerados.</Label>
-            <ComboBox fx:id="yearDrop" styleClass="yearDropStart" translateX="25" translateY="15" promptText="Ano" onAction="#showSport"/>
+            <Label styleClass="labelHome">Visualizar equipas</Label>
+            <Label styleClass="textWelcome">Nesta área poderá visualizar todos as equipas</Label>
+            <Label styleClass="textWelcome">bem como todos os atletas inscritos nas mesmas.</Label>
+            <ComboBox fx:id="countryDrop" styleClass="yearDropStart" translateX="25" translateY="15" promptText="País" onAction="#showTeams"/>
             <ScrollPane fitToWidth="true" pannable="true" styleClass="scrollStyle">
-                <FlowPane fx:id="startSportsContainer" alignment="CENTER" hgap="20" vgap="20" prefWrapLength="1040" prefHeight="600">
-                    <Label fx:id="noSportsLabel" text="Não existem modalidades registadas!" visible="false" />
+                <FlowPane fx:id="showTeamsContainer" alignment="CENTER" hgap="20" vgap="20" prefWrapLength="1040" prefHeight="600">
+                    <Label fx:id="noSportsLabel" text="Não existem equipas registados!" visible="false" />
                     <!-- Requests will be dynamically added here -->
                 </FlowPane>
             </ScrollPane>

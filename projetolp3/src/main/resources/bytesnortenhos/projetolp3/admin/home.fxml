@@ -50,18 +50,18 @@
             </SplitMenuButton>
             <SplitMenuButton fx:id="teamSplitButton" styleClass="dropdownButton" text="Gerir equipa">
                 <items>
+                    <MenuItem text="Visualizar Equipas" onAction="#showTeamsView"/>
                     <MenuItem text="Editar Equipa" onAction="#showTeamsEdit"/>
                 </items>
             </SplitMenuButton>
-            <SplitMenuButton fx:id="athleteSplitButton" styleClass="dropdownButton" text="Gerir atleta">
+            <SplitMenuButton fx:id="athleteSplitButton" styleClass="dropdownButton" text="Atletas">
                 <items>
-                    <MenuItem text="Visualizar atletas" onAction="#showAthletes"/>
+                    <MenuItem text="Gerir atletas" onAction="#showAthletes"/>
                     <MenuItem text="Registar atleta" onAction="#showRegister"/>
                 </items>
             </SplitMenuButton>
             <SplitMenuButton fx:id="testeSplitButton" styleClass="dropdownButton" text="Alterar IMG">
                 <items>
-                    <MenuItem text="Alterar Imagem Atlete - teste" onAction="#updateImageAthlete"/>
                     <MenuItem text="Alterar Imagem Event - teste" onAction="#updateImageEvent"/>
                 </items>
             </SplitMenuButton>

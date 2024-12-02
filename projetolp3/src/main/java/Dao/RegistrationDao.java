@@ -459,12 +459,14 @@ public class RegistrationDao {
         return athletes;
     }
 
-    public List<Integer> getRegisteredTeams(int idSport, int year) throws SQLException {
+    public List<Integer> getRegisteredTeams(int idSport, int year, int mPart) throws SQLException {
         List<Integer> teams = new ArrayList<>();
         String query = "SELECT DISTINCT idTeam " +
                 "FROM tblRegistration " +
-                "WHERE idStatus = 3 AND idSport = ? AND year = ?;";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, year);
+                "WHERE idStatus = 3 AND idSport = ? AND year = ? " +
+                "GROUP BY idTeam " +
+                "HAVING COUNT(idTeam) > ?;";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, year, mPart);
         if (rs != null) {
             while (rs.next()) {
                 int IdTeam = rs.getInt("idTeam");
