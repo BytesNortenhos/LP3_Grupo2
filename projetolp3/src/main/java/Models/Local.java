@@ -8,6 +8,7 @@ public class Local {
     private String city;
     private int capacity;
     private int constructionYear;
+    private int event;
 
     /**
      * Constructor of Local
@@ -26,6 +27,28 @@ public class Local {
         this.city = city;
         this.capacity = capacity;
         this.constructionYear = constructionYear;
+    }
+
+    /**
+     * Constructor of Local
+     * @param idLocal {int} Local ID
+     * @param name {String} Name
+     * @param type {String} Type
+     * @param address {String} Address
+     * @param city {String} City
+     * @param capacity {int} Capacity
+     * @param constructionYear {int} Year of construction
+     * @param event {int} Event
+     */
+    public Local(int idLocal, String name, String type, String address, String city, int capacity, int constructionYear, int event) {
+        this.idLocal = idLocal;
+        this.name = name;
+        this.type = type;
+        this.address = address;
+        this.city = city;
+        this.capacity = capacity;
+        this.constructionYear = constructionYear;
+        this.event = event;
     }
 
     /**
@@ -138,5 +161,21 @@ public class Local {
      */
     public void setConstructionYear(int constructionYear) {
         this.constructionYear = constructionYear;
+    }
+
+    /**
+     * Get event year
+     * @return int
+     */
+    public int getEvent() {
+        return event;
+    }
+
+    /**
+     * Set event year
+     * @param event {int} Event
+     */
+    public void setEvent(int event) {
+        this.event = event;
     }
 }

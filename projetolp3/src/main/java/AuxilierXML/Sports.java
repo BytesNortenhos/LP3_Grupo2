@@ -10,7 +10,7 @@ import java.util.List;
 @XmlRootElement(name = "sports")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Sports {
-    @XmlElement(name = "sport")  // Isso garante que o JAXB reconheça as sports no XML
+    @XmlElement(name = "sport")
     private List<Sport> sportList;
 
     /**
@@ -18,11 +18,36 @@ public class Sports {
      */
     public Sports() {}
 
+    /**
+     * Get sport list
+     * @return List<Sport>
+     */
     public List<Sport> getSportList() {
         return sportList;
     }
 
+    /**
+     * Set sport list
+     * @param sportList {List<Sport>} List of sports
+     */
     public void setSportList(List<Sport> sportList) {
         this.sportList = sportList;
     }
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Lista de Desportos:\n");
+
+        if (sportList != null && !sportList.isEmpty()) {
+            for (Sport sport : sportList) {
+                sb.append("  - ").append(sport.toString()).append("\n");
+            }
+        } else {
+            sb.append("Nenhum desporto encontrado.\n");
+        }
+
+        return sb.toString();
+    }
+
 }

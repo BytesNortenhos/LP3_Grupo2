@@ -12,6 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ResultDao {
+    /**
+     * Get all results
+     * @return {List<Result>} List of results
+     * @throws SQLException
+     */
     public static List<Result> getResults() throws SQLException {
         List<Result> results = new ArrayList<>();
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT * FROM tblResult;");
@@ -41,6 +46,11 @@ public class ResultDao {
         return results;
     }
 
+    /**
+     * Add result
+     * @param result {Result} Result
+     * @throws SQLException
+     */
     public static void addResult(Result result) throws SQLException {
         String query = "INSERT INTO tblResult (idSport, idAthlete, idTeam, date, result, idLocal) VALUES (?, ?, ?, ?, ?, ?)";
         Connection conn = null;
@@ -66,6 +76,15 @@ public class ResultDao {
         }
     }
 
+    /**
+     * Add result athlete
+     * @param idSport {int} Id sport
+     * @param idAthlete {int} Id athlete
+     * @param date {Date} Date
+     * @param result {int} Result
+     * @param idLocal {int} Id local
+     * @throws SQLException
+     */
     public void addResultAthlete(int idSport, int idAthlete, Date date, int result, int idLocal) throws SQLException {
         String query = "INSERT INTO tblResult (idSport, idAthlete, date, result, idLocal) VALUES (?, ?, ?, ?, ?)";
         Connection conn = null;
@@ -90,6 +109,15 @@ public class ResultDao {
         }
     }
 
+    /**
+     * Add result team
+     * @param idSport {int} Id sport
+     * @param idTeam {int} Id team
+     * @param date {Date} Date
+     * @param result {int} Result
+     * @param idLocal {int} Id local
+     * @throws SQLException
+     */
     public void addResultTeam(int idSport, int idTeam, Date date, int result, int idLocal) throws SQLException {
         String query = "INSERT INTO tblResult (idSport, idTeam, date, result, idLocal) VALUES (?, ?, ?, ?, ?)";
         Connection conn = null;
@@ -114,6 +142,16 @@ public class ResultDao {
         }
     }
 
+    /**
+     * Add result athlete team
+     * @param idSport {int} Id sport
+     * @param idAthlete {int} Id athlete
+     * @param idTeam {int} Id team
+     * @param date {Date} Date
+     * @param result {int} Result
+     * @param idLocal {int} Id local
+     * @throws SQLException
+     */
     public void addResultAthleteTeam(int idSport, int idAthlete, int idTeam, Date date, int result, int idLocal) throws SQLException {
         String query = "INSERT INTO tblResult (idSport, idAthlete, idTeam, date, result, idLocal) VALUES (?, ?, ?, ?, ?, ?)";
         Connection conn = null;
@@ -139,6 +177,11 @@ public class ResultDao {
         }
     }
 
+    /**
+     * Remove result
+     * @param idResult {int} Id result
+     * @throws SQLException
+     */
     public static void removeResult(int idResult) throws SQLException {
         String query = "DELETE FROM tblResult WHERE idResult = ?";
         Connection conn = null;
@@ -158,6 +201,11 @@ public class ResultDao {
         }
     }
 
+    /**
+     * Update result
+     * @param result {Result} Result
+     * @throws SQLException
+     */
     public static void updateResult(Result result) throws SQLException {
         String query = "UPDATE tblResult SET idSport = ?, idAthlete = ?, idTeam = ?, date = ?, result = ?, idLocal = ? WHERE idResult = ?";
         Connection conn = null;
@@ -184,6 +232,12 @@ public class ResultDao {
         }
     }
 
+    /**
+     * Get result by id
+     * @param idResult {int} Id result
+     * @return {Result} Result
+     * @throws SQLException
+     */
     public Result getResultById(int idResult) throws SQLException {
         String query = "SELECT * FROM tblResult WHERE idResult = ?";
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idResult);
@@ -206,6 +260,12 @@ public class ResultDao {
         return null;
     }
 
+    /**
+     * Get result by athlete
+     * @param idAthlete {int} Id athlete
+     * @return {List<Result>} List of results
+     * @throws SQLException
+     */
     public List<List> getResultByAthlete(int idAthlete) throws SQLException{
         String query = "SELECT r.*, s.name as sportName, s.idSport as idSport, s.type as sportType, t.name as teamName, l.name as localName FROM tblResult as r " +
                 "LEFT JOIN tblSport as s ON r.idSport = s.idSport " +

@@ -17,6 +17,11 @@ import java.sql.ResultSet;
 
 public class AthleteDao {
 
+    /**
+     * Get all athletes
+     * @return List<Athlete>
+     * @throws SQLException
+     */
     public List<Athlete> getAthletes() throws SQLException {
         List<Athlete> athletes = new ArrayList<>();
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT * FROM tblAthlete;");
@@ -69,6 +74,12 @@ public class AthleteDao {
         return athletes;
     }
 
+    /**
+     * Add athlete
+     * @param athlete {Athlete} Athlete
+     * @return int
+     * @throws SQLException
+     */
     public static int addAthlete(Athlete athlete) throws SQLException {
         String query = "INSERT INTO tblAthlete (password, name, idCountry, idGender, height, weight, dateOfBirth, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         Connection conn = null;
@@ -116,7 +127,11 @@ public class AthleteDao {
         return generatedId; // Retorna o id gerado automaticamente
     }
 
-
+    /**
+     * Remove athlete
+     * @param idAthlete {int} ID
+     * @throws SQLException
+     */
     public static void removeAthlete(int idAthlete) throws SQLException {
         String query = "DELETE FROM tblAthlete WHERE idAthlete = ?";
         Connection conn = null;
@@ -136,6 +151,11 @@ public class AthleteDao {
         }
     }
 
+    /**
+     * Update athlete
+     * @param athlete {Athlete} Athlete
+     * @throws SQLException
+     */
     public static void updateAthlete(Athlete athlete) throws SQLException {
         String query = "UPDATE tblAthlete SET password = ?, name = ?, idCountry = ?, idGender = ?, height = ?, weight = ?, dateOfBirth = ? WHERE idAthlete = ?";
         Connection conn = null;
@@ -163,6 +183,12 @@ public class AthleteDao {
         }
     }
 
+    /**
+     * Get athlete by ID
+     * @param idAthlete {int} ID
+     * @return Athlete
+     * @throws SQLException
+     */
     public Athlete getAthleteById(int idAthlete) throws SQLException {
         String query = "SELECT * FROM tblAthlete WHERE idAthlete = ?";
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idAthlete);
@@ -195,6 +221,12 @@ public class AthleteDao {
         return null;
     }
 
+    /**
+     * Update athlete password
+     * @param idAthlete {int} ID
+     * @param password {String} Password
+     * @throws SQLException
+     */
     public static void updateAthletePassword(int idAthlete, String password) throws SQLException {
         String query = "UPDATE tblAthlete SET password = ? WHERE idAthlete = ?";
         Connection conn = null;
@@ -220,6 +252,13 @@ public class AthleteDao {
             }
         }
     }
+
+    /**
+     * Get athlete name by ID
+     * @param idAthlete {int} ID
+     * @return String
+     * @throws SQLException
+     */
     public String getAthlheteNameByID(int idAthlete) throws SQLException {
         String query = "SELECT name FROM tblAthlete WHERE idAthlete = ?";
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idAthlete);
@@ -229,6 +268,13 @@ public class AthleteDao {
         return null;
     }
 
+    /**
+     * Update athlete image
+     * @param idAthlete {int} ID
+     * @param path {String} Path
+     * @param extensao {String} Extension
+     * @throws SQLException
+     */
     public void updateAthleteImage(int idAthlete, String path, String extensao) throws SQLException {
         String query = "UPDATE tblAthlete SET image = ? WHERE idAthlete = ?";
         Connection conn = null;

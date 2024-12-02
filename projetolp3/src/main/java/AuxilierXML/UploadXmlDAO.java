@@ -77,7 +77,7 @@ public class UploadXmlDAO {
                             tempHolderId = rs2.getInt(1);
                         }
 
-                        String query2 = "INSERT INTO tblOlympicRecord (idSport, year, idAthlete, idTeam, timeMS, medals) VALUES (?, ?, ?, ?, ?, ?)";
+                        String query2 = "INSERT INTO tblOlympicRecord (idSport, year, idAthlete, idTeam, result, medals) VALUES (?, ?, ?, ?, ?, ?)";
                         stmt2 = conn.prepareStatement(query2);
                         stmt2.setInt(1, sport.getTempDatabaseId());
                         stmt2.setInt(2, record.getYear());
@@ -153,7 +153,7 @@ public class UploadXmlDAO {
                             }
                         }
 
-                        String query3 = "INSERT INTO tblWinnerOlympic (idSport, year, idAthlete, idTeam, timeMS, idMedal) VALUES (?, ?, ?, ?, ?, ?)";
+                        String query3 = "INSERT INTO tblWinnerOlympic (idSport, year, idAthlete, idTeam, result, idMedal) VALUES (?, ?, ?, ?, ?, ?)";
                         stmt = conn.prepareStatement(query3);
                         stmt.setInt(1, sport.getTempDatabaseId());
                         stmt.setInt(2, winner.getYear());
@@ -397,7 +397,7 @@ public class UploadXmlDAO {
 
     /**
      * Convert String HH:MM:SS.MS/HH:MM:SS to MS
-     * @param time {String} String of time (HH:MM:SS.MS/HH:MM:SS)
+     * @param time {String} String of time (HH:MM:SS/HH:MM:SS.SS)
      * @return int
      */
     public int convertToMS(String time) {
@@ -415,6 +415,12 @@ public class UploadXmlDAO {
         return (int) ChronoUnit.MILLIS.between(LocalTime.MIDNIGHT, parsedTime);
     }
 
+    /**
+     * Save XML and XSD files
+     * @param pathXML {String} Path of XML file
+     * @param pathXSD {String} Path of XSD file
+     * @return boolean
+     */
     public boolean saveXML(String pathXML, String pathXSD) {
         String pathSave = "src/main/java/DataXML_uploads/";
 

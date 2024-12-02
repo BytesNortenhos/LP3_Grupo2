@@ -1,33 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.VBox?>
-
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.image.Image?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SplitMenuButton?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.collections.FXCollections?>
-<?import javafx.scene.control.ComboBox?>
-<?import java.lang.String?>
-<?import javafx.scene.control.skin.TabPaneSkin.TabControlButtons?>
-<?import javafx.scene.control.SplitMenuButton?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.layout.FlowPane?>
 
-<BorderPane fx:id="parent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-            prefHeight="400.0" prefWidth="600.0" styleClass="background" xmlns="http://javafx.com/javafx/21"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.admin.HomeController">
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<BorderPane fx:id="parent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="background" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.admin.EventAddController">
     <top>
         <HBox styleClass="navBar" prefHeight="40.0" prefWidth="400.0">
-            <Button styleClass="iconHomeNav">
+            <Button styleClass="iconHomeNav" onAction="#returnHomeMenu">
                 <graphic>
                     <ImageView fx:id="iconHomeNav" fitWidth="55" fitHeight="55" preserveRatio="true"/>
                 </graphic>
@@ -40,12 +29,11 @@
                     <MenuItem text="Carregar atletas" onAction="#loadAthletes"/>
                 </items>
             </SplitMenuButton>
-                <SplitMenuButton fx:id="eventSplitButton" styleClass="dropdownButton" text="Gerir eventos">
-                    <items>
-                        <MenuItem text="Adicionar evento" onAction="#showAddEvent"/>
-                        <MenuItem text="Visualizar eventos" onAction="#showViewEvent"/>
-                    </items>
-                </SplitMenuButton>
+            <SplitMenuButton fx:id="eventSplitButton" styleClass="dropdownButton" text="Gerir eventos">
+                <items>
+                    <MenuItem text="Adicionar evento" onAction="#showAddEvent"/>
+                </items>
+            </SplitMenuButton>
             <SplitMenuButton fx:id="sportSplitButton" styleClass="dropdownButton" text="Gerir modalidade">
                 <items>
                     <MenuItem text="Visualizar modalidades" onAction="#showSports"/>
@@ -56,19 +44,19 @@
             </SplitMenuButton>
             <SplitMenuButton fx:id="teamSplitButton" styleClass="dropdownButton" text="Gerir equipa">
                 <items>
-                    <MenuItem text="Visualizar Equipas" onAction="#showTeamsView"/>
                     <MenuItem text="Editar Equipa" onAction="#showTeamsEdit"/>
                 </items>
             </SplitMenuButton>
-            <SplitMenuButton fx:id="athleteSplitButton" styleClass="dropdownButton" text="Atletas">
+            <SplitMenuButton fx:id="athleteSplitButton" styleClass="dropdownButton" text="Gerir atleta">
                 <items>
-                    <MenuItem text="Gerir atletas" onAction="#showAthletes"/>
+                    <MenuItem text="Visualizar atletas" onAction="#showAthletes"/>
                     <MenuItem text="Registar atleta" onAction="#showRegister"/>
                 </items>
             </SplitMenuButton>
             <SplitMenuButton fx:id="testeSplitButton" styleClass="dropdownButton" text="Alterar IMG">
                 <items>
-                    <MenuItem text="Alterar Imagem Event - teste" onAction="#updateImageEvent"/>
+                    <MenuItem text="Alterar Imagem Atlete - teste" />
+                    <MenuItem text="Alterar Imagem Event - teste"/>
                 </items>
             </SplitMenuButton>
             <Button mnemonicParsing="false" onAction="#changeMode" styleClass="iconMoonNav">
@@ -83,18 +71,14 @@
             </Button>
         </HBox>
     </top>
+
     <center>
-        <VBox>
-            <Label styleClass="labelHome">Inicio</Label>
-            <Label styleClass="textWelcome">Lista de membros com aprovação pendente para inscrição em modalidades</Label>
-            <Label styleClass="textWelcome">Ao iniciar a modalidade, caso não exista será criada uma equipa para o país!</Label>
-            <ScrollPane fitToWidth="true" pannable="true" styleClass="scrollStyle">
-                <FlowPane fx:id="mainContainer" alignment="CENTER" hgap="50" vgap="20" prefWrapLength="1040"
-                          prefHeight="600">
-                    <Label fx:id="noRequestsLabel" text="Não existem pedidos pendentes!" visible="false"/>
-                    <!-- Requests will be dynamically added aqui -->
-                </FlowPane>
-            </ScrollPane>
+        <VBox spacing="10" alignment="CENTER">
+            <Label styleClass="loginText" text="ADICIONAR EVENTO" />
+            <ComboBox fx:id="yearComboBox" styleClass="registerDropBig" promptText="Escolha o ano do evento"/>
+            <ComboBox fx:id="countryComboBox" styleClass="registerDropBig" promptText="Escolha o país"/>
+            <Button styleClass="buttonEntrar" text="Selecionar Imagem" onAction="#updateImageEvent" />
+            <Button styleClass="buttonEntrar" text="Adicionar Evento" onAction="#handleAddEvent" />
         </VBox>
     </center>
 </BorderPane>

@@ -50,4 +50,10 @@ public class Person {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    @Override
+    public String toString() {
+        return String.format("ID: %d, Password: %s", id, password);
+    }
 }
+

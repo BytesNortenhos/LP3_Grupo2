@@ -17,6 +17,11 @@ public class Country {
         this.continent = continent;
     }
 
+    /**
+     * Constructor of Country
+     * @param idCountry {String} ID
+     * @param name {String} Name
+     */
     public Country(String idCountry, String name) {
         this.idCountry = idCountry;
         this.name = name;
@@ -24,7 +29,6 @@ public class Country {
 
     /**
      * Get id
-     *
      * @return String
      */
     public String getIdCountry() {
@@ -69,5 +73,15 @@ public class Country {
      */
     public void setContinent(String continent) {
         this.continent = continent;
+    }
+    /**
+     * Returns a string representation of the Country object.
+     * This includes the name and continent in a readable format, side by side.
+     *
+     * @return A string representing the Country object in "Country - Continent" format.
+     */
+    @Override
+    public String toString() {
+        return name + " - " + continent;
     }
 }

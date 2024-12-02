@@ -1,15 +1,13 @@
 package controllers.admin;
-
-import Dao.GenderDao;
-import Dao.RuleDao;
-import Models.Gender;
-import Dao.SportDao;
-import Models.Rule;
-import Models.Sport;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import Dao.CountryDao;
+import Dao.EventDao;
+import Models.Country;
+import Models.Event;
 import bytesnortenhos.projetolp3.Main;
 import controllers.ViewsController;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -24,262 +22,174 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
+import javafx.scene.control.Alert.AlertType;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
-public class EditSportController {
+public class EventAddController {
+    private static Stage stage;
     private static Scene scene;
-    URL cssDarkURL = Main.class.getResource("css/dark.css");
-    URL cssLightURL = Main.class.getResource("css/light.css");
-    String cssDark = cssDarkURL.toExternalForm();
-    String cssLight = cssLightURL.toExternalForm();
-
     @FXML
     private BorderPane parent;
-
+    private static boolean isDarkMode = true;
     @FXML
     private ImageView iconModeNav;
     @FXML
     private ImageView iconHomeNav;
     @FXML
-    private ImageView iconSports;
-    @FXML
     private ImageView iconLogoutNav;
-
-    private static boolean isDarkMode = true;
-
+    URL cssDarkURL = Main.class.getResource("css/dark.css");
+    URL cssLightURL = Main.class.getResource("css/light.css");
+    String cssDark = ((URL) cssDarkURL).toExternalForm();
+    String cssLight = ((URL) cssLightURL).toExternalForm();
+    @FXML
+    private ComboBox<Country> countryComboBox;
 
     @FXML
-    private ComboBox<Sport> sportsListDropdown;
-
+    private ComboBox<Integer> yearComboBox;
     @FXML
-    private TextField nameText, descText, minText;
-
+    private DatePicker yearDatePicker;
     @FXML
-    private SplitMenuButton teamSplitButton;
-
-
-    private List<String> rules = new ArrayList<>();
-
-    @FXML
-    private ComboBox<String> genderDrop;
-    @FXML
-    private ComboBox<String> typeDrop;
-    @FXML
-    private ComboBox<String> scoringDrop;
-    @FXML
-    private ComboBox<String> oneGameDrop;
-
+    private TextField logoField;
     @FXML
     private SplitMenuButton athleteSplitButton;
     @FXML
     private SplitMenuButton sportSplitButton;
+    @FXML
+    private SplitMenuButton teamSplitButton;
+    @FXML
+    private SplitMenuButton eventSplitButton;
+    @FXML
+    private SplitMenuButton xmlSplitButton;
+
+    private String logoPath = "";
 
     @FXML
-    private TextField resultMinText;
-    @FXML
-    private TextField resultMaxText;
-
-
-
-
-
     public void initialize() {
-        loadIcons();
-        loadTypes();
-        loadOneGameOptions();
-        loadAvailableSports();
-
+        List<Country> countries = null;
+        try {
+            countries = CountryDao.getCountries();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         athleteSplitButton.setOnMouseClicked(event -> athleteSplitButton.show());
         sportSplitButton.setOnMouseClicked(mouseEvent -> sportSplitButton.show());
         teamSplitButton.setOnMouseClicked(mouseEvent -> teamSplitButton.show());
-    }
+        eventSplitButton.setOnMouseClicked(event -> eventSplitButton.show());
+        xmlSplitButton.setOnMouseClicked(mouseEvent -> xmlSplitButton.show());
+        countryComboBox.getItems().addAll(countries);
 
-    private void loadIcons() {
-
-        URL iconMoonNavURL = Main.class.getResource("img/iconMoon.png");
-        Image image = new Image(iconMoonNavURL.toExternalForm());
-        if (iconModeNav != null) iconModeNav.setImage(image);
-
-        URL iconOlympicURL = Main.class.getResource("img/iconSports.png");
-        image = new Image(iconOlympicURL.toExternalForm());
-        if(iconSports != null) iconSports.setImage(image);
-
-        URL iconHomeNavURL = Main.class.getResource("img/iconOlympic.png");
-        image = new Image(iconHomeNavURL.toExternalForm());
-        if (iconHomeNav != null) iconHomeNav.setImage(image);
-
-        URL iconLogoutNavURL = Main.class.getResource("img/iconLogoutDark.png");
-        image = new Image(iconLogoutNavURL.toExternalForm());
-        if(iconLogoutNav != null) iconLogoutNav.setImage(image);
+        int currentYear = java.time.LocalDate.now().getYear();
+        for (int i = currentYear; i <= currentYear + 100; i++) {
+            yearComboBox.getItems().add(i);
+        }
+        yearComboBox.setValue(currentYear);
     }
 
     @FXML
-    private void loadAvailableSports() {
-        try {
-            List<Sport> sports = SportDao.getAllSportsV2();
+    private void updateImageEvent(ActionEvent event) {
 
-            ObservableList<Sport> sportsOptions = FXCollections.observableArrayList(sports);
-            sportsListDropdown.setItems(sportsOptions);
-        } catch (SQLException e) {
-            showAlert("Database Error", "Erro ao carregar esportes: " + e.getMessage(), Alert.AlertType.ERROR);
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Escolher Logo do Evento");
+
+        FileChooser.ExtensionFilter imageFilter = new FileChooser.ExtensionFilter("Arquivos de Imagem (*.png, *.jpeg, *.jpg)", "*.png", "*.jpeg", "*.jpg");
+        fileChooser.getExtensionFilters().addAll(imageFilter);
+
+        Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+        File selectedFile = fileChooser.showOpenDialog(stage);
+
+        if (selectedFile != null) {
+            Integer selectedYear = yearComboBox.getValue();
+            Country selectedCountry = countryComboBox.getSelectionModel().getSelectedItem();
+
+            if (selectedYear != null && selectedCountry != null) {
+                String extension = getFileExtension(selectedFile);
+                String newFileName = selectedYear + extension;
+
+                String destinationFolder = "src/main/java/ImagesEvent";
+                Path destinationPath = Path.of(destinationFolder, newFileName);
+
+                try {
+                    Files.copy(selectedFile.toPath(), destinationPath, StandardCopyOption.REPLACE_EXISTING);
+
+
+                    logoPath = destinationPath.toString();
+
+                    showAlert("Sucesso", "Imagem selecionada com sucesso!", AlertType.INFORMATION);
+
+                } catch (IOException e) {
+                    Alert alerta = new Alert(AlertType.ERROR);
+                    alerta.setTitle("Erro ao copiar imagem");
+                    alerta.setHeaderText("Não foi possível copiar a imagem para o diretório.");
+                    alerta.setContentText("Erro: " + e.getMessage());
+                    alerta.show();
+                }
+            }
+        } else {
+            Alert alerta = new Alert(AlertType.ERROR);
+            alerta.setTitle("Erro");
+            alerta.setHeaderText("Nenhum arquivo de imagem selecionado");
+            alerta.show();
         }
     }
 
-    @FXML
-    private void onSportSelected() {
-        Sport selectedSport = sportsListDropdown.getSelectionModel().getSelectedItem();
-
-        if (selectedSport != null) {
-            nameText.setText(selectedSport.getName());
-            descText.setText(selectedSport.getDesc());
-            minText.setText(String.valueOf(selectedSport.getMinParticipants()));
-            scoringDrop.setValue(selectedSport.getScoringMeasure());
-
-
-            typeDrop.setValue(selectedSport.getType());
-
-
-            if (selectedSport.getGenre() != null) {
-                if (selectedSport.getGenre().getIdGender() == 1) {
-                    genderDrop.setValue("Masculino");
-                } else if (selectedSport.getGenre().getIdGender() == 2) {
-                    genderDrop.setValue("Feminino");
-                }
-            }
-
-
-            oneGameDrop.setValue(selectedSport.getOneGame());
-
-
-            resultMinText.setText(String.valueOf(selectedSport.getResultMin()));
-            resultMaxText.setText(String.valueOf(selectedSport.getResultMax()));
+    private String getFileExtension(File file) {
+        String fileName = file.getName();
+        int lastDotIndex = fileName.lastIndexOf(".");
+        if (lastDotIndex > 0) {
+            return fileName.substring(lastDotIndex);
         }
+        return "";
     }
 
 
-
-
-
     @FXML
-    private void updateSport() {
+    private void handleAddEvent() {
+        Integer selectedYear = yearComboBox.getValue();
+        Country selectedCountry = countryComboBox.getSelectionModel().getSelectedItem();
+
+        if (selectedYear == null || selectedCountry == null || logoPath.isEmpty()) {
+            showAlert("Erro", "Todos os campos são obrigatórios!", AlertType.ERROR);
+            return;
+        }
+
         try {
-            String name = nameText.getText();
-            String type = typeDrop.getValue();
-            String description = descText.getText();
-            String minParticipantsText = minText.getText();
-            String scoringMeasure = scoringDrop.getValue();
-            String oneGame = oneGameDrop.getValue();
-            String selectedGenderDesc = genderDrop.getValue();
+            Event event = new Event(selectedYear, selectedCountry, logoPath);
+            EventDao eventdao = new EventDao();
+            boolean success = eventdao.addEvent(event);
 
-            if (name.isEmpty() || type == null || selectedGenderDesc == null || description.isEmpty() || minParticipantsText.isEmpty() ||
-                    scoringMeasure == null || oneGame == null) {
-                showAlert("Erro de Validação", "Por favor, preencha todos os campos obrigatórios!", Alert.AlertType.ERROR);
-                return;
+            if (success) {
+                showAlert("Sucesso", "Evento adicionado com sucesso!", AlertType.INFORMATION);
+
+                yearComboBox.setValue(null);
+                countryComboBox.getSelectionModel().clearSelection();
+                logoPath = "";
+            } else {
+                showAlert("Erro", "Já existe um evento para o ano escolhido!", AlertType.ERROR);
             }
-
-            if (name.length() > 50) {
-                showAlert("Erro de Validação", "O nome da modalidade não pode ter mais de 50 caracteres!", Alert.AlertType.ERROR);
-                return;
-            }
-
-            if (description.length() > 200) {
-                showAlert("Erro de Validação", "A descrição da modalidade não pode ter mais de 200 caracteres!", Alert.AlertType.ERROR);
-                return;
-            }
-
-            int minParticipants;
-            try {
-                minParticipants = Integer.parseInt(minParticipantsText);
-                if (minParticipants < 2) {
-                    showAlert("Erro de Validação", "O número mínimo de participantes deve ser pelo menos 2!", Alert.AlertType.ERROR);
-                    return;
-                }
-            } catch (NumberFormatException e) {
-                showAlert("Erro de Validação", "Formato inválido para o número mínimo de participantes!", Alert.AlertType.ERROR);
-                return;
-            }
-
-            int genderId = selectedGenderDesc.equals("Masculino") ? 1 : 2;
-            Gender selectedGender = new Gender(genderId, selectedGenderDesc);
-
-            Sport selectedSport = sportsListDropdown.getSelectionModel().getSelectedItem();
-            if (selectedSport == null) {
-                showAlert("Erro de Validação", "Selecione uma modalidade para atualizar!", Alert.AlertType.ERROR);
-                return;
-            }
-
-            int resultMin = 0;
-            int resultMax = 0;
-
-            try {
-                resultMin = Integer.parseInt(resultMinText.getText());
-                resultMax = Integer.parseInt(resultMaxText.getText());
-                if (resultMin < 0 || resultMax < 0) {
-                    throw new NumberFormatException("Os valores de resultado não podem ser negativos.");
-                }
-            } catch (NumberFormatException e) {
-                showAlert("Erro de Validação", "Formato inválido ou valor de resultado inválido. Os valores de resultado devem ser números não negativos.", Alert.AlertType.ERROR);
-                return;
-            }
-
-            if (resultMin > resultMax) {
-                showAlert("Erro de Validação", "O valor mínimo do resultado não pode ser maior que o valor máximo!", Alert.AlertType.ERROR);
-                return;
-            }
-
-            selectedSport.setName(name);
-            selectedSport.setDesc(description);
-            selectedSport.setMinParticipants(minParticipants);
-            selectedSport.setType(type);
-            selectedSport.getGenre().setIdGender(genderId);
-            selectedSport.setScoringMeasure(scoringMeasure);
-            selectedSport.setOneGame(oneGame);
-            selectedSport.setResultMin(resultMin);
-            selectedSport.setResultMax(resultMax);
-
-            SportDao.updateSport(selectedSport);
-
-            showAlert("Sucesso", "Modalidade atualizada com sucesso!", Alert.AlertType.INFORMATION);
 
         } catch (SQLException e) {
-            showAlert("Erro na BD", "Ocorreu um erro ao acessar a BD: " + e.getMessage(), Alert.AlertType.ERROR);
-        } catch (Exception e) {
-            showAlert("Erro", "Ocorreu um erro inesperado: " + e.getMessage(), Alert.AlertType.ERROR);
+            e.printStackTrace();
+            showAlert("Erro", "Erro ao adicionar o evento ao banco de dados:\n" + e.getMessage(), AlertType.ERROR);
         }
     }
 
 
-    private void showAlert(String title, String message, Alert.AlertType alertType) {
-        Alert alert = new Alert(alertType);
+
+    private void showAlert(String title, String message, AlertType type) {
+        Alert alert = new Alert(type);
         alert.setTitle(title);
+        alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
     }
-
-
-    private void loadTypes() {
-        ObservableList<String> types = FXCollections.observableArrayList("Individual", "Collective");
-        typeDrop.setItems(types);
-    }
-
-    private void loadOneGameOptions() {
-        ObservableList<String> gameOptions = FXCollections.observableArrayList("One", "Multiple");
-        oneGameDrop.setItems(gameOptions);
-    }
-
-
-    public void returnHomeMenu(ActionEvent event) throws IOException {
-        HomeController.returnHomeMenu(event);
-    }
-
-
     public boolean changeMode(ActionEvent event) {
         isDarkMode = !isDarkMode;
         if (isDarkMode) {
@@ -294,17 +204,20 @@ public class EditSportController {
         parent.getStylesheets().remove(cssDark);
         parent.getStylesheets().add(cssLight);
         URL iconMoonURL = Main.class.getResource("img/iconMoonLight.png");
-        Image image = new Image(iconMoonURL.toExternalForm());
+        String iconMoonStr = ((URL) iconMoonURL).toExternalForm();
+        Image image = new Image(iconMoonStr);
         iconModeNav.setImage(image);
     }
 
     public void setDarkMode() {
-        parent.getStylesheets().remove(cssLight);
-        parent.getStylesheets().add(cssDark);
+        parent.getStylesheets().remove(String.valueOf(cssLight));
+        parent.getStylesheets().add(String.valueOf(cssDark));
         URL iconMoonURL = Main.class.getResource("img/iconMoon.png");
-        Image image = new Image(iconMoonURL.toExternalForm());
+        String iconMoonStr = ((URL) iconMoonURL).toExternalForm();
+        Image image = new Image(iconMoonStr);
         iconModeNav.setImage(image);
     }
+
     public void showRegister(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
         Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/register.fxml")));
@@ -331,19 +244,22 @@ public class EditSportController {
         stage.setScene(scene);
         stage.show();
     }
+
+
     public void showSportsRegister(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
-        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/sportRegister.fxml")));
+        Parent root = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/sportRegister.fxml")));
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
         scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
-        if(isDarkMode){
+        if (isDarkMode) {
             scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
-        }else{
+        } else {
             scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
         }
         stage.setScene(scene);
         stage.show();
     }
+
     public void showSportsEdit(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
         Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/sportEdit.fxml")));
@@ -358,22 +274,23 @@ public class EditSportController {
         stage.show();
     }
 
-    public void showTeamsEdit(ActionEvent event) throws IOException {
+    public void showSports(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
-        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/teamEdit.fxml")));
+        Parent root = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/sportsView.fxml")));
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
         scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
-        if(isDarkMode){
+        if (isDarkMode) {
             scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
-        }else{
+        } else {
             scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
         }
         stage.setScene(scene);
         stage.show();
     }
-    public void showSports(ActionEvent event) throws IOException {
+
+    public void showTeamsEdit(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
-        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/sportsView.fxml")));
+        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/teamEdit.fxml")));
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
         scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
         if(isDarkMode){
@@ -397,11 +314,24 @@ public class EditSportController {
         stage.setScene(scene);
         stage.show();
     }
-
+    public void returnHomeMenu(ActionEvent event) throws IOException {
+        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
+        Parent root = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/home.fxml")));
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
+        if (isDarkMode) {
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+        } else {
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
+        }
+        stage.setScene(scene);
+        stage.show();
+    }
 
     public void logout(ActionEvent event) throws Exception {
         showLogin(event);
     }
+
     public void showLogin(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
         Parent root = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/loginView.fxml")));
@@ -415,6 +345,7 @@ public class EditSportController {
         stage.setScene(scene);
         stage.show();
     }
+
     @FXML
     public void loadTeams(ActionEvent event) throws IOException {
         FileChooser fileChooser = new FileChooser();
@@ -430,6 +361,7 @@ public class EditSportController {
             System.out.println("File selected: " + file.getAbsolutePath());
         }
     }
+
     @FXML
     public void loadSports(ActionEvent event) throws IOException {
         FileChooser fileChooser = new FileChooser();
@@ -446,7 +378,6 @@ public class EditSportController {
         }
     }
 
-
     @FXML
     public void loadAthletes(ActionEvent event) throws IOException {
         FileChooser fileChooser = new FileChooser();
@@ -462,4 +393,18 @@ public class EditSportController {
             System.out.println("File selected: " + file.getAbsolutePath());
         }
     }
+    public void showAddEvent(ActionEvent event) throws IOException {
+        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
+        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/addEvent.fxml")));
+        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
+        scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
+        if(isDarkMode){
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+        }else{
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
+        }
+        stage.setScene(scene);
+        stage.show();
+    }
 }
+

@@ -13,9 +13,13 @@ public class Person {
         this.id = id;
         this.password = password;
     }
+
+    /**
+     * Constructor of Person
+     * @param id {int} ID
+     */
     public Person(int id) {
         this.id = id;
-
     }
 
     /**

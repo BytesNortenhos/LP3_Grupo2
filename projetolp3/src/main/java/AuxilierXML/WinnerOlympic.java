@@ -99,4 +99,9 @@ public class WinnerOlympic {
     public void setMedal(String medal) {
         this.medal = medal;
     }
+    @Override
+    public String toString() {
+        return String.format("Ano: %d, Detentor: %s, Tempo: %s, Medalha: %s", year, holder, time, medal);
+    }
+
 }

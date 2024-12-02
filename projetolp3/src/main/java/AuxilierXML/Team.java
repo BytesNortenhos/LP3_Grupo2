@@ -10,7 +10,7 @@ public class Team {
     @XmlElement
     private String name;
     @XmlElement(name = "country")
-    private String xmlCountry; // Needed for JAXB
+    private String xmlCountry;
     @XmlElement(name = "genre")
     private String xmlGenre;
     @XmlElement(name = "sport")
@@ -19,7 +19,7 @@ public class Team {
     private int yearFounded;
     @XmlElementWrapper(name = "olympicParticipations")
     @XmlElement(name = "participation")
-    private List<ParticipationTeam> olympicParticipations; // Needed for JAXB
+    private List<ParticipationTeam> olympicParticipations;
 
     /**
      * Constructor of Team (without parameters)
@@ -59,7 +59,7 @@ public class Team {
     }
 
     /**
-     * Get XML country (used only for JAXB)
+     * Get XML country
      * @return String
      */
     public String getXmlCountry() {
@@ -67,7 +67,7 @@ public class Team {
     }
 
     /**
-     * Set XML country (used only for JAXB)
+     * Set XML country
      * @param xmlCountry {String} Country
      */
     public void setXmlCountry(String xmlCountry) {
@@ -75,7 +75,7 @@ public class Team {
     }
 
     /**
-     * Get XML genre (used only for JAXB)
+     * Get XML genre
      * @return String
      */
     public String getXmlGenre() {
@@ -83,7 +83,7 @@ public class Team {
     }
 
     /**
-     * Set XML genre (used only for JAXB)
+     * Set XML genre
      * @param xmlGenre {String} Genre
      */
     public void setXmlGenre(String xmlGenre) {
@@ -91,7 +91,7 @@ public class Team {
     }
 
     /**
-     * Get XML sport (used only for JAXB)
+     * Get XML sport
      * @return String
      */
     public String getXmlSport() {
@@ -99,7 +99,7 @@ public class Team {
     }
 
     /**
-     * Set XML sport (used only for JAXB)
+     * Set XML sport
      * @param xmlSport {String} Sport
      */
     public void setXmlSport(String xmlSport) {
@@ -107,7 +107,7 @@ public class Team {
     }
 
     /**
-     * Get olympic participations (used only for JAXB)
+     * Get olympic participations
      * @return List<ParticipationTeam>
      */
     public List<ParticipationTeam> getOlympicParticipations() {
@@ -115,10 +115,30 @@ public class Team {
     }
 
     /**
-     * Set olympic participations (used only for JAXB)
+     * Set olympic participations
      * @param olympicParticipations {List<ParticipationTeam>} Olympic participations
      */
     public void setOlympicParticipations(List<ParticipationTeam> olympicParticipations) {
         this.olympicParticipations = olympicParticipations;
     }
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Name: ").append(name).append("\n");
+        sb.append("Country: ").append(xmlCountry).append("\n");
+        sb.append("Genre: ").append(xmlGenre).append("\n");
+        sb.append("Sport: ").append(xmlSport).append("\n");
+        sb.append("Foundation Year: ").append(yearFounded).append("\n");
+
+        if (olympicParticipations != null && !olympicParticipations.isEmpty()) {
+            for (ParticipationTeam participation : olympicParticipations) {
+                sb.append(participation.toString()).append("\n");
+            }
+        } else {
+            sb.append("No Olympic Participations\n");
+        }
+        sb.append("---------------------------\n");
+        return sb.toString();
+    }
+
 }

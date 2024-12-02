@@ -28,7 +28,7 @@
 							<!-- Date of Birth -->
 							<xs:element name="dateOfBirth" type="xs:date"/>
 							<!-- Olympic participations -->
-							<xs:element name="olympicParticipations">
+							<xs:element name="olympicParticipations" minOccurs="0">
 								<xs:complexType>
 									<xs:sequence>
 										<!-- Multiple participation records -->
