@@ -12,9 +12,9 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class IniciarModalidadesTest {
+public class sportStartTest {
     @Test
-    void testIniciarModalidadesIndividual() throws SQLException {
+    void testsportStartIndividual() throws SQLException {
         SportDao spd = new SportDao();
         List<Sport> sports = spd.getSports();
         Sport sportEncontrado = null;
@@ -96,7 +96,7 @@ public class IniciarModalidadesTest {
 
         //Verificar se a modalidade foi iniciada
         StartSportsController startSportsController = new StartSportsController();
-        boolean result = startSportsController.iniciarModalidades(sportEncontrado.getIdSport(), year);
+        boolean result = startSportsController.sportStart(sportEncontrado.getIdSport(), year);
         assertTrue(result);
 
 
@@ -168,7 +168,7 @@ public class IniciarModalidadesTest {
     }
 
     @Test
-    void testIniciarModalidadesCollective() throws SQLException {
+    void testsportStartCollective() throws SQLException {
         SportDao spd = new SportDao();
         List<Sport> sports = spd.getSports();
         Sport sportEncontrado = null;
@@ -302,7 +302,7 @@ public class IniciarModalidadesTest {
 
         //Verificar se a modalidade foi iniciada
         StartSportsController startSportsController = new StartSportsController();
-        boolean result = startSportsController.iniciarModalidades(sportEncontrado.getIdSport(), year);
+        boolean result = startSportsController.sportStart(sportEncontrado.getIdSport(), year);
         assertTrue(result);
 
         if(result){

@@ -230,17 +230,19 @@ public class SportDao {
         return quantidade;
     }
 
-    public int getNumberTeamsSport(int idSport, int year, int mPart) throws SQLException {
-        String query = "SELECT COUNT(DISTINCT idTeam) AS quantidade " +
-                "FROM( " +
-                "SELECT idTeam FROM tblRegistration " +
-                "WHERE idSport = ? " +
-                "AND year = ? " +
-                "AND (idStatus = 3 OR idStatus = 4)" +
-                "GROUP BY idTeam " +
-                "HAVING COUNT(idTeam) >= ? " +
+    public int getNumberTeamsSports(int idSport, int year) throws SQLException {
+        String query = "SELECT COUNT(DISTINCT subquery.idTeam) AS quantidade " +
+                "FROM ( " +
+                "SELECT r.idTeam, t.minParticipants " +
+                "FROM tblRegistration r " +
+                "JOIN tblTeam t ON r.idTeam = t.idTeam " +
+                "WHERE r.idSport = ? " +
+                "AND r.year = ? " +
+                "AND (r.idStatus = 3 OR r.idStatus = 4) " +
+                "GROUP BY r.idTeam, t.minParticipants " +
+                "HAVING COUNT(r.idTeam) >= t.minParticipants " +
                 ") AS subquery;";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, year,mPart);
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, year);
         int quantidade = 0;
         if (rs != null && rs.next()) {
             quantidade = rs.getInt("quantidade");

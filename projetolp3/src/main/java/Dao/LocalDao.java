@@ -38,6 +38,28 @@ public class LocalDao {
         return locals;
     }
 
+    public List<Local> getLocalsByYear(int year) throws SQLException{
+        List<Local> locals = new ArrayList<>();
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT * FROM tblLocal WHERE constructionYear = ?;", year);
+        if (rs != null) {
+            while (rs.next()) {
+                int idLocal = rs.getInt("idLocal");
+                String name = rs.getString("name");
+                String type = rs.getString("type");
+                String address = rs.getString("address");
+                String city = rs.getString("city");
+                int capacity = rs.getInt("capacity");
+                int constructionYear = rs.getInt("constructionYear");
+
+                Local local = new Local(idLocal, name, type, address, city, capacity, constructionYear);
+                locals.add(local);
+            }
+        } else {
+            System.out.println("ResultSet is null. No results for Local found.");
+        }
+        return locals;
+    }
+
     /**
      * Add local
      * @param local {Local} Local
