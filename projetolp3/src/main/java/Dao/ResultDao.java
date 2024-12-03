@@ -66,7 +66,7 @@ public class ResultDao {
         }
     }
 
-    public void addResultAthlete(int idSport, int idAthlete, Date date, int result, int idLocal) throws SQLException {
+    public void addResultAthlete(int idSport, int idAthlete, Date date, String result, int idLocal) throws SQLException {
         String query = "INSERT INTO tblResult (idSport, idAthlete, date, result, idLocal) VALUES (?, ?, ?, ?, ?)";
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -77,7 +77,7 @@ public class ResultDao {
             stmt.setInt(1, idSport);
             stmt.setInt(2, idAthlete);
             stmt.setDate(3, date);
-            stmt.setInt(4, result);
+            stmt.setString(4, result);
             stmt.setInt(5, idLocal);
             stmt.executeUpdate();
         } finally {
@@ -114,7 +114,7 @@ public class ResultDao {
         }
     }
 
-    public void addResultAthleteTeam(int idSport, int idAthlete, int idTeam, Date date, int result, int idLocal) throws SQLException {
+    public void addResultAthleteTeam(int idSport, int idAthlete, int idTeam, Date date, String result, int idLocal) throws SQLException {
         String query = "INSERT INTO tblResult (idSport, idAthlete, idTeam, date, result, idLocal) VALUES (?, ?, ?, ?, ?, ?)";
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -126,7 +126,7 @@ public class ResultDao {
             stmt.setInt(2, idAthlete);
             stmt.setInt(3, idTeam);
             stmt.setDate(4, date);
-            stmt.setInt(5, result);
+            stmt.setString(5, result);
             stmt.setInt(6, idLocal);
             stmt.executeUpdate();
         } finally {

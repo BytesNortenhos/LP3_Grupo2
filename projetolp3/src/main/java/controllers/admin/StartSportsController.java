@@ -162,15 +162,14 @@ public class StartSportsController {
         Label genderLabel = new Label(sport.get(2).toString());
         genderLabel.getStyleClass().add("gender-label");
 
-        if(sportType.equals("Individual")){
+        if (sportType.equals("Individual")) {
             nPart = sportDao.getNumberParticipantsSport(idSport, year);
             minPart = new Label("Minímo de participantes: " + mPart);
             minPart.getStyleClass().add("minPart-label");
 
             numPart = new Label("Número de participantes: " + nPart);
             numPart.getStyleClass().add("numPart-label");
-        }
-        else{
+        } else {
 
             nPart = sportDao.getNumberTeamsSport(idSport, year);
             minPart = new Label("Minímo de equipas: " + mPart);
@@ -271,15 +270,14 @@ public class StartSportsController {
         VBox vbox = new VBox(600);
         vbox.setPadding(new Insets(10));
         vbox.getStyleClass().add("popup-vbox");
-        if(sportDao.verifyIfIsTeam(idSport, year)){
+        if (sportDao.verifyIfIsTeam(idSport, year)) {
             List<List> results = sportDao.getTeamsAndthletes(idSport, year);
             displayTeams(vbox, results);
             Scene scene = new Scene(vbox, 600, 450);
             scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
             popupStage.setScene(scene);
             popupStage.show();
-        }
-        else{
+        } else {
             List<Athlete> results = sportDao.getAthletesBySport(idSport, year);
             displayAthletes(vbox, results);
             Scene scene = new Scene(vbox, 600, 450);
@@ -305,10 +303,11 @@ public class StartSportsController {
             vbox.getChildren().add(resultItem);
         }
     }
+
     public void displayAthletes(VBox vbox, List<Athlete> results) {
         vbox.getChildren().clear();
         vbox.setSpacing(20);
-        for(Athlete athlete : results){
+        for (Athlete athlete : results) {
             VBox resultItem = createAthleteResult(athlete.getName(), athlete.getCountry().getName());
             vbox.getChildren().add(resultItem);
         }
@@ -335,6 +334,7 @@ public class StartSportsController {
         resultItem.getChildren().addAll(nameLabel, resultLabel);
         return resultItem;
     }
+
     private VBox createAthleteResult(String athletes, String country) {
         VBox resultItem = new VBox();
         resultItem.setSpacing(10);
@@ -380,25 +380,26 @@ public class StartSportsController {
 
     public void showRegister(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
-        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/register.fxml")));
+        Parent root = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/register.fxml")));
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
         scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
-        if(isDarkMode){
+        if (isDarkMode) {
             scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
-        }else{
+        } else {
             scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
         }
         stage.setScene(scene);
         stage.show();
     }
+
     public void showAthletes(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
-        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/athletesView.fxml")));
+        Parent root = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/athletesView.fxml")));
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
         scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
-        if(isDarkMode){
+        if (isDarkMode) {
             scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
-        }else{
+        } else {
             scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
         }
         stage.setScene(scene);
@@ -418,27 +419,29 @@ public class StartSportsController {
         stage.setScene(scene);
         stage.show();
     }
+
     public void showTeamsEdit(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
-        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/teamEdit.fxml")));
+        Parent root = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/teamEdit.fxml")));
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
         scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
-        if(isDarkMode){
+        if (isDarkMode) {
             scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
-        }else{
+        } else {
             scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
         }
         stage.setScene(scene);
         stage.show();
     }
+
     public void showSportsEdit(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
-        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/sportEdit.fxml")));
+        Parent root = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/sportEdit.fxml")));
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
         scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
-        if(isDarkMode){
+        if (isDarkMode) {
             scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
-        }else{
+        } else {
             scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
         }
         stage.setScene(scene);
@@ -566,7 +569,7 @@ public class StartSportsController {
             }
             if (sportDao.getOneGame(idSport).equals("Multiple")) {
                 System.out.println("Individual Multiple");
-                individualMultiple(idSport, IdsParticipants);
+                individualMultiple(idSport, IdsParticipants, year);
             }
         }
         if (sportDao.getType(idSport).equals("Collective")) {
@@ -577,7 +580,7 @@ public class StartSportsController {
             }
             if (sportDao.getOneGame(idSport).equals("Multiple")) {
                 System.out.println("Collective Multiple");
-                CollectiveMultiple(idSport, IdsParticipants);
+                CollectiveMultiple(idSport, IdsParticipants, year);
             }
         }
 
@@ -619,11 +622,7 @@ public class StartSportsController {
             int idAthlete = IdsParticipants.get(i);
             int resultadoInserir = resultados.get(i);
             java.sql.Date date = new java.sql.Date(System.currentTimeMillis());
-            try {
-                resultDao.addResultAthlete(idSport, idAthlete, date, resultadoInserir, 2);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            resultDao.addResultAthlete(idSport, idAthlete, date, String.valueOf(resultadoInserir), 2);
         }
 
         //Atribuir Medalhas
@@ -631,16 +630,13 @@ public class StartSportsController {
         medalDao.addTopMedalAthlete(IdsParticipants.get(1), year, 2);
         medalDao.addTopMedalAthlete(IdsParticipants.get(2), year, 3);
         for (int i = 3; i < IdsParticipants.size(); i++) {
-            try {
-                medalDao.addTopMedalAthlete(IdsParticipants.get(i), year, 4);
-            } catch (SQLException e) {
-            }
+            medalDao.addTopMedalAthlete(IdsParticipants.get(i), year, 4);
         }
 
         //Verificar Recorde Olímpico
         Integer olympicRecord = olympicRecordDao.getOlympicRecord(idSport);
         if (olympicRecord != null) {
-            if (resultados.getFirst() > olympicRecord){
+            if (resultados.getFirst() > olympicRecord) {
                 olympicRecordDao.setNewOlympicRecordAthlete(idSport, year, IdsParticipants.getFirst(), resultados.getFirst());
             }
         }
@@ -681,15 +677,11 @@ public class StartSportsController {
             int idTeam = IdsParticipants.get(i);
             int resultadoInserir = resultados.get(i);
             java.sql.Date date = new java.sql.Date(System.currentTimeMillis());
-            try {
-                //resultDao.addResultTeam(idSport, idTeam, date, resultadoInserir, 2);
-                athletes.clear();
-                athletes = registrationDao.getAthletesByTeam(idTeam, idSport, year);
-                for (int j = 0; j < athletes.size(); j++) {
-                    resultDao.addResultAthleteTeam(idSport, athletes.get(j), idTeam, date, resultadoInserir, 2);
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
+            //resultDao.addResultTeam(idSport, idTeam, date, resultadoInserir, 2);
+            athletes.clear();
+            athletes = registrationDao.getAthletesByTeam(idTeam, idSport, year);
+            for (int j = 0; j < athletes.size(); j++) {
+                resultDao.addResultAthleteTeam(idSport, athletes.get(j), idTeam, date, String.valueOf(resultadoInserir), 2);
             }
         }
 
@@ -713,32 +705,204 @@ public class StartSportsController {
             medalDao.addTopMedalAthleteTeam(athletes.get(i), IdsParticipants.get(2), year, 3);
         }
         for (int i = 3; i < IdsParticipants.size(); i++) {
-            try {
-                //medalDao.addTopMedalTeam(IdsParticipants.get(i), year, 4);
-                athletes.clear();
-                athletes = registrationDao.getAthletesByTeam(IdsParticipants.get(i), idSport, year);
-                for (int j = 0; j < athletes.size(); j++) {
-                    medalDao.addTopMedalAthleteTeam(athletes.get(j), IdsParticipants.get(i), year, 4);
-                }
-            } catch (SQLException e) {
+            //medalDao.addTopMedalTeam(IdsParticipants.get(i), year, 4);
+            athletes.clear();
+            athletes = registrationDao.getAthletesByTeam(IdsParticipants.get(i), idSport, year);
+            for (int j = 0; j < athletes.size(); j++) {
+                medalDao.addTopMedalAthleteTeam(athletes.get(j), IdsParticipants.get(i), year, 4);
             }
         }
 
         //Verificar Recorde Olímpico
         Integer olympicRecord = olympicRecordDao.getOlympicRecord(idSport);
         if (olympicRecord != null) {
-            if (resultados.getFirst() > olympicRecord){
+            if (resultados.getFirst() > olympicRecord) {
                 olympicRecordDao.setNewOlympicRecordTeam(idSport, year, IdsParticipants.getFirst(), resultados.getFirst());
             }
         }
         return true;
     }
 
-    public boolean individualMultiple(int idSport, List<Integer> IdsParticipants) throws SQLException {
+    public boolean individualMultiple(int idSport, List<Integer> IdsParticipants, int year) throws SQLException {
+        List<Integer> scores = new ArrayList<>(Collections.nCopies(IdsParticipants.size(), 0));
+        List<List<String>> resultados = new ArrayList<>();
+        Random random = new Random();
+
+        //Gerar Resultados
+        List<Integer> range = sportDao.getRange(idSport);
+        int resultado1, resultado2;
+        do {
+            Collections.fill(scores, 0);
+            resultados.clear();
+            for (int i = 0; i < IdsParticipants.size(); i++) {
+                resultados.add(new ArrayList<>());
+            }
+            //Jogos entre os Participantes
+            for (int i = 0; i < IdsParticipants.size(); i++) {
+                for (int j = i + 1; j < IdsParticipants.size(); j++) {
+                    resultado1 = range.getFirst() + random.nextInt(range.getLast() - range.getFirst());
+                    resultado2 = range.getFirst() + random.nextInt(range.getLast() - range.getFirst());
+                    if (resultado1 > resultado2) {
+                        scores.set(i, scores.get(i) + 3);
+                    } else if (resultado1 < resultado2) {
+                        scores.set(j, scores.get(j) + 3);
+                    } else {
+                        scores.set(i, scores.get(i) + 1);
+                        scores.set(j, scores.get(j) + 1);
+                    }
+
+                    String resultadoP = "(" + resultado1 + ") - " + resultado2;
+                    String resultadoS = resultado1 + " - (" + resultado2 + ")";
+                    resultados.get(i).add(resultadoP);
+                    resultados.get(j).add(resultadoS);
+
+
+                    System.out.println(IdsParticipants.get(i) + " " + IdsParticipants.get(j) + " " + resultado1 + " " + resultado2);
+                }
+            }
+            //Ordenar Resultados
+            for (int i = 0; i < scores.size(); i++) {
+                for (int j = i + 1; j < scores.size(); j++) {
+                    if (scores.get(j) > scores.get(i)) {
+                        Collections.swap(scores, i, j);
+                        Collections.swap(IdsParticipants, i, j);
+                        Collections.swap(resultados, i, j);
+                    }
+                }
+            }
+            System.out.println("Resultados após a ordenação:");
+            for (int i = 0; i < IdsParticipants.size(); i++) {
+                System.out.println("ID: " + IdsParticipants.get(i) + ", Pontuação: " + scores.get(i));
+            }
+            System.out.println();
+        } while (scores.getFirst() == scores.get(1) || scores.get(1) == scores.get(2) || scores.get(2) == scores.get(3));
+
+
+        //Atribuir Resultados
+        java.sql.Date date = new java.sql.Date(System.currentTimeMillis());
+        for (int i = 0; i < resultados.size(); i++) {
+            for (String resultado : resultados.get(i)) {
+                resultDao.addResultAthlete(idSport, IdsParticipants.get(i), date, resultado, 2);
+                System.out.println("DAO: " + idSport + " " + IdsParticipants.get(i) + " " + date + " " + resultado);
+            }
+        }
+
+        //Atribuir Medalhas
+        medalDao.addTopMedalAthlete(IdsParticipants.getFirst(), year, 1);
+        medalDao.addTopMedalAthlete(IdsParticipants.get(1), year, 2);
+        medalDao.addTopMedalAthlete(IdsParticipants.get(2), year, 3);
+        for (int i = 3; i < IdsParticipants.size(); i++) {
+            medalDao.addTopMedalAthlete(IdsParticipants.get(i), year, 4);
+        }
+
+        //Verificar Recorde Olimpico
+
+
         return true;
     }
 
-    public boolean CollectiveMultiple(int idSport, List<Integer> IdsParticipants) throws SQLException {
+
+    public boolean CollectiveMultiple(int idSport, List<Integer> IdsParticipants, int year) throws SQLException {
+        List<Integer> scores = new ArrayList<>(Collections.nCopies(IdsParticipants.size(), 0));
+        List<List<String>> resultados = new ArrayList<>();
+        Random random = new Random();
+
+        //Gerar Resultados
+        List<Integer> range = sportDao.getRange(idSport);
+        int resultado1, resultado2;
+        do {
+            Collections.fill(scores, 0);
+            resultados.clear();
+            for (int i = 0; i < IdsParticipants.size(); i++) {
+                resultados.add(new ArrayList<>());
+            }
+            //Jogos entre os Participantes
+            for (int i = 0; i < IdsParticipants.size(); i++) {
+                for (int j = i + 1; j < IdsParticipants.size(); j++) {
+                    resultado1 = range.getFirst() + random.nextInt(range.getLast() - range.getFirst());
+                    resultado2 = range.getFirst() + random.nextInt(range.getLast() - range.getFirst());
+                    if (resultado1 > resultado2) {
+                        scores.set(i, scores.get(i) + 3);
+                    } else if (resultado1 < resultado2) {
+                        scores.set(j, scores.get(j) + 3);
+                    } else {
+                        scores.set(i, scores.get(i) + 1);
+                        scores.set(j, scores.get(j) + 1);
+                    }
+
+                    String resultadoP = "(" + resultado1 + ") - " + resultado2;
+                    String resultadoS = resultado1 + " - (" + resultado2 + ")";
+                    resultados.get(i).add(resultadoP);
+                    resultados.get(j).add(resultadoS);
+
+
+                    System.out.println(IdsParticipants.get(i) + " " + IdsParticipants.get(j) + " " + resultado1 + " " + resultado2);
+                }
+            }
+            //Ordenar Resultados
+            for (int i = 0; i < scores.size(); i++) {
+                for (int j = i + 1; j < scores.size(); j++) {
+                    if (scores.get(j) > scores.get(i)) {
+                        Collections.swap(scores, i, j);
+                        Collections.swap(IdsParticipants, i, j);
+                        Collections.swap(resultados, i, j);
+                    }
+                }
+            }
+            System.out.println("Resultados após a ordenação:");
+            for (int i = 0; i < IdsParticipants.size(); i++) {
+                System.out.println("ID: " + IdsParticipants.get(i) + ", Pontuação: " + scores.get(i));
+            }
+            System.out.println();
+        } while (scores.getFirst() == scores.get(1) || scores.get(1) == scores.get(2) || scores.get(2) == scores.get(3));
+
+        //Atribuir Resultados
+        List<Integer> athletes = new ArrayList<>();
+        for (int i = 0; i < resultados.size(); i++) {
+            int idTeam = IdsParticipants.get(i);
+            java.sql.Date date = new java.sql.Date(System.currentTimeMillis());
+            athletes.clear();
+            athletes = registrationDao.getAthletesByTeam(idTeam, idSport, year);
+            for (int j = 0; j < athletes.size(); j++) {
+                for (String resultado : resultados.get(i)) {
+                    resultDao.addResultAthleteTeam(idSport, athletes.get(j), idTeam, date, resultado, 2);
+                    System.out.println("DAO: " + idSport + " " + athletes.get(j) + " " + idTeam + " " + date + " " + resultado);
+                }
+            }
+        }
+
+
+        //Atribuir Medalhas
+        //medalDao.addTopMedalTeam(IdsParticipants.getFirst(), year, 1);
+        athletes.clear();
+        athletes = registrationDao.getAthletesByTeam(IdsParticipants.getFirst(), idSport, year);
+        for (int i = 0; i < athletes.size(); i++) {
+            medalDao.addTopMedalAthleteTeam(athletes.get(i), IdsParticipants.getFirst(), year, 1);
+        }
+        //medalDao.addTopMedalTeam(IdsParticipants.get(1), year, 2);
+        athletes.clear();
+        athletes = registrationDao.getAthletesByTeam(IdsParticipants.get(1), idSport, year);
+        for (int i = 0; i < athletes.size(); i++) {
+            medalDao.addTopMedalAthleteTeam(athletes.get(i), IdsParticipants.get(1), year, 2);
+        }
+        //medalDao.addTopMedalTeam(IdsParticipants.get(2), year, 3);
+        athletes.clear();
+        athletes = registrationDao.getAthletesByTeam(IdsParticipants.get(2), idSport, year);
+        for (int i = 0; i < athletes.size(); i++) {
+            medalDao.addTopMedalAthleteTeam(athletes.get(i), IdsParticipants.get(2), year, 3);
+        }
+        for (int i = 3; i < IdsParticipants.size(); i++) {
+            //medalDao.addTopMedalTeam(IdsParticipants.get(i), year, 4);
+            athletes.clear();
+            athletes = registrationDao.getAthletesByTeam(IdsParticipants.get(i), idSport, year);
+            for (int j = 0; j < athletes.size(); j++) {
+                medalDao.addTopMedalAthleteTeam(athletes.get(j), IdsParticipants.get(i), year, 4);
+            }
+        }
+
+        //Verificar Recorde Olimpico
+
+
         return true;
     }
 
