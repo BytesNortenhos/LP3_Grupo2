@@ -24,7 +24,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -141,38 +143,35 @@ public class ViewEventsController {
         eventItem.setSpacing(10);
         eventItem.getStyleClass().add("request-item");
 
+        HBox nameContainer = new HBox(10);
+        String logoPath = event.getLogo();
+        ImageView profileImage = new ImageView();
+        URL iconImageURL = Main.class.getResource(logoPath);
+        if (iconImageURL != null) {
+            Image images = new Image(iconImageURL.toExternalForm());
+            profileImage.setImage(images);
+            profileImage.setFitWidth(60);
+            profileImage.setFitHeight(60);
+            Circle clip = new Circle(30, 30, 30);
+            profileImage.setClip(clip);
+        }
+        Label nameLabel = new Label("" + event.getYear());
+        nameLabel.getStyleClass().add("name-label");
+        nameLabel.setTranslateY(13);
+        nameContainer.getChildren().addAll(profileImage, nameLabel);
 
-        Label yearLabel = new Label("Year: " + event.getYear());
-        yearLabel.getStyleClass().add("name-label");
 
 
-        Label countryNameLabel = new Label("Country: " + event.getCountry().getName());
+        Label countryNameLabel = new Label("País: " + event.getCountry().getName());
         countryNameLabel.getStyleClass().add("name-label");
 
 
-        Label continentLabel = new Label("Continent: " + event.getCountry().getContinent());
+        Label continentLabel = new Label("Continente: " + event.getCountry().getContinent());
         continentLabel.getStyleClass().add("name-label");
 
 
-        String logoPath = event.getLogo();
-        ImageView logoImageView = new ImageView();
 
-        if (logoPath != null && !logoPath.isEmpty()) {
-            Image logoImage = new Image("file:" + logoPath);
-            logoImageView.setImage(logoImage);
-            logoImageView.setFitWidth(100);
-            logoImageView.setPreserveRatio(true);
-        } else {
-
-            logoImageView.setImage(null);
-        }
-
-
-        Label logoLabel = new Label("Logo: ");
-        logoLabel.getStyleClass().add("name-label");
-
-
-        eventItem.getChildren().addAll(yearLabel, countryNameLabel, continentLabel, logoLabel, logoImageView);
+        eventItem.getChildren().addAll(nameContainer, countryNameLabel, continentLabel);
 
         eventItem.setPrefWidth(500);
 

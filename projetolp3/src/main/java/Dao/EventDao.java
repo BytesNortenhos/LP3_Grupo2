@@ -23,7 +23,8 @@ public class EventDao {
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT e.year, e.logo, " +
                 "c.idCountry, c.name AS countryName, c.continent " +
                 "FROM tblEvent e " +
-                "INNER JOIN tblCountry c ON e.idCountry = c.idCountry;");
+                "INNER JOIN tblCountry c ON e.idCountry = c.idCountry " +
+                "ORDER BY e.year DESC;");
         if (rs != null) {
             while (rs.next()) {
                 int year = rs.getInt("year");
@@ -187,5 +188,27 @@ public class EventDao {
                 conn.close();
             }
         }
+    }
+
+    public List<List> getEventsToShow() throws SQLException {
+        List<List> events = new ArrayList<>();
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT e.year, e.logo, " +
+                "c.idCountry, c.name AS countryName, c.continent " +
+                "FROM tblEvent e " +
+                "INNER JOIN tblCountry c ON e.idCountry = c.idCountry " +
+                "ORDER BY e.year DESC;");
+        if (rs != null) {
+            while (rs.next()) {
+                List<String> event = new ArrayList<>();
+                event.add(rs.getString("year"));
+                event.add(rs.getString("countryName"));
+                event.add(rs.getString("continent"));
+                event.add(rs.getString("logo"));
+                events.add(event);
+            }
+        } else {
+            System.out.println("ResultSet is null. No results for Event found.");
+        }
+        return events;
     }
 }

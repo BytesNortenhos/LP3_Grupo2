@@ -158,7 +158,7 @@ public class SportsController {
         oneGame.getStyleClass().add("oneGame-label");
 
         requestItem.getChildren().addAll(nameLabel, description, typeLabel, genderLabel, minPart, scoringMeasure, oneGame);
-        requestItem.setPrefWidth(500); // Ensure this width allows two items per line
+        requestItem.setPrefWidth(500);
         return requestItem;
     }
 
