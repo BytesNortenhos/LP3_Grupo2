@@ -72,6 +72,7 @@ public class SportTest {
 
             //Remover o Sport
             SportDao.removeSport(sportAdd.getIdSport());
+            System.out.println("Sport removido com sucesso");
         }
     }
 
@@ -122,6 +123,7 @@ public class SportTest {
         for (Athlete at : athletesAdicionados) {
             at.setIdAthlete(AthleteDao.addAthlete(at));
         }
+        System.out.println("Atletas inseridos com sucesso");
 
         //Guardar status de registo
         RegistrationStatus status3 = RegistrationStatusDao.getRegistrationStatuses().stream()
@@ -150,29 +152,33 @@ public class SportTest {
         for (Registration reg : registrationsAdicionados) {
             reg.setIdRegistration(RegistrationDao.addRegistrationSolo(reg));
         }
+        System.out.println("Registos de atletas adicionados com sucesso");
 
         //Testar o método
         int expectedNumber = 4;
         int numberParticipants = sportDao.getNumberParticipantsSport(sportAdded.getIdSport(), year);
         assertEquals(expectedNumber, numberParticipants);
         System.out.println("ExpectedNumber: " + expectedNumber + "\nNumberParticipants: " + numberParticipants);
-        System.out.println("Sucesso");
+        System.out.println("Número de participantes retornado corretamente");
 
 
         //Remover os registos
         for(Registration reg: registrationsAdicionados){
             RegistrationDao.removeRegistration(reg.getIdRegistration());
         }
+        System.out.println("Registos removidos com sucesso");
 
         //Remover os atletas
         for(Athlete at: athletesAdicionados){
             AthleteDao.removeAthlete(at.getIdAthlete());
         }
+        System.out.println("Atletas removidos com sucesso");
 
         //Remover o Sport
         SportDao.removeSport(sportAdd.getIdSport());
-
+        System.out.println("Sport removido com sucesso");
     }
+
     public static void assertEqualsSport(Sport expected, Sport actual) {
         assertNotNull(expected);
         assertNotNull(actual);

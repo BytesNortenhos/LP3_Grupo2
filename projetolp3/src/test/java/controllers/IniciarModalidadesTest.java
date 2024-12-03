@@ -2,6 +2,7 @@ package controllers;
 
 import Dao.*;
 import Models.*;
+import Utils.PasswordUtils;
 import controllers.admin.StartSportsController;
 import org.junit.jupiter.api.Test;
 
@@ -9,6 +10,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static controllers.AthleteTest.assertEqualsAthlete;
+import static controllers.SportTest.assertEqualsSport;
+import static controllers.TeamTest.assertEqualsTeam;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -33,6 +37,13 @@ public class IniciarModalidadesTest {
         Sport sportAdd = new Sport(0, type, gender, name, description, minParticipants, scoringMeasure, oneGame, resultMin, resultMax);
 
         sportAdd.setIdSport(SportDao.addSportJUnit(sportAdd));
+
+        //Verificar se foi inserido
+        SportDao sportDao = new SportDao();
+        Sport sportAdded = sportDao.getSportByIdJunit(sportAdd.getIdSport());
+        assertEqualsSport(sportAdd, sportAdded);
+        System.out.println("Sport inserido com sucesso");
+
         //Adicionar atletas
 
         Country country = CountryDao.getCountries().stream()
@@ -55,6 +66,23 @@ public class IniciarModalidadesTest {
         for (Athlete at : athletesAdicionados) {
             at.setIdAthlete(AthleteDao.addAthlete(at));
         }
+
+        //Colocar a Password encriptada para poder comparar objetos
+        PasswordUtils passwordUtils = new PasswordUtils();
+        for (Athlete athlete : athletesAdicionados) {
+            String passwordEncriptadaAdd = passwordUtils.encriptarPassword(athlete.getPassword());
+            athlete.setPassword(passwordEncriptadaAdd);
+        }
+
+        // Verificar se foi inserido
+        AthleteDao athleteDao = new AthleteDao();
+        for (Athlete athlete : athletesAdicionados) {
+            Athlete athleteAdded = athleteDao.getAthleteById(athlete.getIdAthlete());
+            assertEqualsAthlete(athleteAdded, athlete);
+            System.out.println("Atleta " + athlete.getName() + "inserido com sucesso");
+        }
+        System.out.println("Atletas inseridos com sucesso");
+
 
         //Guardar status de registo
         RegistrationStatus status = RegistrationStatusDao.getRegistrationStatuses().stream()
@@ -81,6 +109,13 @@ public class IniciarModalidadesTest {
         for (Registration reg : registrationsAdicionados) {
             reg.setIdRegistration(RegistrationDao.addRegistrationSolo(reg));
         }
+
+        for (Athlete athlete : athletesAdicionados) {
+            List<Registration> regs = RegistrationDao.getRegistrationByIdAthlete(athlete.getIdAthlete());
+            assertEquals(1, regs.size());
+            System.out.println("Registo do atleta " + athlete.getName() + " inserido com sucesso");
+        }
+        System.out.println("Registos inseridos com sucesso");
 
         System.out.println("A gerar ids...");
 
@@ -171,6 +206,12 @@ public class IniciarModalidadesTest {
 
         sportAdd.setIdSport(SportDao.addSportJUnit(sportAdd));
 
+        //Verificar se foi inserido
+        SportDao sportDao = new SportDao();
+        Sport sportAdded = sportDao.getSportByIdJunit(sportAdd.getIdSport());
+        assertEqualsSport(sportAdd, sportAdded);
+        System.out.println("Sport inserido com sucesso");
+
         //Adicionar equipas
         String nameAus = "Australia Men's 4x100m Freestyle Relay Team Test";
         String nameBra = "Brazil Men's 4x100m Freestyle Relay Team Test";
@@ -211,6 +252,13 @@ public class IniciarModalidadesTest {
             t.setIdTeam(td.addTeam(t));
         }
 
+        for (Team t : teamsAdicionadas) {
+            Team teamAdded = TeamDao.getTeamByIdJunit(t.getIdTeam());
+            assertEqualsTeam(t, teamAdded);
+            System.out.println("Equipa " + t.getName() + " inserida com sucesso");
+        }
+        System.out.println("Equipas inseridas com sucesso");
+
         //Registar atletas para as equipas
 
         Athlete atletaAus1 = new Athlete(0, "Teste123", "João Teste", countryAus, gender, 195, 90, java.sql.Date.valueOf("2000-08-22"), "image1");
@@ -235,6 +283,22 @@ public class IniciarModalidadesTest {
         for (Athlete at : athletesAdicionados) {
             at.setIdAthlete(AthleteDao.addAthlete(at));
         }
+
+        //Colocar a Password encriptada para poder comparar objetos
+        PasswordUtils passwordUtils = new PasswordUtils();
+        for (Athlete athlete : athletesAdicionados) {
+            String passwordEncriptadaAdd = passwordUtils.encriptarPassword(athlete.getPassword());
+            athlete.setPassword(passwordEncriptadaAdd);
+        }
+
+        // Verificar se foi inserido
+        AthleteDao athleteDao = new AthleteDao();
+        for (Athlete athlete : athletesAdicionados) {
+            Athlete athleteAdded = athleteDao.getAthleteById(athlete.getIdAthlete());
+            assertEqualsAthlete(athleteAdded, athlete);
+            System.out.println("Atleta " + athlete.getName() + "inserido com sucesso");
+        }
+        System.out.println("Atletas inseridos com sucesso");
 
         //Guardar status de registo
         RegistrationStatus status = RegistrationStatusDao.getRegistrationStatuses().stream()
@@ -267,6 +331,13 @@ public class IniciarModalidadesTest {
         for (Registration reg : registrationsAdicionadosTeam) {
             reg.setIdRegistration(rgDao.addRegistrationTeam(reg));
         }
+
+        for (Athlete athlete : athletesAdicionados) {
+            List<Registration> regs = RegistrationDao.getRegistrationByIdAthlete(athlete.getIdAthlete());
+            assertEquals(1, regs.size());
+            System.out.println("Registo do atleta " + athlete.getName() + " inserido com sucesso");
+        }
+        System.out.println("Registos inseridos com sucesso");
 
 
         //Verificar se a modalidade foi iniciada

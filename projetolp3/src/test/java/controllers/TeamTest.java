@@ -76,9 +76,11 @@ public class TeamTest {
 
             //Remover Team
             TeamDao.removeTeam(teamAdded.getIdTeam());
+            System.out.println("Team removido com sucesso");
 
             //Remover Sport
             SportDao.removeSport(sportAdded.getIdSport());
+            System.out.println("Sport removido com sucesso");
         }
     }
 

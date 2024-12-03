@@ -82,6 +82,7 @@ public class AthleteTest {
             System.out.println("Atleta atualizado com sucesso");
 
             AthleteDao.removeAthlete(athlete.getIdAthlete());
+            System.out.println("Atleta removido com sucesso");
         }
     }
 
