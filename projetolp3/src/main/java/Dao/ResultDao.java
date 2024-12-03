@@ -85,7 +85,7 @@ public class ResultDao {
      * @param idLocal {int} Id local
      * @throws SQLException
      */
-    public void addResultAthlete(int idSport, int idAthlete, Date date, int result, int idLocal) throws SQLException {
+    public void addResultAthlete(int idSport, int idAthlete, Date date, String result, int idLocal) throws SQLException {
         String query = "INSERT INTO tblResult (idSport, idAthlete, date, result, idLocal) VALUES (?, ?, ?, ?, ?)";
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -152,7 +152,7 @@ public class ResultDao {
      * @param idLocal {int} Id local
      * @throws SQLException
      */
-    public void addResultAthleteTeam(int idSport, int idAthlete, int idTeam, Date date, int result, int idLocal) throws SQLException {
+    public void addResultAthleteTeam(int idSport, int idAthlete, int idTeam, Date date, String result, int idLocal) throws SQLException {
         String query = "INSERT INTO tblResult (idSport, idAthlete, idTeam, date, result, idLocal) VALUES (?, ?, ?, ?, ?, ?)";
         Connection conn = null;
         PreparedStatement stmt = null;
