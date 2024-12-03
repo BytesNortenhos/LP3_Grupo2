@@ -99,4 +99,10 @@ public class OlympicRecord {
     public void setMedals(int medals) {
         this.medals = medals;
     }
+    @Override
+    public String toString() {
+        return String.format("Ano: %d, Detentor: %s, Tempo: %s, Medalhas: %d",
+                year, holder, time, medals);
+    }
+
 }

@@ -11,6 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GenderDao {
+    /**
+     * Get all genders
+     * @return List<Gender>
+     * @throws SQLException
+     */
     public static List<Gender> getGenders() throws SQLException {
         List<Gender> genders = new ArrayList<>();
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT * FROM tblGender;");
@@ -28,6 +33,11 @@ public class GenderDao {
         return genders;
     }
 
+    /**
+     * Add gender
+     * @param gender {Gender} Gender
+     * @throws SQLException
+     */
     public static void addGender(Gender gender) throws SQLException {
         String query = "INSERT INTO tblGender (description) VALUES (?)";
         Connection conn = null;
@@ -48,6 +58,11 @@ public class GenderDao {
         }
     }
 
+    /**
+     * Remove gender
+     * @param idGender {int} ID
+     * @throws SQLException
+     */
     public static void removeGender(int idGender) throws SQLException {
         String query = "DELETE FROM tblGender WHERE idGender = ?";
         Connection conn = null;
@@ -67,6 +82,11 @@ public class GenderDao {
         }
     }
 
+    /**
+     * Update gender
+     * @param gender {Gender} Gender
+     * @throws SQLException
+     */
     public static void updateGender(Gender gender) throws SQLException {
         String query = "UPDATE tblGender SET description = ? WHERE idGender = ?";
         Connection conn = null;
@@ -88,6 +108,12 @@ public class GenderDao {
         }
     }
 
+    /**
+     * Get gender by id
+     * @param idGender {int} ID
+     * @return Gender
+     * @throws SQLException
+     */
     public Gender getGenderById(int idGender) throws SQLException {
         String query = "SELECT * FROM tblGender WHERE idGender = ?";
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idGender);

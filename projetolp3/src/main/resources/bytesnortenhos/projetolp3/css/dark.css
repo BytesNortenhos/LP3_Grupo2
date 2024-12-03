@@ -132,7 +132,15 @@
     line-height: 120%;
     -fx-text-fill: #F7EED8;
 }
-.age-label, .sport-label, .country-label, .type-label, .description-label, .gender-label, .minPart-label, .scoringMeasure-label, .oneGame-label, .numPart-label, .result-label, .local-label, .date-label, .height-label, .weight-label, .birth-label {
+.team-name{
+    -fx-font-family: 'Inter';
+    -fx-font-style: normal;
+    -fx-font-weight: 400;
+    -fx-font-size: 32px;
+    line-height: 120%;
+    -fx-fill: #F7EED8;
+}
+.age-label, .sport-label, .country-label, .type-label, .description-label, .gender-label, .minPart-label, .scoringMeasure-label, .oneGame-label, .numPart-label, .result-label, .local-label, .date-label, .height-label, .weight-label, .birth-label, .maxPart-label, .year-label    {
     -fx-font-family: 'Inter';
     -fx-font-style: normal;
     -fx-font-weight: 400;
@@ -163,13 +171,13 @@
     -fx-translate-y: 30px;
     -fx-padding: 10px;
 }
-#mainContainer, .scrollStyle, #sportsContainer, #startSportsContainer, #showAthletesContainer{
+#mainContainer, .scrollStyle, #sportsContainer, #startSportsContainer, #showAthletesContainer, .popup-scroll-pane, #showTeamsContainer, #eventsContainer{
     -fx-background-color: #1E1E1E;
 }
-#mainContainer, #sportsContainer{
+#mainContainer, #sportsContainer, #eventsContainer{
     -fx-padding: 0 0 50px 0;
 }
-#startSportsContainer, #showAthletesContainer{
+#startSportsContainer, #showAthletesContainer, #showTeamsContainer{
     -fx-padding: 0 0 70px 0;
 }
 #noRequestsLabel, #noSportsLabel{
@@ -203,15 +211,13 @@
     -fx-background-color: #1E1E1E;
     -fx-border-color: #1E1E1E;
 }
-/* Target the label/text part */
 .dropdownButton .label, .dropdownButton .arrow-button {
     -fx-background-color: transparent;
 }
-/*.dropdownButton:hover .label, .dropdownButton:hover .arrow-button {*/
-/*    -fx-text-fill: #F7EED8;*/
-/*    -fx-background-color: #1E1E1E;*/
-/*}*/
-
+.dropdownButton .label {
+    -fx-alignment: CENTER_RIGHT;
+    -fx-cursor: hand;
+}
 .dropdownButton:hover .label{
     -fx-text-fill: #1E1E1E;
 }
@@ -231,7 +237,6 @@
 .dropdownButton .menu-item:hover .label{
     -fx-text-fill: #F7EED8;
 }
-
 
 .registerDrop {
     -fx-background-color: #3A3A38; /* Dark background color */
@@ -429,7 +434,12 @@
     -fx-border-color: lightgray;
 }
 .popup-vbox{
+    -fx-min-height: 100%;
     -fx-background-color: #1E1E1E;
+}
+.popup-title {
+    -fx-font-size: 30px;
+    -fx-text-fill: #F7EED8;
 }
 .popup-label{
     -fx-font-size: 20px;
@@ -464,4 +474,26 @@
 .buttonViewAthleteHistory{
     -fx-translate-y: 40px;
     -fx-translate-x: 200px;
+}
+
+/* reduzir espaço entre botões navbar */
+#athleteImageSplitButton{
+    -fx-min-width: 70px;
+    -fx-max-width: 70px;
+    -fx-pref-width: 70px;
+}
+#athleteImageSplitButton .label{
+    -fx-translate-x: 45px;
+    -fx-alignment: CENTER_RIGHT;
+}
+#athleteImageSplitButton .arrow{
+    visibility: false;
+}
+#athleteImageSplitButton .menu-item .label{
+    -fx-translate-x: -5px;
+}
+#athleteSplitButton{
+    -fx-min-width: 140px;
+    -fx-max-width: 140px;
+    -fx-pref-width: 140px;
 }

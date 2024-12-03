@@ -15,7 +15,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MedalDao {
-
+    /**
+     * Get all medals
+     * @return {List<Medal>} List of medals
+     * @throws SQLException
+     */
     public List<Medal> getMedals() throws SQLException {
         List<Medal> medals = new ArrayList<>();
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(
@@ -42,15 +46,29 @@ public class MedalDao {
         }
         return medals;
     }
-        public int countGoldMedals(int idAthlete) throws SQLException {
-        int quantidade = 0;
-            CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(
-                    "SELECT COUNT(*) AS quantidade FROM tblMedal WHERE idAthlete = ? AND idMedalType = 1;", idAthlete);
-            if (rs != null && rs.next()) {
-                quantidade = rs.getInt("quantidade");
-            }
-            return quantidade;
+
+    /**
+     * Get gold medals by athlete id
+     * @param idAthlete {int} Athlete id
+     * @return {int} Gold medals
+     * @throws SQLException
+     */
+    public int countGoldMedals(int idAthlete) throws SQLException {
+    int quantidade = 0;
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(
+                "SELECT COUNT(*) AS quantidade FROM tblMedal WHERE idAthlete = ? AND idMedalType = 1;", idAthlete);
+        if (rs != null && rs.next()) {
+            quantidade = rs.getInt("quantidade");
         }
+        return quantidade;
+    }
+
+    /**
+     * Get silver medals by athlete id
+     * @param idAthlete {int} Athlete id
+     * @return {int} Silver medals
+     * @throws SQLException
+     */
     public int countSilverMedals(int idAthlete) throws SQLException {
         int quantidade = 0;
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(
@@ -60,6 +78,13 @@ public class MedalDao {
         }
         return quantidade;
     }
+
+    /**
+     * Get bronze medals by athlete id
+     * @param idAthlete {int} Athlete id
+     * @return {int} Bronze medals
+     * @throws SQLException
+     */
     public int countBronzeMedals(int idAthlete) throws SQLException {
         int quantidade = 0;
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(
@@ -69,6 +94,13 @@ public class MedalDao {
         }
         return quantidade;
     }
+
+    /**
+     * Get certificate medals by athlete id
+     * @param idAthlete {int} Athlete id
+     * @return {int} Certificate medals
+     * @throws SQLException
+     */
     public int countCertificate(int idAthlete) throws SQLException {
         int quantidade = 0;
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(
@@ -78,6 +110,12 @@ public class MedalDao {
         }
         return quantidade;
     }
+
+    /**
+     * Add medal to database
+     * @param medal {Medal} Medal
+     * @throws SQLException
+     */
     public static void addMedal(Medal medal) throws SQLException {
         String query = "INSERT INTO tblMedal (idAthlete, idTeam, year, idMedalType) VALUES (?, ?, ?, ?)";
         Connection conn = null;
@@ -101,6 +139,11 @@ public class MedalDao {
         }
     }
 
+    /**
+     * Remove medal from database
+     * @param idMedal {int} Medal id
+     * @throws SQLException
+     */
     public static void removeMedal(int idMedal) throws SQLException {
         String query = "DELETE FROM tblMedal WHERE idMedal = ?";
         Connection conn = null;
@@ -120,6 +163,11 @@ public class MedalDao {
         }
     }
 
+    /**
+     * Update medal
+     * @param medal {Medal} Medal
+     * @throws SQLException
+     */
     public static void updateMedal(Medal medal) throws SQLException {
         String query = "UPDATE tblMedal SET idAthlete = ?, idTeam = ?, year = ?, idMedalType = ? WHERE idMedal = ?";
         Connection conn = null;
@@ -144,6 +192,12 @@ public class MedalDao {
         }
     }
 
+    /**
+     * Get medal by id
+     * @param idMedal {int} Medal id
+     * @return {Medal} Medal
+     * @throws SQLException
+     */
     public static Medal getMedalById(int idMedal) throws SQLException {
         String query = "SELECT m.idMedal, m.idAthlete, m.idTeam, m.year, " +
                 "mt.idMedalType, mt.description AS medalTypeDescription " +
@@ -164,6 +218,12 @@ public class MedalDao {
         return null;
     }
 
+    /**
+     * Get medals by athlete id
+     * @param idAthlete {int} Athlete id
+     * @return {List<Medal>} List of medals
+     * @throws SQLException
+     */
     public static List<Medal> getMedalsByAthleteId(int idAthlete) throws SQLException {
         List<Medal> medals = new ArrayList<>();
         String query = "SELECT m.idMedal, m.idAthlete, m.idTeam, m.year, " +
@@ -189,6 +249,13 @@ public class MedalDao {
         return medals;
     }
 
+    /**
+     * Add top medal athlete
+     * @param idAthelete {int} Athlete id
+     * @param year {int} Year
+     * @param idMedalType {int} Medal type id
+     * @throws SQLException
+     */
     public void addTopMedalAthlete(int idAthelete, int year, int idMedalType) throws SQLException {
         String query = "INSERT INTO tblMedal (idAthlete, year, idMedalType) VALUES (?, ?, ?)";
         Connection conn = null;
@@ -211,6 +278,13 @@ public class MedalDao {
         }
     }
 
+    /**
+     * Add top medal team
+     * @param idTeam {int} Team id
+     * @param year {int} Year
+     * @param idMedalType {int} Medal type id
+     * @throws SQLException
+     */
     public void addTopMedalTeam(int idTeam, int year, int idMedalType) throws SQLException {
         String query = "INSERT INTO tblMedal (idTeam, year, idMedalType) VALUES (?, ?, ?)";
         Connection conn = null;
@@ -233,6 +307,14 @@ public class MedalDao {
         }
     }
 
+    /**
+     * Add top medal athlete team
+     * @param idAthlete {int} Athlete id
+     * @param idTeam {int} Team id
+     * @param year {int} Year
+     * @param idMedalType {int} Medal type id
+     * @throws SQLException
+     */
     public void addTopMedalAthleteTeam(int idAthlete, int idTeam, int year, int idMedalType) throws SQLException {
         String query = "INSERT INTO tblMedal (idAthlete, idTeam, year, idMedalType) VALUES (?, ?, ?, ?)";
         Connection conn = null;

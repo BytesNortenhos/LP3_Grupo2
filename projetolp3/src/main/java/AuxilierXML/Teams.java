@@ -18,11 +18,34 @@ public class Teams {
      */
     public Teams() {}
 
+    /**
+     * Get team list
+     * @return List<Team>
+     */
     public List<Team> getTeamList() {
         return teamList;
     }
 
+    /**
+     * Set team list
+     * @param teamList {List<Team>} List of teams
+     */
     public void setTeamList(List<Team> teamList) {
         this.teamList = teamList;
     }
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        if (teamList != null && !teamList.isEmpty()) {
+            for (Team team : teamList) {
+                sb.append(team.toString()).append("\n");
+            }
+        } else {
+            sb.append("No teams available.\n");
+        }
+
+        return sb.toString();
+    }
+
 }

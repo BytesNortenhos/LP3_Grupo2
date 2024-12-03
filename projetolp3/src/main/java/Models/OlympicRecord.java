@@ -1,7 +1,7 @@
 package Models;
 
 public class OlympicRecord extends RecordOrWinner {
-    private int timeMS;
+    private int result;
     private int medals;
 
     /**
@@ -10,34 +10,43 @@ public class OlympicRecord extends RecordOrWinner {
      * @param year {int} Year
      * @param athlete {Athlete} Athlete
      * @param team {Team} Team
-     * @param timeMS {int} Time in ms
+     * @param result {int} Time in ms
      * @param medals {int} Number of medals
      */
-    public OlympicRecord(Sport sport, int year, Athlete athlete, Team team, int timeMS, int medals) {
+    public OlympicRecord(Sport sport, int year, Athlete athlete, Team team, int result, int medals) {
         super(sport, year, athlete, team);
-        this.timeMS = timeMS;
+        this.result = result;
         this.medals = medals;
     }
 
-    public OlympicRecord(int idSport, int year, int idAthlete, int idTeam, int timeMS, int medals) {
+    /**
+     * Constructor of OlympicRecord
+     * @param idSport {int} Sport ID
+     * @param year {int} Year
+     * @param idAthlete {int} Athlete ID
+     * @param idTeam {int} Team ID
+     * @param result {int} Time in ms
+     * @param medals {int} Number of medals
+     */
+    public OlympicRecord(int idSport, int year, int idAthlete, int idTeam, int result, int medals) {
         super(idSport, year, idAthlete, idTeam);  // Calls the constructor in RecordOrWinner with IDs
-        this.timeMS = timeMS;
+        this.result = result;
         this.medals = medals;
     }
     /**
      * Get time in ms
      * @return int
      */
-    public int getTimeMS() {
-        return timeMS;
+    public int getresult() {
+        return result;
     }
 
     /**
      * Set time in ms
-     * @param timeMS {int} Tempo em milissegundos
+     * @param result {int} Tempo em milissegundos
      */
-    public void setTimeMS(int timeMS) {
-        this.timeMS = timeMS;
+    public void setresult(int result) {
+        this.result = result;
     }
 
     /**

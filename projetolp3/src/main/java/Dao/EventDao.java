@@ -7,17 +7,24 @@ import Models.Event;
 import javax.sql.rowset.CachedRowSet;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class EventDao {
+    /**
+     * Get all events
+     * @return List<Event>
+     * @throws SQLException
+     */
     public static List<Event> getEvents() throws SQLException {
         List<Event> events = new ArrayList<>();
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT e.year, e.logo, " +
                 "c.idCountry, c.name AS countryName, c.continent " +
                 "FROM tblEvent e " +
-                "INNER JOIN tblCountry c ON e.idCountry = c.idCountry;");
+                "INNER JOIN tblCountry c ON e.idCountry = c.idCountry " +
+                "ORDER BY e.year DESC;");
         if (rs != null) {
             while (rs.next()) {
                 int year = rs.getInt("year");
@@ -33,19 +40,43 @@ public class EventDao {
         return events;
     }
 
-    public static void addEvent(Event event) throws SQLException {
-        String query = "INSERT INTO tblEvent (year, idCountry, Logo) VALUES (?, ?, ?)";
+    /**
+     * Adds a new event to the database.
+     *
+     * @param event The event to be added.
+     * @return {@code true} if the event was successfully added; {@code false} if an event for the selected year already exists.
+     * @throws SQLException If there is an error during database interaction.
+     */
+    public boolean addEvent(Event event) throws SQLException {
+        String checkQuery = "SELECT COUNT(*) FROM tblEvent WHERE year = ?";
+        String insertQuery = "INSERT INTO tblEvent (year, idCountry, Logo) VALUES (?, ?, ?)";
         Connection conn = null;
         PreparedStatement stmt = null;
+        ResultSet rs = null;
+
         try {
             conn = ConnectionsUtlis.dbConnect();
-            stmt = conn.prepareStatement(query);
+            stmt = conn.prepareStatement(checkQuery);
+            stmt.setInt(1, event.getYear());
+            rs = stmt.executeQuery();
 
+            if (rs.next() && rs.getInt(1) > 0) {
+                return false;
+            }
+
+
+            stmt = conn.prepareStatement(insertQuery);
             stmt.setInt(1, event.getYear());
             stmt.setString(2, event.getCountry().getIdCountry());
             stmt.setString(3, event.getLogo());
             stmt.executeUpdate();
+
+            return true;
+
         } finally {
+            if (rs != null) {
+                rs.close();
+            }
             if (stmt != null) {
                 stmt.close();
             }
@@ -55,6 +86,13 @@ public class EventDao {
         }
     }
 
+
+
+    /**
+     * Remove event
+     * @param year {int} Year
+     * @throws SQLException
+     */
     public static void removeEvent(int year) throws SQLException {
         String query = "DELETE FROM tblEvent WHERE year = ?";
         Connection conn = null;
@@ -75,6 +113,11 @@ public class EventDao {
         }
     }
 
+    /**
+     * Update event
+     * @param event {Event} Event
+     * @throws SQLException
+     */
     public static void updateEvent(Event event) throws SQLException {
         String query = "UPDATE tblEvent SET idCountry = ?, Logo = ? WHERE year = ?";
         Connection conn = null;
@@ -97,6 +140,12 @@ public class EventDao {
         }
     }
 
+    /**
+     * Get event by year
+     * @param year {int} Year
+     * @return Event
+     * @throws SQLException
+     */
     public static Event getEventByYear(int year) throws SQLException {
         String query = "SELECT e.year, e.logo, " +
                 "c.idCountry, c.name AS countryName, c.continent " +
@@ -112,6 +161,13 @@ public class EventDao {
         return null;
     }
 
+    /**
+     * Update event image
+     * @param year {int} Year
+     * @param path {String} Path
+     * @param extensao {String} Extension
+     * @throws SQLException
+     */
     public void updateEventImage(int year, String path, String extensao) throws SQLException {
         String query = "UPDATE tblEvent SET Logo = ? WHERE year = ?";
         Connection conn = null;
@@ -132,5 +188,27 @@ public class EventDao {
                 conn.close();
             }
         }
+    }
+
+    public List<List> getEventsToShow() throws SQLException {
+        List<List> events = new ArrayList<>();
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT e.year, e.logo, " +
+                "c.idCountry, c.name AS countryName, c.continent " +
+                "FROM tblEvent e " +
+                "INNER JOIN tblCountry c ON e.idCountry = c.idCountry " +
+                "ORDER BY e.year DESC;");
+        if (rs != null) {
+            while (rs.next()) {
+                List<String> event = new ArrayList<>();
+                event.add(rs.getString("year"));
+                event.add(rs.getString("countryName"));
+                event.add(rs.getString("continent"));
+                event.add(rs.getString("logo"));
+                events.add(event);
+            }
+        } else {
+            System.out.println("ResultSet is null. No results for Event found.");
+        }
+        return events;
     }
 }

@@ -26,7 +26,7 @@
 							<!-- Foundation year of the team -->
 							<xs:element name="foundationYear" type="xs:int"/>
 							<!-- All Olympic participations -->
-							<xs:element name="olympicParticipations">
+							<xs:element name="olympicParticipations" minOccurs="0">
 								<xs:complexType>
 									<xs:sequence>
 										<xs:element name="participation" maxOccurs="unbounded">

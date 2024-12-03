@@ -172,10 +172,10 @@ public class StartSportsController {
             numPart.getStyleClass().add("numPart-label");
         } else {
 
-            nPart = sportDao.getNumberTeamsSport(idSport, year);
             minPart = new Label("Minímo de equipas: " + mPart);
             minPart.getStyleClass().add("minPart-label");
 
+            nPart = sportDao.getNumberTeamsSport(idSport, year, mPart);
             numPart = new Label("Número de equipas: " + nPart);
             numPart.getStyleClass().add("numPart-label");
         }
@@ -219,7 +219,7 @@ public class StartSportsController {
                 startButton.setOnAction(event -> {
                     try {
                         if (sportDao.verifyRanges(idSport)) {
-                            if (iniciarModalidades(idSport, year)) {
+                            if (iniciarModalidades(idSport, year, mPart)) {
                                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                                 alert.setTitle("Sucesso!");
                                 alert.setHeaderText("Modalidade inicada com sucesso!");
@@ -557,7 +557,7 @@ public class StartSportsController {
         }
     }
 
-    public boolean iniciarModalidades(int idSport, int year) throws SQLException {
+    public boolean iniciarModalidades(int idSport, int year, int mPart) throws SQLException {
         List<Integer> IdsParticipants;
 
         registrationDao.setStatusRejected(idSport, year);
@@ -574,7 +574,7 @@ public class StartSportsController {
             }
         }
         if (sportDao.getType(idSport).equals("Collective")) {
-            IdsParticipants = registrationDao.getRegisteredTeams(idSport, year);
+            IdsParticipants = registrationDao.getRegisteredTeams(idSport, year, mPart);
             if (sportDao.getOneGame(idSport).equals("One")) {
                 System.out.println("Collective One");
                 CollectiveOne(idSport, IdsParticipants, year);

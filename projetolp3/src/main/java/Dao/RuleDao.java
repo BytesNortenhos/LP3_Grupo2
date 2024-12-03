@@ -12,6 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RuleDao {
+    /**
+     * Get all rules
+     * @return {List<Rule>} List of rules
+     * @throws SQLException
+     */
     public static List<Rule> getRules() throws SQLException {
         List<Rule> rules = new ArrayList<>();
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT * FROM tblRule;");
@@ -33,6 +38,11 @@ public class RuleDao {
         return rules;
     }
 
+    /**
+     * Add rule
+     * @param rule {Rule} Rule
+     * @throws SQLException
+     */
     public static void addRule(Rule rule) throws SQLException {
         String query = "INSERT INTO tblRule (idSport, description) VALUES (?, ?)";
         Connection conn = null;
@@ -55,7 +65,11 @@ public class RuleDao {
         }
     }
 
-
+    /**
+     * Remove rule
+     * @param idRule {int} Id rule
+     * @throws SQLException
+     */
     public static void removeRule(int idRule) throws SQLException {
         String query = "DELETE FROM tblRule WHERE idRule = ?";
         Connection conn = null;
@@ -75,6 +89,11 @@ public class RuleDao {
         }
     }
 
+    /**
+     * Update rule
+     * @param rule {Rule} Rule
+     * @throws SQLException
+     */
     public static void updateRule(Rule rule) throws SQLException {
         String query = "UPDATE tblRule SET idSport = ?, description = ? WHERE idRule = ?";
         Connection conn = null;
@@ -97,6 +116,12 @@ public class RuleDao {
         }
     }
 
+    /**
+     * Get rule by id
+     * @param idRule {int} Id rule
+     * @return {Rule} Rule
+     * @throws SQLException
+     */
     public static Rule getRuleById(int idRule) throws SQLException {
         String query = "SELECT * FROM tblRule WHERE idRule = ?";
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idRule);
@@ -110,6 +135,12 @@ public class RuleDao {
         return null;
     }
 
+    /**
+     * Get rules by sport
+     * @param idSport {int} Id sport
+     * @return {List<Rule>} List of rules
+     * @throws SQLException
+     */
     public static List<Rule> getRulesBySport(int idSport) throws SQLException {
         List<Rule> rules = new ArrayList<>();
         String query = "SELECT r.idRule, r.description FROM tblRule r WHERE r.idSport = ?";
@@ -124,6 +155,13 @@ public class RuleDao {
         }
         return null;
     }
+
+    /**
+     * Get rules by sport V2
+     * @param idSport {int} Id sport
+     * @return {List<Rule>} List of rules
+     * @throws SQLException
+     */
     public static List<Rule> getRulesBySportV2(int idSport) throws SQLException {
         List<Rule> rules = new ArrayList<>();
         String query = "SELECT r.idRule, r.description FROM tblRule r WHERE r.idSport = ?";

@@ -11,9 +11,9 @@ public class Athlete extends Person {
     @XmlElement
     private String name;
     @XmlElement(name = "country")
-    private String xmlCountry; // Needed for JAXB
+    private String xmlCountry;
     @XmlElement(name = "genre")
-    private String xmlGenre; // Needed for JAXB
+    private String xmlGenre;
     @XmlElement
     private int height;
     @XmlElement
@@ -114,7 +114,7 @@ public class Athlete extends Person {
     }
 
     /**
-     * Get olympic participations (used only for JAXB)
+     * Get olympic participations
      * @return List<ParticipationAthlete>
      */
     public List<ParticipationAthlete> getOlympicParticipations() {
@@ -122,7 +122,7 @@ public class Athlete extends Person {
     }
 
     /**
-     * Set olympic participations (used only for JAXB)
+     * Set olympic participations
      * @param olympicParticipations {List<ParticipationAthlete>} Olympic participations
      */
     public void setOlympicParticipations(List<ParticipationAthlete> olympicParticipations) {
@@ -130,7 +130,7 @@ public class Athlete extends Person {
     }
 
     /**
-     * Get country (used only for JAXB)
+     * Get country
      * @return String
      */
     public String getXmlCountry() {
@@ -138,7 +138,7 @@ public class Athlete extends Person {
     }
 
     /**
-     * Set country (used only for JAXB)
+     * Set country
      * @param xmlCountry {String} Country
      */
     public void setXmlCountry(String xmlCountry) {
@@ -146,7 +146,7 @@ public class Athlete extends Person {
     }
 
     /**
-     * Get genre (used only for JAXB)
+     * Get genre
      * @return String
      */
     public String getXmlGenre() {
@@ -154,10 +154,43 @@ public class Athlete extends Person {
     }
 
     /**
-     * Set genre (used only for JAXB)
+     * Set genre
      * @param xmlGenre {String} Genre
      */
     public void setXmlGenre(String xmlGenre) {
         this.xmlGenre = xmlGenre;
     }
+    @Override
+    public String toString() {
+        // Formatando a data de nascimento em um formato legível
+        String formattedDateOfBirth = (dateOfBirth != null) ? dateOfBirth.toString() : "N/A";
+
+        // Formatando a lista de participações olímpicas, se existir
+        StringBuilder olympicParticipationsString = new StringBuilder();
+        if (olympicParticipations != null && !olympicParticipations.isEmpty()) {
+            olympicParticipations.forEach(participation -> {
+                olympicParticipationsString.append(participation.toString()).append("\n");
+            });
+        } else {
+            olympicParticipationsString.append("Nenhuma participação olímpica registrada");
+        }
+
+        return String.format("Atleta: %s\n" +
+                        "Nome: %s\n" +
+                        "País: %s\n" +
+                        "Gênero: %s\n" +
+                        "Altura: %d cm\n" +
+                        "Peso: %.2f kg\n" +
+                        "Data de Nascimento: %s\n" +
+                        "Participações Olímpicas: \n%s",
+                super.toString(), // Chama o toString da classe pai (Person)
+                name,
+                xmlCountry,
+                xmlGenre,
+                height,
+                weight,
+                formattedDateOfBirth,
+                olympicParticipationsString.toString());
+    }
+
 }

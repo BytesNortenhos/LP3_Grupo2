@@ -14,6 +14,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OlympicRecordDao {
+    /**
+     * Get all Olympic records
+     * @return {List<OlympicRecord>} List of Olympic records
+     * @throws SQLException
+     */
     public static List<OlympicRecord> getOlympicRecords() throws SQLException {
         List<OlympicRecord> records = new ArrayList<>();
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT * FROM tblOlympicRecord;");
@@ -23,7 +28,7 @@ public class OlympicRecordDao {
                 int year = rs.getInt("year");
                 int idAthlete = rs.getInt("idAthlete");
                 int idTeam = rs.getInt("idTeam");
-                int timeMS = rs.getInt("timeMS");
+                int result = rs.getInt("result");
                 int medals = rs.getInt("medals");
 
                 SportDao sportDao = new SportDao();
@@ -32,7 +37,7 @@ public class OlympicRecordDao {
                 Athlete athlete = athleteDao.getAthleteById(idAthlete);
                 Team team = TeamDao.getTeamById(idTeam);
 
-                OlympicRecord record = new OlympicRecord(sport, year, athlete, team, timeMS, medals);
+                OlympicRecord record = new OlympicRecord(sport, year, athlete, team, result, medals);
                 records.add(record);
             }
         } else {
@@ -41,8 +46,13 @@ public class OlympicRecordDao {
         return records;
     }
 
+    /**
+     * Add Olympic record
+     * @param record {OlympicRecord} Olympic record
+     * @throws SQLException
+     */
     public static void addOlympicRecord(OlympicRecord record) throws SQLException {
-        String query = "INSERT INTO tblOlympicRecord (idSport, year, idAthlete, idTeam, timeMS, medals) VALUES (?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO tblOlympicRecord (idSport, year, idAthlete, idTeam, result, medals) VALUES (?, ?, ?, ?, ?, ?)";
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
@@ -53,7 +63,7 @@ public class OlympicRecordDao {
             stmt.setInt(2, record.getYear());
             stmt.setInt(3, record.getAthlete().getIdAthlete());
             stmt.setInt(4, record.getTeam().getIdTeam());
-            stmt.setInt(5, record.getTimeMS());
+            stmt.setInt(5, record.getresult());
             stmt.setInt(6, record.getMedals());
             stmt.executeUpdate();
         } finally {
@@ -66,6 +76,12 @@ public class OlympicRecordDao {
         }
     }
 
+    /**
+     * Remove Olympic record
+     * @param idSport {int} Sport id
+     * @param year {int} Year
+     * @throws SQLException
+     */
     public static void removeOlympicRecord(int idSport, int year) throws SQLException {
         String query = "DELETE FROM tblOlympicRecord WHERE idSport = ? AND year = ?";
         Connection conn = null;
@@ -86,8 +102,13 @@ public class OlympicRecordDao {
         }
     }
 
+    /**
+     * Update Olympic record
+     * @param record {OlympicRecord} Olympic record
+     * @throws SQLException
+     */
     public static void updateOlympicRecord(OlympicRecord record) throws SQLException {
-        String query = "UPDATE tblOlympicRecord SET idAthlete = ?, idTeam = ?, timeMS = ?, medals = ? WHERE idSport = ? AND year = ?";
+        String query = "UPDATE tblOlympicRecord SET idAthlete = ?, idTeam = ?, result = ?, medals = ? WHERE idSport = ? AND year = ?";
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
@@ -96,7 +117,7 @@ public class OlympicRecordDao {
 
             stmt.setInt(1, record.getAthlete().getIdAthlete());
             stmt.setInt(2, record.getTeam().getIdTeam());
-            stmt.setInt(3, record.getTimeMS());
+            stmt.setInt(3, record.getresult());
             stmt.setInt(4, record.getMedals());
             stmt.setInt(5, record.getSport().getIdSport());
             stmt.setInt(6, record.getYear());
@@ -111,13 +132,20 @@ public class OlympicRecordDao {
         }
     }
 
+    /**
+     * Get Olympic record by id
+     * @param idSport {int} Sport id
+     * @param year {int} Year
+     * @return {OlympicRecord} Olympic record
+     * @throws SQLException
+     */
     public OlympicRecord getOlympicRecordById(int idSport, int year) throws SQLException {
         String query = "SELECT * FROM tblOlympicRecord WHERE idSport = ? AND year = ?";
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, year);
         if (rs != null && rs.next()) {
             int idAthlete = rs.getInt("idAthlete");
             int idTeam = rs.getInt("idTeam");
-            int timeMS = rs.getInt("timeMS");
+            int result = rs.getInt("result");
             int medals = rs.getInt("medals");
 
             SportDao sportDao = new SportDao();
@@ -126,21 +154,28 @@ public class OlympicRecordDao {
             Athlete athlete = athleteDao.getAthleteById(idAthlete);
             TeamDao teamDao = new TeamDao();
             Team team = teamDao.getTeamByIdV2(idTeam);
-            return new OlympicRecord(sport, year, athlete, team, timeMS, medals);
+            return new OlympicRecord(sport, year, athlete, team, result, medals);
         }
         return null;
     }
 
+    /**
+     * Get Olympic record by id V2
+     * @param idSport {int} Sport id
+     * @param year {int} Year
+     * @return {OlympicRecord} Olympic record
+     * @throws SQLException
+     */
     public static OlympicRecord getOlympicRecordByIdV2(int idSport, int year) throws SQLException {
         String query = "SELECT * FROM tblOlympicRecord WHERE idSport = ? AND year = ?";
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, year);
         if (rs != null && rs.next()) {
             int idAthlete = rs.getInt("idAthlete");
             int idTeam = rs.getInt("idTeam");
-            int timeMS = rs.getInt("timeMS");
+            int result = rs.getInt("result");
             int medals = rs.getInt("medals");
 
-            return new OlympicRecord(idSport, year, idAthlete, idTeam, timeMS, medals);
+            return new OlympicRecord(idSport, year, idAthlete, idTeam, result, medals);
         }
         return null;
     }
