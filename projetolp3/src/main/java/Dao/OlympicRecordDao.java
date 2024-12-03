@@ -158,7 +158,7 @@ public class OlympicRecordDao {
         return null;
     }
 
-    public boolean setNewOlympicRecordAthlete(int idSport, int year, int idAthlete, int resultado) throws SQLException {
+    public boolean setNewOlympicRecordAthleteOne(int idSport, int year, int idAthlete, int resultado) throws SQLException {
         String query = "UPDATE tblOlympicRecord SET year = ?, idAthlete = ?, result = ? WHERE idSport = ?";
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -182,7 +182,7 @@ public class OlympicRecordDao {
         }
     }
 
-    public boolean setNewOlympicRecordTeam(int idSport, int year, int idTeam, int resultado) throws SQLException {
+    public boolean setNewOlympicRecordTeamOne(int idSport, int year, int idTeam, int resultado) throws SQLException {
         String query = "UPDATE tblOlympicRecord SET year = ?, idTeam = ?, result = ? WHERE idSport = ?";
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -193,6 +193,67 @@ public class OlympicRecordDao {
             stmt.setInt(1, year);
             stmt.setInt(2, idTeam);
             stmt.setInt(3, resultado);
+            stmt.setInt(4, idSport);
+            stmt.executeUpdate();
+            return true;
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+    }
+
+    public Integer getOlympicRecordMultipleGames(int idSport) throws SQLException {
+        Integer olympicRecordMedals = 0;
+        String query = "SELECT medals " +
+                "FROM tblOlympicRecord " +
+                "WHERE idSport = ?";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport);
+        if (rs != null && rs.next()) {
+            olympicRecordMedals = rs.getInt("medals");
+            return olympicRecordMedals;
+        }
+        return olympicRecordMedals;
+    }
+
+    public boolean setNewOlympicRecordTeamMultiple(int idSport, int year, int idTeam, int totalMedals) throws SQLException {
+        String query = "UPDATE tblOlympicRecord SET year = ?, idTeam = ?, medals = ? WHERE idSport = ?";
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        try {
+            conn = ConnectionsUtlis.dbConnect();
+            stmt = conn.prepareStatement(query);
+
+            stmt.setInt(1, year);
+            stmt.setInt(2, idTeam);
+            stmt.setInt(3, totalMedals);
+            stmt.setInt(4, idSport);
+            stmt.executeUpdate();
+            return true;
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+    }
+
+    public boolean setNewOlympicRecordAthleteMultiple(int idSport, int year, int idAthlete, int totalMedals) throws SQLException {
+        String query = "UPDATE tblOlympicRecord SET year = ?, idAthlete = ?, medals = ? WHERE idSport = ?";
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        try {
+            conn = ConnectionsUtlis.dbConnect();
+            stmt = conn.prepareStatement(query);
+
+            stmt.setInt(1, year);
+            stmt.setInt(2, idAthlete);
+            stmt.setInt(3, totalMedals);
             stmt.setInt(4, idSport);
             stmt.executeUpdate();
             return true;

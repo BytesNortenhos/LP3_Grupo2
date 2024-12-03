@@ -5,6 +5,7 @@ import Utils.ConnectionsUtlis;
 
 import javax.sql.rowset.CachedRowSet;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -195,6 +196,122 @@ public class WinnerOlympicDao {
             winnerOlympics.add(winnerOlympic);
         }
         return winnerOlympics;
+    }
+
+    public int getMedalsByAthlete(int idSport, int idAthlete) throws SQLException {
+        int totalMedals = 0;
+        String query = "SELECT COUNT(idAthlete) AS num_medals " +
+                "FROM tblWinnerOlympic " +
+                "WHERE idSport = ? AND idAthlete = ?";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, idAthlete);
+        if (rs != null && rs.next()) {
+            totalMedals = rs.getInt("num_medals");
+            return totalMedals;
+        }
+        return totalMedals;
+    }
+
+    public int getMedalsByTeam(int idSport, int idTeam) throws SQLException {
+        int totalMedals = 0;
+        String query = "SELECT COUNT(idTeam) AS num_medals " +
+                "FROM tblWinnerOlympic " +
+                "WHERE idSport = ? AND idTeam = ?";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, idTeam);
+        if (rs != null && rs.next()) {
+            totalMedals = rs.getInt("num_medals");
+            return totalMedals;
+        }
+        return totalMedals;
+    }
+
+    public void addWinnerOlympicTeamMultiple(int idSport, int year, int idTeam) throws SQLException {
+        String query = "INSERT INTO tblResult (idSport, year, idTeam) VALUES (?, ?, ?)";
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        try {
+            conn = ConnectionsUtlis.dbConnect();
+            stmt = conn.prepareStatement(query);
+
+            stmt.setInt(1, idSport);
+            stmt.setInt(2, year);
+            stmt.setInt(3, idTeam);
+            stmt.executeUpdate();
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+    }
+
+    public void addWinnerOlympicTeamOne(int idSport, int year, int idTeam, int result) throws SQLException {
+        String query = "INSERT INTO tblResult (idSport, year, idTeam, result) VALUES (?, ?, ?, ?)";
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        try {
+            conn = ConnectionsUtlis.dbConnect();
+            stmt = conn.prepareStatement(query);
+
+            stmt.setInt(1, idSport);
+            stmt.setInt(2, year);
+            stmt.setInt(3, idTeam);
+            stmt.setInt(4, result);
+            stmt.executeUpdate();
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+    }
+
+    public void addWinnerOlympicAthleteMultiple(int idSport, int year, int idAthlete) throws SQLException {
+        String query = "INSERT INTO tblResult (idSport, year, idAthlete) VALUES (?, ?, ?)";
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        try {
+            conn = ConnectionsUtlis.dbConnect();
+            stmt = conn.prepareStatement(query);
+
+            stmt.setInt(1, idSport);
+            stmt.setInt(2, year);
+            stmt.setInt(3, idAthlete);
+            stmt.executeUpdate();
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+    }
+
+    public void addWinnerOlympicAthleteOne(int idSport, int year, int idTeam, int result) throws SQLException {
+        String query = "INSERT INTO tblResult (idSport, year, idTeam, result) VALUES (?, ?, ?, ?)";
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        try {
+            conn = ConnectionsUtlis.dbConnect();
+            stmt = conn.prepareStatement(query);
+
+            stmt.setInt(1, idSport);
+            stmt.setInt(2, year);
+            stmt.setInt(3, idTeam);
+            stmt.setInt(4, result);
+            stmt.executeUpdate();
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
     }
 
 }

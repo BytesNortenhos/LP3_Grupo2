@@ -68,6 +68,7 @@ public class StartSportsController {
     ResultDao resultDao = new ResultDao();
     MedalDao medalDao = new MedalDao();
     OlympicRecordDao olympicRecordDao = new OlympicRecordDao();
+    WinnerOlympicDao winnerOlympicDao = new WinnerOlympicDao();
 
     public void initialize() throws SQLException {
         loadIcons();
@@ -633,11 +634,14 @@ public class StartSportsController {
             medalDao.addTopMedalAthlete(IdsParticipants.get(i), year, 4);
         }
 
+        //Inserir Vencedor Olímpico
+        winnerOlympicDao.addWinnerOlympicAthleteOne(idSport, year, IdsParticipants.getFirst(), resultados.getFirst());
+
         //Verificar Recorde Olímpico
         Integer olympicRecord = olympicRecordDao.getOlympicRecord(idSport);
         if (olympicRecord != null) {
             if (resultados.getFirst() > olympicRecord) {
-                olympicRecordDao.setNewOlympicRecordAthlete(idSport, year, IdsParticipants.getFirst(), resultados.getFirst());
+                olympicRecordDao.setNewOlympicRecordAthleteOne(idSport, year, IdsParticipants.getFirst(), resultados.getFirst());
             }
         }
         return true;
@@ -713,11 +717,14 @@ public class StartSportsController {
             }
         }
 
+        //Inserir Vencedor Olímpico
+        winnerOlympicDao.addWinnerOlympicTeamOne(idSport, year, IdsParticipants.getFirst(), resultados.getFirst());
+
         //Verificar Recorde Olímpico
         Integer olympicRecord = olympicRecordDao.getOlympicRecord(idSport);
         if (olympicRecord != null) {
             if (resultados.getFirst() > olympicRecord) {
-                olympicRecordDao.setNewOlympicRecordTeam(idSport, year, IdsParticipants.getFirst(), resultados.getFirst());
+                olympicRecordDao.setNewOlympicRecordTeamOne(idSport, year, IdsParticipants.getFirst(), resultados.getFirst());
             }
         }
         return true;
@@ -795,8 +802,19 @@ public class StartSportsController {
             medalDao.addTopMedalAthlete(IdsParticipants.get(i), year, 4);
         }
 
-        //Verificar Recorde Olimpico
+        //Inserir Vencedor Olímpico
+        winnerOlympicDao.addWinnerOlympicAthleteMultiple(idSport, year, IdsParticipants.getFirst());
 
+        //Verificar Recorde Olímpico
+        for (int i = 0; i < 3; i++) {
+            Integer olympicRecordMedals = olympicRecordDao.getOlympicRecordMultipleGames(idSport);
+            if (olympicRecordMedals != null) {
+                int totalMedals = winnerOlympicDao.getMedalsByAthlete(idSport, IdsParticipants.get(i));
+                if (totalMedals > olympicRecordMedals) {
+                    olympicRecordDao.setNewOlympicRecordAthleteMultiple(idSport, year, IdsParticipants.get(i), totalMedals);
+                }
+            }
+        }
 
         return true;
     }
@@ -871,7 +889,6 @@ public class StartSportsController {
             }
         }
 
-
         //Atribuir Medalhas
         //medalDao.addTopMedalTeam(IdsParticipants.getFirst(), year, 1);
         athletes.clear();
@@ -900,8 +917,19 @@ public class StartSportsController {
             }
         }
 
-        //Verificar Recorde Olimpico
+        //Inserir Vencedor Olímpico
+        winnerOlympicDao.addWinnerOlympicTeamMultiple(idSport, year, IdsParticipants.getFirst());
 
+        //Verificar Recorde Olímpico
+        for (int i = 0; i < 3; i++) {
+            Integer olympicRecordMedals = olympicRecordDao.getOlympicRecordMultipleGames(idSport);
+            if (olympicRecordMedals != null) {
+                int totalMedals = winnerOlympicDao.getMedalsByTeam(idSport, IdsParticipants.get(i));
+                if (totalMedals > olympicRecordMedals) {
+                    olympicRecordDao.setNewOlympicRecordTeamMultiple(idSport, year, IdsParticipants.get(i), totalMedals);
+                }
+            }
+        }
 
         return true;
     }
