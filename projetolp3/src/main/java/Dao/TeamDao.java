@@ -238,7 +238,9 @@ public class TeamDao {
             Gender gender = new Gender(genderId, genderDesc);
             SportDao sportDao = new SportDao();
             Sport sport = sportDao.getSportById(idSport);
-            return new Team(idTeam, teamName, country, gender, sport, yearFounded);
+            int minParticipants = rs.getInt("minParticipants");
+            int maxParticipants = rs.getInt("maxParticipants");
+            return new Team(idTeam, teamName, country, gender, sport,yearFounded, minParticipants, maxParticipants);
         }
         return null;
     }

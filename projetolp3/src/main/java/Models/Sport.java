@@ -197,6 +197,19 @@ public class Sport {
         this.scoringMeasure = scoringMeasure;
     }
 
+    public Sport(int i, String type, Gender gender, String name, String description, int minParticipants, String scoringMeasure, String oneGame, int resultMin, int resultMax) {
+        this.idSport = i;
+        this.type = type;
+        this.genre = gender;
+        this.name = name;
+        this.desc = description;
+        this.minParticipants = minParticipants;
+        this.scoringMeasure = scoringMeasure;
+        this.oneGame = oneGame;
+        this.resultMin = resultMin;
+        this.resultMax = resultMax;
+    }
+
     /**
      * Get Sport ID
      * @return int

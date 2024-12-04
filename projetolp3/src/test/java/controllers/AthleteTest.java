@@ -6,27 +6,27 @@ import Models.Athlete;
 import Models.Country;
 import Models.Gender;
 import Utils.ConnectionsUtlis;
+import Utils.PasswordUtils;
 import org.junit.jupiter.api.Test;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Date;
 
-
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class AthleteTest {
 
 
     @Test
-    void testAddAthlete() throws SQLException {
+    void testCrudAthlete() throws SQLException {
         try (Connection connection = ConnectionsUtlis.dbConnect()) {
             // Configuração dos dados
             String password = "Teste123";
-            String name = "Raul Silva";
+            String name = "Joao Kobi";
             int height = 195;
             float weight = 90;
             Date dateOfBirth = java.sql.Date.valueOf("2023-11-13");
+            String img = "imagem1";
 
             Gender gender = GenderDao.getGenders().stream()
                     .filter(g -> g.getDesc().equals("Male"))
@@ -36,86 +36,76 @@ public class AthleteTest {
                     .filter(c -> c.getName().equals("Portugal"))
                     .findFirst().orElse(null);
 
-            Athlete atleta = new Athlete(0, password, name, country, gender, height, weight, dateOfBirth);
+            Athlete athlete = new Athlete(0, password, name, country, gender, height, weight, dateOfBirth, img);
 
-            AthleteDao.addAthlete(atleta);
+            athlete.setIdAthlete(AthleteDao.addAthlete(athlete));
+
+            //Colocar a Password encriptada para poder comparar objetos
+            PasswordUtils passwordUtils = new PasswordUtils();
+            String passwordEncriptadaAdd = passwordUtils.encriptarPassword(athlete.getPassword());
+            athlete.setPassword(passwordEncriptadaAdd);
 
 
             // Verificar se foi inserido
-            boolean atletaEncontrado = false;
-            int idAtletaEncontado = 0;
             AthleteDao athleteDao = new AthleteDao();
-            for (Athlete a : athleteDao.getAthletes()) {
-                if (a.getName().equals(name)) {
-                    atletaEncontrado = true;
-                    idAtletaEncontado = a.getIdAthlete();
-                    break;
-                }
-            }
+            Athlete athleteAdded = athleteDao.getAthleteById(athlete.getIdAthlete());
 
-            if(atletaEncontrado){
-                AthleteDao.removeAthlete(idAtletaEncontado);
-                assertTrue(atletaEncontrado);
-            }
-        }
+            assertEqualsAthlete(athleteAdded, athlete);
+            System.out.println("Atleta inserido com sucesso");
 
-    }
+            //Dados para atualizar
+            String passwordUpdate = "123Teste";
+            String nameUpdate = "Daniela Kobi";
+            int heightUpdate = 100;
+            float weightUpdate = 33;
+            Date dateOfBirthUpdate = java.sql.Date.valueOf("2023-02-12");
+            String imgUpdate = "imagem2";
 
-    @Test
-    void testUpdateAthlete() throws SQLException {
-        try (Connection connection = ConnectionsUtlis.dbConnect()) {
-            // Configuração dos dados
-            String password = "123Teste";
-            String name = "Sandro Silva";
-            int height = 100;
-            float weight = 33;
-            Date dateOfBirth = java.sql.Date.valueOf("2023-02-12");
-
-            Gender gender = GenderDao.getGenders().stream()
+            Gender genderUpdate = GenderDao.getGenders().stream()
                     .filter(g -> g.getDesc().equals("Female"))
                     .findFirst().orElse(null);
 
-            Country country = CountryDao.getCountries().stream()
+            Country countryUpdate = CountryDao.getCountries().stream()
                     .filter(c -> c.getName().equals("Angola"))
                     .findFirst().orElse(null);
 
-            int idAtleta = 0;
-            Athlete atletaEncontrado = null;
-            AthleteDao athleteDao = new AthleteDao();
-            for (Athlete a : athleteDao.getAthletes()) {
-                if (a.getName().equals("Usain Bolt")) {
-                    idAtleta = a.getIdAthlete();
-                    atletaEncontrado = a;
-                    break;
-                }
-            }
+            Athlete athleteUp = new Athlete(athlete.getIdAthlete(), passwordUpdate, nameUpdate, countryUpdate, genderUpdate, heightUpdate, weightUpdate, dateOfBirthUpdate, imgUpdate);
 
-            Athlete atletaUpdate = new Athlete(idAtleta, password, name, country, gender, height, weight, dateOfBirth);
+            AthleteDao.updateAthlete(athleteUp);
+            String passwordEncriptadaUp = passwordUtils.encriptarPassword(athleteUp.getPassword());
+            athleteUp.setPassword(passwordEncriptadaUp);
 
-            if(atletaEncontrado != null){
-                AthleteDao.updateAthlete(atletaUpdate);
-            } else {
-                fail();
-            }
-            for (Athlete a : athleteDao.getAthletes()) {
-                if (a.getIdAthlete() == idAtleta) {
-                    if(a.getPassword().equals(password) && a.getName().equals(name) && a.getHeight() == height
-                            && a.getWeight() == weight && a.getDateOfBirth().equals(dateOfBirth) && a.getGenre().getIdGender() == gender.getIdGender()
-                            && a.getCountry().getIdCountry().equals(country.getIdCountry())){
-                        assertTrue(true);
-                        AthleteDao.updateAthlete(atletaEncontrado);
-                    }else {
-                        fail("Erro ao atualizar");
-                    }
 
-                }
-            }
+            Athlete athleteUpdated = athleteDao.getAthleteById(athleteUp.getIdAthlete());
+
+            assertEqualsAthlete(athleteUpdated, athleteUp);
+            System.out.println("Atleta atualizado com sucesso");
+
+            AthleteDao.removeAthlete(athlete.getIdAthlete());
+            System.out.println("Atleta removido com sucesso");
         }
     }
+
+    public static void assertEqualsAthlete(Athlete expected, Athlete actual) {
+        assertNotNull(expected);
+        assertNotNull(actual);
+
+        // Compara os atributos primitivos e strings diretamente
+        assertEquals(expected.getIdAthlete(), actual.getIdAthlete(), "ID do atleta não é igual");
+        assertEquals(expected.getName(), actual.getName(), "Nome do atleta não é igual");
+        assertEquals(expected.getHeight(), actual.getHeight(), "Altura do atleta não é igual");
+        assertEquals(expected.getWeight(), actual.getWeight(), "Peso do atleta não é igual");
+        assertEquals(expected.getDateOfBirth(), actual.getDateOfBirth(), "Data de nascimento do atleta não é igual");
+        assertEquals(expected.getImage(), actual.getImage(), "Imagem do atleta não é igual");
+
+        // Compara os objetos Country
+        assertNotNull(expected.getCountry(), "O país do atleta não pode ser nulo");
+        assertNotNull(actual.getCountry(), "O país do atleta não pode ser nulo");
+        assertEquals(expected.getCountry().getName(), actual.getCountry().getName(), "Nome do país não é igual");
+
+        // Compara os objetos Gender
+        assertNotNull(expected.getGenre(), "O gênero do atleta não pode ser nulo");
+        assertNotNull(actual.getGenre(), "O gênero do atleta não pode ser nulo");
+        assertEquals(expected.getGenre().getDesc(), actual.getGenre().getDesc(), "Descrição do gênero não é igual");
+    }
 }
-
-
-
-
-
-

@@ -9,111 +9,105 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Date;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TeamTest {
 
     @Test
-    void testAddTeam() throws SQLException {
+    void testCrudTeam() throws SQLException {
         try (Connection connection = ConnectionsUtlis.dbConnect()) {
-            // Configuração dos dados
-            String name = "Australia Men's 4x100m Freestyle Relay Team";
-            int yearFounded = 2023;
+            // Adicionar um novo Sport
+            String type = "Individual";
 
             Gender gender = GenderDao.getGenders().stream()
                     .filter(g -> g.getDesc().equals("Male"))
                     .findFirst().orElse(null);
 
+            String name = "Sport Test";
+            String description = "This is a sport for test purposes";
+            int minParticipants = 1;
+            String scoringMeasure = "Time";
+            String oneGame = "One";
+            int resultMin = 1000;
+            int resultMax = 2000;
+
+            Sport sportAdd = new Sport(0, type, gender, name, description, minParticipants, scoringMeasure, oneGame, resultMin, resultMax);
+
+            sportAdd.setIdSport(SportDao.addSport(sportAdd));
+            System.out.println("Sport inserido com sucesso");
+
+            SportDao sportDao = new SportDao();
+            Sport sportAdded = sportDao.getSportById(sportAdd.getIdSport());
+
+            // Configuração dos dados Team
+            String nameTeam = "Team added for test purposes";
+            int yearFounded = 2000;
+
             Country country = CountryDao.getCountries().stream()
                     .filter(c -> c.getName().equals("Portugal"))
                     .findFirst().orElse(null);
 
-
-            Sport sport = new SportDao().getSports().stream()
-                    .filter(s -> s.getName().equals("4x100m Freestyle Relay") && s.getGenre().getIdGender() == 1)
-                    .findFirst().orElse(null);
-
-            int minParticipants = 4;
-            int maxParticipants = 8;
+            int minParticipantsTeam = 4;
+            int maxParticipantsTeam = 8;
 
 
-            Team team = new Team(0,name, country, gender, sport, yearFounded,minParticipants,maxParticipants);
+            Team teamAdd = new Team(0,nameTeam, country, gender, sportAdd, yearFounded,minParticipantsTeam,maxParticipantsTeam);
             TeamDao teamDao = new TeamDao();
-            teamDao.addTeam(team);
+            teamAdd.setIdTeam(teamDao.addTeam(teamAdd));
 
-            // Verificar se foi inserido
-            boolean teamEncontrado = false;
-            int idTeamEncontado = 0;
+            Team teamAdded = TeamDao.getTeamById(teamAdd.getIdTeam());
 
-            for (Team t : TeamDao.getTeams()) {
-                if (t.getName().equals(name)) {
-                    teamEncontrado = true;
-                    idTeamEncontado = t.getIdTeam();
-                    break;
-                }
-            }
+            assertEqualsTeam(teamAdd, teamAdded);
+            System.out.println("Team inserido com sucesso");
 
-            if(teamEncontrado){
-                TeamDao.removeTeam(idTeamEncontado);
-                assertTrue(teamEncontrado);
-            }
+            //Dados Update Team
+            String nameTeamUpdate = "Team Update added for test purposes";
+            int yearFoundedUpdate = 2010;
+            int minParticipantsTeamUpdate = 3;
+            int maxParticipantsTeamUpdate = 6;
+
+            Team teamAddUpdate = new Team(teamAdded.getIdTeam(),nameTeamUpdate, country, gender, sportAdd, yearFoundedUpdate,minParticipantsTeamUpdate,maxParticipantsTeamUpdate);
+            teamDao.updateTeam(teamAddUpdate);
+
+            Team teamAddedUpdate = TeamDao.getTeamById(teamAddUpdate.getIdTeam());
+
+            assertEqualsTeam(teamAddUpdate, teamAddedUpdate);
+            System.out.println("Team atualizado com sucesso");
+
+            //Remover Team
+            TeamDao.removeTeam(teamAdded.getIdTeam());
+            System.out.println("Team removido com sucesso");
+
+            //Remover Sport
+            SportDao.removeSport(sportAdded.getIdSport());
+            System.out.println("Sport removido com sucesso");
         }
     }
 
-    @Test
-    void testUpdateTeam() throws SQLException {
-        try (Connection connection = ConnectionsUtlis.dbConnect()) {
-            // Configuração dos dados
-            String name = "Brazil Women's 100m Sprint";
-            int yearFounded = 2010;
+    public static void assertEqualsTeam(Team expected, Team actual) {
+        assertNotNull(expected);
+        assertNotNull(actual);
 
-            Gender gender = GenderDao.getGenders().stream()
-                    .filter(g -> g.getDesc().equals("Female"))
-                    .findFirst().orElse(null);
+        // Compara os atributos primitivos e strings diretamente
+        assertEquals(expected.getIdTeam(), actual.getIdTeam(), "ID da Team não é igual");
+        assertEquals(expected.getName(), actual.getName(), "Name da Team não é igual");
+        assertEquals(expected.getYearFounded(), actual.getYearFounded(), "Year da Team não é igual");
+        assertEquals(expected.getMinParticipants(), actual.getMinParticipants(), "MinParticipants da Team não é igual");
+        assertEquals(expected.getMaxParticipants(), actual.getMaxParticipants(), "MaxParticipants da Team não é igual");
 
-            Country country = CountryDao.getCountries().stream()
-                    .filter(c -> c.getName().equals("Brazil"))
-                    .findFirst().orElse(null);
+        // Compara os objetos Country
+        assertNotNull(expected.getCountry(), "O país da Team não pode ser nulo");
+        assertNotNull(actual.getCountry(), "O país da Team não pode ser nulo");
+        assertEquals(expected.getCountry().getName(), actual.getCountry().getName(), "Nome do país não é igual");
 
-            Sport sport = new SportDao().getSports().stream()
-                    .filter(s -> s.getName().equals("100m Sprint") && s.getGenre().getIdGender() == 1)
-                    .findFirst().orElse(null);
+        // Compara os objetos Gender
+        assertNotNull(expected.getGenre(), "O gênero da Team não pode ser nulo");
+        assertNotNull(actual.getGenre(), "O gênero da Team não pode ser nulo");
+        assertEquals(expected.getGenre().getDesc(), actual.getGenre().getDesc(), "Descrição do gênero não é igual");
 
-
-            int idTeam = 0;
-            Team teamEncontrado = null;
-            for (Team t : TeamDao.getTeams()) {
-                if (t.getName().equals("USA Men's 4x100m Relay Team") ) {
-                    idTeam = t.getIdTeam();
-                    teamEncontrado = t;
-                    break;
-                }
-            }
-
-            int minParticipants = 4;
-            int maxParticipants = 8;
-
-            Team teamUpdate = new Team(idTeam, name, country, gender, sport, yearFounded, minParticipants, maxParticipants);
-
-            if (teamEncontrado != null) {
-                TeamDao.updateTeam(teamUpdate);
-            } else {
-                fail();
-            }
-
-            for (Team t : TeamDao.getTeams()) {
-                if (t.getIdTeam() == idTeam) {
-                    if (t.getName().equals(name) && t.getCountry().getIdCountry().equals(country.getIdCountry()) && t.getGenre().getIdGender() == gender.getIdGender()
-                            && t.getSport().getIdSport() == sport.getIdSport() && t.getYearFounded() == yearFounded) {
-                        assertTrue(true);
-                        TeamDao.updateTeam(teamEncontrado);
-                    } else {
-                        fail("Erro ao atualizar");
-                    }
-                }
-            }
-        }
+        //Compara os objetos Sport
+        assertNotNull(expected.getSport(), "O sport da Team não pode ser nulo");
+        assertNotNull(actual.getSport(), "O sport da Team não pode ser nulo");
+        assertEquals(expected.getSport().getName(), actual.getSport().getName(), "Nome do sport não é igual");
     }
 }
-

@@ -320,6 +320,8 @@ public class SportDao {
             stmtSport.setInt(5, sport.getMinParticipants());
             stmtSport.setString(6, sport.getScoringMeasure());
             stmtSport.setString(7, sport.getOneGame());
+            stmtSport.setInt(8, sport.getResultMin());
+            stmtSport.setInt(9, sport.getResultMax());
 
             stmtSport.executeUpdate();
 

@@ -101,6 +101,7 @@ public class AthleteDao {
             stmt.setInt(5, athlete.getHeight());
             stmt.setFloat(6, athlete.getWeight());
             stmt.setDate(7, athlete.getDateOfBirth());
+            stmt.setString(8, athlete.getImage());
 
             stmt.executeUpdate();
 
@@ -153,7 +154,7 @@ public class AthleteDao {
      * @throws SQLException
      */
     public static void updateAthlete(Athlete athlete) throws SQLException {
-        String query = "UPDATE tblAthlete SET password = ?, name = ?, idCountry = ?, idGender = ?, height = ?, weight = ?, dateOfBirth = ? WHERE idAthlete = ?";
+        String query = "UPDATE tblAthlete SET password = ?, name = ?, idCountry = ?, idGender = ?, height = ?, weight = ?, dateOfBirth = ?, image = ? WHERE idAthlete = ?";
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
@@ -167,7 +168,8 @@ public class AthleteDao {
             stmt.setInt(5, athlete.getHeight());
             stmt.setFloat(6, athlete.getWeight());
             stmt.setDate(7, athlete.getDateOfBirth());
-            stmt.setInt(8, athlete.getIdAthlete());
+            stmt.setString(8, athlete.getImage());
+            stmt.setInt(9, athlete.getIdAthlete());
             stmt.executeUpdate();
         } finally {
             if (stmt != null) {
