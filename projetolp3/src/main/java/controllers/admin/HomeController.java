@@ -613,6 +613,11 @@ public class HomeController {
         }
     }
 
+    /**
+     * Load the Sports from an XML file
+     * @param event {ActionEvent} Event
+     * @throws IOException
+     */
     public void loadSports(ActionEvent event) throws IOException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource Files");
@@ -702,6 +707,11 @@ public class HomeController {
         }
     }
 
+    /**
+     * Load the Athletes from an XML file
+     * @param event {ActionEvent} Event
+     * @throws IOException
+     */
     public void loadAthletes(ActionEvent event) throws IOException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource Files");
