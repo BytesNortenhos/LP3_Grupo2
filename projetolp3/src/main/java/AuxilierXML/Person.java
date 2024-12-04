@@ -51,6 +51,10 @@ public class Person {
         this.password = password;
     }
 
+    /**
+     * Override toString method
+     * @return String
+     */
     @Override
     public String toString() {
         return String.format("ID: %d, Password: %s", id, password);

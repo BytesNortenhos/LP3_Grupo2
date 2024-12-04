@@ -31,6 +31,11 @@ public class Rules {
     public void setRule(String rule) {
         this.rule = rule;
     }
+
+    /**
+     * Override toString method
+     * @return String
+     */
     @Override
     public String toString() {
         return String.format("Regra: %s", rule);

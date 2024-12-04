@@ -180,6 +180,12 @@ public class OlympicRecordDao {
         return null;
     }
 
+    /**
+     * Get Olympic record by id V3
+     * @param idSport {int} Sport id
+     * @return Integer
+     * @throws SQLException
+     */
     public Integer getOlympicRecord(int idSport) throws SQLException {
         String query = "SELECT result FROM tblOlympicRecord WHERE idSport = ?";
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport);
@@ -193,6 +199,15 @@ public class OlympicRecordDao {
         return null;
     }
 
+    /**
+     * Add new Olympic record to Athlete (OneGame)
+     * @param idSport {int} Sport id
+     * @param year {int} Year
+     * @param idAthlete {int} Athlete id
+     * @param resultado {int} Result
+     * @return boolean
+     * @throws SQLException
+     */
     public boolean setNewOlympicRecordAthleteOne(int idSport, int year, int idAthlete, int resultado) throws SQLException {
         String query = "UPDATE tblOlympicRecord SET year = ?, idAthlete = ?, result = ? WHERE idSport = ?";
         Connection conn = null;
@@ -217,6 +232,15 @@ public class OlympicRecordDao {
         }
     }
 
+    /**
+     * Add new Olympic record to Team (OneGame)
+     * @param idSport {int} Sport id
+     * @param year {int} Year
+     * @param idTeam {int} Team id
+     * @param resultado {int} Result
+     * @return boolean
+     * @throws SQLException
+     */
     public boolean setNewOlympicRecordTeamOne(int idSport, int year, int idTeam, int resultado) throws SQLException {
         String query = "UPDATE tblOlympicRecord SET year = ?, idTeam = ?, result = ? WHERE idSport = ?";
         Connection conn = null;
@@ -241,6 +265,12 @@ public class OlympicRecordDao {
         }
     }
 
+    /**
+     * Get Olympic record by id (MultipleGames)
+     * @param idSport {int} Sport id
+     * @return Integer
+     * @throws SQLException
+     */
     public Integer getOlympicRecordMultipleGames(int idSport) throws SQLException {
         Integer olympicRecordMedals = 0;
         String query = "SELECT medals " +
@@ -254,6 +284,15 @@ public class OlympicRecordDao {
         return olympicRecordMedals;
     }
 
+    /**
+     * Add new Olympic record to Team (MultipleGames)
+     * @param idSport {int} Sport id
+     * @param year {int} Year
+     * @param idTeam {int} Team id
+     * @param totalMedals {int} Total medals
+     * @return boolean
+     * @throws SQLException
+     */
     public boolean setNewOlympicRecordTeamMultiple(int idSport, int year, int idTeam, int totalMedals) throws SQLException {
         String query = "UPDATE tblOlympicRecord SET year = ?, idTeam = ?, medals = ? WHERE idSport = ?";
         Connection conn = null;
@@ -278,6 +317,15 @@ public class OlympicRecordDao {
         }
     }
 
+    /**
+     * Add new Olympic record to Athlete (MultipleGames)
+     * @param idSport {int} Sport id
+     * @param year {int} Year
+     * @param idAthlete {int} Athlete id
+     * @param totalMedals {int} Total medals
+     * @return boolean
+     * @throws SQLException
+     */
     public boolean setNewOlympicRecordAthleteMultiple(int idSport, int year, int idAthlete, int totalMedals) throws SQLException {
         String query = "UPDATE tblOlympicRecord SET year = ?, idAthlete = ?, medals = ? WHERE idSport = ?";
         Connection conn = null;

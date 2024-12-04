@@ -99,6 +99,11 @@ public class ParticipationAthlete {
     public void setBronze(int bronze) {
         this.bronze = bronze;
     }
+
+    /**
+     * Override toString method
+     * @return String
+     */
     @Override
     public String toString() {
         return "Participação Olímpica{" +

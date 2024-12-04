@@ -33,6 +33,11 @@ public class Sports {
     public void setSportList(List<Sport> sportList) {
         this.sportList = sportList;
     }
+
+    /**
+     * Override toString method
+     * @return String
+     */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

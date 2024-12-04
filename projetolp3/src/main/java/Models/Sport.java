@@ -194,7 +194,7 @@ public class Sport {
         this.type = type;
         this.genre = genre;
         this.desc = desc;
-        this.scoringMeasure = scoringMeasure;  // Atribuição do scoringMeasure
+        this.scoringMeasure = scoringMeasure;
     }
 
     /**

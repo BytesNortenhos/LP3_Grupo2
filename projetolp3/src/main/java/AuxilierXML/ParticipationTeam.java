@@ -59,6 +59,11 @@ public class ParticipationTeam {
     public void setResult(String result) {
         this.result = result;
     }
+
+    /**
+     * Override toString method
+     * @return String
+     */
     @Override
     public String toString() {
         return "Year: " + year + "\nResult: " + result;

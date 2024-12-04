@@ -10,7 +10,7 @@ import java.util.List;
 @XmlRootElement(name = "teams")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Teams {
-    @XmlElement(name = "team")  // Isso garante que o JAXB reconheça as teams no XML
+    @XmlElement(name = "team")
     private List<Team> teamList;
 
     /**
@@ -33,6 +33,11 @@ public class Teams {
     public void setTeamList(List<Team> teamList) {
         this.teamList = teamList;
     }
+
+    /**
+     * Override toString method
+     * @return String
+     */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

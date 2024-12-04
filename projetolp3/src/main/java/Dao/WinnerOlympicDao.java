@@ -237,6 +237,13 @@ public class WinnerOlympicDao {
         return winnerOlympics;
     }
 
+    /**
+     * Get medals by athlete
+     * @param idSport {int} Id sport
+     * @param idAthlete {int} Id athlete
+     * @return int
+     * @throws SQLException
+     */
     public int getMedalsByAthlete(int idSport, int idAthlete) throws SQLException {
         int totalMedals = 0;
         String query = "SELECT COUNT(idAthlete) AS num_medals " +

@@ -107,7 +107,7 @@ public class TeamDao {
                 rs = stmt.getGeneratedKeys();
                 if (rs.next()) {
                     generatedId = rs.getInt(1);
-                    System.out.println("Generated Team ID: " + generatedId); // Debugging
+                    System.out.println("Generated Team ID: " + generatedId);
                 } else {
                     System.out.println("No generated keys.");
                 }
@@ -303,7 +303,6 @@ public class TeamDao {
             Country country = new Country(idCountry, countryName, continent);
             Gender gender = new Gender(genderId, genderDesc);
 
-            // Aqui o esporte ainda não é carregado; será carregado quando necessário
             return new Team(idTeam, teamName, country, gender, idSport, yearFounded);
         }
         return null;
@@ -337,12 +336,16 @@ public class TeamDao {
             Country country = new Country(idCountry, countryName);
             Gender gender = new Gender(genderId, genderDesc);
 
-            // Aqui o esporte ainda não é carregado; será carregado quando necessário
             return new Team(idTeam, teamName, country, gender, idSport, yearFounded);
         }
         return null;
     }
 
+    /**
+     * Get teams to show
+     * @return {List<List>} List of teams
+     * @throws SQLException
+     */
     public List<List> getTeamsToShow() throws SQLException {
         List<List> teams = new ArrayList<>();
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT t.idTeam as idTeam, t.name as teamName, t.yearFounded, t.minParticipants, t.maxParticipants, " +
@@ -367,6 +370,13 @@ public class TeamDao {
         }
         return teams;
     }
+
+    /**
+     * Get number of athletes on team
+     * @param idTeam {int} Id team
+     * @return int
+     * @throws SQLException
+     */
     public int getNAthletesOnTeam(int idTeam) throws SQLException {
         String query = "SELECT COUNT(*) as nAthletes FROM tblRegistration WHERE idTeam = ? " +
                 "AND (idStatus = 3 OR idStatus = 4);";

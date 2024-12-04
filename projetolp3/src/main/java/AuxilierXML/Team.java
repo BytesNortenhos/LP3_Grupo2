@@ -121,21 +121,26 @@ public class Team {
     public void setOlympicParticipations(List<ParticipationTeam> olympicParticipations) {
         this.olympicParticipations = olympicParticipations;
     }
+
+    /**
+     * Override toString method
+     * @return String
+     */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Name: ").append(name).append("\n");
-        sb.append("Country: ").append(xmlCountry).append("\n");
-        sb.append("Genre: ").append(xmlGenre).append("\n");
-        sb.append("Sport: ").append(xmlSport).append("\n");
-        sb.append("Foundation Year: ").append(yearFounded).append("\n");
+        sb.append("Nome: ").append(name).append("\n");
+        sb.append("País: ").append(xmlCountry).append("\n");
+        sb.append("Gênero: ").append(xmlGenre).append("\n");
+        sb.append("Desporto: ").append(xmlSport).append("\n");
+        sb.append("Ano Fundação: ").append(yearFounded).append("\n");
 
         if (olympicParticipations != null && !olympicParticipations.isEmpty()) {
             for (ParticipationTeam participation : olympicParticipations) {
                 sb.append(participation.toString()).append("\n");
             }
         } else {
-            sb.append("No Olympic Participations\n");
+            sb.append("Sem Participações Olímpicas.\n");
         }
         sb.append("---------------------------\n");
         return sb.toString();

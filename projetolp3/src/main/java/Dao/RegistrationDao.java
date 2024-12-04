@@ -86,7 +86,6 @@ public class RegistrationDao {
                         rs.getString("statusDescription")
                 );
 
-                // Cria o objeto Registration com as novas entidades carregadas
                 Registration registration = new Registration(idRegistration, athlete, team, sport, status);
                 registrations.add(registration);
             }
@@ -105,7 +104,6 @@ public class RegistrationDao {
      * @throws SQLException
      */
     public int addRegistrationTeam(Registration registration) throws SQLException {
-        // Query para verificar se a inscrição já existe
         String checkQuery = "SELECT COUNT(*) FROM tblRegistration WHERE idAthlete = ? AND idTeam = ? AND idSport = ? AND idStatus = ? AND year = ?";
         String insertQuery = "INSERT INTO tblRegistration (idAthlete, idTeam, idSport, idStatus, year) VALUES (?, ?, ?, ?, ?)";
 
@@ -119,7 +117,6 @@ public class RegistrationDao {
         try {
             conn = ConnectionsUtlis.dbConnect();
 
-            // Preparar a consulta para verificar se a inscrição já existe
             checkStmt = conn.prepareStatement(checkQuery);
             checkStmt.setInt(1, registration.getAthlete().getIdAthlete());
             checkStmt.setInt(2, registration.getTeam().getIdTeam());
@@ -127,18 +124,16 @@ public class RegistrationDao {
             checkStmt.setInt(4, registration.getSport().getIdSport());
             checkStmt.setInt(5, registration.getYear());
 
-            // Executa a consulta para verificar se a inscrição já existe
             rs = checkStmt.executeQuery();
 
             if (rs != null && rs.next()) {
-                int count = rs.getInt(1);  // Obtém a contagem de registros existentes
+                int count = rs.getInt(1);
                 if (count > 0) {
-                    System.out.println("A inscrição já existe!");  // Exibe mensagem se já existir
-                    return -1;  // Sai do método para evitar inserir o registro duplicado
+                    System.out.println("A inscrição já existe!");
+                    return -1;
                 }
             }
 
-            // Se não houver registro existente, procede com a inserção
             insertStmt = conn.prepareStatement(insertQuery, PreparedStatement.RETURN_GENERATED_KEYS);
 
             int idAthlete = registration.getAthlete().getIdAthlete();
@@ -147,7 +142,6 @@ public class RegistrationDao {
             int idSport = registration.getSport().getIdSport();
             int year = registration.getYear();
 
-            // Debugging: Imprime os valores antes de inserir
             System.out.println("Inserindo nova inscrição:");
             System.out.println("idAthlete: " + idAthlete);
             System.out.println("idTeam: " + idTeam);
@@ -155,27 +149,25 @@ public class RegistrationDao {
             System.out.println("idStatus: " + idStatus);
             System.out.println("year: " + year);
 
-            // Set parameters correctly for the insert statement
-            insertStmt.setInt(1, idAthlete);  // Corresponds to the first placeholder
+            insertStmt.setInt(1, idAthlete);
             insertStmt.setInt(2, idTeam);
-            insertStmt.setInt(3, idSport); // Corresponds to the second placeholder
-            insertStmt.setInt(4, idStatus); // Corresponds to the third placeholder
-            insertStmt.setInt(5, year);       // Corresponds to the fourth placeholder
+            insertStmt.setInt(3, idSport);
+            insertStmt.setInt(4, idStatus);
+            insertStmt.setInt(5, year);
 
             insertStmt.executeUpdate();
-            System.out.println("Inscrição realizada com sucesso!");  // Mensagem de sucesso após a inserção
+            System.out.println("Inscrição realizada com sucesso!");
 
             generatedKeys = insertStmt.getGeneratedKeys();
             if (generatedKeys.next()) {
                 int idGenerated = generatedKeys.getInt(1);
-                System.out.println("Generated ID: " + idGenerated); // Debugging: Print the generated ID
-                return idGenerated; // Return the generated ID
+                System.out.println("Generated ID: " + idGenerated);
+                return idGenerated;
             } else {
                 throw new SQLException("Insertion failed, no ID obtained.");
             }
 
         } finally {
-            // Fechando os recursos
             if (rs != null) {
                 rs.close();
             }
@@ -210,24 +202,22 @@ public class RegistrationDao {
 
         try {
             conn = ConnectionsUtlis.dbConnect();
-            // Prepare the check statement to check if the record already exists
+
             checkStmt = conn.prepareStatement(checkQuery);
             checkStmt.setInt(1, registration.getAthlete().getIdAthlete());
             checkStmt.setInt(2, registration.getSport().getIdSport());
             checkStmt.setInt(3, registration.getYear());
 
-            // Execute the check query to see if the record already exists
             rs = checkStmt.executeQuery();
 
             if (rs != null && rs.next()) {
-                int count = rs.getInt(1);  // Get the count of existing records
+                int count = rs.getInt(1);
                 if (count > 0) {
-                    System.out.println("The registration already exists!"); // Show message if already exists
-                    return -1;  // Exit the method to avoid inserting the duplicate
+                    System.out.println("The registration already exists!");
+                    return -1;
                 }
             }
 
-            // If no existing registration, proceed with the insertion
             insertStmt = conn.prepareStatement(insertQuery, PreparedStatement.RETURN_GENERATED_KEYS);
 
             int idAthlete = registration.getAthlete().getIdAthlete();
@@ -235,7 +225,6 @@ public class RegistrationDao {
             int idStatus = registration.getStatus().getIdStatus();
             int year = registration.getYear();
 
-            // Debugging: Print the values before insertion
             System.out.println("Inserting new registration:");
             System.out.println("idAthlete: " + idAthlete);
             System.out.println("idSport: " + idSport);
@@ -248,13 +237,13 @@ public class RegistrationDao {
             insertStmt.setInt(4, year);
 
             insertStmt.executeUpdate();
-            System.out.println("Registration successfully added!"); // Show success message only if inserted
+            System.out.println("Registration successfully added!");
 
             generatedKeys = insertStmt.getGeneratedKeys();
             if (generatedKeys.next()) {
                 int idGenerated = generatedKeys.getInt(1);
-                System.out.println("Generated ID: " + idGenerated); // Debugging: Print the generated ID
-                return idGenerated; // Return the generated ID
+                System.out.println("Generated ID: " + idGenerated);
+                return idGenerated;
             } else {
                 throw new SQLException("Insertion failed, no ID obtained.");
             }
@@ -350,7 +339,7 @@ public class RegistrationDao {
             stmt.setInt(2, idTeam);
             stmt.setInt(3, registrationId);
 
-            stmt.executeUpdate(); // Executa a atualização
+            stmt.executeUpdate();
         } finally {
             if (stmt != null) {
                 stmt.close();
@@ -395,7 +384,7 @@ public class RegistrationDao {
      */
     public static List<Registration> getPendingRegistrations() throws SQLException {
         List<Registration> registrations = new ArrayList<>();
-        // Query modificada para buscar apenas registros com idStatus = 1
+
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT * FROM tblRegistration WHERE idStatus = 1;");
 
         if (rs != null) {
@@ -614,6 +603,13 @@ public class RegistrationDao {
         }
     }
 
+    /**
+     * Set status rejected
+     * @param idSport {int} Sport ID
+     * @param year {int} Year
+     * @return boolean
+     * @throws SQLException
+     */
     public boolean setStatusRejected(int idSport, int year) throws SQLException{
         String query = "UPDATE tblRegistration SET idStatus = 2 WHERE idSport = ? AND year = ? AND idStatus = 1";
         Connection conn = null;

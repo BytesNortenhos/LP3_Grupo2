@@ -129,9 +129,9 @@ public class XMLUtils {
      * @param pathXML {String} XML File Path
      * @return Teams
      */
-    public Teams getTeamsDataXML(String pathXML) {
+    public Teams getTeamsDataXML(String pathXML) throws JAXBException {
 
-        try {
+
             JAXBContext jaxbContext = JAXBContext.newInstance(Teams.class, Team.class, ParticipationTeam.class);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 
@@ -157,10 +157,7 @@ public class XMLUtils {
             }
 
             return teams;
-        } catch (JAXBException e) {
-            e.printStackTrace();
-            return null;
-        }
+
     }
 
     /**

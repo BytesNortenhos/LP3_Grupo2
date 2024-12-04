@@ -95,12 +95,11 @@ public class Athlete extends Person {
     }
 
     /**
-     * Constructs an Athlete object with the specified ID, name, and country.
-     *
-     * @param id       the unique identifier of the athlete
-     * @param name     the name of the athlete
-     * @param country  the ID of the country associated with the athlete
-     * @throws SQLException if an error occurs while fetching the country details from the database
+     * Constructor of Athlete
+     * @param id {int} Id
+     * @param name {String} Name
+     * @param country {String} Country
+     * @throws SQLException
      */
     public Athlete(int id, String name, String country) throws SQLException {
         super(id);
@@ -165,8 +164,20 @@ public class Athlete extends Person {
         return genre;
     }
 
+    /**
+     * Get image
+     * @return String
+     */
     public String getImage() {
         return image;
+    }
+
+    /**
+     * Set image
+     * @param image {String} Image
+     */
+    public void setImage(String image) {
+        this.image = image;
     }
 
     /**
