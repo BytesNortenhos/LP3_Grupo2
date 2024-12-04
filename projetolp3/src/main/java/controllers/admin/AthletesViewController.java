@@ -299,20 +299,28 @@ public class AthletesViewController {
     private VBox createResultItem(List result, int idAthlete) throws SQLException {
         VBox resultItem = new VBox();
         resultItem.setSpacing(10);
+
+        Label resultLabel = new Label();
+
         Label nameLabel = new Label("Modalidade: " + (result.get(1) != null ? result.get(1).toString() : "N/A"));
         nameLabel.getStyleClass().add("name-label");
-
-        long resultValue = Long.parseLong(result.get(0).toString());
-        double resultSeconds = resultValue / 1000.0;
-        Label resultLabel = new Label("Resultado: " + resultSeconds + " segundos");
-        resultLabel.getStyleClass().add("result-label");
+        if(result.get(7).toString().equals("One")){
+            long resultValue = Long.parseLong(result.getFirst().toString());
+            double resultSeconds = resultValue / 1000.0;
+            resultLabel = new Label("Resultado: " + resultSeconds + " segundos");
+            resultLabel.getStyleClass().add("result-label");
+        }
+        else{
+            resultLabel = new Label("Resultado: " + result.getFirst().toString());
+            resultLabel.getStyleClass().add("result-label");
+        }
 
         Label typeLabel = new Label("Tipo de modalidade: " + (result.get(2) != null ? result.get(2).toString() : "N/A"));
         typeLabel.getStyleClass().add("type-label");
 
         if (result.get(3) != null) {
             Label teamLabel = new Label("Equipa: " + result.get(3).toString());
-            teamLabel.getStyleClass().add("team-label");
+            teamLabel.getStyleClass().add("type-label");
             resultItem.getChildren().add(teamLabel);
         }
 
@@ -322,35 +330,35 @@ public class AthletesViewController {
         Label localLabel = new Label("Local: " + (result.get(5) != null ? result.get(5).toString() : "N/A"));
         localLabel.getStyleClass().add("local-label");
 
-        int pos = 0;
-        ResultDao resultDao = new ResultDao();
-        List<List> positions = new ArrayList<>();
-        if (result.get(2).equals("Collective")){
-            if (result.get(7).equals("One")){
-                positions = resultDao.getPositionByIdCollective((Integer) result.get(6), result.get(4).toString());
-            }
-            if (result.get(7).equals("Multiple")){
-                positions = resultDao.getPositionByIdCollective((Integer) result.get(6), result.get(4).toString());
-            }
-        }
-        if (result.get(2).equals("Individual")){
-            if (result.get(7).equals("One")){
-                positions = resultDao.getPositionByIdIndividualOne((Integer) result.get(6), result.get(4).toString());
-            }
-            if (result.get(7).equals("Multiple")){
-                positions = resultDao.getPositionByIdIndividualMultiple((Integer) result.get(6), result.get(4).toString());
-            }
-        }
-        for (List position : positions) {
-            if((Integer) position.get(1) == idAthlete || position.get(1) == result.get(8)){
-                pos = (Integer) position.get(0);
-                System.out.println("pos" + pos);
-            }
-        }
-        Label postionLabel = new Label("Posição: " + pos + "º lugar");
-        postionLabel.getStyleClass().add("local-label");
+//        int pos = 0;
+//        ResultDao resultDao = new ResultDao();
+//        List<List> positions = new ArrayList<>();
+//        if (result.get(2).equals("Collective")){
+//            if (result.get(7).equals("One")){
+//                positions = resultDao.getPositionByIdCollective((Integer) result.get(6), result.get(4).toString());
+//            }
+//            if (result.get(7).equals("Multiple")){
+//                positions = resultDao.getPositionByIdCollective((Integer) result.get(6), result.get(4).toString());
+//            }
+//        }
+//        if (result.get(2).equals("Individual")){
+//            if (result.get(7).equals("One")){
+//                positions = resultDao.getPositionByIdIndividualOne((Integer) result.get(6), result.get(4).toString());
+//            }
+//            if (result.get(7).equals("Multiple")){
+//                positions = resultDao.getPositionByIdIndividualMultiple((Integer) result.get(6), result.get(4).toString());
+//            }
+//        }
+//        for (List position : positions) {
+//            if((Integer) position.get(1) == idAthlete || position.get(1) == result.get(8)){
+//                pos = (Integer) position.get(0);
+//                System.out.println("pos" + pos);
+//            }
+//        }
+//        Label postionLabel = new Label("Posição: " + pos + "º lugar");
+//        postionLabel.getStyleClass().add("local-label");
 
-        resultItem.getChildren().addAll(nameLabel, resultLabel, typeLabel, dateLabel, localLabel, postionLabel);
+        resultItem.getChildren().addAll(nameLabel, resultLabel, typeLabel, dateLabel, localLabel);
         return resultItem;
     }
 

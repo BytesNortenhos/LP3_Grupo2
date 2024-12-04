@@ -435,52 +435,82 @@ public class StartSportsController {
         popupStage.show();
     }
 
-    public void displayResults(VBox vbox, List<List> results) {
+    private void displayResults(VBox vbox, List<List> results) {
         vbox.getChildren().clear();
         vbox.setSpacing(20);
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.getStyleClass().add("popup-scroll-pane");
+        scrollPane.setFitToWidth(true);
+
+        VBox scrollContent = new VBox();
+        scrollContent.setSpacing(20);
+        scrollContent.setFillWidth(true);
+        scrollContent.getStyleClass().add("popup-scroll-pane");
+
+        Map<String, List<String>> teamResultsMap = new HashMap<>();
         for (List result : results) {
-            VBox resultItem = createResultItem(result);
-            vbox.getChildren().add(resultItem);
+            String teamName = result.get(5) != null ? result.get(5).toString() : null;
+            String resultText = "Resultado: " + result.get(0).toString();
+            String athleteName = result.get(4) != null ? result.get(4).toString() : "N/A";
+            if (teamName != null) {
+                teamResultsMap.computeIfAbsent(teamName, k -> new ArrayList<>()).add(resultText + " - " + athleteName);
+            } else {
+                VBox resultItem = createResultItem(result);
+                scrollContent.getChildren().add(resultItem);
+            }
         }
+
+        for (Map.Entry<String, List<String>> entry : teamResultsMap.entrySet()) {
+            VBox resultItem = createTeamResultItem(entry.getKey(), entry.getValue());
+            scrollContent.getChildren().add(resultItem);
+        }
+        scrollPane.setContent(scrollContent);
+        vbox.getChildren().add(scrollPane);
     }
 
     private VBox createResultItem(List result) {
         VBox resultItem = new VBox();
         resultItem.setSpacing(10);
 
-        if (result.get(5) != null) {
-            Label teamLabel = new Label("Equipa: " + result.get(5).toString());
-            teamLabel.getStyleClass().add("name-label");
-            resultItem.getChildren().add(teamLabel);
-
-            for (Object res : result) {
-                Label resultLabel = new Label("Resultado: " + res.toString());
-                resultLabel.getStyleClass().add("result-label");
-                resultItem.getChildren().add(resultLabel);
-            }
-        } else {
-            HBox nameContainer = new HBox(10);
-            ImageView profileImage = new ImageView();
-            URL iconImageURL = Main.class.getResource(result.get(8).toString());
-            if (iconImageURL != null) {
-                Image images = new Image(iconImageURL.toExternalForm());
-                profileImage.setImage(images);
-                profileImage.setFitWidth(60);
-                profileImage.setFitHeight(60);
-                Circle clip = new Circle(30, 30, 30);
-                profileImage.setClip(clip);
-            }
-
-            Label nameLabel = new Label(result.get(4).toString());
-            nameLabel.getStyleClass().add("name-label");
-            nameLabel.setTranslateY(13);
-            nameContainer.getChildren().addAll(profileImage, nameLabel);
-
-            Label resultLabel = new Label("Resultado: " + result.get(0).toString());
-            resultLabel.getStyleClass().add("result-label");
-
-            resultItem.getChildren().addAll(nameContainer, resultLabel);
+        HBox nameContainer = new HBox(10);
+        ImageView profileImage = new ImageView();
+        URL iconImageURL = Main.class.getResource(result.get(8).toString());
+        if (iconImageURL != null) {
+            Image images = new Image(iconImageURL.toExternalForm());
+            profileImage.setImage(images);
+            profileImage.setFitWidth(60);
+            profileImage.setFitHeight(60);
+            Circle clip = new Circle(30, 30, 30);
+            profileImage.setClip(clip);
         }
+
+        Label nameLabel = new Label(result.get(4).toString());
+        nameLabel.getStyleClass().add("name-label");
+        nameLabel.setTranslateY(13);
+        nameContainer.getChildren().addAll(profileImage, nameLabel);
+
+        Label resultLabel = new Label("Resultado: " + result.get(0).toString());
+        resultLabel.getStyleClass().add("result-label");
+
+
+        resultItem.getChildren().addAll(nameContainer, resultLabel);
+        return resultItem;
+    }
+
+    private VBox createTeamResultItem(String teamName, List<String> results) {
+        VBox resultItem = new VBox();
+        resultItem.setSpacing(10);
+
+        Label teamLabel = new Label("Equipa: " + teamName);
+        teamLabel.getStyleClass().add("name-label");
+        resultItem.getChildren().add(teamLabel);
+
+        for (String result : results) {
+            Label resultLabel = new Label(result);
+            resultLabel.getStyleClass().add("result-label");
+            resultItem.getChildren().add(resultLabel);
+        }
+
         return resultItem;
     }
 
