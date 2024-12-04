@@ -353,10 +353,17 @@ public class HomeControllerAthlete {
         resultItem.setSpacing(10);
         Label nameLabel = new Label("Modalidade: " + (result.get(1) != null ? result.get(1).toString() : "N/A"));
         nameLabel.getStyleClass().add("name-label");
+        Label resultLabel = new Label("");
 
-        String resultValue = String.valueOf(result.get(0).toString());
-        //double resultSeconds = resultValue / 1000.0;
-        Label resultLabel = new Label("Resultado: " + resultValue + " segundos");
+        if(result.get(2).toString().equals("Individual")){
+            double resultValue = Float.parseFloat(result.get(0).toString());
+            double resultSeconds = resultValue / 1000.0;
+            resultLabel = new Label("Resultado: " + resultSeconds + " segundos");
+        }
+        else{
+            String resultValue = String.valueOf(result.get(0).toString());
+            resultLabel = new Label("Resultado: " + resultValue + " segundos");
+        }
         resultLabel.getStyleClass().add("result-label");
 
         Label typeLabel = new Label("Tipo de modalidade: " + (result.get(2) != null ? result.get(2).toString() : "N/A"));
