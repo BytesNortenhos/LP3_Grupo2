@@ -30,6 +30,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -243,6 +244,15 @@ public class StartSportsController {
             Button viewResultsButton = new Button();
             viewResultsButton.setGraphic(viewImageView);
             viewResultsButton.getStyleClass().add("startButton");
+            viewResultsButton.setOnAction(event -> {
+                try {
+                    historyPopUp(event, Integer.parseInt(sport.get(0).toString()) , sport.get(2).toString(), year);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            });
             requestItem.getChildren().addAll(nameLabel, typeLabel, genderLabel, minPart, numPart, viewResultsButton);
         }
 
@@ -404,6 +414,76 @@ public class StartSportsController {
         resultItem.getChildren().addAll(resultLabel);
         return resultItem;
     }
+
+
+    public void historyPopUp(ActionEvent event, int idSport, String gender, int year) throws IOException, SQLException {
+        ResultDao resultDao = new ResultDao();
+        Stage popupStage = new Stage();
+        popupStage.setTitle("Histórico de participações");
+
+        VBox vbox = new VBox(400);
+        vbox.setPadding(new Insets(10));
+        vbox.getStyleClass().add("popup-vbox");
+        List<List> results = resultDao.getResultBySport(idSport, gender, year);
+        System.out.println(results);
+        displayResults(vbox, results);
+
+
+        Scene scene = new Scene(vbox, 500, 450);
+        scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+        popupStage.setScene(scene);
+        popupStage.show();
+    }
+
+    public void displayResults(VBox vbox, List<List> results) {
+        vbox.getChildren().clear();
+        vbox.setSpacing(20);
+        for (List result : results) {
+            VBox resultItem = createResultItem(result);
+            vbox.getChildren().add(resultItem);
+        }
+    }
+
+    private VBox createResultItem(List result) {
+        VBox resultItem = new VBox();
+        resultItem.setSpacing(10);
+
+        if (result.get(5) != null) {
+            Label teamLabel = new Label("Equipa: " + result.get(5).toString());
+            teamLabel.getStyleClass().add("name-label");
+            resultItem.getChildren().add(teamLabel);
+
+            for (Object res : result) {
+                Label resultLabel = new Label("Resultado: " + res.toString());
+                resultLabel.getStyleClass().add("result-label");
+                resultItem.getChildren().add(resultLabel);
+            }
+        } else {
+            HBox nameContainer = new HBox(10);
+            ImageView profileImage = new ImageView();
+            URL iconImageURL = Main.class.getResource(result.get(8).toString());
+            if (iconImageURL != null) {
+                Image images = new Image(iconImageURL.toExternalForm());
+                profileImage.setImage(images);
+                profileImage.setFitWidth(60);
+                profileImage.setFitHeight(60);
+                Circle clip = new Circle(30, 30, 30);
+                profileImage.setClip(clip);
+            }
+
+            Label nameLabel = new Label(result.get(4).toString());
+            nameLabel.getStyleClass().add("name-label");
+            nameLabel.setTranslateY(13);
+            nameContainer.getChildren().addAll(profileImage, nameLabel);
+
+            Label resultLabel = new Label("Resultado: " + result.get(0).toString());
+            resultLabel.getStyleClass().add("result-label");
+
+            resultItem.getChildren().addAll(nameContainer, resultLabel);
+        }
+        return resultItem;
+    }
+
 
     public boolean changeMode(ActionEvent event) {
         isDarkMode = !isDarkMode;

@@ -451,4 +451,32 @@ public class ResultDao {
         return positions;
     }
 
+    public List<List> getResultBySport(int idSport, String gender, int year) throws SQLException {
+        String query = "SELECT DISTINCT r.*, s.name as sportName, s.type as sportType, a.name as athleteName, a.image as profilePhoto, t.name as teamName, g.description as gender, l.name as localName FROM tblResult as r " +
+                "LEFT JOIN tblSport as s ON r.idSport = s.idSport " +
+                "LEFT JOIN tblAthlete as a ON r.idAthlete = a.idAthlete " +
+                "LEFT JOIN tblTeam as t ON r.idTeam = t.idTeam " +
+                "LEFT JOIN tblLocal as l on r.idLocal = l.idLocal " +
+                "LEFT JOIN tblGender AS g ON s.idGender = g.idGender " +
+                "LEFT JOIN tblRegistration AS re ON re.year = ? " +
+                "WHERE r.idSport = ? AND g.description = ? AND re.idStatus =4;";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, year, idSport, gender);
+        List<List> results = new ArrayList<>();
+        if (rs != null) {
+            while (rs.next()) {
+                List<Object> result = new ArrayList<>();
+                result.add(rs.getString("result"));
+                result.add(rs.getString("idSport"));
+                result.add(rs.getString("sportName"));
+                result.add(rs.getString("sportType"));
+                result.add(rs.getString("athleteName"));
+                result.add(rs.getString("teamName"));
+                result.add(rs.getDate("date"));
+                result.add(rs.getString("localName"));
+                result.add(rs.getString("profilePhoto"));
+                results.add(result);
+            }
+        }
+        return results;
+    }
 }
