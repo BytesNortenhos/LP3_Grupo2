@@ -374,18 +374,38 @@ public class HomeControllerAthlete {
         Label localLabel = new Label("Local: " + (result.get(5) != null ? result.get(5).toString() : "N/A"));
         localLabel.getStyleClass().add("local-label");
 
-        int pos = 0;
+        /*int pos = 0;
         ResultDao resultDao = new ResultDao();
-        List<List> positions = resultDao.getPositionByIdCollective((Integer) result.get(6), result.get(4).toString());
-        for (List position : positions) {
-            if((Integer) position.get(1) == idAthlete){
-                pos = (Integer) position.get(0);
+        List<List> positions = new ArrayList<>();
+        if (result.get(2).equals("Collective")){
+            if (result.get(7).equals("One")){
+                positions = resultDao.getPositionByIdCollective((Integer) result.get(6), result.get(4).toString());
+            }
+            if (result.get(7).equals("Multiple")){
+                positions = resultDao.getPositionByIdCollective((Integer) result.get(6), result.get(4).toString());
             }
         }
-        Label postionLabel = new Label("Posição: " + pos + "º lugar");
-        postionLabel.getStyleClass().add("local-label");
+        if (result.get(2).equals("Individual")){
+            if (result.get(7).equals("One")){
+                positions = resultDao.getPositionByIdIndividualOne((Integer) result.get(6), result.get(4).toString());
+            }
+            if (result.get(7).equals("Multiple")){
+                positions = resultDao.getPositionByIdIndividualMultiple((Integer) result.get(6), result.get(4).toString());
+            }
+        }
+        for (List position : positions) {
+            if(position != null && result.get(8) != null){
+                if(Integer.parseInt(position.get(1).toString()) == idAthlete || Integer.parseInt(position.get(1).toString()) == Integer.parseInt(result.get(8).toString())){
+                    pos = Integer.parseInt(position.get(0).toString());
+                    System.out.println("siuuu");
+                }
+            }
 
-        resultItem.getChildren().addAll(nameLabel, resultLabel, typeLabel, dateLabel, localLabel, postionLabel);
+        }
+        Label postionLabel = new Label("Posição: " + pos + "º lugar");
+        postionLabel.getStyleClass().add("local-label");*/
+
+        resultItem.getChildren().addAll(nameLabel, resultLabel, typeLabel, dateLabel, localLabel/*, postionLabel*/);
         return resultItem;
     }
 

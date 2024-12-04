@@ -43,6 +43,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -323,15 +324,27 @@ public class AthletesViewController {
 
         int pos = 0;
         ResultDao resultDao = new ResultDao();
-        List<List> positions;
+        List<List> positions = new ArrayList<>();
         if (result.get(2).equals("Collective")){
-            positions = resultDao.getPositionByIdCollective((Integer) result.get(6), result.get(4).toString());
-        } else {
-            positions = resultDao.getPositionByIdIndividual((Integer) result.get(6), result.get(4).toString());
+            if (result.get(7).equals("One")){
+                positions = resultDao.getPositionByIdCollective((Integer) result.get(6), result.get(4).toString());
+            }
+            if (result.get(7).equals("Multiple")){
+                positions = resultDao.getPositionByIdCollective((Integer) result.get(6), result.get(4).toString());
+            }
+        }
+        if (result.get(2).equals("Individual")){
+            if (result.get(7).equals("One")){
+                positions = resultDao.getPositionByIdIndividualOne((Integer) result.get(6), result.get(4).toString());
+            }
+            if (result.get(7).equals("Multiple")){
+                positions = resultDao.getPositionByIdIndividualMultiple((Integer) result.get(6), result.get(4).toString());
+            }
         }
         for (List position : positions) {
-            if((Integer) position.get(1) == idAthlete){
+            if((Integer) position.get(1) == idAthlete || position.get(1) == result.get(8)){
                 pos = (Integer) position.get(0);
+                System.out.println("pos" + pos);
             }
         }
         Label postionLabel = new Label("Posição: " + pos + "º lugar");

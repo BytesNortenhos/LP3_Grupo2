@@ -14,6 +14,7 @@ import java.util.List;
 public class ResultDao {
     /**
      * Get all results
+     *
      * @return {List<Result>} List of results
      * @throws SQLException
      */
@@ -48,6 +49,7 @@ public class ResultDao {
 
     /**
      * Add result
+     *
      * @param result {Result} Result
      * @throws SQLException
      */
@@ -78,11 +80,12 @@ public class ResultDao {
 
     /**
      * Add result athlete
-     * @param idSport {int} Id sport
+     *
+     * @param idSport   {int} Id sport
      * @param idAthlete {int} Id athlete
-     * @param date {Date} Date
-     * @param result {int} Result
-     * @param idLocal {int} Id local
+     * @param date      {Date} Date
+     * @param result    {int} Result
+     * @param idLocal   {int} Id local
      * @throws SQLException
      */
     public void addResultAthlete(int idSport, int idAthlete, Date date, String result, int idLocal) throws SQLException {
@@ -111,10 +114,11 @@ public class ResultDao {
 
     /**
      * Add result team
+     *
      * @param idSport {int} Id sport
-     * @param idTeam {int} Id team
-     * @param date {Date} Date
-     * @param result {int} Result
+     * @param idTeam  {int} Id team
+     * @param date    {Date} Date
+     * @param result  {int} Result
      * @param idLocal {int} Id local
      * @throws SQLException
      */
@@ -144,12 +148,13 @@ public class ResultDao {
 
     /**
      * Add result athlete team
-     * @param idSport {int} Id sport
+     *
+     * @param idSport   {int} Id sport
      * @param idAthlete {int} Id athlete
-     * @param idTeam {int} Id team
-     * @param date {Date} Date
-     * @param result {int} Result
-     * @param idLocal {int} Id local
+     * @param idTeam    {int} Id team
+     * @param date      {Date} Date
+     * @param result    {int} Result
+     * @param idLocal   {int} Id local
      * @throws SQLException
      */
     public void addResultAthleteTeam(int idSport, int idAthlete, int idTeam, Date date, String result, int idLocal) throws SQLException {
@@ -179,6 +184,7 @@ public class ResultDao {
 
     /**
      * Remove result
+     *
      * @param idResult {int} Id result
      * @throws SQLException
      */
@@ -203,6 +209,7 @@ public class ResultDao {
 
     /**
      * Update result
+     *
      * @param result {Result} Result
      * @throws SQLException
      */
@@ -234,6 +241,7 @@ public class ResultDao {
 
     /**
      * Get result by id
+     *
      * @param idResult {int} Id result
      * @return {Result} Result
      * @throws SQLException
@@ -262,12 +270,13 @@ public class ResultDao {
 
     /**
      * Get result by athlete
+     *
      * @param idAthlete {int} Id athlete
      * @return {List<Result>} List of results
      * @throws SQLException
      */
-    public List<List> getResultByAthlete(int idAthlete) throws SQLException{
-        String query = "SELECT r.*, s.name as sportName, s.idSport as idSport, s.type as sportType, t.name as teamName, l.name as localName FROM tblResult as r " +
+    public List<List> getResultByAthlete(int idAthlete) throws SQLException {
+        String query = "SELECT r.*, s.name as sportName, s.idSport as idSport, s.type as sportType, s.oneGame as one, t.name as teamName, t.idTeam as teamId, l.name as localName FROM tblResult as r " +
                 "LEFT JOIN tblSport as s ON r.idSport = s.idSport " +
                 "LEFT JOIN tblTeam as t ON r.idTeam = t.idTeam " +
                 "LEFT JOIN tblLocal as l on r.idLocal = l.idLocal " +
@@ -285,6 +294,8 @@ public class ResultDao {
                 result.add(rs.getDate("date"));
                 result.add(rs.getString("localName"));
                 result.add(rs.getInt("idSport"));
+                result.add(rs.getString("one"));
+                result.add(rs.getString("teamId"));
                 results.add(result);
             }
         } else {
@@ -295,12 +306,13 @@ public class ResultDao {
 
     /**
      * Get position by id
+     *
      * @param idSport {int} Id sport
-     * @param date {String} Date
+     * @param date    {String} Date
      * @return {List<List>} List of Results
      * @throws SQLException
      */
-    public List<List> getPositionById (int idSport, String date) throws SQLException {
+    public List<List> getPositionById(int idSport, String date) throws SQLException {
         List<List> positions = new ArrayList<>();
         String query = "SELECT *,\n" +
                 "       DENSE_RANK() OVER (PARTITION BY idSport, [date] ORDER BY idTeam ASC) AS lugar\n" +
@@ -318,7 +330,7 @@ public class ResultDao {
         return positions;
     }
 
-    public List<List> getPositionById1 (int idSport, String date) throws SQLException {
+    public List<List> getPositionById1(int idSport, String date) throws SQLException {
         System.out.println(date);
         List<List> positions = new ArrayList<>();
         String query = "SELECT *,\n" +
@@ -344,11 +356,11 @@ public class ResultDao {
 
         // Ajuste na consulta SQL para evitar conflitos com palavras reservadas
         String query = """
-            SELECT *,
-                   DENSE_RANK() OVER (PARTITION BY idSport, [date] ORDER BY idTeam ASC) AS lugar
-            FROM tblResult
-            WHERE idSport = ? AND [date] = ?;
-            """;
+                SELECT *,
+                       DENSE_RANK() OVER (PARTITION BY idSport, [date] ORDER BY idTeam ASC) AS lugar
+                FROM tblResult
+                WHERE idSport = ? AND [date] = ?;
+                """;
 
         // Usando CachedRowSet para executar a consulta
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, date); // "%" removido para manter igualdade exata
@@ -367,12 +379,39 @@ public class ResultDao {
 
     public List<List> getPositionByIdCollective(int idSport, String date) throws SQLException {
         List<List> positions = new ArrayList<>();
+
         String query = """
-            SELECT *,
-                   DENSE_RANK() OVER (PARTITION BY idSport, [date] ORDER BY idTeam ASC) AS lugar
-            FROM tblResult
-            WHERE idSport = ? AND [date] = ?;
-            """;
+                SELECT *,
+                       DENSE_RANK() OVER (PARTITION BY idSport, [date] ORDER BY idTeam ASC) AS lugar
+                FROM tblResult
+                WHERE idSport = ? AND [date] = ?;
+                """;
+
+        // Executa a consulta com os parâmetros
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, date);
+
+        if (rs != null) {
+            while (rs.next()) {
+                List<Object> position = new ArrayList<>();
+                System.out.println(rs.getInt("lugar"));
+                position.add(rs.getInt("lugar"));   // 'lugar' gerado pelo DENSE_RANK
+                position.add(rs.getInt("idTeam")); // Trocar para 'idTeam' (coletivo)
+                positions.add(position);
+            }
+        }
+
+        return positions;
+    }
+
+    public List<List> getPositionByIdIndividualOne(int idSport, String date) throws SQLException {
+        List<List> positions = new ArrayList<>();
+
+        String query = """
+                SELECT *,
+                       DENSE_RANK() OVER (PARTITION BY idSport, [date] ORDER BY idAthlete ASC) AS lugar
+                FROM tblResult
+                WHERE idSport = ? AND [date] = ?;
+                """;
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, date);
 
         if (rs != null) {
@@ -387,21 +426,24 @@ public class ResultDao {
         return positions;
     }
 
-    public List<List> getPositionByIdIndividual(int idSport, String date) throws SQLException {
+    public List<List> getPositionByIdIndividualMultiple(int idSport, String date) throws SQLException {
         List<List> positions = new ArrayList<>();
+
         String query = """
-            SELECT *,
-                   DENSE_RANK() OVER (PARTITION BY idSport, [date] ORDER BY idAthlete ASC) AS lugar
-            FROM tblResult
-            WHERE idSport = ? AND [date] = ?;
-            """;
+                SELECT *,
+                       DENSE_RANK() OVER (PARTITION BY idSport, [date] ORDER BY idAthlete ASC) AS lugar
+                FROM tblResult
+                WHERE idSport = ? AND [date] = ?;
+                """;
+
+        // Executa a consulta com os parâmetros
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, date);
 
         if (rs != null) {
             while (rs.next()) {
                 List<Object> position = new ArrayList<>();
-                position.add(rs.getInt("lugar"));
-                position.add(rs.getInt("idAthlete"));
+                position.add(rs.getInt("lugar"));       // Nome correto da coluna calculada
+                position.add(rs.getInt("idAthlete"));  // Nome correto da coluna existente
                 positions.add(position);
             }
         }
