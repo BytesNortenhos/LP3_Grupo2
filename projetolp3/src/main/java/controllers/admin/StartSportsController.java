@@ -919,9 +919,10 @@ public class StartSportsController {
                 System.out.println("ID: " + IdsParticipants.get(i) + ", Pontuação: " + scores.get(i));
             }
             System.out.println();
-        } while (scores.getFirst() == scores.get(1) || scores.get(1) == scores.get(2) || scores.get(2) == scores.get(3));
+        } while (scores.get(0) == scores.get(1) || scores.get(1) == scores.get(2) || scores.get(2) == scores.get(3));
 
         //Atribuir Resultados
+        System.out.println("Atribuir Resultados");
         List<Integer> athletes = new ArrayList<>();
         for (int i = 0; i < resultados.size(); i++) {
             int idTeam = IdsParticipants.get(i);
@@ -937,6 +938,7 @@ public class StartSportsController {
         }
 
         //Atribuir Medalhas
+        System.out.println("Atribuir Medalhas");
         //medalDao.addTopMedalTeam(IdsParticipants.getFirst(), year, 1);
         athletes.clear();
         athletes = registrationDao.getAthletesByTeam(IdsParticipants.getFirst(), idSport, year);
@@ -965,9 +967,11 @@ public class StartSportsController {
         }
 
         //Inserir Vencedor Olímpico
+        System.out.println("Atribuir Vencedor Olímpico");
         winnerOlympicDao.addWinnerOlympicTeamMultiple(idSport, year, IdsParticipants.getFirst());
 
         //Verificar Recorde Olímpico
+        System.out.println("Atribuir Recorde Olimpico");
         for (int i = 0; i < 3; i++) {
             Integer olympicRecordMedals = olympicRecordDao.getOlympicRecordMultipleGames(idSport);
             if (olympicRecordMedals != null) {

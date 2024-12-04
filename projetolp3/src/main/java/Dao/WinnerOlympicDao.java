@@ -264,7 +264,7 @@ public class WinnerOlympicDao {
     }
 
     public void addWinnerOlympicTeamMultiple(int idSport, int year, int idTeam) throws SQLException {
-        String query = "INSERT INTO tblResult (idSport, year, idTeam) VALUES (?, ?, ?)";
+        String query = "INSERT INTO tblWinnerOlympic (idSport, year, idTeam) VALUES (?, ?, ?)";
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
@@ -286,7 +286,7 @@ public class WinnerOlympicDao {
     }
 
     public void addWinnerOlympicTeamOne(int idSport, int year, int idTeam, int result) throws SQLException {
-        String query = "INSERT INTO tblResult (idSport, year, idTeam, result) VALUES (?, ?, ?, ?)";
+        String query = "INSERT INTO tblWinnerOlympic (idSport, year, idTeam, result) VALUES (?, ?, ?, ?)";
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
@@ -309,7 +309,7 @@ public class WinnerOlympicDao {
     }
 
     public void addWinnerOlympicAthleteMultiple(int idSport, int year, int idAthlete) throws SQLException {
-        String query = "INSERT INTO tblResult (idSport, year, idAthlete) VALUES (?, ?, ?)";
+        String query = "INSERT INTO tblWinnerOlympic (idSport, year, idAthlete) VALUES (?, ?, ?)";
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
@@ -331,7 +331,7 @@ public class WinnerOlympicDao {
     }
 
     public void addWinnerOlympicAthleteOne(int idSport, int year, int idTeam, int result) throws SQLException {
-        String query = "INSERT INTO tblResult (idSport, year, idTeam, result) VALUES (?, ?, ?, ?)";
+        String query = "INSERT INTO tblWinnerOlympic (idSport, year, idTeam, result) VALUES (?, ?, ?, ?)";
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
