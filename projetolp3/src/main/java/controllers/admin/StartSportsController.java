@@ -959,7 +959,7 @@ public class StartSportsController {
         //Verificar Recorde Olímpico
         Integer olympicRecord = olympicRecordDao.getOlympicRecord(idSport);
         if (olympicRecord != null) {
-            if (resultados.getFirst() > olympicRecord) {
+            if (resultados.getFirst() < olympicRecord) {
                 olympicRecordDao.setNewOlympicRecordAthleteOne(idSport, year, IdsParticipants.getFirst(), resultados.getFirst());
             }
         }
@@ -1042,7 +1042,7 @@ public class StartSportsController {
         //Verificar Recorde Olímpico
         Integer olympicRecord = olympicRecordDao.getOlympicRecord(idSport);
         if (olympicRecord != null) {
-            if (resultados.getFirst() > olympicRecord) {
+            if (resultados.getFirst() < olympicRecord) {
                 olympicRecordDao.setNewOlympicRecordTeamOne(idSport, year, IdsParticipants.getFirst(), resultados.getFirst());
             }
         }
