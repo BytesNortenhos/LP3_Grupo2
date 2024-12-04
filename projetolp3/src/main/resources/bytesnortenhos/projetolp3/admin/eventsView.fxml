@@ -17,7 +17,7 @@
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.admin.ViewEventsController">
     <top>
         <HBox styleClass="navBar" prefHeight="40.0" prefWidth="400.0">
-            <Button styleClass="iconHomeNav" onAction="#returnHomeMenu">
+            <Button styleClass="iconHomeNav">
                 <graphic>
                     <ImageView fx:id="iconHomeNav" fitWidth="55" fitHeight="55" preserveRatio="true"/>
                 </graphic>
@@ -30,6 +30,13 @@
                     <MenuItem text="Carregar atletas" onAction="#loadAthletes"/>
                 </items>
             </SplitMenuButton>
+            <SplitMenuButton fx:id="eventSplitButton" styleClass="dropdownButton" text="Gerir eventos">
+                <items>
+                    <MenuItem text="Adicionar evento" onAction="#showAddEvent"/>
+                    <MenuItem text="Visualizar eventos" onAction="#showViewEvent"/>
+                    <MenuItem text="Alterar imagem" onAction="#updateImageEvent"/>
+                </items>
+            </SplitMenuButton>
             <SplitMenuButton fx:id="sportSplitButton" styleClass="dropdownButton" text="Gerir modalidade">
                 <items>
                     <MenuItem text="Visualizar modalidades" onAction="#showSports"/>
@@ -40,19 +47,14 @@
             </SplitMenuButton>
             <SplitMenuButton fx:id="teamSplitButton" styleClass="dropdownButton" text="Gerir equipa">
                 <items>
+                    <MenuItem text="Visualizar Equipas" onAction="#showTeamsView"/>
                     <MenuItem text="Editar Equipa" onAction="#showTeamsEdit"/>
                 </items>
             </SplitMenuButton>
-            <SplitMenuButton fx:id="athleteSplitButton" styleClass="dropdownButton" text="Gerir atleta">
+            <SplitMenuButton fx:id="athleteSplitButton" styleClass="dropdownButton" text="Atletas">
                 <items>
-                    <MenuItem text="Visualizar atletas" onAction="#showAthletes"/>
+                    <MenuItem text="Gerir atletas" onAction="#showAthletes"/>
                     <MenuItem text="Registar atleta" onAction="#showRegister"/>
-                </items>
-            </SplitMenuButton>
-            <SplitMenuButton fx:id="testeSplitButton" styleClass="dropdownButton" text="Alterar IMG">
-                <items>
-                    <MenuItem text="Alterar Imagem Atlete - teste" />
-                    <MenuItem text="Alterar Imagem Event - teste"/>
                 </items>
             </SplitMenuButton>
             <Button mnemonicParsing="false" onAction="#changeMode" styleClass="iconMoonNav">

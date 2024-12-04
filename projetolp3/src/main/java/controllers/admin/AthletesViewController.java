@@ -6,6 +6,7 @@ import AuxilierXML.Teams;
 import AuxilierXML.UploadXmlDAO;
 import Dao.AthleteDao;
 import Dao.CountryDao;
+import Dao.EventDao;
 import Dao.ResultDao;
 import Models.Athlete;
 import Utils.XMLUtils;
@@ -982,5 +983,106 @@ public class AthletesViewController {
             alerta.show();
         }
     }
+    public void showAddEvent(ActionEvent event) throws IOException {
+        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
+        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/addEvent.fxml")));
+        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
+        scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
+        if(isDarkMode){
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+        }else{
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
+        }
+        stage.setScene(scene);
+        stage.show();
+    }
+    public void showViewEvent(ActionEvent event) throws IOException {
+        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
+        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/eventsView.fxml")));
+        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
+        scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
+        if(isDarkMode){
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+        }else{
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
+        }
+        stage.setScene(scene);
+        stage.show();
+    }
+    public void updateImageEvent(ActionEvent event) throws SQLException {
+        String pathSave = "src/main/java/ImagesEvent/";
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Resource Files");
 
+        FileChooser.ExtensionFilter imageFilter = new FileChooser.ExtensionFilter("Image Files (*.png, *.jpeg, *.jpg)", "*.png", "*.jpeg", "*.jpg");
+        fileChooser.getExtensionFilters().addAll(imageFilter);
+
+        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
+        List<File> selectedFiles = fileChooser.showOpenMultipleDialog(stage);
+
+        if (selectedFiles != null) {
+            long pngCount = selectedFiles.stream().filter(file -> file.getName().endsWith(".png")).count();
+            long jpgCount = selectedFiles.stream().filter(file -> file.getName().endsWith(".jpg")).count();
+            long jpegCount = selectedFiles.stream().filter(file -> file.getName().endsWith(".jpeg")).count();
+
+            if (selectedFiles.size() == 1 && (pngCount == 1 || jpgCount == 1 || jpegCount == 1)) {
+                File selectedFile = selectedFiles.get(0);
+
+                int tempEventYear = 1900;
+                boolean saved = saveEventImage(tempEventYear, pathSave, selectedFile.getAbsolutePath());
+                if (saved) {
+                    Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+                    alerta.setTitle("Sucesso!");
+                    alerta.setHeaderText("A imagem foi guardada com sucesso!");
+                    alerta.show();
+
+
+                    EventDao eventDao = new EventDao();
+                    eventDao.updateEventImage(tempEventYear, pathSave, "." + selectedFile.getName().split("\\.")[1]);
+                } else {
+                    Alert alerta = new Alert(Alert.AlertType.ERROR);
+                    alerta.setTitle("Erro!");
+                    alerta.setHeaderText("Ocorreu um erro ao guardar a imagem!");
+                    alerta.show();
+                }
+
+            } else {
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setTitle("Erro!");
+                alerta.setHeaderText("Selecione 1 ficheiro! Extensões válidas: .png, .jpeg, .jpg");
+                alerta.show();
+            }
+        } else {
+            Alert alerta = new Alert(Alert.AlertType.ERROR);
+            alerta.setTitle("Erro!");
+            alerta.setHeaderText("Selecione 1 ficheiro! Extensões válidas: .png, .jpeg, .jpg");
+            alerta.show();
+        }
+    }
+    public boolean saveEventImage(int tempEventYear, String pathSave, String pathImage) {
+        File fileImage = new File(pathImage);
+        String filename = String.valueOf(tempEventYear) + "." + fileImage.getName().split("\\.")[1];
+
+        try {
+            Files.copy(fileImage.toPath(), Path.of(pathSave, filename), StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+
+        return true;
+    }
+    public void showTeamsView(ActionEvent event) throws IOException {
+        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
+        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/teamsView.fxml")));
+        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
+        scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
+        if(isDarkMode){
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+        }else{
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
+        }
+        stage.setScene(scene);
+        stage.show();
+    }
 }

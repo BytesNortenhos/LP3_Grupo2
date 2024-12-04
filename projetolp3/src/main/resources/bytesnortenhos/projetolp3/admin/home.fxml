@@ -44,6 +44,7 @@
                     <items>
                         <MenuItem text="Adicionar evento" onAction="#showAddEvent"/>
                         <MenuItem text="Visualizar eventos" onAction="#showViewEvent"/>
+                        <MenuItem text="Alterar imagem" onAction="#updateImageEvent"/>
                     </items>
                 </SplitMenuButton>
             <SplitMenuButton fx:id="sportSplitButton" styleClass="dropdownButton" text="Gerir modalidade">
@@ -64,11 +65,6 @@
                 <items>
                     <MenuItem text="Gerir atletas" onAction="#showAthletes"/>
                     <MenuItem text="Registar atleta" onAction="#showRegister"/>
-                </items>
-            </SplitMenuButton>
-            <SplitMenuButton fx:id="testeSplitButton" styleClass="dropdownButton" text="Alterar IMG">
-                <items>
-                    <MenuItem text="Alterar Imagem Event - teste" onAction="#updateImageEvent"/>
                 </items>
             </SplitMenuButton>
             <Button mnemonicParsing="false" onAction="#changeMode" styleClass="iconMoonNav">

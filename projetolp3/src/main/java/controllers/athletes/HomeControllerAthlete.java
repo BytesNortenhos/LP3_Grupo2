@@ -371,7 +371,7 @@ public class HomeControllerAthlete {
 
         if (result.get(3) != null) {
             Label teamLabel = new Label("Equipa: " + result.get(3).toString());
-            teamLabel.getStyleClass().add("team-label");
+            teamLabel.getStyleClass().add("type-label");
             resultItem.getChildren().add(teamLabel);
         }
 
