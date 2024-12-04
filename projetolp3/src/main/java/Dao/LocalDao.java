@@ -38,6 +38,12 @@ public class LocalDao {
         return locals;
     }
 
+    /**
+     * Get locals by year
+     * @param year {int} Year
+     * @return {List<Local>} List of locals
+     * @throws SQLException
+     */
     public List<Local> getLocalsByYear(int year) throws SQLException{
         List<Local> locals = new ArrayList<>();
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT * FROM tblLocal WHERE constructionYear = ?;", year);

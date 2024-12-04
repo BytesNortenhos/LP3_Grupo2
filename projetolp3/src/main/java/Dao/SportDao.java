@@ -123,13 +123,13 @@ public class SportDao {
         }
         return sports;
     }
+
     /**
-     * Verifies if the specified sport and year have associated teams.
-     *
-     * @param idSport the ID of the sport
-     * @param year    the year of the event
-     * @return {@code true} if the sport has teams for the specified year, {@code false} otherwise
-     * @throws SQLException if a database access error occurs
+     * Verify if is team
+     * @param idSport {int} Id sport
+     * @param year {int} Year
+     * @return boolean
+     * @throws SQLException
      */
     public boolean verifyIfIsTeam(int idSport, int year) throws SQLException{
         String query = "SELECT idTeam " +
@@ -144,13 +144,13 @@ public class SportDao {
         }
         return false;
     }
+
     /**
-     * Retrieves a list of teams and their athletes for a specified sport and year.
-     *
-     * @param idSport the ID of the sport
-     * @param year    the year of the event
-     * @return a list of lists, where each inner list contains team and athlete details
-     * @throws SQLException if a database access error occurs
+     * Get teams and athletes
+     * @param idSport {int} Id sport
+     * @param year {int} Year
+     * @return List<List>
+     * @throws SQLException
      */
     public List<List> getTeamsAndthletes(int idSport, int year) throws SQLException{
         List<List> teams = new ArrayList<>();
@@ -176,13 +176,13 @@ public class SportDao {
         }
         return teams;
     }
+
     /**
-     * Retrieves a list of athletes registered for a specified sport and year.
-     *
-     * @param idSport the ID of the sport
-     * @param year    the year of the event
-     * @return a list of {@link Athlete} objects representing the registered athletes
-     * @throws SQLException if a database access error occurs
+     * Get athletes by sport
+     * @param idSport {int} Id sport
+     * @param year {int} Year
+     * @return List<Athlete>
+     * @throws SQLException
      */
     public List<Athlete> getAthletesBySport(int idSport, int year) throws SQLException {
         List<Athlete> athletes = new ArrayList<>();
@@ -230,6 +230,13 @@ public class SportDao {
         return quantidade;
     }
 
+    /**
+     * Get number of teams in a sport
+     * @param idSport {int} Id sport
+     * @param year {int} Year
+     * @return int
+     * @throws SQLException
+     */
     public int getNumberTeamsSports(int idSport, int year) throws SQLException {
         String query = "SELECT COUNT(DISTINCT subquery.idTeam) AS quantidade " +
                 "FROM ( " +
@@ -249,6 +256,7 @@ public class SportDao {
         }
         return quantidade;
     }
+
     /**
      * Verify ranges
      * @param idSport {int} Id sport
@@ -302,10 +310,8 @@ public class SportDao {
         try {
             conn = ConnectionsUtlis.dbConnect();
 
-            // Start transaction
-            conn.setAutoCommit(false); // Ensure both inserts are in one transaction
+            conn.setAutoCommit(false);
 
-            // Insert the sport into tblSport
             stmtSport = conn.prepareStatement(querySport, PreparedStatement.RETURN_GENERATED_KEYS);
             stmtSport.setString(1, sport.getType());
             stmtSport.setInt(2, sport.getGenre().getIdGender());
@@ -317,36 +323,31 @@ public class SportDao {
 
             stmtSport.executeUpdate();
 
-            // Get the generated sport ID
             rs = stmtSport.getGeneratedKeys();
             if (rs.next()) {
-                int sportId = rs.getInt(1); // Get the generated ID
+                int sportId = rs.getInt(1);
 
-                // Get the current year (current year)
                 int currentYear = LocalDate.now().getYear();
 
-                // Insert a record into tblOlympicRecord with the generated sportId and current year
                 stmtOlympicRecord = conn.prepareStatement(queryOlympicRecord);
                 stmtOlympicRecord.setInt(1, sportId);
-                stmtOlympicRecord.setInt(2, currentYear); // Pass the current year
+                stmtOlympicRecord.setInt(2, currentYear);
 
                 stmtOlympicRecord.executeUpdate();
 
-                // Commit the transaction
                 conn.commit();
 
-                System.out.println("Generated Sport ID: " + sportId); // For debugging
+                System.out.println("Generated Sport ID: " + sportId);
                 return sportId;
             } else {
                 throw new SQLException("Failed to retrieve the generated ID for the sport.");
             }
         } catch (SQLException e) {
             if (conn != null) {
-                conn.rollback(); // Rollback the transaction in case of an error
+                conn.rollback();
             }
-            throw e; // Rethrow the exception to propagate the error
+            throw e;
         } finally {
-            // Close resources
             if (rs != null) {
                 rs.close();
             }
@@ -361,7 +362,6 @@ public class SportDao {
             }
         }
     }
-
 
     /**
      * Remove sport
@@ -674,13 +674,13 @@ public class SportDao {
         }
         return range;
     }
+
     /**
-     * Gets the number of distinct teams registered for a specified sport and year.
-     *
-     * @param idSport the ID of the sport
-     * @param year    the year of the event
-     * @return the total number of teams
-     * @throws SQLException if a database access error occurs
+     * Get number of teams in a sport
+     * @param idSport {int} Id sport
+     * @param year {int} Year
+     * @return int
+     * @throws SQLException
      */
     public int getNumberTeamsSport(int idSport, int year) throws SQLException {
         String query = "SELECT COUNT(DISTINCT idTeam) AS quantidade " +

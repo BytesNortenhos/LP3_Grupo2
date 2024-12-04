@@ -92,9 +92,8 @@ public class AthleteDao {
 
         try {
             conn = ConnectionsUtlis.dbConnect();
-            stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS); // Importante: Use Statement.RETURN_GENERATED_KEYS
+            stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
-            // Definir os parâmetros do statement
             stmt.setString(1, password);
             stmt.setString(2, athlete.getName());
             stmt.setString(3, athlete.getCountry().getIdCountry());
@@ -103,16 +102,13 @@ public class AthleteDao {
             stmt.setFloat(6, athlete.getWeight());
             stmt.setDate(7, athlete.getDateOfBirth());
 
-            // Executa o insert
             stmt.executeUpdate();
 
-            // Recuperar o id gerado
-            rs = stmt.getGeneratedKeys(); // Obtém as chaves geradas
+            rs = stmt.getGeneratedKeys();
             if (rs.next()) {
-                generatedId = rs.getInt(1); // O id gerado estará na primeira coluna
+                generatedId = rs.getInt(1);
             }
         } finally {
-            // Fechar recursos
             if (rs != null) {
                 rs.close();
             }
@@ -124,7 +120,7 @@ public class AthleteDao {
             }
         }
 
-        return generatedId; // Retorna o id gerado automaticamente
+        return generatedId;
     }
 
     /**
@@ -208,7 +204,15 @@ public class AthleteDao {
             return new Athlete(idAthlete, password, name, country, gender, height, weight, dateOfBirth, image);
         }
         return null;
-    }   public static Athlete getAthleteByIdMinimum(int idAthlete) throws SQLException {
+    }
+
+    /**
+     * Get athlete by ID (Minimalist)
+     * @param idAthlete {int} ID
+     * @return Athlete
+     * @throws SQLException
+     */
+    public static Athlete getAthleteByIdMinimum(int idAthlete) throws SQLException {
         String query = "SELECT name, height, weight, dateOfBirth FROM tblAthlete WHERE idAthlete = ?";
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idAthlete);
         if (rs != null && rs.next()) {
@@ -236,14 +240,11 @@ public class AthleteDao {
             conn = ConnectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
-            // Define a senha do atleta
-            stmt.setString(1, password); // Senha a ser atualizada
-            stmt.setInt(2, idAthlete);   // ID do atleta para identificar a linha
+            stmt.setString(1, password);
+            stmt.setInt(2, idAthlete);
 
-            // Executa a atualização
             stmt.executeUpdate();
         } finally {
-            // Fechar recursos
             if (stmt != null) {
                 stmt.close();
             }

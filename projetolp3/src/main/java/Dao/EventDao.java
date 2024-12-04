@@ -43,9 +43,9 @@ public class EventDao {
     /**
      * Adds a new event to the database.
      *
-     * @param event The event to be added.
-     * @return {@code true} if the event was successfully added; {@code false} if an event for the selected year already exists.
-     * @throws SQLException If there is an error during database interaction.
+     * @param event {Event} Event
+     * @return boolean
+     * @throws SQLException
      */
     public boolean addEvent(Event event) throws SQLException {
         String checkQuery = "SELECT COUNT(*) FROM tblEvent WHERE year = ?";

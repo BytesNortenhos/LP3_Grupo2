@@ -51,7 +51,6 @@ public class RuleDao {
             conn = ConnectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
-            // Agora estamos acessando diretamente o idSport da Rule
             stmt.setInt(1, rule.getIdSport());
             stmt.setString(2, rule.getDesc());
             stmt.executeUpdate();
@@ -170,11 +169,10 @@ public class RuleDao {
             int idRule = rs.getInt("idRule");
             String description = rs.getString("description");
 
-            // InstÃ¢ncia de Rule com idSport
             Rule rule = new Rule(idRule, idSport, description);
             rules.add(rule);
         }
-        return rules;  // Corrigido para retornar a lista de regras
+        return rules;
     }
 
 }

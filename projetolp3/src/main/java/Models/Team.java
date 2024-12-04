@@ -95,11 +95,9 @@ public class Team {
         this.name = name;
         this.country = country;
         this.genre = genre;
-        this.idSport = idSport; // Atribui apenas o id do esporte
+        this.idSport = idSport;
         this.yearFounded = yearFounded;
     }
-
-
 
     /**
      * Get Team ID

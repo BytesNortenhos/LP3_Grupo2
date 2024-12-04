@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<teams>
+    <team>
+        <name>Equipa teste</name>
+        <country>USA</country>
+		<genre>Men</genre>
+        <sport>Basketball</sport>
+        <foundationYear>1936</foundationYear>
+    </team>
+</teams>

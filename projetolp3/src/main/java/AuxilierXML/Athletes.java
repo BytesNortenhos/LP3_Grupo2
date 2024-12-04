@@ -33,6 +33,11 @@ public class Athletes {
     public void setAthleteList(List<Athlete> athleteList) {
         this.athleteList = athleteList;
     }
+
+    /**
+     * Override toString method
+     * @return String
+     */
     @Override
     public String toString() {
         StringBuilder athletesString = new StringBuilder();
@@ -40,10 +45,10 @@ public class Athletes {
         if (athleteList != null && !athleteList.isEmpty()) {
             athletesString.append("Lista de Atletas:\n");
             for (Athlete athlete : athleteList) {
-                athletesString.append(athlete.toString()).append("\n"); // Chama o toString de cada atleta
+                athletesString.append(athlete.toString()).append("\n");
             }
         } else {
-            athletesString.append("Nenhum atleta registrado.");
+            athletesString.append("Nenhum atleta registado.");
         }
 
         return athletesString.toString();

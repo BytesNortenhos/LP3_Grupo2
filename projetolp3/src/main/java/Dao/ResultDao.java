@@ -292,6 +292,14 @@ public class ResultDao {
         }
         return results;
     }
+
+    /**
+     * Get position by id
+     * @param idSport {int} Id sport
+     * @param date {String} Date
+     * @return {List<List>} List of Results
+     * @throws SQLException
+     */
     public List<List> getPositionById (int idSport, String date) throws SQLException {
         List<List> positions = new ArrayList<>();
         String query = "SELECT *, ROW_NUMBER() OVER (ORDER BY idResult) as position FROM tblResult where idSport = ? AND date LIKE ?;";

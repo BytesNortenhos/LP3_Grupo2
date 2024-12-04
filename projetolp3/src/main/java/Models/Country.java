@@ -74,11 +74,10 @@ public class Country {
     public void setContinent(String continent) {
         this.continent = continent;
     }
+
     /**
-     * Returns a string representation of the Country object.
-     * This includes the name and continent in a readable format, side by side.
-     *
-     * @return A string representing the Country object in "Country - Continent" format.
+     * Override toString
+     * @return String
      */
     @Override
     public String toString() {
