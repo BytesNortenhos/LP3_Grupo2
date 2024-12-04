@@ -621,7 +621,7 @@ public class StartSportsController {
             }
         }
         if (sportDao.getType(idSport).equals("Collective")) {
-            IdsParticipants = registrationDao.getRegisteredTeams(idSport, year, mPart);
+            IdsParticipants = registrationDao.getRegisteredTeams(idSport, year);
             if (sportDao.getOneGame(idSport).equals("One")) {
                 System.out.println("Collective One");
                 CollectiveOne(idSport, IdsParticipants, year, idocal);

@@ -547,15 +547,12 @@ public class RegistrationDao {
      * @return List<Integer>
      * @throws SQLException
      */
-    public List<Integer> getRegisteredTeams(int idSport, int year, int mPart) throws SQLException {
-        System.out.println(mPart);
+    public List<Integer> getRegisteredTeams(int idSport, int year) throws SQLException {
         List<Integer> teams = new ArrayList<>();
         String query = "SELECT idTeam " +
                 "FROM tblRegistration " +
-                "WHERE idStatus = 3 AND idSport = ? AND year = ? " +
-                "GROUP BY idTeam " +
-                "HAVING COUNT(idAthlete) >= ?;";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, year, mPart);
+                "WHERE idStatus = 3 AND idSport = ? AND year = ? ";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, year);
         if (rs != null) {
             while (rs.next()) {
                 int IdTeam = rs.getInt("idTeam");
