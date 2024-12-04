@@ -330,8 +330,8 @@ public class WinnerOlympicDao {
         }
     }
 
-    public void addWinnerOlympicAthleteOne(int idSport, int year, int idTeam, int result) throws SQLException {
-        String query = "INSERT INTO tblWinnerOlympic (idSport, year, idTeam, result) VALUES (?, ?, ?, ?)";
+    public void addWinnerOlympicAthleteOne(int idSport, int year, int idAthlete, int result) throws SQLException {
+        String query = "INSERT INTO tblWinnerOlympic (idSport, year, idAthlete, result) VALUES (?, ?, ?, ?)";
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
@@ -340,7 +340,7 @@ public class WinnerOlympicDao {
 
             stmt.setInt(1, idSport);
             stmt.setInt(2, year);
-            stmt.setInt(3, idTeam);
+            stmt.setInt(3, idAthlete);
             stmt.setInt(4, result);
             stmt.executeUpdate();
         } finally {

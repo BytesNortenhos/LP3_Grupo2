@@ -549,7 +549,7 @@ public class RegistrationDao {
      */
     public List<Integer> getRegisteredTeams(int idSport, int year) throws SQLException {
         List<Integer> teams = new ArrayList<>();
-        String query = "SELECT idTeam " +
+        String query = "SELECT DISTINCT idTeam " +
                 "FROM tblRegistration " +
                 "WHERE idStatus = 3 AND idSport = ? AND year = ? ";
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, year);

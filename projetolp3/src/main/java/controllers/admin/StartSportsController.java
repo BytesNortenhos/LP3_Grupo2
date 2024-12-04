@@ -277,7 +277,7 @@ public class StartSportsController {
                             idLocal = local.getIdLocal();
                         }
                     }
-                    if (sportStart(idSport, year, mPart, idLocal)) {
+                    if (sportStart(idSport, year, idLocal)) {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
                         alert.setTitle("Sucesso!");
                         alert.setHeaderText("Modalidade inicada com sucesso!");
@@ -604,7 +604,7 @@ public class StartSportsController {
         }
     }
 
-    public boolean sportStart(int idSport, int year, int mPart, int idocal) throws SQLException {
+    public boolean sportStart(int idSport, int year, int idocal) throws SQLException {
         List<Integer> IdsParticipants;
 
         registrationDao.setStatusRejected(idSport, year);
@@ -728,7 +728,7 @@ public class StartSportsController {
             int idTeam = IdsParticipants.get(i);
             int resultadoInserir = resultados.get(i);
             java.sql.Date date = new java.sql.Date(System.currentTimeMillis());
-            //resultDao.addResultTeam(idSport, idTeam, date, resultadoInserir, 2);
+            //resultDao.addResultTeam(idSport, idTeam, date, resultadoInserir, idLocal);
             athletes.clear();
             athletes = registrationDao.getAthletesByTeam(idTeam, idSport, year);
             for (int j = 0; j < athletes.size(); j++) {
@@ -919,7 +919,7 @@ public class StartSportsController {
                 System.out.println("ID: " + IdsParticipants.get(i) + ", Pontuação: " + scores.get(i));
             }
             System.out.println();
-        } while (scores.get(0) == scores.get(1) || scores.get(1) == scores.get(2) || scores.get(2) == scores.get(3));
+        } while (scores.getFirst() == scores.get(1) || scores.get(1) == scores.get(2) || scores.get(2) == scores.get(3));
 
         //Atribuir Resultados
         System.out.println("Atribuir Resultados");

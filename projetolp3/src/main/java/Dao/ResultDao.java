@@ -278,7 +278,7 @@ public class ResultDao {
             while (rs.next()) {
 
                 List<Object> result = new ArrayList<>();
-                result.add(rs.getInt("result"));
+                result.add(rs.getString("result"));
                 result.add(rs.getString("sportName"));
                 result.add(rs.getString("sportType"));
                 result.add(rs.getString("teamName"));
@@ -292,18 +292,94 @@ public class ResultDao {
         }
         return results;
     }
-    public List<List> getPositionById (int idSport, String date) throws SQLException {
+    public List<List> getPositionById1 (int idSport, String date) throws SQLException {
+        System.out.println(date);
         List<List> positions = new ArrayList<>();
-        String query = "SELECT *, ROW_NUMBER() OVER (ORDER BY idResult) as position FROM tblResult where idSport = ? AND date LIKE ?;";
+        String query = "SELECT *,\n" +
+                "       DENSE_RANK() OVER (PARTITION BY idSport, [date] ORDER BY idTeam ASC) AS lugar\n" +
+                "FROM tblResult\n" +
+                "WHERE idSport = ? AND [date] = ?;";
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, "%" + date + "%");
         if (rs != null) {
             while (rs.next()) {
                 List<Object> positon = new ArrayList<>();
-                positon.add(rs.getInt("position"));
+                positon.add(rs.getInt("lugar"));
                 positon.add(rs.getInt("idAthlete"));
                 positions.add(positon);
             }
         }
+        return positions;
+    }
+
+    public List<List<Object>> getPositionById2(int idSport, String date) throws SQLException {
+        System.out.println("Query Date: " + date); // Apenas para debugging
+
+        List<List<Object>> positions = new ArrayList<>();
+
+        // Ajuste na consulta SQL para evitar conflitos com palavras reservadas
+        String query = """
+            SELECT *,
+                   DENSE_RANK() OVER (PARTITION BY idSport, [date] ORDER BY idTeam ASC) AS lugar
+            FROM tblResult
+            WHERE idSport = ? AND [date] = ?;
+            """;
+
+        // Usando CachedRowSet para executar a consulta
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, date); // "%" removido para manter igualdade exata
+
+        if (rs != null) {
+            while (rs.next()) {
+                List<Object> position = new ArrayList<>();
+                position.add(rs.getInt("lugar"));       // Adiciona a posição
+                position.add(rs.getInt("idAthlete"));  // Adiciona o ID do atleta
+                positions.add(position);
+            }
+        }
+
+        return positions;
+    }
+
+    public List<List> getPositionByIdCollective(int idSport, String date) throws SQLException {
+        List<List> positions = new ArrayList<>();
+        String query = """
+            SELECT *,
+                   DENSE_RANK() OVER (PARTITION BY idSport, [date] ORDER BY idTeam ASC) AS lugar
+            FROM tblResult
+            WHERE idSport = ? AND [date] = ?;
+            """;
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, date);
+
+        if (rs != null) {
+            while (rs.next()) {
+                List<Object> position = new ArrayList<>();
+                position.add(rs.getInt("lugar"));
+                position.add(rs.getInt("idAthlete"));
+                positions.add(position);
+            }
+        }
+
+        return positions;
+    }
+
+    public List<List> getPositionByIdIndividual(int idSport, String date) throws SQLException {
+        List<List> positions = new ArrayList<>();
+        String query = """
+            SELECT *,
+                   DENSE_RANK() OVER (PARTITION BY idSport, [date] ORDER BY idAthlete ASC) AS lugar
+            FROM tblResult
+            WHERE idSport = ? AND [date] = ?;
+            """;
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, date);
+
+        if (rs != null) {
+            while (rs.next()) {
+                List<Object> position = new ArrayList<>();
+                position.add(rs.getInt("lugar"));
+                position.add(rs.getInt("idAthlete"));
+                positions.add(position);
+            }
+        }
+
         return positions;
     }
 

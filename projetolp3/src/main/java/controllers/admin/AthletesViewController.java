@@ -316,7 +316,12 @@ public class AthletesViewController {
 
         int pos = 0;
         ResultDao resultDao = new ResultDao();
-        List<List> positions = resultDao.getPositionById((Integer) result.get(6), result.get(4).toString());
+        List<List> positions;
+        if (result.get(2).equals("Collective")){
+            positions = resultDao.getPositionByIdCollective((Integer) result.get(6), result.get(4).toString());
+        } else {
+            positions = resultDao.getPositionByIdIndividual((Integer) result.get(6), result.get(4).toString());
+        }
         for (List position : positions) {
             if((Integer) position.get(1) == idAthlete){
                 pos = (Integer) position.get(0);

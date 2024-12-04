@@ -354,9 +354,9 @@ public class HomeControllerAthlete {
         Label nameLabel = new Label("Modalidade: " + (result.get(1) != null ? result.get(1).toString() : "N/A"));
         nameLabel.getStyleClass().add("name-label");
 
-        long resultValue = Long.parseLong(result.get(0).toString());
-        double resultSeconds = resultValue / 1000.0;
-        Label resultLabel = new Label("Resultado: " + resultSeconds + " segundos");
+        String resultValue = String.valueOf(result.get(0).toString());
+        //double resultSeconds = resultValue / 1000.0;
+        Label resultLabel = new Label("Resultado: " + resultValue + " segundos");
         resultLabel.getStyleClass().add("result-label");
 
         Label typeLabel = new Label("Tipo de modalidade: " + (result.get(2) != null ? result.get(2).toString() : "N/A"));
@@ -376,7 +376,7 @@ public class HomeControllerAthlete {
 
         int pos = 0;
         ResultDao resultDao = new ResultDao();
-        List<List> positions = resultDao.getPositionById((Integer) result.get(6), result.get(4).toString());
+        List<List> positions = resultDao.getPositionByIdCollective((Integer) result.get(6), result.get(4).toString());
         for (List position : positions) {
             if((Integer) position.get(1) == idAthlete){
                 pos = (Integer) position.get(0);
