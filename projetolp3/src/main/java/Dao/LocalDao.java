@@ -46,7 +46,7 @@ public class LocalDao {
      */
     public List<Local> getLocalsByYear(int year) throws SQLException{
         List<Local> locals = new ArrayList<>();
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT * FROM tblLocal WHERE constructionYear = ?;", year);
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT * FROM tblLocal WHERE event = ?;", year);
         if (rs != null) {
             while (rs.next()) {
                 int idLocal = rs.getInt("idLocal");
