@@ -337,5 +337,21 @@ public class MedalDao {
             }
         }
     }
+    public static int getMedalsByTeamId(int idTeam) throws SQLException {
+        String query = "SELECT COUNT(DISTINCT m.idMedalType) AS totalMedals " +
+                "FROM tblMedal m " +
+                "INNER JOIN tblMedalType mt ON m.idMedalType = mt.idMedalType " +
+                "WHERE m.idTeam = ?";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idTeam);
+
+        int totalMedals = 0;
+
+        if (rs != null && rs.next()) {
+            totalMedals = rs.getInt("totalMedals");
+        }
+
+        return totalMedals;
+    }
+
 
 }
