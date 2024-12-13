@@ -28,35 +28,7 @@
             prefHeight="400.0" prefWidth="600.0" styleClass="background" xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.athletes.HomeControllerAthlete">
     <top>
-        <HBox styleClass="navBar" prefHeight="40.0" prefWidth="400.0">
-            <Button styleClass="iconHomeNav">
-                <graphic>
-                    <ImageView fx:id="iconHomeNav" fitWidth="55" fitHeight="55" preserveRatio="true"/>
-                </graphic>
-            </Button>
-            <Pane HBox.hgrow="ALWAYS"/>
-            <SplitMenuButton fx:id="sportSplitButton" styleClass="dropdownButton" text="Modalidade">
-                <items>
-                    <MenuItem text="Inscrição" onAction="#showSportsRegister"/>
-                </items>
-            </SplitMenuButton>
-            <Button mnemonicParsing="false" onAction="#changeMode" styleClass="iconMoonNav">
-                <graphic>
-                    <ImageView fx:id="iconModeNav" fitWidth="55" fitHeight="55" preserveRatio="true"/>
-                </graphic>
-            </Button>
-            <SplitMenuButton fx:id="athleteImageSplitButton" prefWidth="40" styleClass="dropdownButton">
-                <graphic>
-                    <StackPane>
-                        <ImageView fx:id="iconAthlete" preserveRatio="true" />
-                    </StackPane>
-                </graphic>
-                <items>
-                    <MenuItem text="Alterar foto" onAction="#updateImage" />
-                    <MenuItem text="Logout" onAction="#showLogin" />
-                </items>
-            </SplitMenuButton>
-        </HBox>
+        <fx:include source="menu.fxml" fx:id="menubar" />
     </top>
     <center>
         <VBox>

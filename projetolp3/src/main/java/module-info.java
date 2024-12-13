@@ -4,6 +4,7 @@ module bytesnortenhos.projetolp3 {
     requires java.sql;
     requires java.sql.rowset;
     requires jakarta.xml.bind;
+    requires java.desktop;
 
 
     opens bytesnortenhos.projetolp3 to javafx.fxml;
