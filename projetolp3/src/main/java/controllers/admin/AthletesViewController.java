@@ -188,7 +188,7 @@ public class AthletesViewController {
 
         ImageView editImageView = new ImageView();
         URL iconEditImageURL = Main.class.getResource("img/iconImageEdit.png");
-        if (iconEditURL != null) {
+        if (iconEditImageURL != null) {
             Image image = new Image(iconEditImageURL.toExternalForm());
             editImageView.setImage(image);
             editImageView.setFitWidth(60);
@@ -286,33 +286,6 @@ public class AthletesViewController {
         Label localLabel = new Label("Local: " + (result.get(5) != null ? result.get(5).toString() : "N/A"));
         localLabel.getStyleClass().add("local-label");
 
-//        int pos = 0;
-//        ResultDao resultDao = new ResultDao();
-//        List<List> positions = new ArrayList<>();
-//        if (result.get(2).equals("Collective")){
-//            if (result.get(7).equals("One")){
-//                positions = resultDao.getPositionByIdCollective((Integer) result.get(6), result.get(4).toString());
-//            }
-//            if (result.get(7).equals("Multiple")){
-//                positions = resultDao.getPositionByIdCollective((Integer) result.get(6), result.get(4).toString());
-//            }
-//        }
-//        if (result.get(2).equals("Individual")){
-//            if (result.get(7).equals("One")){
-//                positions = resultDao.getPositionByIdIndividualOne((Integer) result.get(6), result.get(4).toString());
-//            }
-//            if (result.get(7).equals("Multiple")){
-//                positions = resultDao.getPositionByIdIndividualMultiple((Integer) result.get(6), result.get(4).toString());
-//            }
-//        }
-//        for (List position : positions) {
-//            if((Integer) position.get(1) == idAthlete || position.get(1) == result.get(8)){
-//                pos = (Integer) position.get(0);
-//                System.out.println("pos" + pos);
-//            }
-//        }
-//        Label postionLabel = new Label("Posição: " + pos + "º lugar");
-//        postionLabel.getStyleClass().add("local-label");
 
         resultItem.getChildren().addAll(nameLabel, resultLabel, typeLabel, dateLabel, localLabel);
         return resultItem;

@@ -7,6 +7,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
@@ -23,6 +24,7 @@ import java.sql.SQLException;
 import java.util.Objects;
 
 public class ViewsController {
+    private static Stage stage;
     private static Scene scene;
     @FXML
     private BorderPane parent;
@@ -103,13 +105,13 @@ public class ViewsController {
 
     public void returnHomeMenu(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
-        Parent root = FXMLLoader.load(Objects.requireNonNull(controllers.ViewsController.class.getResource("/bytesnortenhos/projetolp3/athlete/home.fxml")));
-        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
+        Parent root  = FXMLLoader.load(Objects.requireNonNull(controllers.ViewsController.class.getResource("/bytesnortenhos/projetolp3/athlete/home.fxml")));
+        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
-        if (isDarkMode) {
-            scene.getStylesheets().add(Main.class.getResource("css/dark.css").toExternalForm());
-        } else {
-            scene.getStylesheets().add(Main.class.getResource("css/light.css").toExternalForm());
+        if(isDarkMode){
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+        }else{
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
         }
         stage.setScene(scene);
         stage.show();

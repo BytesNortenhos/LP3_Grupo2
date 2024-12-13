@@ -5,7 +5,6 @@ import Models.*;
 import Models.Athlete;
 import bytesnortenhos.projetolp3.Main;
 import controllers.LoginController;
-import controllers.ViewsController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -15,9 +14,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SplitMenuButton;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -30,6 +27,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 public class SportRegisterController {
     @FXML
@@ -63,7 +61,7 @@ public class SportRegisterController {
             sportsDrop.setItems(sportsOptions);
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Erro ao carregar esportes.");
+            System.out.println("Erro ao carregar desportos.");
         }
     }
 
@@ -98,7 +96,7 @@ public class SportRegisterController {
     }
 
     @FXML
-    private void registerSport(ActionEvent event) {
+    private void registerSport(ActionEvent event)  throws IOException{
         int idStatus = 0;
         try {
 
@@ -138,22 +136,36 @@ public class SportRegisterController {
 
             // Obter o ano do evento usando o método getYear()
             int year = selectedEvent.getYear();
-            System.out.println("Ano do evento selecionado: " + year);
 
-            // Criar o objeto Registration com o ano
             Registration registration = new Registration(0, athlete, selectedSport, status, year);
 
-            // Registrar a inscrição
-            RegistrationDao.addRegistrationSolo(registration);
+            RegistrationDao registrationDao = new RegistrationDao();
+            if(registrationDao.addRegistrationSolo(registration) == -1){
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Erro!");
+                alert.setHeaderText("Já está inscrito nesta modalidade!");
+                alert.showAndWait();
+            }
+            else{
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Sucesso!");
+                alert.setHeaderText("Inscrição realizada com sucesso na modalidade " + selectedSport.getName() + "!");
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.isPresent() && result.get() == ButtonType.OK) {
+                    ViewsController viewsController = new ViewsController();
+                    viewsController.returnHomeMenu(event);
+                }
+            }
 
-            // Mensagem de sucesso
-            System.out.println("Inscrição realizada com sucesso!");
+
 
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("Erro ao realizar a inscrição.");
         } catch (NumberFormatException e) {
             System.out.println("Erro ao processar o ano do evento.");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

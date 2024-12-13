@@ -9,7 +9,6 @@ import Models.*;
 import Utils.XMLUtils;
 import bytesnortenhos.projetolp3.Main;
 import controllers.LoginController;
-import controllers.ViewsController;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.UnmarshalException;
 import javafx.event.ActionEvent;
@@ -47,10 +46,10 @@ import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class HomeController {
-    public SplitMenuButton testeSplitButton;
     @FXML
     private FlowPane mainContainer;
     @FXML
@@ -153,6 +152,10 @@ public class HomeController {
         rejectButton.setOnAction(event -> {
             try {
                 RegistrationDao.updateRegistrationStatus(request.getIdRegistration(), 2, 0);
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Sucesso!");
+                alert.setHeaderText("Inscrição recusada com sucesso!");
+                alert.show();
                 Platform.runLater(() -> mainContainer.getChildren().remove(requestItem));
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -174,6 +177,10 @@ public class HomeController {
         }
         else{
             RegistrationDao.updateRegistrationStatus(request.getIdRegistration(), 3, registrationDao.getIdTeam(request.getAthlete().getCountry().getIdCountry(), request.getSport().getIdSport()));
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Sucesso!");
+            alert.setHeaderText("Inscrição aprovada com sucesso na modalidade " + request.getSport().getName() + "!");
+            alert.show();
         }
     }
     private void popWindow(Registration request) {

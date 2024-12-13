@@ -29,7 +29,6 @@
             <items>
                 <MenuItem text="Adicionar evento" onAction="#showAddEvent"/>
                 <MenuItem text="Visualizar eventos" onAction="#showViewEvent"/>
-                <MenuItem text="Alterar imagem" onAction="#updateImageEvent"/>
             </items>
         </SplitMenuButton>
         <SplitMenuButton fx:id="sportSplitButton" styleClass="dropdownButton" text="Gerir modalidade">

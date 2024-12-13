@@ -105,9 +105,9 @@ public class IniciarModalidadesTest {
         registrationsAdicionados.add(registration4);
         registrationsAdicionados.add(registration5);
 
-
+        RegistrationDao registrationDao = new RegistrationDao();
         for (Registration reg : registrationsAdicionados) {
-            reg.setIdRegistration(RegistrationDao.addRegistrationSolo(reg));
+            reg.setIdRegistration(registrationDao.addRegistrationSolo(reg));
         }
 
         for (Athlete athlete : athletesAdicionados) {

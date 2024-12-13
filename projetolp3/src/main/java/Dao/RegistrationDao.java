@@ -190,7 +190,7 @@ public class RegistrationDao {
      * @return {int} Generated ID
      * @throws SQLException
      */
-    public static int addRegistrationSolo(Registration registration) throws SQLException {
+    public int addRegistrationSolo(Registration registration) throws SQLException {
         String checkQuery = "SELECT COUNT(*) FROM tblRegistration WHERE idAthlete = ? AND idSport = ? AND idStatus = 3 AND year = ?";
         String insertQuery = "INSERT INTO tblRegistration (idAthlete, idSport, idStatus, year) VALUES (?, ?, ?, ?)";
 
@@ -225,11 +225,6 @@ public class RegistrationDao {
             int idStatus = registration.getStatus().getIdStatus();
             int year = registration.getYear();
 
-            System.out.println("Inserting new registration:");
-            System.out.println("idAthlete: " + idAthlete);
-            System.out.println("idSport: " + idSport);
-            System.out.println("idStatus: " + idStatus);
-            System.out.println("year: " + year);
 
             insertStmt.setInt(1, idAthlete);
             insertStmt.setInt(2, idSport);
@@ -237,7 +232,6 @@ public class RegistrationDao {
             insertStmt.setInt(4, year);
 
             insertStmt.executeUpdate();
-            System.out.println("Registration successfully added!");
 
             generatedKeys = insertStmt.getGeneratedKeys();
             if (generatedKeys.next()) {
@@ -336,7 +330,12 @@ public class RegistrationDao {
             stmt = conn.prepareStatement(query);
 
             stmt.setInt(1, newStatus);
-            stmt.setInt(2, idTeam);
+            if(idTeam == 0){
+                stmt.setNull(2, 0);
+            }
+            else {
+                stmt.setInt(2, idTeam);
+            }
             stmt.setInt(3, registrationId);
 
             stmt.executeUpdate();

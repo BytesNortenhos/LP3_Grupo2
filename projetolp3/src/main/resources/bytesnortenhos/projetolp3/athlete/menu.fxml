@@ -12,7 +12,7 @@
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.athletes.ViewsController">
     <top>
         <HBox styleClass="navBar" prefHeight="40.0" prefWidth="400.0">
-            <Button styleClass="iconHomeNav">
+            <Button styleClass="iconHomeNav" onAction="#returnHomeMenu">
                 <graphic>
                     <ImageView fx:id="iconHomeNav" fitWidth="55" fitHeight="55" preserveRatio="true"/>
                 </graphic>
