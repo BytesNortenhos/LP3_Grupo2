@@ -11,6 +11,7 @@ import Dao.CountryDao;
 import Dao.EventDao;
 import Models.Country;
 import Models.Event;
+import Utils.ErrorHandler;
 import Utils.XMLUtils;
 import bytesnortenhos.projetolp3.Main;
 import controllers.ViewsController;
@@ -422,24 +423,24 @@ public class EventAddController {
                         String content = teams.toString();
                         if(previewXmlContent(content)) {
                             UploadXmlDAO uploadXmlDAO = new UploadXmlDAO();
-                            boolean uploaded = uploadXmlDAO.addTeams(teams);
-                            if (uploaded) {
+                            ErrorHandler uploaded = uploadXmlDAO.addTeams(teams);
+                            if (uploaded.isSuccessful()) {
                                 Alert alerta = new Alert(Alert.AlertType.INFORMATION);
                                 alerta.setTitle("Sucesso!");
                                 alerta.setHeaderText("Upload (apenas dos dados não repetidos) foi efetuado! Verifique pois se todos os dados forem repetidos, nada foi inserido!");
                                 alerta.show();
                             } else {
                                 Alert alerta = new Alert(Alert.AlertType.ERROR);
-                                alerta.setTitle("Erro!");
-                                alerta.setHeaderText("Ocorreu um erro ao adicionar os dados à Base de Dados!");
+                                alerta.setTitle("Erro ao Adicionar à Base de Dados:");
+                                alerta.setHeaderText(uploaded.getMessage());
                                 alerta.show();
                             }
 
-                            boolean xmlSaved = uploadXmlDAO.saveXML(xmlPath, xsdPath);
-                            if (!xmlSaved) {
+                            ErrorHandler xmlSaved = uploadXmlDAO.saveXML(xmlPath, xsdPath);
+                            if (!xmlSaved.isSuccessful()) {
                                 Alert alerta = new Alert(Alert.AlertType.ERROR);
-                                alerta.setTitle("Erro!");
-                                alerta.setHeaderText("Ocorreu um erro ao guardar o ficheiro XML/XSD!");
+                                alerta.setTitle("Erro ao Guardar Ficheiro XML/XSD:");
+                                alerta.setHeaderText(xmlSaved.getMessage());
                                 alerta.show();
                             }
                         } else {
@@ -455,8 +456,8 @@ public class EventAddController {
                         alerta.show();
                     } catch (SQLException e) {
                         Alert alerta = new Alert(Alert.AlertType.ERROR);
-                        alerta.setTitle("Erro!");
-                        alerta.setHeaderText("Ocorreu um erro ao adicionar os dados à Base de Dados!");
+                        alerta.setTitle("Erro relacionado à Base de Dados!");
+                        alerta.setHeaderText(e.getMessage());
                         alerta.show();
                     }
                 } else {
@@ -516,24 +517,24 @@ public class EventAddController {
                         String content = sports.toString();
                         if(previewXmlContent(content)) {
                             UploadXmlDAO uploadXmlDAO = new UploadXmlDAO();
-                            boolean uploaded = uploadXmlDAO.addSports(sports);
-                            if (uploaded) {
+                            ErrorHandler uploaded = uploadXmlDAO.addSports(sports);
+                            if (uploaded.isSuccessful()) {
                                 Alert alerta = new Alert(Alert.AlertType.INFORMATION);
                                 alerta.setTitle("Sucesso!");
                                 alerta.setHeaderText("Upload (apenas dos dados não repetidos) foi efetuado! Verifique pois se todos os dados forem repetidos, nada foi inserido!");
                                 alerta.show();
                             } else {
                                 Alert alerta = new Alert(Alert.AlertType.ERROR);
-                                alerta.setTitle("Erro!");
-                                alerta.setHeaderText("Ocorreu um erro ao adicionar os dados à Base de Dados!");
+                                alerta.setTitle("Erro ao Adicionar à Base de Dados:");
+                                alerta.setHeaderText(uploaded.getMessage());
                                 alerta.show();
                             }
 
-                            boolean xmlSaved = uploadXmlDAO.saveXML(xmlPath, xsdPath);
-                            if (!xmlSaved) {
+                            ErrorHandler xmlSaved = uploadXmlDAO.saveXML(xmlPath, xsdPath);
+                            if (!xmlSaved.isSuccessful()) {
                                 Alert alerta = new Alert(Alert.AlertType.ERROR);
-                                alerta.setTitle("Erro!");
-                                alerta.setHeaderText("Ocorreu um erro ao guardar o ficheiro XML/XSD!");
+                                alerta.setTitle("Erro ao Guardar Ficheiro XML/XSD:");
+                                alerta.setHeaderText(xmlSaved.getMessage());
                                 alerta.show();
                             }
                         } else {
@@ -544,13 +545,14 @@ public class EventAddController {
                         }
                     }  catch (JAXBException e) {
                         Alert alerta = new Alert(Alert.AlertType.ERROR);
-                        alerta.setTitle("Erro!");
+                        alerta.setTitle("Erro relacionado ao XML!");
                         alerta.setHeaderText("Os dados do XML não coincidem com a opção escolhida!");
+
                         alerta.show();
                     } catch (SQLException e) {
                         Alert alerta = new Alert(Alert.AlertType.ERROR);
-                        alerta.setTitle("Erro!");
-                        alerta.setHeaderText("Ocorreu um erro ao adicionar os dados à Base de Dados!");
+                        alerta.setTitle("Erro relacionado à Base de Dados!");
+                        alerta.setHeaderText(e.getMessage());
                         alerta.show();
                     }
                 } else {
@@ -610,24 +612,24 @@ public class EventAddController {
                         String content = athletes.toString();
                         if(previewXmlContent(content)) {
                             UploadXmlDAO uploadXmlDAO = new UploadXmlDAO();
-                            boolean uploaded = uploadXmlDAO.addAthletes(athletes);
-                            if (uploaded) {
+                            ErrorHandler uploaded = uploadXmlDAO.addAthletes(athletes);
+                            if (uploaded.isSuccessful()) {
                                 Alert alerta = new Alert(Alert.AlertType.INFORMATION);
                                 alerta.setTitle("Sucesso!");
                                 alerta.setHeaderText("Upload (apenas dos dados não repetidos) foi efetuado! Verifique pois se todos os dados forem repetidos, nada foi inserido!");
                                 alerta.show();
                             } else {
                                 Alert alerta = new Alert(Alert.AlertType.ERROR);
-                                alerta.setTitle("Erro!");
-                                alerta.setHeaderText("Ocorreu um erro ao adicionar os dados à Base de Dados!");
+                                alerta.setTitle("Erro ao Adicionar à Base de Dados:");
+                                alerta.setHeaderText(uploaded.getMessage());
                                 alerta.show();
                             }
 
-                            boolean xmlSaved = uploadXmlDAO.saveXML(xmlPath, xsdPath);
-                            if (!xmlSaved) {
+                            ErrorHandler xmlSaved = uploadXmlDAO.saveXML(xmlPath, xsdPath);
+                            if (!xmlSaved.isSuccessful()) {
                                 Alert alerta = new Alert(Alert.AlertType.ERROR);
-                                alerta.setTitle("Erro!");
-                                alerta.setHeaderText("Ocorreu um erro ao guardar o ficheiro XML/XSD!");
+                                alerta.setTitle("Erro ao Guardar Ficheiro XML/XSD:");
+                                alerta.setHeaderText(xmlSaved.getMessage());
                                 alerta.show();
                             }
                         } else {
@@ -643,8 +645,8 @@ public class EventAddController {
                         alerta.show();
                     } catch (SQLException e) {
                         Alert alerta = new Alert(Alert.AlertType.ERROR);
-                        alerta.setTitle("Erro!");
-                        alerta.setHeaderText("Ocorreu um erro ao adicionar os dados à Base de Dados!");
+                        alerta.setTitle("Erro relacionado à Base de Dados!");
+                        alerta.setHeaderText(e.getMessage());
                         alerta.show();
                     }
                 } else {

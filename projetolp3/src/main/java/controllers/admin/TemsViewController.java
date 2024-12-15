@@ -5,6 +5,7 @@ import AuxilierXML.Sports;
 import AuxilierXML.Teams;
 import AuxilierXML.UploadXmlDAO;
 import Dao.*;
+import Utils.ErrorHandler;
 import Utils.XMLUtils;
 import bytesnortenhos.projetolp3.Main;
 import controllers.ViewsController;
@@ -512,21 +513,21 @@ public class TemsViewController {
                         String content = teams.toString();
                         if(previewXmlContent(content)) {
                             UploadXmlDAO uploadXmlDAO = new UploadXmlDAO();
-                            boolean uploaded = uploadXmlDAO.addTeams(teams);
-                            if (uploaded) {
+                            ErrorHandler uploaded = uploadXmlDAO.addTeams(teams);
+                            if (uploaded.isSuccessful()) {
                                 Alert alerta = new Alert(Alert.AlertType.INFORMATION);
                                 alerta.setTitle("Sucesso!");
                                 alerta.setHeaderText("Upload (apenas dos dados não repetidos) foi efetuado! Verifique pois se todos os dados forem repetidos, nada foi inserido!");
                                 alerta.show();
                             } else {
                                 Alert alerta = new Alert(Alert.AlertType.ERROR);
-                                alerta.setTitle("Erro!");
-                                alerta.setHeaderText("Ocorreu um erro ao adicionar os dados à Base de Dados!");
+                                alerta.setTitle("Erro ao Adicionar Dados à Base de Dados!");
+                                alerta.setHeaderText(uploaded.getMessage());
                                 alerta.show();
                             }
 
-                            boolean xmlSaved = uploadXmlDAO.saveXML(xmlPath, xsdPath);
-                            if (!xmlSaved) {
+                            ErrorHandler xmlSaved = uploadXmlDAO.saveXML(xmlPath, xsdPath);
+                            if (!xmlSaved.isSuccessful()) {
                                 Alert alerta = new Alert(Alert.AlertType.ERROR);
                                 alerta.setTitle("Erro!");
                                 alerta.setHeaderText("Ocorreu um erro ao guardar o ficheiro XML/XSD!");
@@ -606,21 +607,21 @@ public class TemsViewController {
                         String content = sports.toString();
                         if(previewXmlContent(content)) {
                             UploadXmlDAO uploadXmlDAO = new UploadXmlDAO();
-                            boolean uploaded = uploadXmlDAO.addSports(sports);
-                            if (uploaded) {
+                            ErrorHandler uploaded = uploadXmlDAO.addSports(sports);
+                            if (uploaded.isSuccessful()) {
                                 Alert alerta = new Alert(Alert.AlertType.INFORMATION);
                                 alerta.setTitle("Sucesso!");
                                 alerta.setHeaderText("Upload (apenas dos dados não repetidos) foi efetuado! Verifique pois se todos os dados forem repetidos, nada foi inserido!");
                                 alerta.show();
                             } else {
                                 Alert alerta = new Alert(Alert.AlertType.ERROR);
-                                alerta.setTitle("Erro!");
-                                alerta.setHeaderText("Ocorreu um erro ao adicionar os dados à Base de Dados!");
+                                alerta.setTitle("Erro ao Adicionar Dados à Base de Dados!");
+                                alerta.setHeaderText(uploaded.getMessage());
                                 alerta.show();
                             }
 
-                            boolean xmlSaved = uploadXmlDAO.saveXML(xmlPath, xsdPath);
-                            if (!xmlSaved) {
+                            ErrorHandler xmlSaved = uploadXmlDAO.saveXML(xmlPath, xsdPath);
+                            if (!xmlSaved.isSuccessful()) {
                                 Alert alerta = new Alert(Alert.AlertType.ERROR);
                                 alerta.setTitle("Erro!");
                                 alerta.setHeaderText("Ocorreu um erro ao guardar o ficheiro XML/XSD!");
@@ -700,21 +701,21 @@ public class TemsViewController {
                         String content = athletes.toString();
                         if(previewXmlContent(content)) {
                             UploadXmlDAO uploadXmlDAO = new UploadXmlDAO();
-                            boolean uploaded = uploadXmlDAO.addAthletes(athletes);
-                            if (uploaded) {
+                            ErrorHandler uploaded = uploadXmlDAO.addAthletes(athletes);
+                            if (uploaded.isSuccessful()) {
                                 Alert alerta = new Alert(Alert.AlertType.INFORMATION);
                                 alerta.setTitle("Sucesso!");
                                 alerta.setHeaderText("Upload (apenas dos dados não repetidos) foi efetuado! Verifique pois se todos os dados forem repetidos, nada foi inserido!");
                                 alerta.show();
                             } else {
                                 Alert alerta = new Alert(Alert.AlertType.ERROR);
-                                alerta.setTitle("Erro!");
-                                alerta.setHeaderText("Ocorreu um erro ao adicionar os dados à Base de Dados!");
+                                alerta.setTitle("Erro ao Adicionar Dados à Base de Dados!");
+                                alerta.setHeaderText(uploaded.getMessage());
                                 alerta.show();
                             }
 
-                            boolean xmlSaved = uploadXmlDAO.saveXML(xmlPath, xsdPath);
-                            if (!xmlSaved) {
+                            ErrorHandler xmlSaved = uploadXmlDAO.saveXML(xmlPath, xsdPath);
+                            if (!xmlSaved.isSuccessful()) {
                                 Alert alerta = new Alert(Alert.AlertType.ERROR);
                                 alerta.setTitle("Erro!");
                                 alerta.setHeaderText("Ocorreu um erro ao guardar o ficheiro XML/XSD!");

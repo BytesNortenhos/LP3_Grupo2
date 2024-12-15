@@ -1,5 +1,6 @@
 package AuxilierXML;
 import Utils.ConnectionsUtlis;
+import Utils.ErrorHandler;
 import Utils.PasswordUtils;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -22,10 +23,10 @@ public class UploadXmlDAO {
     /**
      * Add sports from XML to database
      * @param sports {Sports} Sports object
-     * @return boolean
+     * @return ErrorHandler
      * @throws SQLException
      */
-    public boolean addSports(Sports sports) throws SQLException {
+    public ErrorHandler addSports(Sports sports) throws SQLException {
         Connection conn = null;
         PreparedStatement stmt = null;
         PreparedStatement stmt2 = null;
@@ -196,20 +197,19 @@ public class UploadXmlDAO {
                 }
             }
 
-            return true;
+            return new ErrorHandler(true, "");
         } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+            return new ErrorHandler(false, e.getMessage());
         }
     }
 
     /**
      * Add teams from XML to database
      * @param teams {Teams} Teams object
-     * @return boolean
+     * @return ErrorHandler
      * @throws SQLException
      */
-    public boolean addTeams(Teams teams) throws SQLException {
+    public ErrorHandler addTeams(Teams teams) throws SQLException {
         Connection conn = null;
         PreparedStatement stmt = null;
         PreparedStatement stmt2 = null;
@@ -281,20 +281,19 @@ public class UploadXmlDAO {
                     }
                 }
             }
-            return true;
+            return new ErrorHandler(true, "");
         } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+            return new ErrorHandler(false, e.getMessage());
         }
     }
 
     /**
      * Add athletes from XML to database
      * @param athletes {Athletes} Athletes object
-     * @return boolean
+     * @return ErrorHandler
      * @throws SQLException
      */
-    public boolean addAthletes(Athletes athletes) throws SQLException {
+    public ErrorHandler addAthletes(Athletes athletes) throws SQLException {
         Connection conn = null;
         PreparedStatement stmt = null;
         PreparedStatement stmt2 = null;
@@ -382,10 +381,9 @@ public class UploadXmlDAO {
                 }
 
             }
-            return true;
+            return new ErrorHandler(true, "");
         } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+            return new ErrorHandler(false, e.getMessage());
         }
     }
 
@@ -415,7 +413,7 @@ public class UploadXmlDAO {
      * @param pathXSD {String} Path of XSD file
      * @return boolean
      */
-    public boolean saveXML(String pathXML, String pathXSD) {
+    public ErrorHandler saveXML(String pathXML, String pathXSD) {
         String pathSave = "src/main/java/DataXML_uploads/";
 
         File fileXML = new File(pathXML);
@@ -429,10 +427,9 @@ public class UploadXmlDAO {
             Files.copy(fileXML.toPath(), Path.of(pathSave, formattedDateTime + "_" + fileXML.getName()), StandardCopyOption.REPLACE_EXISTING);
             Files.copy(fileXSD.toPath(), Path.of(pathSave, formattedDateTime + "_" + fileXSD.getName()), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
-            System.out.println(e.getMessage());
-            return false;
+            return new ErrorHandler(false, e.getMessage());
         }
 
-        return true;
+        return new ErrorHandler(true, "");
     }
 }
