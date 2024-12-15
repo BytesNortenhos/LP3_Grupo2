@@ -29,15 +29,14 @@ public class UploadXmlDAO {
         Connection conn = null;
         PreparedStatement stmt = null;
         PreparedStatement stmt2 = null;
-        conn = ConnectionsUtlis.dbConnect();
 
         try {
+            conn = ConnectionsUtlis.dbConnect();
+            PreparedStatement stmtGetSport = conn.prepareStatement("SELECT name FROM tblSport WHERE name IN (?) AND idGender = ?");
             for (Sport sport : sports.getSportList()) {
-                String queryGetSport = "SELECT name FROM tblSport WHERE name LIKE ? AND idGender = ?";
-                stmt = conn.prepareStatement(queryGetSport);
-                stmt.setString(1, sport.getName());
-                stmt.setInt(2, sport.getXmlGenre().equals("Men") ? 1 : 2);
-                ResultSet rsSport = stmt.executeQuery();
+                stmtGetSport.setString(1, sport.getName());
+                stmtGetSport.setInt(2, sport.getXmlGenre().equals("Men") ? 1 : 2);
+                ResultSet rsSport = stmtGetSport.executeQuery();
 
                 if(rsSport.next()) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -217,13 +216,13 @@ public class UploadXmlDAO {
 
         try {
             conn = ConnectionsUtlis.dbConnect();
+            PreparedStatement stmtGetTeam = conn.prepareStatement("SELECT name FROM tblTeam WHERE name IN (?) AND idGender = ?");
+            PreparedStatement stmtGetSport = conn.prepareStatement("SELECT idSport FROM tblSport WHERE name IN (?) AND idGender = ?");
 
             for (Team team : teams.getTeamList()) {
-                String queryGetTeam = "SELECT name FROM tblTeam WHERE name LIKE ? AND idGender = ?";
-                stmt = conn.prepareStatement(queryGetTeam);
-                stmt.setString(1, team.getName());
-                stmt.setInt(2, team.getXmlGenre().equals("Men") ? 1 : 2);
-                ResultSet rsTeam = stmt.executeQuery();
+                stmtGetTeam.setString(1, team.getName());
+                stmtGetTeam.setInt(2, team.getXmlGenre().equals("Men") ? 1 : 2);
+                ResultSet rsTeam = stmtGetTeam.executeQuery();
 
                 if(rsTeam.next()) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -235,11 +234,9 @@ public class UploadXmlDAO {
 
                 int tempSportId = 0;
                 int tempGenderId = (team.getXmlGenre().equals("Men") ? 1 : 2);
-                String queryGetSport = "SELECT idSport FROM tblSport WHERE name LIKE ? AND idGender = ?";
-                stmt = conn.prepareStatement(queryGetSport);
-                stmt.setString(1, team.getXmlSport());
-                stmt.setInt(2, tempGenderId);
-                ResultSet rs = stmt.executeQuery();
+                stmtGetSport.setString(1, team.getXmlSport());
+                stmtGetSport.setInt(2, tempGenderId);
+                ResultSet rs = stmtGetSport.executeQuery();
 
                 if (rs.next()) {
                     tempSportId = rs.getInt(1);
@@ -288,10 +285,6 @@ public class UploadXmlDAO {
         } catch (Exception e) {
             e.printStackTrace();
             return false;
-        } finally {
-            if (stmt != null) stmt.close();
-            if (stmt2 != null) stmt2.close();
-            if (conn != null) conn.close();
         }
     }
 
@@ -305,14 +298,13 @@ public class UploadXmlDAO {
         Connection conn = null;
         PreparedStatement stmt = null;
         PreparedStatement stmt2 = null;
-        conn = ConnectionsUtlis.dbConnect();
 
         try {
+            conn = ConnectionsUtlis.dbConnect();
+            PreparedStatement stmtGetAthlete = conn.prepareStatement("SELECT name FROM tblAthlete WHERE name IN (?)");
             for (Athlete athlete : athletes.getAthleteList()) {
-                String queryGetAthlete = "SELECT name FROM tblAthlete WHERE name LIKE ?";
-                stmt = conn.prepareStatement(queryGetAthlete);
-                stmt.setString(1, athlete.getName());
-                ResultSet rsAthlete = stmt.executeQuery();
+                stmtGetAthlete.setString(1, athlete.getName());
+                ResultSet rsAthlete = stmtGetAthlete.executeQuery();
 
                 if(rsAthlete.next()) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
