@@ -33,9 +33,10 @@ public class UploadXmlDAO {
 
         try {
             for (Sport sport : sports.getSportList()) {
-                String queryGetSport = "SELECT name FROM tblSport WHERE name LIKE ?";
+                String queryGetSport = "SELECT name FROM tblSport WHERE name LIKE ? AND idGender = ?";
                 stmt = conn.prepareStatement(queryGetSport);
                 stmt.setString(1, sport.getName());
+                stmt.setInt(2, sport.getXmlGenre().equals("Men") ? 1 : 2);
                 ResultSet rsSport = stmt.executeQuery();
 
                 if(rsSport.next()) {
@@ -218,9 +219,10 @@ public class UploadXmlDAO {
             conn = ConnectionsUtlis.dbConnect();
 
             for (Team team : teams.getTeamList()) {
-                String queryGetTeam = "SELECT name FROM tblTeam WHERE name LIKE ?";
+                String queryGetTeam = "SELECT name FROM tblTeam WHERE name LIKE ? AND idGender = ?";
                 stmt = conn.prepareStatement(queryGetTeam);
                 stmt.setString(1, team.getName());
+                stmt.setInt(2, team.getXmlGenre().equals("Men") ? 1 : 2);
                 ResultSet rsTeam = stmt.executeQuery();
 
                 if(rsTeam.next()) {
