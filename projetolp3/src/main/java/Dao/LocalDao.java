@@ -16,9 +16,10 @@ public class LocalDao {
      * @return {List<Local>} List of locals
      * @throws SQLException
      */
-    public static List<Local> getLocals() throws SQLException {
+    public List<Local> getLocals() throws SQLException {
         List<Local> locals = new ArrayList<>();
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT * FROM tblLocal;");
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery("SELECT * FROM tblLocal;");
         if (rs != null) {
             while (rs.next()) {
                 int idLocal = rs.getInt("idLocal");
@@ -46,7 +47,8 @@ public class LocalDao {
      */
     public List<Local> getLocalsByYear(int year) throws SQLException{
         List<Local> locals = new ArrayList<>();
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT * FROM tblLocal WHERE event = ?;", year);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery("SELECT * FROM tblLocal WHERE event = ?;", year);
         if (rs != null) {
             while (rs.next()) {
                 int idLocal = rs.getInt("idLocal");
@@ -71,13 +73,14 @@ public class LocalDao {
      * @param local {Local} Local
      * @throws SQLException
      */
-    public static void addLocal(Local local) throws SQLException {
+    public void addLocal(Local local) throws SQLException {
         String query = "INSERT INTO tblLocal (name, type, address, city, capacity, constructionYear) " +
                 "VALUES (?, ?, ?, ?, ?, ?)";
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
             stmt.setString(1, local.getName());
@@ -102,12 +105,13 @@ public class LocalDao {
      * @param idLocal {int} Local ID
      * @throws SQLException
      */
-    public static void removeLocal(int idLocal) throws SQLException {
+    public void removeLocal(int idLocal) throws SQLException {
         String query = "DELETE FROM tblLocal WHERE idLocal = ?";
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
             stmt.setInt(1, idLocal);
             stmt.executeUpdate();
@@ -126,13 +130,14 @@ public class LocalDao {
      * @param local {Local} Local
      * @throws SQLException
      */
-    public static void updateLocal(Local local) throws SQLException {
+    public void updateLocal(Local local) throws SQLException {
         String query = "UPDATE tblLocal SET name = ?, type = ?, address = ?, city = ?, capacity = ?, constructionYear = ? " +
                 "WHERE idLocal = ?";
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
             stmt.setString(1, local.getName());
@@ -161,7 +166,8 @@ public class LocalDao {
      */
     public static Local getLocalById(int idLocal) throws SQLException {
         String query = "SELECT * FROM tblLocal WHERE idLocal = ?";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idLocal);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idLocal);
         if (rs != null && rs.next()) {
             String name = rs.getString("name");
             String type = rs.getString("type");

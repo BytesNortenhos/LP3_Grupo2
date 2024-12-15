@@ -20,7 +20,8 @@ public class EventDao {
      */
     public static List<Event> getEvents() throws SQLException {
         List<Event> events = new ArrayList<>();
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT e.year, e.logo, " +
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery("SELECT e.year, e.logo, " +
                 "c.idCountry, c.name AS countryName, c.continent " +
                 "FROM tblEvent e " +
                 "INNER JOIN tblCountry c ON e.idCountry = c.idCountry " +
@@ -55,7 +56,8 @@ public class EventDao {
         ResultSet rs = null;
 
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(checkQuery);
             stmt.setInt(1, event.getYear());
             rs = stmt.executeQuery();
@@ -93,12 +95,13 @@ public class EventDao {
      * @param year {int} Year
      * @throws SQLException
      */
-    public static void removeEvent(int year) throws SQLException {
+    public void removeEvent(int year) throws SQLException {
         String query = "DELETE FROM tblEvent WHERE year = ?";
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
             stmt.setInt(1, year);
@@ -118,12 +121,13 @@ public class EventDao {
      * @param event {Event} Event
      * @throws SQLException
      */
-    public static void updateEvent(Event event) throws SQLException {
+    public void updateEvent(Event event) throws SQLException {
         String query = "UPDATE tblEvent SET idCountry = ?, Logo = ? WHERE year = ?";
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
             stmt.setString(1, event.getCountry().getIdCountry());
@@ -146,13 +150,14 @@ public class EventDao {
      * @return Event
      * @throws SQLException
      */
-    public static Event getEventByYear(int year) throws SQLException {
+    public Event getEventByYear(int year) throws SQLException {
         String query = "SELECT e.year, e.logo, " +
                 "c.idCountry, c.name AS countryName, c.continent " +
                 "FROM tblEvent e " +
                 "INNER JOIN tblCountry c ON e.idCountry = c.idCountry " +
                 "WHERE e.year = ?;";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, year);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, year);
         if (rs != null && rs.next()) {
             Country country = new Country(rs.getString("idCountry"), rs.getString("countryName"), rs.getString("continent"));
             String logo = rs.getString("Logo");
@@ -174,7 +179,8 @@ public class EventDao {
         PreparedStatement stmt = null;
 
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
             stmt.setString(1, path + year + extensao);
             stmt.setInt(2, year);
@@ -192,7 +198,8 @@ public class EventDao {
 
     public List<List> getEventsToShow() throws SQLException {
         List<List> events = new ArrayList<>();
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT e.year, e.logo, " +
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery("SELECT e.year, e.logo, " +
                 "c.idCountry, c.name AS countryName, c.continent " +
                 "FROM tblEvent e " +
                 "INNER JOIN tblCountry c ON e.idCountry = c.idCountry " +

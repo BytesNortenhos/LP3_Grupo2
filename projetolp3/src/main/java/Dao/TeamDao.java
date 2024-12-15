@@ -22,7 +22,8 @@ public class TeamDao {
      */
     public static List<Team> getTeams() throws SQLException {
         List<Team> teams = new ArrayList<>();
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT t.idTeam, t.name AS teamName, t.idCountry, c.name AS countryName, " +
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery("SELECT t.idTeam, t.name AS teamName, t.idCountry, c.name AS countryName, " +
                 "c.continent, t.idGender, g.description AS genderDesc, " +
                 "t.idSport, t.yearFounded, t.minParticipants, t.maxParticipants " +
                 "FROM tblTeam t " +
@@ -61,7 +62,8 @@ public class TeamDao {
      */
     public List<List> getTeamsNamesAndId() throws SQLException {
         List<List> teams = new ArrayList<>();
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT idTeam, name FROM tblTeam;");
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery("SELECT idTeam, name FROM tblTeam;");
         if (rs != null) {
             while (rs.next()) {
                 List<String> team = new ArrayList<>();
@@ -91,7 +93,8 @@ public class TeamDao {
         boolean isAdded = false;
 
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
 
             stmt.setString(1, team.getName());
@@ -133,7 +136,8 @@ public class TeamDao {
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
             stmt.setInt(1, idTeam);
             stmt.executeUpdate();
@@ -157,7 +161,8 @@ public class TeamDao {
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
             stmt.setString(1, team.getName());
@@ -192,7 +197,8 @@ public class TeamDao {
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
             stmt.setString(1,name);
@@ -224,7 +230,8 @@ public class TeamDao {
                 "INNER JOIN tblCountry c ON t.idCountry = c.idCountry " +
                 "INNER JOIN tblGender g ON t.idGender = g.idGender " +
                 "WHERE t.idTeam = ?";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idTeam);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idTeam);
         if (rs != null && rs.next()) {
             String teamName = rs.getString("teamName");
             String idCountry = rs.getString("idCountry");
@@ -253,7 +260,8 @@ public class TeamDao {
      */
     public List<List> getTeamToShow(int idAthlete) throws SQLException {
         List<List> teams = new ArrayList<>();
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT t.idTeam, t.name AS teamName, " +
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery("SELECT t.idTeam, t.name AS teamName, " +
                 "g.idGender AS genderId, g.description AS genderDesc, " +
                 "c.idCountry, c.name AS countryName " +
                 "FROM tblTeam t " +
@@ -291,7 +299,8 @@ public class TeamDao {
                 "INNER JOIN tblGender g ON t.idGender = g.idGender " +
                 "WHERE t.idTeam = ?";
 
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idTeam);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idTeam);
         if (rs != null && rs.next()) {
             String teamName = rs.getString("teamName");
             String idCountry = rs.getString("idCountry");
@@ -316,7 +325,7 @@ public class TeamDao {
      * @return {Team} Team
      * @throws SQLException
      */
-    public static Team getTeamByIdMinimum(int idTeam) throws SQLException {
+    public Team getTeamByIdMinimum(int idTeam) throws SQLException {
         String query = "SELECT t.idTeam, t.name AS teamName, c.idCountry, c.name AS countryName, " +
                 "g.idGender AS genderId, g.description AS genderDesc, " +
                 "t.idSport, t.yearFounded " +
@@ -325,7 +334,8 @@ public class TeamDao {
                 "INNER JOIN tblGender g ON t.idGender = g.idGender " +
                 "WHERE t.idTeam = ?";
 
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idTeam);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idTeam);
         if (rs != null && rs.next()) {
             String teamName = rs.getString("teamName");
             String idCountry = rs.getString("idCountry");
@@ -350,7 +360,8 @@ public class TeamDao {
      */
     public List<List> getTeamsToShow() throws SQLException {
         List<List> teams = new ArrayList<>();
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT t.idTeam as idTeam, t.name as teamName, t.yearFounded, t.minParticipants, t.maxParticipants, " +
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery("SELECT t.idTeam as idTeam, t.name as teamName, t.yearFounded, t.minParticipants, t.maxParticipants, " +
                         "c.name as countryName, g.description as gender, s.name as sport " +
                 "from tblTeam as t " +
                 "join tblCountry c on t.idCountry = c.idCountry " +
@@ -382,7 +393,8 @@ public class TeamDao {
     public int getNAthletesOnTeam(int idTeam) throws SQLException {
         String query = "SELECT COUNT(*) as nAthletes FROM tblRegistration WHERE idTeam = ? " +
                 "AND (idStatus = 3 OR idStatus = 4);";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idTeam);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idTeam);
         if (rs != null && rs.next()) {
             return rs.getInt("nAthletes");
         }

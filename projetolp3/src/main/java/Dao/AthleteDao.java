@@ -24,7 +24,8 @@ public class AthleteDao {
      */
     public List<Athlete> getAthletes() throws SQLException {
         List<Athlete> athletes = new ArrayList<>();
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT * FROM tblAthlete;");
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery("SELECT * FROM tblAthlete;");
         if (rs != null) {
             while (rs.next()) {
                 int idAthlete = rs.getInt("idAthlete");
@@ -51,7 +52,8 @@ public class AthleteDao {
     }
     public List<List> getAthletesToShow() throws SQLException{
         List<List> athletes = new ArrayList<>();
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT a.idAthlete ,a.name, a.height, a.weight,a.dateOfBirth, a.image, c.name as countryName, g.description as gender " +
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery("SELECT a.idAthlete ,a.name, a.height, a.weight,a.dateOfBirth, a.image, c.name as countryName, g.description as gender " +
                 "FROM tblAthlete as a " +
                 "INNER JOIN tblCountry as c ON a.idCountry = c.idCountry " +
                 "INNER JOIN tblGender as g ON a.idGender = g.idGender");
@@ -91,7 +93,8 @@ public class AthleteDao {
 
 
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
             stmt.setString(1, password);
@@ -134,7 +137,8 @@ public class AthleteDao {
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
             stmt.setInt(1, idAthlete);
             stmt.executeUpdate();
@@ -158,7 +162,8 @@ public class AthleteDao {
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
             stmt.setString(1, athlete.getPassword());
@@ -189,7 +194,8 @@ public class AthleteDao {
      */
     public Athlete getAthleteById(int idAthlete) throws SQLException {
         String query = "SELECT * FROM tblAthlete WHERE idAthlete = ?";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idAthlete);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idAthlete);
         if (rs != null && rs.next()) {
             String password = rs.getString("password");
             String name = rs.getString("name");
@@ -216,7 +222,8 @@ public class AthleteDao {
      */
     public static Athlete getAthleteByIdMinimum(int idAthlete) throws SQLException {
         String query = "SELECT name, height, weight, dateOfBirth FROM tblAthlete WHERE idAthlete = ?";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idAthlete);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idAthlete);
         if (rs != null && rs.next()) {
             String name = rs.getString("name");
             int height = rs.getInt("height");
@@ -239,7 +246,8 @@ public class AthleteDao {
         PreparedStatement stmt = null;
 
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
             stmt.setString(1, password);
@@ -264,7 +272,8 @@ public class AthleteDao {
      */
     public String getAthlheteNameByID(int idAthlete) throws SQLException {
         String query = "SELECT name FROM tblAthlete WHERE idAthlete = ?";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idAthlete);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idAthlete);
         if (rs != null && rs.next()) {
             return rs.getString("name");
         }
@@ -284,7 +293,8 @@ public class AthleteDao {
         PreparedStatement stmt = null;
 
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
             stmt.setString(1, path + idAthlete + extensao);
             stmt.setInt(2, idAthlete);
@@ -305,7 +315,8 @@ public class AthleteDao {
         PreparedStatement stmt = null;
 
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
             stmt.setInt(1, height);
             stmt.setFloat(2, weight);
@@ -324,7 +335,8 @@ public class AthleteDao {
 
     public List<List> getPartToShow(int idTeam) throws SQLException {
         List<List> athletes = new ArrayList<>();
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT a.name, a.height, a.weight, a.dateOfBirth, a.image " +
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery("SELECT a.name, a.height, a.weight, a.dateOfBirth, a.image " +
                 "FROM tblAthlete as a " +
                 "INNER JOIN tblRegistration as r ON a.idAthlete = r.idAthlete " +
                 "WHERE r.idTeam = ?", idTeam);
@@ -346,7 +358,8 @@ public class AthleteDao {
 
     public String getImageAthlete(int idAthlete) throws SQLException{
         String query = "SELECT image FROM tblAthlete WHERE idAthlete = ?";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idAthlete);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idAthlete);
         if (rs != null && rs.next()) {
             return rs.getString("image");
         }

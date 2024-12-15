@@ -13,7 +13,7 @@ public class ConnectionsUtlis{
          * @return
          * @throws SQLException
          */
-        public static Connection dbConnect() throws SQLException {
+        public Connection dbConnect() throws SQLException {
             if (conn == null || conn.isClosed()) {
                 try {
                     conn = DriverManager.getConnection(connStr);
@@ -30,7 +30,7 @@ public class ConnectionsUtlis{
          * Disconnect from DB
          * @throws SQLException
          */
-        public static void dbDisconnect() throws SQLException {
+        public void dbDisconnect() throws SQLException {
             try {
                 if (conn != null && !conn.isClosed()) {
                     conn.close();
@@ -46,7 +46,7 @@ public class ConnectionsUtlis{
          * @return CachedRowSet
          * @throws SQLException
          */
-        public static CachedRowSet dbExecuteQuery(String queryStmt) throws SQLException {
+        public CachedRowSet dbExecuteQuery(String queryStmt) throws SQLException {
             Statement stmt = null;
             ResultSet resultSet = null;
             CachedRowSet crs = null;
@@ -80,7 +80,7 @@ public class ConnectionsUtlis{
          * @return CachedRowSet
          * @throws SQLException
          */
-        public static CachedRowSet dbExecuteQuery(String queryStmt, Object... params) throws SQLException {
+        public CachedRowSet dbExecuteQuery(String queryStmt, Object... params) throws SQLException {
             PreparedStatement stmt = null;
             ResultSet resultSet = null;
             CachedRowSet crs = null;

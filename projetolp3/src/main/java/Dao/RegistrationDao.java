@@ -38,7 +38,8 @@ public class RegistrationDao {
     WHERE r.idStatus = 1
     """;
 
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query);
 
         if (rs != null) {
             while (rs.next()) {
@@ -115,7 +116,8 @@ public class RegistrationDao {
 
 
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
 
             checkStmt = conn.prepareStatement(checkQuery);
             checkStmt.setInt(1, registration.getAthlete().getIdAthlete());
@@ -201,7 +203,8 @@ public class RegistrationDao {
         ResultSet generatedKeys = null;
 
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
 
             checkStmt = conn.prepareStatement(checkQuery);
             checkStmt.setInt(1, registration.getAthlete().getIdAthlete());
@@ -276,7 +279,8 @@ public class RegistrationDao {
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
             stmt.setInt(1, idRegistration);
             stmt.executeUpdate();
@@ -295,12 +299,13 @@ public class RegistrationDao {
      * @param registration {Registration} Registration
      * @throws SQLException
      */
-    public static void updateRegistration(Registration registration) throws SQLException {
+    public void updateRegistration(Registration registration) throws SQLException {
         String query = "UPDATE tblRegistration SET idAthlete = ?, idTeam = ?, idSport = ?, idStatus = ? WHERE idRegistration = ?";
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
             stmt.setInt(1, registration.getAthlete().getIdAthlete());
@@ -332,7 +337,8 @@ public class RegistrationDao {
         PreparedStatement stmt = null;
 
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
             stmt.setInt(1, newStatus);
@@ -356,9 +362,10 @@ public class RegistrationDao {
      * @return {Registration} Registration
      * @throws SQLException
      */
-    public static Registration getRegistrationById(int idRegistration) throws SQLException {
+    public Registration getRegistrationById(int idRegistration) throws SQLException {
         String query = "SELECT * FROM tblRegistration WHERE idRegistration = ?";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idRegistration);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idRegistration);
         if (rs != null && rs.next()) {
             int idAthlete = rs.getInt("idAthlete");
             int idTeam = rs.getInt("idTeam");
@@ -382,10 +389,11 @@ public class RegistrationDao {
      * @return {List<Registration>} List of registrations
      * @throws SQLException
      */
-    public static List<Registration> getPendingRegistrations() throws SQLException {
+    public List<Registration> getPendingRegistrations() throws SQLException {
         List<Registration> registrations = new ArrayList<>();
 
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT * FROM tblRegistration WHERE idStatus = 1;");
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery("SELECT * FROM tblRegistration WHERE idStatus = 1;");
 
         if (rs != null) {
             while (rs.next()) {
@@ -423,7 +431,8 @@ public class RegistrationDao {
                 "FROM tblRegistration " +
                 "ORDER BY year DESC;";
 
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query);
         if (rs != null) {
             while (rs.next()) {
                 String year = rs.getString("year");
@@ -444,7 +453,8 @@ public class RegistrationDao {
      */
     public boolean verfiyTeam(String idCountry, int idSport) throws SQLException{
         String query = "SELECT idTeam FROM tblTeam WHERE idCountry = ? AND idSport = ?";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idCountry, idSport);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idCountry, idSport);
         try {
             if (rs != null && rs.next()) {
                 return true;
@@ -464,7 +474,8 @@ public class RegistrationDao {
      */
     public int getIdTeam(String idCountry, int idSport) throws SQLException{
         String query = "SELECT idTeam FROM tblTeam WHERE idCountry = ? AND idSport = ?";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idCountry, idSport);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idCountry, idSport);
         try {
             if (rs != null && rs.next()) {
                 return rs.getInt("idTeam");
@@ -487,7 +498,8 @@ public class RegistrationDao {
                 " FROM tblRegistration r" +
                 " JOIN tblSport s ON r.idSport = s.idSport" +
                 " WHERE r.idAthlete = ? AND r.idStatus = 3;";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idAthlete);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idAthlete);
         if (rs != null) {
             while (rs.next()) {
                 List<String> registration = new ArrayList<>();
@@ -519,7 +531,8 @@ public class RegistrationDao {
         String query = "SELECT idAthlete " +
                 "FROM tblRegistration " +
                 "WHERE idStatus = 3 AND idSport = ? AND year = ?;";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, year);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idSport, year);
         if (rs != null) {
             while (rs.next()) {
                 int IdAthlete = rs.getInt("idAthlete");
@@ -541,7 +554,8 @@ public class RegistrationDao {
         String query = "SELECT DISTINCT idTeam " +
                 "FROM tblRegistration " +
                 "WHERE idStatus = 3 AND idSport = ? AND year = ? ";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, year);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idSport, year);
         if (rs != null) {
             while (rs.next()) {
                 int IdTeam = rs.getInt("idTeam");
@@ -564,7 +578,8 @@ public class RegistrationDao {
         String query = "SELECT idAthlete " +
                 "FROM tblRegistration " +
                 "WHERE idAthlete IS NOT NULL AND idTeam = ? AND idSport = ? AND idStatus = 3 AND year = ?;";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idTeam, idSport, year);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idTeam, idSport, year);
         if (rs != null) {
             while (rs.next()) {
                 int athlete = rs.getInt("idAthlete");
@@ -586,7 +601,8 @@ public class RegistrationDao {
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
             stmt.setInt(1, idSport);
@@ -615,7 +631,8 @@ public class RegistrationDao {
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
             stmt.setInt(1, idSport);
@@ -635,7 +652,8 @@ public class RegistrationDao {
     public static List<Registration> getRegistrationByIdAthlete(int idAthlete) throws SQLException {
         String query = "SELECT * FROM tblRegistration WHERE idAthlete = ?";
         List<Registration> registrations = new ArrayList<>();
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idAthlete);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idAthlete);
         if (rs != null && rs.next()) {
             int idRegistration = rs.getInt("idRegistration");
             Athlete athlete = new AthleteDao().getAthleteById(rs.getInt("idAthlete"));

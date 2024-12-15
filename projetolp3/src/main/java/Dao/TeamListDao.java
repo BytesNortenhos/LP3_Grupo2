@@ -16,7 +16,7 @@ public class TeamListDao {
      * @return {List<TeamList>} List of team lists
      * @throws SQLException
      */
-    public static List<TeamList> getAllTeamLists() throws SQLException {
+    public List<TeamList> getAllTeamLists() throws SQLException {
         List<TeamList> teamLists = new ArrayList<>();
         String query = "SELECT tl.idTeamList, tl.idTeam, tl.idAthlete, tl.idStatus, tl.year, tl.isActive, " +
                 "a.name AS athleteName, t.name AS teamName, ts.description AS statusDescription " +
@@ -25,7 +25,8 @@ public class TeamListDao {
                 "INNER JOIN tblTeam t ON tl.idTeam = t.idTeam " +
                 "INNER JOIN tblTeamListStatus ts ON tl.idStatus = ts.idStatus";
 
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query);
 
         if (rs != null) {
             while (rs.next()) {
@@ -51,14 +52,15 @@ public class TeamListDao {
      * @param teamList {TeamList} TeamList
      * @throws SQLException
      */
-    public static void addTeamList(TeamList teamList) throws SQLException {
+    public void addTeamList(TeamList teamList) throws SQLException {
         String query = "INSERT INTO tblTeamList (idTeam, idAthlete, idStatus, year, isActive) " +
                 "VALUES (?, ?, ?, ?, ?)";
         Connection conn = null;
         PreparedStatement stmt = null;
 
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
             stmt.setInt(1, teamList.getIdTeam());
@@ -79,13 +81,14 @@ public class TeamListDao {
      * @param idTeamList {int} Id TeamList
      * @throws SQLException
      */
-    public static void removeTeamList(int idTeamList) throws SQLException {
+    public void removeTeamList(int idTeamList) throws SQLException {
         String query = "DELETE FROM tblTeamList WHERE idTeamList = ?";
         Connection conn = null;
         PreparedStatement stmt = null;
 
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
             stmt.setInt(1, idTeamList);
             stmt.executeUpdate();
@@ -100,14 +103,15 @@ public class TeamListDao {
      * @param teamList {TeamList} TeamList
      * @throws SQLException
      */
-    public static void updateTeamList(TeamList teamList) throws SQLException {
+    public void updateTeamList(TeamList teamList) throws SQLException {
         String query = "UPDATE tblTeamList SET idTeam = ?, idAthlete = ?, idStatus = ?, year = ?, isActive = ? " +
                 "WHERE idTeamList = ?";
         Connection conn = null;
         PreparedStatement stmt = null;
 
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
             stmt.setInt(1, teamList.getIdTeam());
@@ -130,7 +134,7 @@ public class TeamListDao {
      * @return {TeamList} TeamList
      * @throws SQLException
      */
-    public static TeamList getTeamListById(int idTeamList) throws SQLException {
+    public TeamList getTeamListById(int idTeamList) throws SQLException {
         String query = "SELECT tl.idTeamList, tl.idTeam, tl.idAthlete, tl.idStatus, tl.year, tl.isActive, " +
                 "a.name AS athleteName, t.name AS teamName, ts.description AS statusDescription " +
                 "FROM tblTeamList tl " +
@@ -139,7 +143,8 @@ public class TeamListDao {
                 "INNER JOIN tblTeamListStatus ts ON tl.idStatus = ts.idStatus " +
                 "WHERE tl.idTeamList = ?";
 
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idTeamList);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idTeamList);
 
         if (rs != null && rs.next()) {
             int idTeam = rs.getInt("idTeam");
@@ -175,7 +180,8 @@ public class TeamListDao {
         ResultSet rs = null;
 
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
 
             checkStmt = conn.prepareStatement(checkQuery);
             checkStmt.setInt(1, athleteId);

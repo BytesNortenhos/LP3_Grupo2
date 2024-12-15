@@ -29,7 +29,8 @@ public class UploadXmlDAO {
         Connection conn = null;
         PreparedStatement stmt = null;
         PreparedStatement stmt2 = null;
-        conn = ConnectionsUtlis.dbConnect();
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
 
         try {
             for (Sport sport : sports.getSportList()) {
@@ -215,7 +216,8 @@ public class UploadXmlDAO {
         PreparedStatement stmt2 = null;
 
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
 
             for (Team team : teams.getTeamList()) {
                 String queryGetTeam = "SELECT name FROM tblTeam WHERE name LIKE ?";
@@ -303,7 +305,8 @@ public class UploadXmlDAO {
         Connection conn = null;
         PreparedStatement stmt = null;
         PreparedStatement stmt2 = null;
-        conn = ConnectionsUtlis.dbConnect();
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
 
         try {
             for (Athlete athlete : athletes.getAthleteList()) {

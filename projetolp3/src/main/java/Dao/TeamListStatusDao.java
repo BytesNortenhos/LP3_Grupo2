@@ -16,9 +16,10 @@ public class TeamListStatusDao {
      * @return {List<TeamListStatus>} List of team list statuses
      * @throws SQLException
      */
-    public static List<TeamListStatus> getTeamListStatuses() throws SQLException {
+    public List<TeamListStatus> getTeamListStatuses() throws SQLException {
         List<TeamListStatus> statuses = new ArrayList<>();
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT * FROM tblTeamListStatus;");
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery("SELECT * FROM tblTeamListStatus;");
         if (rs != null) {
             while (rs.next()) {
                 int idStatus = rs.getInt("idStatus");
@@ -38,12 +39,13 @@ public class TeamListStatusDao {
      * @param status {TeamListStatus} Team list status
      * @throws SQLException
      */
-    public static void addTeamListStatus(TeamListStatus status) throws SQLException {
+    public void addTeamListStatus(TeamListStatus status) throws SQLException {
         String query = "INSERT INTO tblTeamListStatus (description) VALUES (?)";
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
             stmt.setString(1, status.getDesc());
@@ -63,12 +65,13 @@ public class TeamListStatusDao {
      * @param idStatus {int} Id of the status
      * @throws SQLException
      */
-    public static void removeTeamListStatus(int idStatus) throws SQLException {
+    public void removeTeamListStatus(int idStatus) throws SQLException {
         String query = "DELETE FROM tblTeamListStatus WHERE idStatus = ?";
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
             stmt.setInt(1, idStatus);
             stmt.executeUpdate();
@@ -87,12 +90,13 @@ public class TeamListStatusDao {
      * @param status {TeamListStatus} Team list status
      * @throws SQLException
      */
-    public static void updateTeamListStatus(TeamListStatus status) throws SQLException {
+    public void updateTeamListStatus(TeamListStatus status) throws SQLException {
         String query = "UPDATE tblTeamListStatus SET description = ? WHERE idStatus = ?";
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
             stmt.setString(1, status.getDesc());
@@ -116,7 +120,8 @@ public class TeamListStatusDao {
      */
     public static TeamListStatus getTeamListStatusById(int idStatus) throws SQLException {
         String query = "SELECT * FROM tblTeamListStatus WHERE idStatus = ?";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idStatus);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idStatus);
         if (rs != null && rs.next()) {
             String description = rs.getString("description");
             return new TeamListStatus(idStatus, description);

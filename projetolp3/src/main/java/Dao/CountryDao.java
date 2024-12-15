@@ -19,7 +19,8 @@ public class CountryDao {
      */
     public static List<Country> getCountries() throws SQLException {
         List<Country> countries = new ArrayList<>();
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT * FROM tblCountry;");
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery("SELECT * FROM tblCountry;");
         if (rs != null) {
             while (rs.next()) {
                 String idCountry = rs.getString("idCountry");
@@ -40,12 +41,13 @@ public class CountryDao {
      * @param country {Country} Country
      * @throws SQLException
      */
-    public static void addCountry(Country country) throws SQLException {
+    public void addCountry(Country country) throws SQLException {
         String query = "INSERT INTO tblCountry (name, continent) VALUES (?, ?)";
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
             stmt.setString(1, country.getName());
@@ -66,12 +68,13 @@ public class CountryDao {
      * @param name {String} Name
      * @throws SQLException
      */
-    public static void removeCountry(String name) throws SQLException {
+    public void removeCountry(String name) throws SQLException {
         String query = "DELETE FROM tblCountry WHERE name = ?";
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
             stmt.setString(1, name);
@@ -91,13 +94,14 @@ public class CountryDao {
      * @param country {Country} Country
      * @throws SQLException
      */
-    public static void updateCountry(Country country) throws SQLException {
+    public void updateCountry(Country country) throws SQLException {
         String query = "UPDATE tblCountry SET name = ?, continent = ? WHERE idCountry = ?";
         Connection conn = null;
         PreparedStatement stmt = null;
 
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
             stmt.setString(1, country.getName());
@@ -122,7 +126,8 @@ public class CountryDao {
      */
     public Country getCountryById(String idCountry) throws SQLException {
         String query = "SELECT * FROM tblCountry WHERE idCountry = ?";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idCountry);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idCountry);
         if (rs != null && rs.next()) {
             String name = rs.getString("name");
             String continent = rs.getString("continent");
@@ -137,7 +142,8 @@ public class CountryDao {
                 "FROM tblCountry " +
                 "ORDER BY name;";
 
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query);
         if (rs != null) {
             while (rs.next()) {
                 String country = rs.getString("name");
