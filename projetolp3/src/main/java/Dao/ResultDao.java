@@ -164,7 +164,7 @@ public class ResultDao {
      * @throws SQLException
      */
     public void addResultAthleteTeam(int idSport, int idAthlete, int idTeam, Date date, String result, int idLocal, int position) throws SQLException {
-        String query = "INSERT INTO tblResult (idSport, idAthlete, idTeam, date, result, idLocal, position()) VALUES (?, ?, ?, ?, ?, ?,?)";
+        String query = "INSERT INTO tblResult (idSport, idAthlete, idTeam, date, result, idLocal, position) VALUES (?, ?, ?, ?, ?, ?, ?)";
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
@@ -473,7 +473,7 @@ public class ResultDao {
     }
 
     public List<List> getResultBySport(int idSport, String gender, int year) throws SQLException {
-        String query = "SELECT DISTINCT r.*, s.name as sportName, s.type as sportType, a.name as athleteName, a.image as profilePhoto, t.name as teamName, g.description as gender, re.year as year l.name as localName FROM tblResult as r " +
+        String query = "SELECT DISTINCT r.*, s.name as sportName, s.type as sportType, a.name as athleteName, a.image as profilePhoto, t.name as teamName, g.description as gender, re.year as year, l.name as localName FROM tblResult as r " +
                 "LEFT JOIN tblSport as s ON r.idSport = s.idSport " +
                 "LEFT JOIN tblAthlete as a ON r.idAthlete = a.idAthlete " +
                 "LEFT JOIN tblTeam as t ON r.idTeam = t.idTeam " +

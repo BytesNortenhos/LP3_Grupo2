@@ -803,6 +803,7 @@ public class StartSportsController {
 
     public boolean CollectiveMultiple(int idSport, List<Integer> IdsParticipants, int year, int idLocal) throws SQLException {
         List<Integer> scores = new ArrayList<>(Collections.nCopies(IdsParticipants.size(), 0));
+        System.out.println(IdsParticipants.size());
         List<List<String>> resultados = new ArrayList<>();
         Random random = new Random();
 
