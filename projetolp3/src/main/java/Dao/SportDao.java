@@ -719,12 +719,10 @@ public class SportDao {
         }
         return quantidade;
     }
-
-    public List<String> getMeasureMetrica(int  idSport) throws SQLException{
+    public List<String> getMeasureMetrica(int idSport) throws SQLException {
         List<String> measureMetrica = new ArrayList<>();
-
-        String query = "SELECT scoringMeasure, metrica" +
-                "FROM tblSport" +
+        String query = "SELECT scoringMeasure, metrica " +
+                "FROM tblSport " +
                 "WHERE idSport = ?";
         ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
         CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idSport);
@@ -732,7 +730,6 @@ public class SportDao {
             measureMetrica.add(rs.getString("scoringMeasure"));
             measureMetrica.add(rs.getString("metrica"));
         }
-
         return measureMetrica;
     }
 

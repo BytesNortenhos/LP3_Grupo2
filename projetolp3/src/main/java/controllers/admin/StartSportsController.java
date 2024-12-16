@@ -399,7 +399,7 @@ public class StartSportsController {
         popupStage.show();
     }
 
-    private void displayResults(VBox vbox, List<List> results) {
+    private void displayResults(VBox vbox, List<List> results) throws SQLException {
         vbox.getChildren().clear();
         vbox.setSpacing(20);
         ScrollPane scrollPane = new ScrollPane();
@@ -432,7 +432,7 @@ public class StartSportsController {
         vbox.getChildren().add(scrollPane);
     }
 
-    private VBox createResultItem(List result) {
+    private VBox createResultItem(List result) throws SQLException {
         VBox resultItem = new VBox();
         resultItem.setSpacing(10);
 
@@ -456,10 +456,16 @@ public class StartSportsController {
         Label resultLabel = new Label("Resultado: " + result.get(0).toString());
         resultLabel.getStyleClass().add("text-label");
 
-        Label positionLabel = new Label("Posição: " + result.get(9).toString()+ "º lugar");
+        Label positionLabel = new Label("Posição: " + result.get(9).toString() + "º lugar");
         positionLabel.getStyleClass().add("text-label");
 
-        resultItem.getChildren().addAll(nameContainer, resultLabel, positionLabel);
+        if (olympicRecordDao.getOlympicRecord((int) result.get(0), (int) result.get(10))) {
+            Label olympicLabel = new Label("Recorde Olímpico!!!");
+            olympicLabel.getStyleClass().add("text-label");
+            resultItem.getChildren().addAll(nameContainer, resultLabel, positionLabel, olympicLabel);
+        } else {
+            resultItem.getChildren().addAll(nameContainer, resultLabel, positionLabel);
+        }
         return resultItem;
     }
 
@@ -582,7 +588,7 @@ public class StartSportsController {
                 int i = 0; i < resultados.size(); i++) {
             int idAthlete = IdsParticipants.get(i);
             int resultadoInserir = resultados.get(i);
-            int position = i+1;
+            int position = i + 1;
             java.sql.Date date = new java.sql.Date(System.currentTimeMillis());
             resultDao.addResultAthlete(idSport, idAthlete, date, String.valueOf(resultadoInserir), idLocal, position);
         }
@@ -651,7 +657,7 @@ public class StartSportsController {
         for (int i = 0; i < resultados.size(); i++) {
             int idTeam = IdsParticipants.get(i);
             int resultadoInserir = resultados.get(i);
-            int position = i+1;
+            int position = i + 1;
             java.sql.Date date = new java.sql.Date(System.currentTimeMillis());
             //resultDao.addResultTeam(idSport, idTeam, date, resultadoInserir, idLocal);
             athletes.clear();
@@ -762,7 +768,7 @@ public class StartSportsController {
         //Atribuir Resultados
         java.sql.Date date = new java.sql.Date(System.currentTimeMillis());
         for (int i = 0; i < resultados.size(); i++) {
-            int position = i+1;
+            int position = i + 1;
             for (String resultado : resultados.get(i)) {
                 resultDao.addResultAthlete(idSport, IdsParticipants.get(i), date, resultado, idLocal, position);
                 System.out.println("DAO: " + idSport + " " + IdsParticipants.get(i) + " " + date + " " + resultado + position);
@@ -859,7 +865,7 @@ public class StartSportsController {
             java.sql.Date date = new java.sql.Date(System.currentTimeMillis());
             athletes.clear();
             athletes = registrationDao.getAthletesByTeam(idTeam, idSport, year);
-            int position = i+1;
+            int position = i + 1;
             for (int j = 0; j < athletes.size(); j++) {
                 for (String resultado : resultados.get(i)) {
                     resultDao.addResultAthleteTeam(idSport, athletes.get(j), idTeam, date, resultado, idLocal, position);

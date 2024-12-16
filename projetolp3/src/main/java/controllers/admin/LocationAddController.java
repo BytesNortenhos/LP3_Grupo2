@@ -28,13 +28,14 @@ public class LocationAddController {
     private TextField constructionYearTextField;
     @FXML
     private ComboBox<Event> eventComboBox;
+    EventDao eventDao = new EventDao();
 
     @FXML
     public void initialize() {
         typeComboBox.getItems().addAll("Interior", "Exterior");
 
         try {
-            List<Event> events = EventDao.getEvents();
+            List<Event> events = eventDao.getEvents();
             eventComboBox.getItems().addAll(events);
             eventComboBox.setConverter(new StringConverter<>() {
                 @Override
