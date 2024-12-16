@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ComboBox?>
+
+<BorderPane fx:id="parent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="background" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.admin.EditLocationController">
+    <top>
+        <fx:include source="menu.fxml" fx:id="menubar" />
+    </top>
+    <center>
+        <VBox alignment="CENTER" spacing="10">
+            <Label styleClass="loginText" text="EDITAR LOCAL" translateY="20"/>
+
+            <ComboBox fx:id="locationsListDropdown" styleClass="registerDropBig" translateY="-80" promptText="Carregar Local" onAction="#onLocationSelected" prefWidth="350" />
+
+            <TextField styleClass="userNameText" fx:id="locationNameText" translateY="-60" promptText="Nome do Local" />
+            <TextField styleClass="userNameText" fx:id="locationCapacityText" translateY="-40" promptText="Capacidade do Local" />
+
+            <Button styleClass="buttonEntrar" translateY="40" onAction="#updateLocation" text="Atualizar Local" />
+        </VBox>
+
+
+    </center>
+</BorderPane>

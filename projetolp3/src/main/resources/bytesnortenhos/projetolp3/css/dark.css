@@ -171,10 +171,10 @@
     -fx-translate-y: 30px;
     -fx-padding: 10px;
 }
-#mainContainer, .scrollStyle, #sportsContainer, #startSportsContainer, #showAthletesContainer, .popup-scroll-pane, #showTeamsContainer, #eventsContainer{
+#mainContainer, .scrollStyle, #sportsContainer, #startSportsContainer, #showAthletesContainer, .popup-scroll-pane, #showTeamsContainer, #eventsContainer, #locationsContainer{
     -fx-background-color: #1E1E1E;
 }
-#mainContainer, #sportsContainer, #eventsContainer{
+#mainContainer, #sportsContainer, #eventsContainer #locationsContainer{
     -fx-padding: 0 0 50px 0;
 }
 #startSportsContainer, #showAthletesContainer, #showTeamsContainer{

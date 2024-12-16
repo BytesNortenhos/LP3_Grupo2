@@ -25,6 +25,13 @@
                 <MenuItem text="Carregar atletas" onAction="#loadAthletes"/>
             </items>
         </SplitMenuButton>
+        <SplitMenuButton fx:id="locationSplitButton" styleClass="dropdownButton" text="Gerir locais">
+            <items>
+                <MenuItem text="Adicionar local" onAction="#showAddLocation"/>
+                <MenuItem text="Visualizar locais" onAction="#showViewLocations"/>
+                <MenuItem text="Alterar locais" onAction="#showUpdateLocations"/>
+            </items>
+        </SplitMenuButton>
         <SplitMenuButton fx:id="eventSplitButton" styleClass="dropdownButton" text="Gerir eventos">
             <items>
                 <MenuItem text="Adicionar evento" onAction="#showAddEvent"/>

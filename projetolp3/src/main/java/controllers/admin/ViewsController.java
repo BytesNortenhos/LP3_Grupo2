@@ -62,6 +62,10 @@ public class ViewsController {
     private SplitMenuButton eventSplitButton;
     @FXML
     private SplitMenuButton xmlSplitButton;
+    @FXML
+    private SplitMenuButton locationSplitButton;
+
+
 
     public void initialize() {
         loadIcons();
@@ -70,6 +74,7 @@ public class ViewsController {
         teamSplitButton.setOnMouseClicked(mouseEvent -> teamSplitButton.show());
         eventSplitButton.setOnMouseClicked(event -> eventSplitButton.show());
         xmlSplitButton.setOnMouseClicked(mouseEvent -> xmlSplitButton.show());
+        locationSplitButton.setOnMouseClicked(mouseEvent -> locationSplitButton.show());
     }
     public void loadIcons(){
         URL iconMoonNavURL = Main.class.getResource("img/iconMoon.png");
@@ -182,6 +187,21 @@ public class ViewsController {
         stage.setScene(scene);
         stage.show();
     }
+    public void showAddLocation(ActionEvent event) throws IOException {
+        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
+        Parent root  = FXMLLoader.load(Objects.requireNonNull(controllers.ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/addLocation.fxml")));
+        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
+        scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
+        if(isDarkMode){
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+        }else{
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
+        }
+        stage.setScene(scene);
+        stage.show();
+    }
+
+
     public void returnHomeMenu(ActionEvent event) throws IOException {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
         Parent root  = FXMLLoader.load(Objects.requireNonNull(controllers.ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/home.fxml")));
@@ -277,6 +297,34 @@ public class ViewsController {
         stage.setScene(scene);
         stage.show();
     }
+    public void showViewLocations(ActionEvent event) throws IOException {
+        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
+        Parent root  = FXMLLoader.load(Objects.requireNonNull(controllers.ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/locationsView.fxml")));
+        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
+        scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
+        if(isDarkMode){
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+        }else{
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
+        }
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public void showUpdateLocations(ActionEvent event) throws IOException {
+        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
+        Parent root  = FXMLLoader.load(Objects.requireNonNull(controllers.ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/locationEdit.fxml")));
+        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
+        scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
+        if(isDarkMode){
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+        }else{
+            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
+        }
+        stage.setScene(scene);
+        stage.show();
+    }
+
 
     /**
      * Preview the XML content before inserting it into the Database
