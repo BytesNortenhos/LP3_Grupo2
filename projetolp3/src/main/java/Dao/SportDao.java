@@ -733,10 +733,10 @@ public class SportDao {
         return measureMetrica;
     }
 
-    public String getMeasure(int  idSport) throws SQLException{
+    public String getMeasure(int idSport) throws SQLException{
         String scoringMeasure = "";
-        String query = "SELECT scoringMeasure" +
-                "FROM tblSport" +
+        String query = "SELECT scoringMeasure " +
+                "FROM tblSport " +
                 "WHERE idSport = ?";
         ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
         CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idSport);
