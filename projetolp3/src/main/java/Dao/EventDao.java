@@ -221,7 +221,8 @@ public class EventDao {
 
     public boolean getIfLocals(int year) throws SQLException {
         String query = "SELECT COUNT(*) FROM tblLocal WHERE event = ?";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, year);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, year);
         if (rs != null && rs.next() && rs.getInt(1) > 0) {
             return true;
         } else {
