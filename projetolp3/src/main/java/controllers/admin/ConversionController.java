@@ -7,16 +7,16 @@ public class ConversionController {
     public double centimetrosParaMetros(double centimetros) {
         return centimetros / 100;
     }
-    public int minutosParaMilissegundos(double minutos) {
+    public double minutosParaMilissegundos(double minutos) {
         return (int) (minutos * 60 * 1000);
     }
-    public Double milissegundosParaMinutos(int milissegundos) {
+    public double milissegundosParaMinutos(int milissegundos) {
         return (milissegundos / (60.0 * 1000));
     }
     public double milissegundosParaSegundos(long milissegundos) {
         return milissegundos / 1000.0;
     }
-    public long segundosParaMilissegundos(double segundos) {
+    public double segundosParaMilissegundos(double segundos) {
         return (long) (segundos * 1000);
     }
 }

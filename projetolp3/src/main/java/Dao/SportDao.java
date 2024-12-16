@@ -720,6 +720,36 @@ public class SportDao {
         return quantidade;
     }
 
+    public List<String> getMeasureMetrica(int  idSport) throws SQLException{
+        List<String> measureMetrica = new ArrayList<>();
+
+        String query = "SELECT scoringMeasure, metrica" +
+                "FROM tblSport" +
+                "WHERE idSport = ?";
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idSport);
+        if (rs != null && rs.next()) {
+            measureMetrica.add(rs.getString("scoringMeasure"));
+            measureMetrica.add(rs.getString("metrica"));
+        }
+
+        return measureMetrica;
+    }
+
+    public String getMeasure(int  idSport) throws SQLException{
+        String scoringMeasure = "";
+        String query = "SELECT scoringMeasure" +
+                "FROM tblSport" +
+                "WHERE idSport = ?";
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idSport);
+        if (rs != null && rs.next()) {
+            scoringMeasure = (rs.getString("scoringMeasure"));
+        }
+
+        return scoringMeasure;
+    }
+
 }
 
 

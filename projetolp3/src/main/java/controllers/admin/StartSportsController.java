@@ -38,6 +38,7 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 import java.lang.foreign.MemoryLayout;
+import java.net.Inet4Address;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -60,6 +61,7 @@ public class StartSportsController {
     MedalDao medalDao = new MedalDao();
     OlympicRecordDao olympicRecordDao = new OlympicRecordDao();
     WinnerOlympicDao winnerOlympicDao = new WinnerOlympicDao();
+    ConversionController conversionController = new ConversionController();
 
     public void initialize() throws SQLException {
         loadYears();
@@ -207,7 +209,7 @@ public class StartSportsController {
             viewResultsButton.getStyleClass().add("startButton");
             viewResultsButton.setOnAction(event -> {
                 try {
-                    historyPopUp(event, Integer.parseInt(sport.get(0).toString()) , sport.get(2).toString(), year);
+                    historyPopUp(event, Integer.parseInt(sport.get(0).toString()), sport.get(2).toString(), year);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 } catch (SQLException e) {
@@ -220,6 +222,7 @@ public class StartSportsController {
         requestItem.setPrefWidth(500); // Ensure this width allows two items per line
         return requestItem;
     }
+
     public void showPopUpLocal(ActionEvent event, int year, int idSport, int mPart) throws SQLException {
         Stage popupStage = new Stage();
         popupStage.setTitle("Escolher local");
@@ -239,7 +242,7 @@ public class StartSportsController {
 
         LocalDao localDao = new LocalDao();
         List<Local> locals = localDao.getLocalsByYear(year);
-        for(Local local : locals){
+        for (Local local : locals) {
             localComboBox.getItems().add(local.getName());
         }
         localComboBox.getStyleClass().add("registerDrop");
@@ -250,8 +253,8 @@ public class StartSportsController {
             try {
                 int idLocal = 0;
                 if (sportDao.verifyRanges(idSport)) {
-                    for(Local local : locals){
-                        if(local.getName().equals(localComboBox.getValue())){
+                    for (Local local : locals) {
+                        if (local.getName().equals(localComboBox.getValue())) {
                             idLocal = local.getIdLocal();
                         }
                     }
@@ -284,6 +287,7 @@ public class StartSportsController {
         popupStage.setScene(scene);
         popupStage.show();
     }
+
     public void showRegistedAthletes(int idSport, int year) throws SQLException {
         SportDao sportDao = new SportDao();
         Stage popupStage = new Stage();
@@ -293,7 +297,6 @@ public class StartSportsController {
         VBox vbox = new VBox(600);
         vbox.setPadding(new Insets(10));
         vbox.getStyleClass().add("popup-vbox");
-
 
 
         if (sportDao.verifyIfIsTeam(idSport, year)) {
@@ -508,16 +511,45 @@ public class StartSportsController {
         return true;
     }
 
+    public List<Double> getRanges(int idSport) throws SQLException {
+        List<Integer> range = sportDao.getRange(idSport);
+        List<String> measureMetrica = sportDao.getMeasureMetrica(idSport);
+        List<Double> ranges = new ArrayList<>();
+        if (measureMetrica.get(0).equals("Distance")) {
+            if (measureMetrica.get(1).equals("Metros")) {
+                ranges.add(conversionController.metrosParaCentimetros(range.getFirst()));
+                ranges.add(conversionController.metrosParaCentimetros(range.getLast()));
+            }
+        }
+        if (measureMetrica.get(0).equals("Time")) {
+            if (measureMetrica.get(1).equals("Minutos")) {
+                ranges.add(conversionController.minutosParaMilissegundos(range.getFirst()));
+                ranges.add(conversionController.minutosParaMilissegundos(range.getLast()));
+            }
+            if (measureMetrica.get(1).equals("Segundos")) {
+                ranges.add(conversionController.segundosParaMilissegundos(range.getFirst()));
+                ranges.add(conversionController.segundosParaMilissegundos(range.getLast()));
+            }
+        }
+        if (measureMetrica.get(0).equals("Points")) {
+            ranges.add(Double.valueOf(range.getFirst()));
+            ranges.add(Double.valueOf(range.getLast()));
+        }
+        return ranges;
+    }
+
     public boolean individualOne(int idSport, List<Integer> IdsParticipants, int year, int idLocal) throws SQLException {
         List<Integer> resultados = new ArrayList<>();
         Random random = new Random();
 
+        //Converter Range
+        List<Double> range = getRanges(idSport);
+
         //Gerar Resultados
         int resultado;
-        List<Integer> range = sportDao.getRange(idSport);
         for (int i = 0; i < IdsParticipants.size(); i++) {
             do {
-                resultado = range.getFirst() + random.nextInt(range.getLast() - range.getFirst());
+                resultado = (int) (range.getFirst() + random.nextInt((int) (range.getLast() - range.getFirst())));
             } while (resultados.contains(resultado));
             resultados.add(resultado);
         }
@@ -527,9 +559,16 @@ public class StartSportsController {
         //Ordenar Resultados
         for (int i = 0; i < resultados.size(); i++) {
             for (int j = i + 1; j < resultados.size(); j++) {
-                if (resultados.get(j) < resultados.get(i)) {
-                    Collections.swap(resultados, i, j);
-                    Collections.swap(IdsParticipants, i, j);
+                if (sportDao.getMeasure(idSport).equals("Distance")) {
+                    if (resultados.get(j) > resultados.get(i)) {
+                        Collections.swap(resultados, i, j);
+                        Collections.swap(IdsParticipants, i, j);
+                    }
+                } else {
+                    if (resultados.get(j) < resultados.get(i)) {
+                        Collections.swap(resultados, i, j);
+                        Collections.swap(IdsParticipants, i, j);
+                    }
                 }
             }
         }
@@ -537,7 +576,8 @@ public class StartSportsController {
         System.out.println(resultados);
 
         //Atribuír Resultados
-        for (int i = 0; i < resultados.size(); i++) {
+        for (
+                int i = 0; i < resultados.size(); i++) {
             int idAthlete = IdsParticipants.get(i);
             int resultadoInserir = resultados.get(i);
             java.sql.Date date = new java.sql.Date(System.currentTimeMillis());
@@ -548,7 +588,8 @@ public class StartSportsController {
         medalDao.addTopMedalAthlete(IdsParticipants.getFirst(), year, 1);
         medalDao.addTopMedalAthlete(IdsParticipants.get(1), year, 2);
         medalDao.addTopMedalAthlete(IdsParticipants.get(2), year, 3);
-        for (int i = 3; i < IdsParticipants.size(); i++) {
+        for (
+                int i = 3; i < IdsParticipants.size(); i++) {
             medalDao.addTopMedalAthlete(IdsParticipants.get(i), year, 4);
         }
 
@@ -569,12 +610,14 @@ public class StartSportsController {
         List<Integer> resultados = new ArrayList<>();
         Random random = new Random();
 
+        //Converter Range
+        List<Double> range = getRanges(idSport);
+
         //Gerar Resultados
         int resultado;
-        List<Integer> range = sportDao.getRange(idSport);
         for (int i = 0; i < IdsParticipants.size(); i++) {
             do {
-                resultado = range.getFirst() + random.nextInt(range.getLast() - range.getFirst());
+                resultado = (int) (range.getFirst() + random.nextInt((int) (range.getLast() - range.getFirst())));
             } while (resultados.contains(resultado));
             resultados.add(resultado);
         }
@@ -584,9 +627,16 @@ public class StartSportsController {
         //Ordenar Resultados
         for (int i = 0; i < resultados.size(); i++) {
             for (int j = i + 1; j < resultados.size(); j++) {
-                if (resultados.get(j) < resultados.get(i)) {
-                    Collections.swap(resultados, i, j);
-                    Collections.swap(IdsParticipants, i, j);
+                if (sportDao.getMeasure(idSport).equals("Distance")) {
+                    if (resultados.get(j) > resultados.get(i)) {
+                        Collections.swap(resultados, i, j);
+                        Collections.swap(IdsParticipants, i, j);
+                    }
+                } else {
+                    if (resultados.get(j) < resultados.get(i)) {
+                        Collections.swap(resultados, i, j);
+                        Collections.swap(IdsParticipants, i, j);
+                    }
                 }
             }
         }
@@ -653,8 +703,10 @@ public class StartSportsController {
         List<List<String>> resultados = new ArrayList<>();
         Random random = new Random();
 
+        //Converter Range
+        List<Double> range = getRanges(idSport);
+
         //Gerar Resultados
-        List<Integer> range = sportDao.getRange(idSport);
         int resultado1, resultado2;
         do {
             Collections.fill(scores, 0);
@@ -665,8 +717,8 @@ public class StartSportsController {
             //Jogos entre os Participantes
             for (int i = 0; i < IdsParticipants.size(); i++) {
                 for (int j = i + 1; j < IdsParticipants.size(); j++) {
-                    resultado1 = range.getFirst() + random.nextInt(range.getLast() - range.getFirst());
-                    resultado2 = range.getFirst() + random.nextInt(range.getLast() - range.getFirst());
+                    resultado1 = (int) (range.getFirst() + random.nextInt((int) (range.getLast() - range.getFirst())));
+                    resultado2 = (int) (range.getFirst() + random.nextInt((int) (range.getLast() - range.getFirst())));
                     if (resultado1 > resultado2) {
                         scores.set(i, scores.get(i) + 3);
                     } else if (resultado1 < resultado2) {
@@ -743,8 +795,10 @@ public class StartSportsController {
         List<List<String>> resultados = new ArrayList<>();
         Random random = new Random();
 
+        //Converter Range
+        List<Double> range = getRanges(idSport);
+
         //Gerar Resultados
-        List<Integer> range = sportDao.getRange(idSport);
         int resultado1, resultado2;
         do {
             Collections.fill(scores, 0);
@@ -755,8 +809,8 @@ public class StartSportsController {
             //Jogos entre os Participantes
             for (int i = 0; i < IdsParticipants.size(); i++) {
                 for (int j = i + 1; j < IdsParticipants.size(); j++) {
-                    resultado1 = range.getFirst() + random.nextInt(range.getLast() - range.getFirst());
-                    resultado2 = range.getFirst() + random.nextInt(range.getLast() - range.getFirst());
+                    resultado1 = (int) (range.getFirst() + random.nextInt((int) (range.getLast() - range.getFirst())));
+                    resultado2 = (int) (range.getFirst() + random.nextInt((int) (range.getLast() - range.getFirst())));
                     if (resultado1 > resultado2) {
                         scores.set(i, scores.get(i) + 3);
                     } else if (resultado1 < resultado2) {
