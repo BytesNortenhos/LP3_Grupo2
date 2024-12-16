@@ -284,7 +284,7 @@ public class ResultDao {
      * @throws SQLException
      */
     public List<List> getResultByAthlete(int idAthlete) throws SQLException {
-        String query = "SELECT r.*, s.name as sportName, s.idSport as idSport, s.type as sportType, s.oneGame as one, t.name as teamName, t.idTeam as teamId, l.name as localName FROM tblResult as r " +
+        String query = "SELECT r.*, s.name as sportName, s.scoringMeasure as scoringMeasure, s.metrica as metrica, s.idSport as idSport, s.type as sportType, s.oneGame as one, t.name as teamName, t.idTeam as teamId, l.name as localName FROM tblResult as r " +
                 "LEFT JOIN tblSport as s ON r.idSport = s.idSport " +
                 "LEFT JOIN tblTeam as t ON r.idTeam = t.idTeam " +
                 "LEFT JOIN tblLocal as l on r.idLocal = l.idLocal " +
@@ -305,6 +305,8 @@ public class ResultDao {
                 result.add(rs.getInt("idSport"));
                 result.add(rs.getString("one"));
                 result.add(rs.getString("teamId"));
+                result.add(rs.getString("scoringMeasure"));
+                result.add(rs.getString("metrica"));
                 results.add(result);
             }
         } else {
