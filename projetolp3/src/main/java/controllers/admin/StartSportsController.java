@@ -459,7 +459,9 @@ public class StartSportsController {
         Label positionLabel = new Label("Posição: " + result.get(9).toString() + "º lugar");
         positionLabel.getStyleClass().add("text-label");
 
-        if (olympicRecordDao.getOlympicRecord((int) result.get(0), (int) result.get(10))) {
+        int idSport = Integer.parseInt((String) result.get(0));
+        int year = Integer.parseInt((String) result.get(10));
+        if (olympicRecordDao.getOlympicRecord(idSport, year)) {
             Label olympicLabel = new Label("Recorde Olímpico!!!");
             olympicLabel.getStyleClass().add("text-label");
             resultItem.getChildren().addAll(nameContainer, resultLabel, positionLabel, olympicLabel);
