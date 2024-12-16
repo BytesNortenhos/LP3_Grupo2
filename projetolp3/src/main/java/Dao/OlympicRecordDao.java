@@ -361,4 +361,16 @@ public class OlympicRecordDao {
             }
         }
     }
+
+    public boolean getOlympicRecord(int idSport, int year) throws SQLException {
+        String query = "SELECT idSport " +
+                "FROM tblOlympicRecord " +
+                "WHERE idSport = ? and year = ?";
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idSport, year);
+        if (rs != null && rs.next()) {
+            return true;
+        }
+        return false;
+    }
 }

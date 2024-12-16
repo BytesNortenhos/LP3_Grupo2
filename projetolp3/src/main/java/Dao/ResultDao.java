@@ -473,7 +473,7 @@ public class ResultDao {
     }
 
     public List<List> getResultBySport(int idSport, String gender, int year) throws SQLException {
-        String query = "SELECT DISTINCT r.*, s.name as sportName, s.type as sportType, a.name as athleteName, a.image as profilePhoto, t.name as teamName, g.description as gender, l.name as localName FROM tblResult as r " +
+        String query = "SELECT DISTINCT r.*, s.name as sportName, s.type as sportType, a.name as athleteName, a.image as profilePhoto, t.name as teamName, g.description as gender, re.year as year l.name as localName FROM tblResult as r " +
                 "LEFT JOIN tblSport as s ON r.idSport = s.idSport " +
                 "LEFT JOIN tblAthlete as a ON r.idAthlete = a.idAthlete " +
                 "LEFT JOIN tblTeam as t ON r.idTeam = t.idTeam " +
@@ -497,6 +497,7 @@ public class ResultDao {
                 result.add(rs.getString("localName"));
                 result.add(rs.getString("profilePhoto"));
                 result.add(rs.getString("position"));
+                result.add(rs.getString("year"));
                 results.add(result);
             }
         }
