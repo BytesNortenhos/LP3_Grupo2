@@ -18,7 +18,8 @@ public class RegistrationStatusDao {
      */
     public static List<RegistrationStatus> getRegistrationStatuses() throws SQLException {
         List<RegistrationStatus> statuses = new ArrayList<>();
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT * FROM tblRegistrationStatus;");
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery("SELECT * FROM tblRegistrationStatus;");
         if (rs != null) {
             while (rs.next()) {
                 int idStatus = rs.getInt("idStatus");
@@ -38,12 +39,13 @@ public class RegistrationStatusDao {
      * @param status {RegistrationStatus} Registration status
      * @throws SQLException
      */
-    public static void addRegistrationStatus(RegistrationStatus status) throws SQLException {
+    public void addRegistrationStatus(RegistrationStatus status) throws SQLException {
         String query = "INSERT INTO tblRegistrationStatus (description) VALUES (?)";
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
             stmt.setString(1, status.getDesc());
@@ -63,12 +65,13 @@ public class RegistrationStatusDao {
      * @param idStatus {int} Id status
      * @throws SQLException
      */
-    public static void removeRegistrationStatus(int idStatus) throws SQLException {
+    public void removeRegistrationStatus(int idStatus) throws SQLException {
         String query = "DELETE FROM tblRegistrationStatus WHERE idStatus = ?";
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
             stmt.setInt(1, idStatus);
             stmt.executeUpdate();
@@ -87,12 +90,13 @@ public class RegistrationStatusDao {
      * @param status {RegistrationStatus} Registration status
      * @throws SQLException
      */
-    public static void updateRegistrationStatus(RegistrationStatus status) throws SQLException {
+    public void updateRegistrationStatus(RegistrationStatus status) throws SQLException {
         String query = "UPDATE tblRegistrationStatus SET description = ? WHERE idStatus = ?";
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
             stmt.setString(1, status.getDesc());
@@ -116,7 +120,8 @@ public class RegistrationStatusDao {
      */
     public RegistrationStatus getRegistrationStatusById(int idStatus) throws SQLException {
         String query = "SELECT * FROM tblRegistrationStatus WHERE idStatus = ?";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idStatus);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idStatus);
         if (rs != null && rs.next()) {
             String description = rs.getString("description");
             return new RegistrationStatus(idStatus, description);

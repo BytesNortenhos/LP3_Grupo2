@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sports>
+    <sport>
+        <type>Collective</type>
+        <genre>Women</genre>
+        <name>Basketball</name>
+        <description>Fast-paced basketball game with 3 players per team, played on a half-court.</description>
+        <minParticipants>4</minParticipants>
+        <scoringMeasure>Points</scoringMeasure>
+        <oneGame>Multiple</oneGame>
+        <olympicRecord>
+            <year>2020</year>
+            <holder>Team USA</holder>
+            <medals>1</medals>
+        </olympicRecord>
+        <winnerOlympic>
+            <year>2020</year>
+            <holder>Team USA</holder>
+            <medal>Gold</medal>
+        </winnerOlympic>
+        <rules>
+            <rule>Game lasts 10 minutes or until one team scores 21 points.</rule>
+            <rule>Shot clock is 12 seconds.</rule>
+            <rule>No quarters; game is continuous.</rule>
+        </rules>
+    </sport>
+    <sport>
+        <type>Individual</type>
+        <genre>Men</genre>
+        <name>Golf</name>
+        <description>A precision sport where athletes compete to complete the course with the fewest strokes.</description>
+        <minParticipants>5</minParticipants>
+        <scoringMeasure>Points</scoringMeasure>
+        <oneGame>One</oneGame>
+        <olympicRecord>
+            <year>2020</year>
+            <holder>Xander Schauffele</holder>
+            <medals>1</medals>
+        </olympicRecord>
+        <winnerOlympic>
+            <year>2020</year>
+            <holder>Xander Schauffele</holder>
+            <medal>Gold</medal>
+        </winnerOlympic>
+        <rules>
+            <rule>18 holes are played in one round.</rule>
+            <rule>The player with the fewest strokes wins.</rule>
+            <rule>In case of a tie, a playoff determines the winner.</rule>
+        </rules>
+    </sport>
+    <sport>
+        <type>Individual</type>
+        <genre>Men</genre>
+        <name>Cycling</name>
+        <description>Competitive race on a road or track, emphasizing endurance and speed.</description>
+        <minParticipants>4</minParticipants>
+        <scoringMeasure>Time</scoringMeasure>
+        <oneGame>One</oneGame>
+        <olympicRecord>
+            <time>06:05:26.00</time>
+            <year>2020</year>
+            <holder>Richard Carapaz</holder>
+            <medals>1</medals>
+        </olympicRecord>
+        <winnerOlympic>
+            <time>06:05:26.00</time>
+            <year>2020</year>
+            <holder>Richard Carapaz</holder>
+            <medal>Gold</medal>
+        </winnerOlympic>
+        <rules>
+            <rule>Athletes must complete the designated course.</rule>
+            <rule>No outside assistance is allowed during the race.</rule>
+            <rule>The fastest time determines the winner.</rule>
+        </rules>
+    </sport>
+	<sport>
+        <type>Collective</type>
+        <genre>Men</genre>
+        <name>Cycling</name>
+        <description>Competitive race on a road or track, emphasizing endurance and speed.</description>
+        <minParticipants>2</minParticipants>
+        <scoringMeasure>Time</scoringMeasure>
+        <oneGame>One</oneGame>
+        <olympicRecord>
+            <year>2020</year>
+            <holder>Team France</holder>
+            <medals>2</medals>
+        </olympicRecord>
+        <winnerOlympic>
+            <year>2020</year>
+            <holder>Team France</holder>
+            <medal>Gold</medal>
+        </winnerOlympic>
+        <rules>
+            <rule>Athletes must complete the designated course.</rule>
+            <rule>No outside assistance is allowed during the race.</rule>
+            <rule>The fastest time determines the winner.</rule>
+        </rules>
+    </sport>
+    <sport>
+        <type>Individual</type>
+        <genre>Men</genre>
+        <name>Hammer Throw</name>
+        <description>A track and field event where athletes throw a heavy weight for distance.</description>
+        <minParticipants>4</minParticipants>
+        <scoringMeasure>Distance</scoringMeasure>
+        <oneGame>One</oneGame>
+        <olympicRecord>
+            <distance>84.80</distance>
+            <year>1988</year>
+            <holder>Yuriy Sedykh</holder>
+            <medals>1</medals>
+        </olympicRecord>
+        <winnerOlympic>
+            <distance>81.98</distance>
+            <year>2020</year>
+            <holder>Wojciech Nowicki</holder>
+            <medal>Gold</medal>
+        </winnerOlympic>
+        <rules>
+            <rule>The athlete must throw within a 2.135-meter diameter circle.</rule>
+            <rule>The throw is measured from the circle to the nearest point of landing.</rule>
+            <rule>Each athlete gets six attempts, and the best throw is counted.</rule>
+        </rules>
+    </sport>
+</sports>

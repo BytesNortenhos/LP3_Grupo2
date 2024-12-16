@@ -19,9 +19,10 @@ public class OlympicRecordDao {
      * @return {List<OlympicRecord>} List of Olympic records
      * @throws SQLException
      */
-    public static List<OlympicRecord> getOlympicRecords() throws SQLException {
+    public List<OlympicRecord> getOlympicRecords() throws SQLException {
         List<OlympicRecord> records = new ArrayList<>();
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT * FROM tblOlympicRecord;");
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery("SELECT * FROM tblOlympicRecord;");
         if (rs != null) {
             while (rs.next()) {
                 int idSport = rs.getInt("idSport");
@@ -51,12 +52,13 @@ public class OlympicRecordDao {
      * @param record {OlympicRecord} Olympic record
      * @throws SQLException
      */
-    public static void addOlympicRecord(OlympicRecord record) throws SQLException {
+    public void addOlympicRecord(OlympicRecord record) throws SQLException {
         String query = "INSERT INTO tblOlympicRecord (idSport, year, idAthlete, idTeam, result, medals) VALUES (?, ?, ?, ?, ?, ?)";
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
             stmt.setInt(1, record.getSport().getIdSport());
@@ -82,12 +84,13 @@ public class OlympicRecordDao {
      * @param year {int} Year
      * @throws SQLException
      */
-    public static void removeOlympicRecord(int idSport, int year) throws SQLException {
+    public void removeOlympicRecord(int idSport, int year) throws SQLException {
         String query = "DELETE FROM tblOlympicRecord WHERE idSport = ? AND year = ?";
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
             stmt.setInt(1, idSport);
             stmt.setInt(2, year);
@@ -107,12 +110,13 @@ public class OlympicRecordDao {
      * @param record {OlympicRecord} Olympic record
      * @throws SQLException
      */
-    public static void updateOlympicRecord(OlympicRecord record) throws SQLException {
+    public void updateOlympicRecord(OlympicRecord record) throws SQLException {
         String query = "UPDATE tblOlympicRecord SET idAthlete = ?, idTeam = ?, result = ?, medals = ? WHERE idSport = ? AND year = ?";
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
             stmt.setInt(1, record.getAthlete().getIdAthlete());
@@ -141,7 +145,8 @@ public class OlympicRecordDao {
      */
     public OlympicRecord getOlympicRecordById(int idSport, int year) throws SQLException {
         String query = "SELECT * FROM tblOlympicRecord WHERE idSport = ? AND year = ?";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, year);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idSport, year);
         if (rs != null && rs.next()) {
             int idAthlete = rs.getInt("idAthlete");
             int idTeam = rs.getInt("idTeam");
@@ -168,7 +173,8 @@ public class OlympicRecordDao {
      */
     public static OlympicRecord getOlympicRecordByIdV2(int idSport, int year) throws SQLException {
         String query = "SELECT * FROM tblOlympicRecord WHERE idSport = ? AND year = ?";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, year);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idSport, year);
         if (rs != null && rs.next()) {
             int idAthlete = rs.getInt("idAthlete");
             int idTeam = rs.getInt("idTeam");
@@ -188,7 +194,8 @@ public class OlympicRecordDao {
      */
     public Integer getOlympicRecord(int idSport) throws SQLException {
         String query = "SELECT result FROM tblOlympicRecord WHERE idSport = ?";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idSport);
         try {
             if (rs != null && rs.next()) {
                 return rs.getInt("result");
@@ -213,7 +220,8 @@ public class OlympicRecordDao {
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
             stmt.setInt(1, year);
@@ -246,7 +254,8 @@ public class OlympicRecordDao {
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
             stmt.setInt(1, year);
@@ -276,7 +285,8 @@ public class OlympicRecordDao {
         String query = "SELECT medals " +
                 "FROM tblOlympicRecord " +
                 "WHERE idSport = ?";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idSport);
         if (rs != null && rs.next()) {
             olympicRecordMedals = rs.getInt("medals");
             return olympicRecordMedals;
@@ -298,7 +308,8 @@ public class OlympicRecordDao {
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
             stmt.setInt(1, year);
@@ -331,7 +342,8 @@ public class OlympicRecordDao {
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
             stmt.setInt(1, year);

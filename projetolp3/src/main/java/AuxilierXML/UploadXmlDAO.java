@@ -1,5 +1,6 @@
 package AuxilierXML;
 import Utils.ConnectionsUtlis;
+import Utils.ErrorHandler;
 import Utils.PasswordUtils;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -22,21 +23,22 @@ public class UploadXmlDAO {
     /**
      * Add sports from XML to database
      * @param sports {Sports} Sports object
-     * @return boolean
+     * @return ErrorHandler
      * @throws SQLException
      */
-    public boolean addSports(Sports sports) throws SQLException {
+    public ErrorHandler addSports(Sports sports) throws SQLException {
         Connection conn = null;
         PreparedStatement stmt = null;
         PreparedStatement stmt2 = null;
-        conn = ConnectionsUtlis.dbConnect();
 
         try {
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
+            PreparedStatement stmtGetSport = conn.prepareStatement("SELECT name FROM tblSport WHERE name IN (?) AND idGender = ?");
             for (Sport sport : sports.getSportList()) {
-                String queryGetSport = "SELECT name FROM tblSport WHERE name LIKE ?";
-                stmt = conn.prepareStatement(queryGetSport);
-                stmt.setString(1, sport.getName());
-                ResultSet rsSport = stmt.executeQuery();
+                stmtGetSport.setString(1, sport.getName());
+                stmtGetSport.setInt(2, sport.getXmlGenre().equals("Men") ? 1 : 2);
+                ResultSet rsSport = stmtGetSport.executeQuery();
 
                 if(rsSport.next()) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -196,32 +198,33 @@ public class UploadXmlDAO {
                 }
             }
 
-            return true;
+            return new ErrorHandler(true, "");
         } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+            return new ErrorHandler(false, e.getMessage());
         }
     }
 
     /**
      * Add teams from XML to database
      * @param teams {Teams} Teams object
-     * @return boolean
+     * @return ErrorHandler
      * @throws SQLException
      */
-    public boolean addTeams(Teams teams) throws SQLException {
+    public ErrorHandler addTeams(Teams teams) throws SQLException {
         Connection conn = null;
         PreparedStatement stmt = null;
         PreparedStatement stmt2 = null;
 
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
+            PreparedStatement stmtGetTeam = conn.prepareStatement("SELECT name FROM tblTeam WHERE name IN (?) AND idGender = ?");
+            PreparedStatement stmtGetSport = conn.prepareStatement("SELECT idSport FROM tblSport WHERE name IN (?) AND idGender = ?");
 
             for (Team team : teams.getTeamList()) {
-                String queryGetTeam = "SELECT name FROM tblTeam WHERE name LIKE ?";
-                stmt = conn.prepareStatement(queryGetTeam);
-                stmt.setString(1, team.getName());
-                ResultSet rsTeam = stmt.executeQuery();
+                stmtGetTeam.setString(1, team.getName());
+                stmtGetTeam.setInt(2, team.getXmlGenre().equals("Men") ? 1 : 2);
+                ResultSet rsTeam = stmtGetTeam.executeQuery();
 
                 if(rsTeam.next()) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -233,11 +236,9 @@ public class UploadXmlDAO {
 
                 int tempSportId = 0;
                 int tempGenderId = (team.getXmlGenre().equals("Men") ? 1 : 2);
-                String queryGetSport = "SELECT idSport FROM tblSport WHERE name LIKE ? AND idGender = ?";
-                stmt = conn.prepareStatement(queryGetSport);
-                stmt.setString(1, team.getXmlSport());
-                stmt.setInt(2, tempGenderId);
-                ResultSet rs = stmt.executeQuery();
+                stmtGetSport.setString(1, team.getXmlSport());
+                stmtGetSport.setInt(2, tempGenderId);
+                ResultSet rs = stmtGetSport.executeQuery();
 
                 if (rs.next()) {
                     tempSportId = rs.getInt(1);
@@ -282,35 +283,30 @@ public class UploadXmlDAO {
                     }
                 }
             }
-            return true;
+            return new ErrorHandler(true, "");
         } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        } finally {
-            if (stmt != null) stmt.close();
-            if (stmt2 != null) stmt2.close();
-            if (conn != null) conn.close();
+            return new ErrorHandler(false, e.getMessage());
         }
     }
 
     /**
      * Add athletes from XML to database
      * @param athletes {Athletes} Athletes object
-     * @return boolean
+     * @return ErrorHandler
      * @throws SQLException
      */
-    public boolean addAthletes(Athletes athletes) throws SQLException {
+    public ErrorHandler addAthletes(Athletes athletes) throws SQLException {
         Connection conn = null;
         PreparedStatement stmt = null;
         PreparedStatement stmt2 = null;
-        conn = ConnectionsUtlis.dbConnect();
 
         try {
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
+            PreparedStatement stmtGetAthlete = conn.prepareStatement("SELECT name FROM tblAthlete WHERE name IN (?)");
             for (Athlete athlete : athletes.getAthleteList()) {
-                String queryGetAthlete = "SELECT name FROM tblAthlete WHERE name LIKE ?";
-                stmt = conn.prepareStatement(queryGetAthlete);
-                stmt.setString(1, athlete.getName());
-                ResultSet rsAthlete = stmt.executeQuery();
+                stmtGetAthlete.setString(1, athlete.getName());
+                ResultSet rsAthlete = stmtGetAthlete.executeQuery();
 
                 if(rsAthlete.next()) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -388,10 +384,9 @@ public class UploadXmlDAO {
                 }
 
             }
-            return true;
+            return new ErrorHandler(true, "");
         } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+            return new ErrorHandler(false, e.getMessage());
         }
     }
 
@@ -421,7 +416,7 @@ public class UploadXmlDAO {
      * @param pathXSD {String} Path of XSD file
      * @return boolean
      */
-    public boolean saveXML(String pathXML, String pathXSD) {
+    public ErrorHandler saveXML(String pathXML, String pathXSD) {
         String pathSave = "src/main/java/DataXML_uploads/";
 
         File fileXML = new File(pathXML);
@@ -435,10 +430,9 @@ public class UploadXmlDAO {
             Files.copy(fileXML.toPath(), Path.of(pathSave, formattedDateTime + "_" + fileXML.getName()), StandardCopyOption.REPLACE_EXISTING);
             Files.copy(fileXSD.toPath(), Path.of(pathSave, formattedDateTime + "_" + fileXSD.getName()), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
-            System.out.println(e.getMessage());
-            return false;
+            return new ErrorHandler(false, e.getMessage());
         }
 
-        return true;
+        return new ErrorHandler(true, "");
     }
 }

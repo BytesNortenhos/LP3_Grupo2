@@ -1,38 +1,23 @@
 package controllers.admin;
 
-import AuxilierXML.Athletes;
-import AuxilierXML.Sports;
-import AuxilierXML.Teams;
-import AuxilierXML.UploadXmlDAO;
 import Dao.*;
 import Models.Event;
-import Models.Gender;
-import Models.Sport;
-import Utils.XMLUtils;
+import Models.Local;
 import bytesnortenhos.projetolp3.Main;
-import controllers.ViewsController;
-import jakarta.xml.bind.JAXBException;
-import jakarta.xml.bind.UnmarshalException;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -42,53 +27,16 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
-import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
-import java.util.Scanner;
 
 public class ViewEventsController {
-    private static Stage stage;
-    private static Scene scene;
-    @FXML
-    private BorderPane parent;
-    private static boolean isDarkMode = true;
-    @FXML
-    private ImageView iconModeNav;
-    @FXML
-    private ImageView iconHomeNav;
-    @FXML
-    private ImageView iconLogoutNav;
-    URL cssDarkURL = Main.class.getResource("css/dark.css");
-    URL cssLightURL = Main.class.getResource("css/light.css");
-    String cssDark = ((URL) cssDarkURL).toExternalForm();
-    String cssLight = ((URL) cssLightURL).toExternalForm();
-    @FXML
-    private SplitMenuButton athleteSplitButton;
-    @FXML
-    private SplitMenuButton sportSplitButton;
-    @FXML
-    private SplitMenuButton teamSplitButton;
-
     @FXML
     private FlowPane eventsContainer;
     @FXML
     private Label noEventsLabel;
+    EventDao eventDao = new EventDao();
 
     public void initialize() throws SQLException {
-        loadIcons();
-
-        athleteSplitButton.setOnMouseClicked(event -> {
-            // Open the dropdown menu when clicking on the button's text
-            athleteSplitButton.show();
-        });
-        sportSplitButton.setOnMouseClicked(mouseEvent -> {
-            sportSplitButton.show();
-        });
-        teamSplitButton.setOnMouseClicked(mouseEvent -> {
-            sportSplitButton.show();
-        });
-
         List<Event> events = null;
         try {
             events = getEvents();  
@@ -103,23 +51,7 @@ public class ViewEventsController {
         }
     }
 
-
-    public void loadIcons() {
-        URL iconMoonNavURL = Main.class.getResource("img/iconMoon.png");
-        Image image = new Image(iconMoonNavURL.toExternalForm());
-        if (iconModeNav != null) iconModeNav.setImage(image);
-
-        URL iconHomeNavURL = Main.class.getResource("img/iconOlympic.png");
-        image = new Image(iconHomeNavURL.toExternalForm());
-        if (iconHomeNav != null) iconHomeNav.setImage(image);
-
-        URL iconLogoutNavURL = Main.class.getResource("img/iconLogoutDark.png");
-        image = new Image(iconLogoutNavURL.toExternalForm());
-        if (iconLogoutNav != null) iconLogoutNav.setImage(image);
-    }
-
     public List<Event> getEvents() throws SQLException {
-        EventDao eventDao = new EventDao();
         return eventDao.getEvents();
     }
 
@@ -145,13 +77,14 @@ public class ViewEventsController {
     }
 
 
-    private VBox createEventItem(Event event) throws SQLException {
+    private VBox createEventItem(Event events) throws SQLException {
         VBox eventItem = new VBox();
         eventItem.setSpacing(10);
         eventItem.getStyleClass().add("request-item");
+        int year = events.getYear();
 
         HBox nameContainer = new HBox(10);
-        String logoPath = event.getLogo();
+        String logoPath = events.getLogo();
         ImageView profileImage = new ImageView();
         URL iconImageURL = Main.class.getResource(logoPath);
         if (iconImageURL != null) {
@@ -162,533 +95,78 @@ public class ViewEventsController {
             Circle clip = new Circle(30, 30, 30);
             profileImage.setClip(clip);
         }
-        Label nameLabel = new Label("" + event.getYear());
+        Label nameLabel = new Label("" + year);
         nameLabel.getStyleClass().add("name-label");
         nameLabel.setTranslateY(13);
         nameContainer.getChildren().addAll(profileImage, nameLabel);
 
 
 
-        Label countryNameLabel = new Label("País: " + event.getCountry().getName());
+        Label countryNameLabel = new Label("País: " + events.getCountry().getName());
         countryNameLabel.getStyleClass().add("name-label");
 
 
-        Label continentLabel = new Label("Continente: " + event.getCountry().getContinent());
+        Label continentLabel = new Label("Continente: " + events.getCountry().getContinent());
         continentLabel.getStyleClass().add("name-label");
 
 
+        HBox iconsContainer = new HBox(10);
+        ImageView editImageView = new ImageView();
+        URL iconEditImageURL = Main.class.getResource("img/iconEdit.png");
+        if (iconEditImageURL != null) {
+            Image image = new Image(iconEditImageURL.toExternalForm());
+            editImageView.setImage(image);
+            editImageView.setFitWidth(60);
+            editImageView.setFitHeight(60);
+        }
+        Button viewEditImageButton = new Button();
+        viewEditImageButton.setGraphic(editImageView);
+        viewEditImageButton.getStyleClass().add("startButton");
+        viewEditImageButton.setOnAction(event -> {
+            try {
+                updateImageEvent(event, events.getYear());
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        });
 
-        eventItem.getChildren().addAll(nameContainer, countryNameLabel, continentLabel);
+        ImageView localsImageView = new ImageView();
+        URL iconLocalsImageURL = Main.class.getResource("img/iconLocalsView.png");
+        if (iconLocalsImageURL != null) {
+            Image image = new Image(iconLocalsImageURL.toExternalForm());
+            localsImageView.setImage(image);
+            localsImageView.setFitWidth(60);
+            localsImageView.setFitHeight(60);
+        }
+        Button viewLocalsImageButton = new Button();
+        viewLocalsImageButton.setGraphic(localsImageView);
+        viewLocalsImageButton.getStyleClass().add("startButton");
+        viewLocalsImageButton.setOnAction(event -> {
+            try {
+                verifyLocals(event, year);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        });
 
+        iconsContainer.getChildren().addAll(viewEditImageButton, viewLocalsImageButton);
+        eventItem.getChildren().addAll(nameContainer, countryNameLabel, continentLabel, iconsContainer);
         eventItem.setPrefWidth(500);
 
         return eventItem;
     }
 
-
-    public boolean changeMode(ActionEvent event) {
-        isDarkMode = !isDarkMode;
-        if (isDarkMode) {
-            setDarkMode();
-        } else {
-            setLightMode();
-        }
-        return isDarkMode;
-    }
-
-    public void setLightMode() {
-        parent.getStylesheets().remove(cssDark);
-        parent.getStylesheets().add(cssLight);
-        URL iconMoonURL = Main.class.getResource("img/iconMoonLight.png");
-        String iconMoonStr = ((URL) iconMoonURL).toExternalForm();
-        Image image = new Image(iconMoonStr);
-        iconModeNav.setImage(image);
-    }
-
-    public void setDarkMode() {
-        parent.getStylesheets().remove(String.valueOf(cssLight));
-        parent.getStylesheets().add(String.valueOf(cssDark));
-        URL iconMoonURL = Main.class.getResource("img/iconMoon.png");
-        String iconMoonStr = ((URL) iconMoonURL).toExternalForm();
-        Image image = new Image(iconMoonStr);
-        iconModeNav.setImage(image);
-    }
-
-    public void showRegister(ActionEvent event) throws IOException {
-        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
-        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/register.fxml")));
-        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
-        scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
-        if(isDarkMode){
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
-        }else{
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
-        }
-        stage.setScene(scene);
-        stage.show();
-    }
-    public void showAthletes(ActionEvent event) throws IOException {
-        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
-        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/athletesView.fxml")));
-        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
-        scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
-        if(isDarkMode){
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
-        }else{
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
-        }
-        stage.setScene(scene);
-        stage.show();
-    }
-
-
-    public void showSportsRegister(ActionEvent event) throws IOException {
-        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
-        Parent root = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/sportRegister.fxml")));
-        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
-        scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
-        if (isDarkMode) {
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
-        } else {
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
-        }
-        stage.setScene(scene);
-        stage.show();
-    }
-
-    public void showSportsEdit(ActionEvent event) throws IOException {
-        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
-        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/sportEdit.fxml")));
-        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
-        scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
-        if(isDarkMode){
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
-        }else{
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
-        }
-        stage.setScene(scene);
-        stage.show();
-    }
-
-    public void showSports(ActionEvent event) throws IOException {
-        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
-        Parent root = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/sportsView.fxml")));
-        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
-        scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
-        if (isDarkMode) {
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
-        } else {
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
-        }
-        stage.setScene(scene);
-        stage.show();
-    }
-
-    public void showTeamsEdit(ActionEvent event) throws IOException {
-        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
-        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/teamEdit.fxml")));
-        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
-        scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
-        if(isDarkMode){
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
-        }else{
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
-        }
-        stage.setScene(scene);
-        stage.show();
-    }
-    public void showStartSports(ActionEvent event) throws IOException {
-        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
-        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/startSport.fxml")));
-        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
-        scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
-        if(isDarkMode){
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
-        }else{
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
-        }
-        stage.setScene(scene);
-        stage.show();
-    }
-    public void returnHomeMenu(ActionEvent event) throws IOException {
-        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
-        Parent root = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/home.fxml")));
-        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
-        if (isDarkMode) {
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
-        } else {
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
-        }
-        stage.setScene(scene);
-        stage.show();
-    }
-
-    public void logout(ActionEvent event) throws Exception {
-        showLogin(event);
-    }
-
-    public void showLogin(ActionEvent event) throws IOException {
-        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
-        Parent root = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/loginView.fxml")));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
-        if (isDarkMode) {
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
-        } else {
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
-        }
-        stage.setScene(scene);
-        stage.show();
-    }
-
-    /**
-     * Preview the XML content before inserting it into the Database
-     * @param content {String} XML Content
-     * @return boolean
-     * @throws JAXBException
-     * @throws UnmarshalException
-     */
-    public boolean previewXmlContent(String content) throws JAXBException, UnmarshalException {
-        Alert dialog = new Alert(Alert.AlertType.CONFIRMATION);
-        dialog.setTitle("Confirmação de Inserção");
-        dialog.setHeaderText("Os seguintes dados serão inseridos na base de dados:");
-        dialog.setContentText("Verifique os detalhes antes de confirmar.");
-
-        TextArea textArea = new TextArea(content);
-        textArea.setEditable(false);
-        textArea.setWrapText(true);
-        textArea.setPrefSize(600, 400);
-        dialog.getDialogPane().setContent(textArea);
-        ButtonType insertButton = new ButtonType("Inserir", ButtonBar.ButtonData.OK_DONE);
-        ButtonType cancelButton = new ButtonType("Cancelar", ButtonBar.ButtonData.CANCEL_CLOSE);
-
-        dialog.getButtonTypes().setAll(insertButton, cancelButton);
-
-        boolean[] finalResult = {false};
-        dialog.showAndWait().ifPresent(response -> {
-            if (response == insertButton) finalResult[0] = true;
-        });
-        return finalResult[0];
-    }
-
-    /**
-     * Load the Athletes from an XML file
-     * @param event {ActionEvent} Event
-     * @throws IOException
-     */
-    @FXML
-    public void loadTeams(ActionEvent event) throws IOException {
+    public void updateImageEvent(ActionEvent event, int year) throws SQLException {
+        String pathSave = "src/main/resources/bytesnortenhos/projetolp3/ImagesEvent/";
+        String pathSaveTemp =  Main.class.getResource("ImagesEvent").toExternalForm().replace("file:", "");
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource Files");
-
-        FileChooser.ExtensionFilter xmlFilter = new FileChooser.ExtensionFilter("XML Files (*.xml)", "*.xml");
-        fileChooser.getExtensionFilters().addAll(xmlFilter);
-        //FileChooser.ExtensionFilter xsdFilter = new FileChooser.ExtensionFilter("XSD Files (*.xsd)", "*.xsd");
-        //fileChooser.getExtensionFilters().addAll(xmlFilter, xsdFilter);
-
-        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
-        List<File> selectedFiles = fileChooser.showOpenMultipleDialog(stage);
-
-        if (selectedFiles != null) {
-            long xsdCount = selectedFiles.stream().filter(file -> file.getName().endsWith("xsd.xml")).count();
-            long xmlCount = selectedFiles.stream().filter(file -> file.getName().endsWith(".xml") && !file.getName().endsWith("_xsd.xml")).count();
-            //long xsdCount = selectedFiles.stream().filter(file -> file.getName().endsWith(".xsd")).count();
-
-            if (selectedFiles.size() == 2 && xmlCount == 1 && xsdCount == 1) {
-                System.out.println("Selected files are valid: " + selectedFiles);
-
-                String xsdPath = selectedFiles.stream().filter(file -> file.getName().endsWith("xsd.xml")).findFirst().get().getAbsolutePath();
-                String xmlPath = selectedFiles.stream().filter(file -> file.getName().endsWith(".xml") && !file.getName().endsWith("_xsd.xml")).findFirst().get().getAbsolutePath();
-
-                XMLUtils xmlUtils = new XMLUtils();
-                boolean xmlValid = xmlUtils.validateXML(xsdPath, xmlPath);
-
-                if(xmlValid) {
-                    try {
-                        Teams teams = xmlUtils.getTeamsDataXML(xmlPath);
-                        String content = teams.toString();
-                        if(previewXmlContent(content)) {
-                            UploadXmlDAO uploadXmlDAO = new UploadXmlDAO();
-                            boolean uploaded = uploadXmlDAO.addTeams(teams);
-                            if (uploaded) {
-                                Alert alerta = new Alert(Alert.AlertType.INFORMATION);
-                                alerta.setTitle("Sucesso!");
-                                alerta.setHeaderText("Upload (apenas dos dados não repetidos) foi efetuado! Verifique pois se todos os dados forem repetidos, nada foi inserido!");
-                                alerta.show();
-                            } else {
-                                Alert alerta = new Alert(Alert.AlertType.ERROR);
-                                alerta.setTitle("Erro!");
-                                alerta.setHeaderText("Ocorreu um erro ao adicionar os dados à Base de Dados!");
-                                alerta.show();
-                            }
-
-                            boolean xmlSaved = uploadXmlDAO.saveXML(xmlPath, xsdPath);
-                            if (!xmlSaved) {
-                                Alert alerta = new Alert(Alert.AlertType.ERROR);
-                                alerta.setTitle("Erro!");
-                                alerta.setHeaderText("Ocorreu um erro ao guardar o ficheiro XML/XSD!");
-                                alerta.show();
-                            }
-                        } else {
-                            Alert alerta = new Alert(Alert.AlertType.INFORMATION);
-                            alerta.setTitle("Operação Cancelada!");
-                            alerta.setHeaderText("Nenhum dado será inserido!");
-                            alerta.show();
-                        }
-                    }  catch (JAXBException e) {
-                        Alert alerta = new Alert(Alert.AlertType.ERROR);
-                        alerta.setTitle("Erro!");
-                        alerta.setHeaderText("Os dados do XML não coincidem com a opção escolhida!");
-                        alerta.show();
-                    } catch (SQLException e) {
-                        Alert alerta = new Alert(Alert.AlertType.ERROR);
-                        alerta.setTitle("Erro!");
-                        alerta.setHeaderText("Ocorreu um erro ao adicionar os dados à Base de Dados!");
-                        alerta.show();
-                    }
-                } else {
-                    Alert alerta = new Alert(Alert.AlertType.ERROR);
-                    alerta.setTitle("Erro!");
-                    alerta.setHeaderText("Baseado no XSD, o XML está incorreto!");
-                    alerta.show();
-                }
-            } else {
-                Alert alerta = new Alert(Alert.AlertType.ERROR);
-                alerta.setTitle("Erro!");
-                alerta.setHeaderText("Selecione apenas 2 ficheiros! 1 .xml e 1 xsd.xml");
-                alerta.show();
-            }
-        } else {
-            Alert alerta = new Alert(Alert.AlertType.ERROR);
-            alerta.setTitle("Erro!");
-            alerta.setHeaderText("Selecione 2 ficheiros! 1 .xml e 1 xsd.xml");
-            alerta.show();
-        }
-    }
-
-    /**
-     * Load the Sports from an XML file
-     * @param event {ActionEvent} Event
-     * @throws IOException
-     */
-    public void loadSports(ActionEvent event) throws IOException {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open Resource Files");
-
-        FileChooser.ExtensionFilter xmlFilter = new FileChooser.ExtensionFilter("XML Files (*.xml)", "*.xml");
-        fileChooser.getExtensionFilters().addAll(xmlFilter);
-        //FileChooser.ExtensionFilter xsdFilter = new FileChooser.ExtensionFilter("XSD Files (*.xsd)", "*.xsd");
-        //fileChooser.getExtensionFilters().addAll(xmlFilter, xsdFilter);
-
-        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
-        List<File> selectedFiles = fileChooser.showOpenMultipleDialog(stage);
-
-        if (selectedFiles != null) {
-            long xsdCount = selectedFiles.stream().filter(file -> file.getName().endsWith("xsd.xml")).count();
-            long xmlCount = selectedFiles.stream().filter(file -> file.getName().endsWith(".xml") && !file.getName().endsWith("_xsd.xml")).count();
-            //long xsdCount = selectedFiles.stream().filter(file -> file.getName().endsWith(".xsd")).count();
-
-            if (selectedFiles.size() == 2 && xmlCount == 1 && xsdCount == 1) {
-                System.out.println("Selected files are valid: " + selectedFiles);
-
-                String xsdPath = selectedFiles.stream().filter(file -> file.getName().endsWith("xsd.xml")).findFirst().get().getAbsolutePath();
-                String xmlPath = selectedFiles.stream().filter(file -> file.getName().endsWith(".xml") && !file.getName().endsWith("_xsd.xml")).findFirst().get().getAbsolutePath();
-
-                XMLUtils xmlUtils = new XMLUtils();
-                boolean xmlValid = xmlUtils.validateXML(xsdPath, xmlPath);
-
-                if(xmlValid) {
-                    try {
-                        Sports sports = xmlUtils.getSportsDataXML(xmlPath);
-                        String content = sports.toString();
-                        if(previewXmlContent(content)) {
-                            UploadXmlDAO uploadXmlDAO = new UploadXmlDAO();
-                            boolean uploaded = uploadXmlDAO.addSports(sports);
-                            if (uploaded) {
-                                Alert alerta = new Alert(Alert.AlertType.INFORMATION);
-                                alerta.setTitle("Sucesso!");
-                                alerta.setHeaderText("Upload (apenas dos dados não repetidos) foi efetuado! Verifique pois se todos os dados forem repetidos, nada foi inserido!");
-                                alerta.show();
-                            } else {
-                                Alert alerta = new Alert(Alert.AlertType.ERROR);
-                                alerta.setTitle("Erro!");
-                                alerta.setHeaderText("Ocorreu um erro ao adicionar os dados à Base de Dados!");
-                                alerta.show();
-                            }
-
-                            boolean xmlSaved = uploadXmlDAO.saveXML(xmlPath, xsdPath);
-                            if (!xmlSaved) {
-                                Alert alerta = new Alert(Alert.AlertType.ERROR);
-                                alerta.setTitle("Erro!");
-                                alerta.setHeaderText("Ocorreu um erro ao guardar o ficheiro XML/XSD!");
-                                alerta.show();
-                            }
-                        } else {
-                            Alert alerta = new Alert(Alert.AlertType.INFORMATION);
-                            alerta.setTitle("Operação Cancelada!");
-                            alerta.setHeaderText("Nenhum dado será inserido!");
-                            alerta.show();
-                        }
-                    }  catch (JAXBException e) {
-                        Alert alerta = new Alert(Alert.AlertType.ERROR);
-                        alerta.setTitle("Erro!");
-                        alerta.setHeaderText("Os dados do XML não coincidem com a opção escolhida!");
-                        alerta.show();
-                    } catch (SQLException e) {
-                        Alert alerta = new Alert(Alert.AlertType.ERROR);
-                        alerta.setTitle("Erro!");
-                        alerta.setHeaderText("Ocorreu um erro ao adicionar os dados à Base de Dados!");
-                        alerta.show();
-                    }
-                } else {
-                    Alert alerta = new Alert(Alert.AlertType.ERROR);
-                    alerta.setTitle("Erro!");
-                    alerta.setHeaderText("Baseado no XSD, o XML está incorreto!");
-                    alerta.show();
-                }
-            } else {
-                Alert alerta = new Alert(Alert.AlertType.ERROR);
-                alerta.setTitle("Erro!");
-                alerta.setHeaderText("Selecione apenas 2 ficheiros! 1 .xml e 1 xsd.xml");
-                alerta.show();
-            }
-        } else {
-            Alert alerta = new Alert(Alert.AlertType.ERROR);
-            alerta.setTitle("Erro!");
-            alerta.setHeaderText("Selecione 2 ficheiros! 1 .xml e 1 xsd.xml");
-            alerta.show();
-        }
-    }
-
-    /**
-     * Load the Athletes from an XML file
-     * @param event {ActionEvent} Event
-     * @throws IOException
-     */
-    public void loadAthletes(ActionEvent event) throws IOException {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open Resource Files");
-
-        FileChooser.ExtensionFilter xmlFilter = new FileChooser.ExtensionFilter("XML Files (*.xml)", "*.xml");
-        fileChooser.getExtensionFilters().addAll(xmlFilter);
-        //FileChooser.ExtensionFilter xsdFilter = new FileChooser.ExtensionFilter("XSD Files (*.xsd)", "*.xsd");
-        //fileChooser.getExtensionFilters().addAll(xmlFilter, xsdFilter);
-
-        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
-        List<File> selectedFiles = fileChooser.showOpenMultipleDialog(stage);
-
-        if (selectedFiles != null) {
-            long xsdCount = selectedFiles.stream().filter(file -> file.getName().endsWith("xsd.xml")).count();
-            long xmlCount = selectedFiles.stream().filter(file -> file.getName().endsWith(".xml") && !file.getName().endsWith("_xsd.xml")).count();
-            //long xsdCount = selectedFiles.stream().filter(file -> file.getName().endsWith(".xsd")).count();
-
-            if (selectedFiles.size() == 2 && xmlCount == 1 && xsdCount == 1) {
-                System.out.println("Selected files are valid: " + selectedFiles);
-
-                String xsdPath = selectedFiles.stream().filter(file -> file.getName().endsWith("xsd.xml")).findFirst().get().getAbsolutePath();
-                String xmlPath = selectedFiles.stream().filter(file -> file.getName().endsWith(".xml") && !file.getName().endsWith("_xsd.xml")).findFirst().get().getAbsolutePath();
-
-                XMLUtils xmlUtils = new XMLUtils();
-                boolean xmlValid = xmlUtils.validateXML(xsdPath, xmlPath);
-
-                if(xmlValid) {
-                    try {
-                        Athletes athletes = xmlUtils.getAthletesDataXML(xmlPath);
-                        String content = athletes.toString();
-                        if(previewXmlContent(content)) {
-                            UploadXmlDAO uploadXmlDAO = new UploadXmlDAO();
-                            boolean uploaded = uploadXmlDAO.addAthletes(athletes);
-                            if (uploaded) {
-                                Alert alerta = new Alert(Alert.AlertType.INFORMATION);
-                                alerta.setTitle("Sucesso!");
-                                alerta.setHeaderText("Upload (apenas dos dados não repetidos) foi efetuado! Verifique pois se todos os dados forem repetidos, nada foi inserido!");
-                                alerta.show();
-                            } else {
-                                Alert alerta = new Alert(Alert.AlertType.ERROR);
-                                alerta.setTitle("Erro!");
-                                alerta.setHeaderText("Ocorreu um erro ao adicionar os dados à Base de Dados!");
-                                alerta.show();
-                            }
-
-                            boolean xmlSaved = uploadXmlDAO.saveXML(xmlPath, xsdPath);
-                            if (!xmlSaved) {
-                                Alert alerta = new Alert(Alert.AlertType.ERROR);
-                                alerta.setTitle("Erro!");
-                                alerta.setHeaderText("Ocorreu um erro ao guardar o ficheiro XML/XSD!");
-                                alerta.show();
-                            }
-                        } else {
-                            Alert alerta = new Alert(Alert.AlertType.INFORMATION);
-                            alerta.setTitle("Operação Cancelada!");
-                            alerta.setHeaderText("Nenhum dado será inserido!");
-                            alerta.show();
-                        }
-                    }  catch (JAXBException e) {
-                        Alert alerta = new Alert(Alert.AlertType.ERROR);
-                        alerta.setTitle("Erro!");
-                        alerta.setHeaderText("Os dados do XML não coincidem com a opção escolhida!");
-                        alerta.show();
-                    } catch (SQLException e) {
-                        Alert alerta = new Alert(Alert.AlertType.ERROR);
-                        alerta.setTitle("Erro!");
-                        alerta.setHeaderText("Ocorreu um erro ao adicionar os dados à Base de Dados!");
-                        alerta.show();
-                    }
-                } else {
-                    Alert alerta = new Alert(Alert.AlertType.ERROR);
-                    alerta.setTitle("Erro!");
-                    alerta.setHeaderText("Baseado no XSD, o XML está incorreto!");
-                    alerta.show();
-                }
-            } else {
-                Alert alerta = new Alert(Alert.AlertType.ERROR);
-                alerta.setTitle("Erro!");
-                alerta.setHeaderText("Selecione apenas 2 ficheiros! 1 .xml e 1 xsd.xml");
-                alerta.show();
-            }
-        } else {
-            Alert alerta = new Alert(Alert.AlertType.ERROR);
-            alerta.setTitle("Erro!");
-            alerta.setHeaderText("Selecione 2 ficheiros! 1 .xml e 1 xsd.xml");
-            alerta.show();
-        }
-    }
-    public void showAddEvent(ActionEvent event) throws IOException {
-        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
-        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/addEvent.fxml")));
-        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
-        scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
-        if(isDarkMode){
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
-        }else{
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
-        }
-        stage.setScene(scene);
-        stage.show();
-    }
-    public void showViewEvent(ActionEvent event) throws IOException {
-        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
-        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/eventsView.fxml")));
-        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
-        scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
-        if(isDarkMode){
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
-        }else{
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
-        }
-        stage.setScene(scene);
-        stage.show();
-    }
-    public void updateImageEvent(ActionEvent event) throws SQLException {
-        String pathSave = "src/main/java/ImagesEvent/";
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open Resource Files");
+        String pathToSave = "ImagesEvent/";
 
         FileChooser.ExtensionFilter imageFilter = new FileChooser.ExtensionFilter("Image Files (*.png, *.jpeg, *.jpg)", "*.png", "*.jpeg", "*.jpg");
         fileChooser.getExtensionFilters().addAll(imageFilter);
 
-        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         List<File> selectedFiles = fileChooser.showOpenMultipleDialog(stage);
 
         if (selectedFiles != null) {
@@ -699,8 +177,7 @@ public class ViewEventsController {
             if (selectedFiles.size() == 1 && (pngCount == 1 || jpgCount == 1 || jpegCount == 1)) {
                 File selectedFile = selectedFiles.get(0);
 
-                int tempEventYear = 1900;
-                boolean saved = saveEventImage(tempEventYear, pathSave, selectedFile.getAbsolutePath());
+                boolean saved = saveEventImage(year, pathSave, pathSaveTemp, selectedFile.getAbsolutePath());
                 if (saved) {
                     Alert alerta = new Alert(Alert.AlertType.INFORMATION);
                     alerta.setTitle("Sucesso!");
@@ -708,8 +185,8 @@ public class ViewEventsController {
                     alerta.show();
 
 
-                    EventDao eventDao = new EventDao();
-                    eventDao.updateEventImage(tempEventYear, pathSave, "." + selectedFile.getName().split("\\.")[1]);
+                    eventDao.updateEventImage(year, pathToSave, "." + selectedFile.getName().split("\\.")[1]);
+                    displayEvents(getEvents());
                 } else {
                     Alert alerta = new Alert(Alert.AlertType.ERROR);
                     alerta.setTitle("Erro!");
@@ -730,12 +207,14 @@ public class ViewEventsController {
             alerta.show();
         }
     }
-    public boolean saveEventImage(int tempEventYear, String pathSave, String pathImage) {
+
+    public boolean saveEventImage(int tempEventYear, String pathSave, String pathSaveTemp, String pathImage) {
         File fileImage = new File(pathImage);
         String filename = String.valueOf(tempEventYear) + "." + fileImage.getName().split("\\.")[1];
 
         try {
             Files.copy(fileImage.toPath(), Path.of(pathSave, filename), StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(fileImage.toPath(), Path.of(pathSaveTemp, filename), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             System.out.println(e.getMessage());
             return false;
@@ -743,18 +222,76 @@ public class ViewEventsController {
 
         return true;
     }
-    public void showTeamsView(ActionEvent event) throws IOException {
-        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
-        Parent root  = FXMLLoader.load(Objects.requireNonNull(ViewsController.class.getResource("/bytesnortenhos/projetolp3/admin/teamsView.fxml")));
-        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
-        scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
-        if(isDarkMode){
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
-        }else{
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
+
+    public void verifyLocals(ActionEvent event, int year) throws SQLException {
+        if (!eventDao.getIfLocals(year)) {
+            Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+            alerta.setTitle("Informação");
+            alerta.setHeaderText("Não existem locais associados a este evento!");
+            alerta.show();
+        } else {
+            showLocalsPopUp(event, year);
         }
-        stage.setScene(scene);
-        stage.show();
+    }
+    public void showLocalsPopUp(ActionEvent event, int year) throws SQLException {
+        Stage popupStage = new Stage();
+        LocalDao localDao = new LocalDao();
+        popupStage.setTitle("Locais do evento");
+
+        VBox vbox = new VBox(10);
+        vbox.setPadding(new Insets(10));
+        vbox.getStyleClass().add("popup-vbox");
+
+        List<Local> locals =  localDao.getLocalsByYear(year);
+        displayResults(vbox, locals);
+
+        Scene scene = new Scene(vbox, 500, 450);
+        scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+        popupStage.setScene(scene);
+        popupStage.show();
     }
 
+    private void displayResults(VBox vbox, List<Local> locals) throws SQLException {
+        vbox.getChildren().clear();
+        vbox.setSpacing(20);
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.getStyleClass().add("popup-scroll-pane");
+        scrollPane.setFitToWidth(true);
+
+        VBox scrollContent = new VBox();
+        scrollContent.setSpacing(20);
+        scrollContent.setFillWidth(true);
+        scrollContent.getStyleClass().add("popup-scroll-pane");
+        for (Local local : locals) {
+            VBox resultItem = createResultItem(local);
+            scrollContent.getChildren().add(resultItem);
+        }
+
+        scrollPane.setContent(scrollContent);
+        vbox.getChildren().add(scrollPane);
+    }
+
+    private VBox createResultItem(Local local) throws SQLException {
+        VBox resultItem = new VBox();
+        resultItem.setSpacing(10);
+
+
+        Label nameLabel = new Label(local.getName());
+        nameLabel.getStyleClass().add("name-label");
+
+        Label typeLabel = new Label("Tipo: " + local.getType());
+        typeLabel.getStyleClass().add("text-label");
+
+        Label address = new Label("Endereço: " + local.getAddress());
+        address.getStyleClass().add("text-label");
+
+        Label capacity = new Label("Capacidade: " + local.getCapacity());
+        capacity.getStyleClass().add("text-label");
+
+        Label contructionYear = new Label("Ano de construção: " + local.getConstructionYear());
+        contructionYear.getStyleClass().add("text-label");
+
+        resultItem.getChildren().addAll(nameLabel, typeLabel, address, capacity, contructionYear);
+        return resultItem;
+    }
 }

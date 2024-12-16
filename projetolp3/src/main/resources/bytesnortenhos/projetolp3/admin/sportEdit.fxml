@@ -20,59 +20,8 @@
 <?import javafx.scene.control.DatePicker?>
 
 <BorderPane fx:id="parent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="background" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.admin.EditSportController">
-    <top>
-        <HBox styleClass="navBar" prefHeight="40.0" prefWidth="400.0">
-            <Button styleClass="iconHomeNav">
-                <graphic>
-                    <ImageView fx:id="iconHomeNav" fitWidth="55" fitHeight="55" preserveRatio="true"/>
-                </graphic>
-            </Button>
-            <Pane HBox.hgrow="ALWAYS"/>
-            <SplitMenuButton fx:id="xmlSplitButton" styleClass="dropdownButton" text="Carregar XML">
-                <items>
-                    <MenuItem text="Carregar equipas" onAction="#loadTeams"/>
-                    <MenuItem text="Carregar modalidades" onAction="#loadSports"/>
-                    <MenuItem text="Carregar atletas" onAction="#loadAthletes"/>
-                </items>
-            </SplitMenuButton>
-            <SplitMenuButton fx:id="eventSplitButton" styleClass="dropdownButton" text="Gerir eventos">
-                <items>
-                    <MenuItem text="Adicionar evento" onAction="#showAddEvent"/>
-                    <MenuItem text="Visualizar eventos" onAction="#showViewEvent"/>
-                    <MenuItem text="Alterar imagem" onAction="#updateImageEvent"/>
-                </items>
-            </SplitMenuButton>
-            <SplitMenuButton fx:id="sportSplitButton" styleClass="dropdownButton" text="Gerir modalidade">
-                <items>
-                    <MenuItem text="Visualizar modalidades" onAction="#showSports"/>
-                    <MenuItem text="Iniciar modalidades" onAction="#showStartSports"/>
-                    <MenuItem text="Registar modalidade" onAction="#showSportsRegister"/>
-                    <MenuItem text="Editar modalidade" onAction="#showSportsEdit"/>
-                </items>
-            </SplitMenuButton>
-            <SplitMenuButton fx:id="teamSplitButton" styleClass="dropdownButton" text="Gerir equipa">
-                <items>
-                    <MenuItem text="Visualizar Equipas" onAction="#showTeamsView"/>
-                    <MenuItem text="Editar Equipa" onAction="#showTeamsEdit"/>
-                </items>
-            </SplitMenuButton>
-            <SplitMenuButton fx:id="athleteSplitButton" styleClass="dropdownButton" text="Atletas">
-                <items>
-                    <MenuItem text="Gerir atletas" onAction="#showAthletes"/>
-                    <MenuItem text="Registar atleta" onAction="#showRegister"/>
-                </items>
-            </SplitMenuButton>
-            <Button mnemonicParsing="false" onAction="#changeMode" styleClass="iconMoonNav">
-                <graphic>
-                    <ImageView fx:id="iconModeNav" fitWidth="55" fitHeight="55" preserveRatio="true"/>
-                </graphic>
-            </Button>
-            <Button mnemonicParsing="false" onAction="#logout" styleClass="iconLogoutNav">
-                <graphic>
-                    <ImageView fx:id="iconLogoutNav" fitWidth="55" fitHeight="55" preserveRatio="true"/>
-                </graphic>
-            </Button>
-        </HBox>
+        <top>
+        <fx:include source="menu.fxml" fx:id="menubar" />
     </top>
     <center>
         <VBox alignment="CENTER" spacing="10">

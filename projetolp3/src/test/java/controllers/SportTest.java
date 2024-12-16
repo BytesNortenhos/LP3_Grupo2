@@ -148,9 +148,9 @@ public class SportTest {
         registrationsAdicionados.add(registration2);
         registrationsAdicionados.add(registration3);
         registrationsAdicionados.add(registration4);
-
+        RegistrationDao registrationDao = new RegistrationDao();
         for (Registration reg : registrationsAdicionados) {
-            reg.setIdRegistration(RegistrationDao.addRegistrationSolo(reg));
+            reg.setIdRegistration(registrationDao.addRegistrationSolo(reg));
         }
         System.out.println("Registos de atletas adicionados com sucesso");
 

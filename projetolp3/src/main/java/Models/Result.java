@@ -10,6 +10,7 @@ public class Result {
     private java.sql.Date date;
     private String result;
     private Local local;
+    private int position;
 
     /**
      * Constructor of Result
@@ -21,7 +22,7 @@ public class Result {
      * @param result {String} Result
      * @param local {Local} Local
      */
-    public Result(int idResult, Sport sport, Athlete athlete, Team team, Date date, String result, Local local) {
+    public Result(int idResult, Sport sport, Athlete athlete, Team team, Date date, String result, Local local, int position) {
         this.idResult = idResult;
         this.sport = sport;
         this.athlete = athlete;
@@ -29,6 +30,7 @@ public class Result {
         this.date = (java.sql.Date) date;
         this.result = result;
         this.local = local;
+        this.position = position;
     }
 
     /**
@@ -139,5 +141,12 @@ public class Result {
      */
     public void setLocal(Local local) {
         this.local = local;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+    public void setPosition(int position) {
+        this.position = position;
     }
 }

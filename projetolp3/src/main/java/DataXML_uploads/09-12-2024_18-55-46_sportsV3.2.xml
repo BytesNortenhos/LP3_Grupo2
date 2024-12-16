@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sports>
+	<sport>
+		<type>Individual</type>
+		<genre>Men</genre>
+		<name>100m Sprint</name>
+		<description>The 100m sprint is a short-distance race in which athletes run as fast as possible over a straight 100-meter track.</description>
+		<minParticipants>8</minParticipants>
+		<scoringMeasure>Time</scoringMeasure>
+		<oneGame>One</oneGame>
+		<olympicRecord>
+			<time>00:00:09.63</time>
+			<year>2012</year>
+			<holder>Usain Bolt</holder>
+		</olympicRecord>
+		<winnerOlympic>
+			<time>00:00:09.80</time>
+			<year>2020</year>
+			<holder>Lamont Marcell Jacobs</holder>
+		</winnerOlympic>
+		<rules>
+			<rule>Each race consists of eight lanes, and each athlete must remain in their lane.</rule>
+			<rule>False starts result in automatic disqualification.</rule>
+			<rule>The winner is the athlete who crosses the finish line first.</rule>
+		</rules>
+	</sport>
+	<sport>
+		<type>Individual</type>
+		<genre>Men</genre>
+		<name>100m Sprint</name>
+		<description>The 100m sprint is a short-distance race in which athletes run as fast as possible over a straight 100-meter track.</description>
+		<minParticipants>4</minParticipants>
+		<scoringMeasure>Time</scoringMeasure>
+		<oneGame>One</oneGame>
+		<olympicRecord>
+			<time>00:00:05.63</time>
+			<year>2012</year>
+			<holder>Usain Half Bolt</holder>
+		</olympicRecord>
+		<winnerOlympic>
+			<time>00:00:05.80</time>
+			<year>2020</year>
+			<holder>Lamont Half Jacobs</holder>
+		</winnerOlympic>
+		<rules>
+			<rule>Each race consists of 4 lanes, and each athlete must remain in their lane.</rule>
+			<rule>False starts result in automatic disqualification.</rule>
+			<rule>The winner is the athlete who crosses the finish line first.</rule>
+		</rules>
+	</sport>
+	<sport>
+		<type>Collective</type>
+		<genre>Women</genre>
+		<name>4x100m Relay</name>
+		<description>A track and field event for women, where four runners each complete a 100-meter leg, passing a baton between each leg.</description>
+		<minParticipants>4</minParticipants>
+		<scoringMeasure>Time</scoringMeasure>
+		<oneGame>One</oneGame>
+		<olympicRecord>
+			<time>00:00:40.82</time>
+			<year>2012</year>
+			<holder>United States of America</holder>
+		</olympicRecord>
+		<winnerOlympic>
+			<time>00:03:51.60</time>
+			<year>2020</year>
+			<holder>Australia</holder>
+		</winnerOlympic>
+		<rules>
+			<rule>Relay baton must be passed within the 20-meter exchange zone.</rule>
+		</rules>
+	</sport>
+	<sport>
+		<type>Collective</type>
+		<genre>Men</genre>
+		<name>4x100m Freestyle Relay</name>
+		<description>A swimming event where teams of four men swim 100 meters freestyle each, passing off the race to the next swimmer in the relay.</description>
+		<minParticipants>4</minParticipants>
+		<scoringMeasure>Time</scoringMeasure>
+		<oneGame>One</oneGame>
+		<olympicRecord>
+			<time>00:03:08.24</time>
+			<year>2008</year>
+			<holder>United States of America</holder>
+		</olympicRecord>
+		<winnerOlympic>
+			<time>00:03:08.97</time>
+			<year>2020</year>
+			<holder>United States of America</holder>
+		</winnerOlympic>
+		<rules>
+			<rule>Each swimmer must touch the wall before the next swimmer begins.</rule>
+		</rules>
+	</sport>
+</sports>

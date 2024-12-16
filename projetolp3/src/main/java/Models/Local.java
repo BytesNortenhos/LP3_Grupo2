@@ -9,6 +9,7 @@ public class Local {
     private int capacity;
     private int constructionYear;
     private int event;
+    private Event Event;
 
     /**
      * Constructor of Local
@@ -50,6 +51,29 @@ public class Local {
         this.constructionYear = constructionYear;
         this.event = event;
     }
+
+    /**
+     * Constructor of Local
+     * @param idLocal {int} Local ID
+     * @param name {String} Name of the local
+     * @param type {String} Type of the local (e.g., "Interior" or "Exterior")
+     * @param address {String} Address of the local
+     * @param city {String} City where the local is located
+     * @param capacity {int} Maximum capacity of the local
+     * @param constructionYear {int} Year when the local was constructed
+     * @param Event {Event} Event associated with the local
+     */
+    public Local(int idLocal, String name, String type, String address, String city, int capacity, int constructionYear, Event Event) {
+        this.idLocal = idLocal;
+        this.name = name;
+        this.type = type;
+        this.address = address;
+        this.city = city;
+        this.capacity = capacity;
+        this.constructionYear = constructionYear;
+        this.Event = Event;
+    }
+
 
     /**
      * Get Local ID
@@ -178,4 +202,20 @@ public class Local {
     public void setEvent(int event) {
         this.event = event;
     }
+    /**
+     * Get the Event associated with this Local
+     * @return Event The Event object associated with this Local
+     */
+    public Event getEventObject() {
+        return Event;
+    }
+
+    /**
+     * Set the Event associated with this Local
+     * @param Event {Event} The Event object to associate with this Local
+     */
+    public void setEventObject(Event Event) {
+        this.Event = Event;
+    }
+
 }
