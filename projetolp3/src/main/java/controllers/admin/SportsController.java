@@ -95,24 +95,24 @@ public class SportsController {
         nameLabel.getStyleClass().add("name-label");
 
         Label typeLabel = new Label(sport.get(1).toString());
-        typeLabel.getStyleClass().add("type-label");
+        typeLabel.getStyleClass().add("text-label");
 
         Label description = new Label(sport.get(4).toString());
         description.setWrapText(true);
-        description.getStyleClass().add("description-label");
+        description.getStyleClass().add("text-label");
 
 
         Label genderLabel = new Label(sport.get(2).toString());
-        genderLabel.getStyleClass().add("gender-label");
+        genderLabel.getStyleClass().add("text-label");
 
         Label minPart = new Label("Minímo de participantes: " + sport.get(5).toString());
-        minPart.getStyleClass().add("minPart-label");
+        minPart.getStyleClass().add("text-label");
 
         Label scoringMeasure = new Label("Medida de pontuação: " + sport.get(6).toString());
-        scoringMeasure.getStyleClass().add("scoringMeasure-label");
+        scoringMeasure.getStyleClass().add("text-label");
 
         Label oneGame = new Label("Quantidade de jogos: " + sport.get(7).toString());
-        oneGame.getStyleClass().add("oneGame-label");
+        oneGame.getStyleClass().add("text-label");
 
         requestItem.getChildren().addAll(nameLabel, description, typeLabel, genderLabel, minPart, scoringMeasure, oneGame);
         requestItem.setPrefWidth(500);

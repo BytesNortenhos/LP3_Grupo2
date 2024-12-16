@@ -106,13 +106,13 @@ public class HomeController {
         int age = Period.between(birthLocalDate, currentDate).getYears();
 
         Label ageLabel = new Label("Idade: " + age);
-        ageLabel.getStyleClass().add("age-label");
+        ageLabel.getStyleClass().add("text-label");
 
         Label sportLabel = new Label("Modalidade: " + request.getSport().getName());
-        sportLabel.getStyleClass().add("sport-label");
+        sportLabel.getStyleClass().add("text-label");
 
         Label countryLabel = new Label("País: " + request.getAthlete().getCountry().getName());
-        countryLabel.getStyleClass().add("country-label");
+        countryLabel.getStyleClass().add("text-label");
 
         ImageView acceptImageView = new ImageView();
         URL iconAcceptURL = Main.class.getResource("img/iconAccept.png");

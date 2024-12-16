@@ -108,7 +108,7 @@ public class HomeControllerAthlete {
         nameLabel.getStyleClass().add("name-label");
 
         Label typeLabel = new Label(request.get(7).toString());
-        typeLabel.getStyleClass().add("type-label");
+        typeLabel.getStyleClass().add("text-label");
 
         requestItem.getChildren().addAll(nameLabel,typeLabel);
         return requestItem;
@@ -251,22 +251,22 @@ public class HomeControllerAthlete {
             String resultValue = String.valueOf(result.get(0).toString());
             resultLabel = new Label("Resultado: " + resultValue + " segundos");
         }
-        resultLabel.getStyleClass().add("result-label");
+        resultLabel.getStyleClass().add("text-label");
 
         Label typeLabel = new Label("Tipo de modalidade: " + (result.get(2) != null ? result.get(2).toString() : "N/A"));
-        typeLabel.getStyleClass().add("type-label");
+        typeLabel.getStyleClass().add("text-label");
 
         if (result.get(3) != null) {
             Label teamLabel = new Label("Equipa: " + result.get(3).toString());
-            teamLabel.getStyleClass().add("type-label");
+            teamLabel.getStyleClass().add("text-label");
             resultItem.getChildren().add(teamLabel);
         }
 
         Label dateLabel = new Label("Data: " + (result.get(4) != null ? result.get(4).toString() : "N/A"));
-        dateLabel.getStyleClass().add("date-label");
+        dateLabel.getStyleClass().add("text-label");
 
         Label localLabel = new Label("Local: " + (result.get(5) != null ? result.get(5).toString() : "N/A"));
-        localLabel.getStyleClass().add("local-label");
+        localLabel.getStyleClass().add("text-label");
 
         /*int pos = 0;
         ResultDao resultDao = new ResultDao();

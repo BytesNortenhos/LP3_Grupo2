@@ -140,7 +140,7 @@
     line-height: 120%;
     -fx-fill: #F7EED8;
 }
-.age-label, .sport-label, .country-label, .type-label, .description-label, .gender-label, .minPart-label, .scoringMeasure-label, .oneGame-label, .numPart-label, .result-label, .local-label, .date-label, .height-label, .weight-label, .birth-label, .maxPart-label, .year-label    {
+.text-label{
     -fx-font-family: 'Inter';
     -fx-font-style: normal;
     -fx-font-weight: 400;

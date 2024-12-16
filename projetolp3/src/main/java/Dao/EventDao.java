@@ -18,7 +18,7 @@ public class EventDao {
      * @return List<Event>
      * @throws SQLException
      */
-    public static List<Event> getEvents() throws SQLException {
+    public List<Event> getEvents() throws SQLException {
         List<Event> events = new ArrayList<>();
         CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT e.year, e.logo, " +
                 "c.idCountry, c.name AS countryName, c.continent " +
@@ -210,5 +210,15 @@ public class EventDao {
             System.out.println("ResultSet is null. No results for Event found.");
         }
         return events;
+    }
+
+    public boolean getIfLocals(int year) throws SQLException {
+        String query = "SELECT COUNT(*) FROM tblLocal WHERE event = ?";
+        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, year);
+        if (rs != null && rs.next() && rs.getInt(1) > 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

@@ -30,6 +30,7 @@ public class ResultDao {
                 java.sql.Date date = rs.getDate("date");
                 String resultValue = rs.getString("result");
                 int idLocal = rs.getInt("idLocal");
+                int position = rs.getInt("position");
 
                 SportDao sportDao = new SportDao();
                 Sport sport = sportDao.getSportById(idSport);
@@ -38,7 +39,7 @@ public class ResultDao {
                 Team team = TeamDao.getTeamById(idTeam);
                 Local local = LocalDao.getLocalById(idLocal);
 
-                Result result = new Result(idResult, sport, athlete, team, date, resultValue, local);
+                Result result = new Result(idResult, sport, athlete, team, date, resultValue, local, position);
                 results.add(result);
             }
         } else {
@@ -88,8 +89,8 @@ public class ResultDao {
      * @param idLocal   {int} Id local
      * @throws SQLException
      */
-    public void addResultAthlete(int idSport, int idAthlete, Date date, String result, int idLocal) throws SQLException {
-        String query = "INSERT INTO tblResult (idSport, idAthlete, date, result, idLocal) VALUES (?, ?, ?, ?, ?)";
+    public void addResultAthlete(int idSport, int idAthlete, Date date, String result, int idLocal, int position) throws SQLException {
+        String query = "INSERT INTO tblResult (idSport, idAthlete, date, result, idLocal, position) VALUES (?, ?, ?, ?, ?, ?)";
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
@@ -101,6 +102,7 @@ public class ResultDao {
             stmt.setDate(3, date);
             stmt.setString(4, result);
             stmt.setInt(5, idLocal);
+            stmt.setInt(6, position);
             stmt.executeUpdate();
         } finally {
             if (stmt != null) {
@@ -157,8 +159,8 @@ public class ResultDao {
      * @param idLocal   {int} Id local
      * @throws SQLException
      */
-    public void addResultAthleteTeam(int idSport, int idAthlete, int idTeam, Date date, String result, int idLocal) throws SQLException {
-        String query = "INSERT INTO tblResult (idSport, idAthlete, idTeam, date, result, idLocal) VALUES (?, ?, ?, ?, ?, ?)";
+    public void addResultAthleteTeam(int idSport, int idAthlete, int idTeam, Date date, String result, int idLocal, int position) throws SQLException {
+        String query = "INSERT INTO tblResult (idSport, idAthlete, idTeam, date, result, idLocal, position()) VALUES (?, ?, ?, ?, ?, ?,?)";
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
@@ -171,6 +173,7 @@ public class ResultDao {
             stmt.setDate(4, date);
             stmt.setString(5, result);
             stmt.setInt(6, idLocal);
+            stmt.setInt(7, position);
             stmt.executeUpdate();
         } finally {
             if (stmt != null) {
@@ -256,6 +259,7 @@ public class ResultDao {
             java.sql.Date date = rs.getDate("date");
             String resultValue = rs.getString("result");
             int idLocal = rs.getInt("idLocal");
+            int position = rs.getInt("position");
 
             SportDao sportDao = new SportDao();
             Sport sport = sportDao.getSportById(idSport);
@@ -263,7 +267,7 @@ public class ResultDao {
             Athlete athlete = athleteDao.getAthleteById(idAthlete);
             Team team = TeamDao.getTeamById(idTeam);
             Local local = LocalDao.getLocalById(idLocal);
-            return new Result(idResult, sport, athlete, team, date, resultValue, local);
+            return new Result(idResult, sport, athlete, team, date, resultValue, local, position);
         }
         return null;
     }
@@ -474,6 +478,7 @@ public class ResultDao {
                 result.add(rs.getDate("date"));
                 result.add(rs.getString("localName"));
                 result.add(rs.getString("profilePhoto"));
+                result.add(rs.getString("position"));
                 results.add(result);
             }
         }
@@ -492,8 +497,9 @@ public class ResultDao {
                 Date date = rs.getDate("date");
                 String Result = rs.getString("result");
                 Local local = new LocalDao().getLocalById(rs.getInt("idLocal"));
+                int position = rs.getInt("position");
 
-                Result result = new Result(id, sport, athlete, null, date, Result, local);
+                Result result = new Result(id, sport, athlete, null, date, Result, local, position);
                 results.add(result);
             }
         } else {

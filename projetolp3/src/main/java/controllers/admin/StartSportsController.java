@@ -125,26 +125,26 @@ public class StartSportsController {
         String sportType = sport.get(1).toString();
 
         Label typeLabel = new Label(sportType);
-        typeLabel.getStyleClass().add("type-label");
+        typeLabel.getStyleClass().add("text-label");
 
         Label genderLabel = new Label(sport.get(2).toString());
-        genderLabel.getStyleClass().add("gender-label");
+        genderLabel.getStyleClass().add("text-label");
 
         if (sportType.equals("Individual")) {
             nPart = sportDao.getNumberParticipantsSport(idSport, year);
             minPart = new Label("Minímo de participantes: " + mPart);
-            minPart.getStyleClass().add("minPart-label");
+            minPart.getStyleClass().add("text-label");
 
             numPart = new Label("Número de participantes: " + nPart);
-            numPart.getStyleClass().add("numPart-label");
+            numPart.getStyleClass().add("text-label");
         } else {
 
             minPart = new Label("Minímo de equipas: " + mPart);
-            minPart.getStyleClass().add("minPart-label");
+            minPart.getStyleClass().add("text-label");
 
             nPart = sportDao.getNumberTeamsSports(idSport, year);
             numPart = new Label("Número de equipas: " + nPart);
-            numPart.getStyleClass().add("numPart-label");
+            numPart.getStyleClass().add("text-label");
         }
 
         ImageView athletesImageView = new ImageView();
@@ -355,7 +355,7 @@ public class StartSportsController {
         }
 
         Label resultLabel = new Label(athletesText.toString());
-        resultLabel.getStyleClass().add("result-label");
+        resultLabel.getStyleClass().add("text-label");
 
         resultItem.getChildren().addAll(nameLabel, resultLabel);
         return resultItem;
@@ -370,7 +370,7 @@ public class StartSportsController {
 
 
         Label resultLabel = new Label(athletes + " - " + country);
-        resultLabel.getStyleClass().add("result-label");
+        resultLabel.getStyleClass().add("text-label");
 
         resultItem.getChildren().addAll(resultLabel);
         return resultItem;
@@ -451,10 +451,12 @@ public class StartSportsController {
         nameContainer.getChildren().addAll(profileImage, nameLabel);
 
         Label resultLabel = new Label("Resultado: " + result.get(0).toString());
-        resultLabel.getStyleClass().add("result-label");
+        resultLabel.getStyleClass().add("text-label");
 
+        Label positionLabel = new Label("Posição: " + result.get(9).toString()+ "º lugar");
+        positionLabel.getStyleClass().add("text-label");
 
-        resultItem.getChildren().addAll(nameContainer, resultLabel);
+        resultItem.getChildren().addAll(nameContainer, resultLabel, positionLabel);
         return resultItem;
     }
 
@@ -468,7 +470,7 @@ public class StartSportsController {
 
         for (String result : results) {
             Label resultLabel = new Label(result);
-            resultLabel.getStyleClass().add("result-label");
+            resultLabel.getStyleClass().add("text-label");
             resultItem.getChildren().add(resultLabel);
         }
 
@@ -540,8 +542,9 @@ public class StartSportsController {
         for (int i = 0; i < resultados.size(); i++) {
             int idAthlete = IdsParticipants.get(i);
             int resultadoInserir = resultados.get(i);
+            int position = i+1;
             java.sql.Date date = new java.sql.Date(System.currentTimeMillis());
-            resultDao.addResultAthlete(idSport, idAthlete, date, String.valueOf(resultadoInserir), idLocal);
+            resultDao.addResultAthlete(idSport, idAthlete, date, String.valueOf(resultadoInserir), idLocal, position);
         }
 
         //Atribuir Medalhas
@@ -598,12 +601,13 @@ public class StartSportsController {
         for (int i = 0; i < resultados.size(); i++) {
             int idTeam = IdsParticipants.get(i);
             int resultadoInserir = resultados.get(i);
+            int position = i+1;
             java.sql.Date date = new java.sql.Date(System.currentTimeMillis());
             //resultDao.addResultTeam(idSport, idTeam, date, resultadoInserir, idLocal);
             athletes.clear();
             athletes = registrationDao.getAthletesByTeam(idTeam, idSport, year);
             for (int j = 0; j < athletes.size(); j++) {
-                resultDao.addResultAthleteTeam(idSport, athletes.get(j), idTeam, date, String.valueOf(resultadoInserir), idLocal);
+                resultDao.addResultAthleteTeam(idSport, athletes.get(j), idTeam, date, String.valueOf(resultadoInserir), idLocal, position);
             }
         }
 
@@ -706,9 +710,10 @@ public class StartSportsController {
         //Atribuir Resultados
         java.sql.Date date = new java.sql.Date(System.currentTimeMillis());
         for (int i = 0; i < resultados.size(); i++) {
+            int position = i+1;
             for (String resultado : resultados.get(i)) {
-                resultDao.addResultAthlete(idSport, IdsParticipants.get(i), date, resultado, idLocal);
-                System.out.println("DAO: " + idSport + " " + IdsParticipants.get(i) + " " + date + " " + resultado);
+                resultDao.addResultAthlete(idSport, IdsParticipants.get(i), date, resultado, idLocal, position);
+                System.out.println("DAO: " + idSport + " " + IdsParticipants.get(i) + " " + date + " " + resultado + position);
             }
         }
 
@@ -800,9 +805,10 @@ public class StartSportsController {
             java.sql.Date date = new java.sql.Date(System.currentTimeMillis());
             athletes.clear();
             athletes = registrationDao.getAthletesByTeam(idTeam, idSport, year);
+            int position = i+1;
             for (int j = 0; j < athletes.size(); j++) {
                 for (String resultado : resultados.get(i)) {
-                    resultDao.addResultAthleteTeam(idSport, athletes.get(j), idTeam, date, resultado, idLocal);
+                    resultDao.addResultAthleteTeam(idSport, athletes.get(j), idTeam, date, resultado, idLocal, position);
                     System.out.println("DAO: " + idSport + " " + athletes.get(j) + " " + idTeam + " " + date + " " + resultado);
                 }
             }

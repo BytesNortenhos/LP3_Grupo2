@@ -132,16 +132,16 @@ public class AthletesViewController {
         nameContainer.getChildren().addAll(profileImage, nameLabel);
 
         Label genderLabel = new Label(athlete.get(3).toString());
-        genderLabel.getStyleClass().add("gender-label");
+        genderLabel.getStyleClass().add("text-label");
 
         Label heightLabel = new Label("Altura: " + athlete.get(4).toString() + " cm");
-        heightLabel.getStyleClass().add("height-label");
+        heightLabel.getStyleClass().add("text-label");
 
         Label weightLabel = new Label("Peso: " + athlete.get(5).toString() + " kg");
-        weightLabel.getStyleClass().add("weight-label");
+        weightLabel.getStyleClass().add("text-label");
 
         Label birthLabel = new Label("Data de nascimento: " + athlete.get(6).toString());
-        birthLabel.getStyleClass().add("birth-label");
+        birthLabel.getStyleClass().add("text-label");
 
         ImageView resultsImageView = new ImageView();
         URL iconResuURL = Main.class.getResource("img/iconResults.png");
@@ -264,27 +264,27 @@ public class AthletesViewController {
             long resultValue = Long.parseLong(result.getFirst().toString());
             double resultSeconds = resultValue / 1000.0;
             resultLabel = new Label("Resultado: " + resultSeconds + " segundos");
-            resultLabel.getStyleClass().add("result-label");
+            resultLabel.getStyleClass().add("text-label");
         }
         else{
             resultLabel = new Label("Resultado: " + result.getFirst().toString());
-            resultLabel.getStyleClass().add("result-label");
+            resultLabel.getStyleClass().add("text-label");
         }
 
         Label typeLabel = new Label("Tipo de modalidade: " + (result.get(2) != null ? result.get(2).toString() : "N/A"));
-        typeLabel.getStyleClass().add("type-label");
+        typeLabel.getStyleClass().add("text-label");
 
         if (result.get(3) != null) {
             Label teamLabel = new Label("Equipa: " + result.get(3).toString());
-            teamLabel.getStyleClass().add("type-label");
+            teamLabel.getStyleClass().add("text-label");
             resultItem.getChildren().add(teamLabel);
         }
 
         Label dateLabel = new Label("Data: " + (result.get(4) != null ? result.get(4).toString() : "N/A"));
-        dateLabel.getStyleClass().add("date-label");
+        dateLabel.getStyleClass().add("text-label");
 
         Label localLabel = new Label("Local: " + (result.get(5) != null ? result.get(5).toString() : "N/A"));
-        localLabel.getStyleClass().add("local-label");
+        localLabel.getStyleClass().add("text-label");
 
 
         resultItem.getChildren().addAll(nameLabel, resultLabel, typeLabel, dateLabel, localLabel);

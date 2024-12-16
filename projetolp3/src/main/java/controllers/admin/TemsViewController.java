@@ -112,27 +112,27 @@ public class TemsViewController {
         nameText.setWrappingWidth(300);
 
         Label sportLabel = new Label("Modalidade: " + (team.get(6) != null ? team.get(6).toString() : "N/A"));
-        sportLabel.getStyleClass().add("sport-label");
+        sportLabel.getStyleClass().add("text-label");
 
         Label genderLabel = new Label("Género: " + (team.get(5) != null ? team.get(5).toString() : "N/A"));
-        genderLabel.getStyleClass().add("gender-label");
+        genderLabel.getStyleClass().add("text-label");
 
         Label countryLabel = new Label("País: " + (team.get(4) != null ? team.get(4).toString() : "N/A"));
-        countryLabel.getStyleClass().add("country-label");
+        countryLabel.getStyleClass().add("text-label");
 
         Label minParticipants = new Label("Min atletas: " + (team.get(2) != null ? team.get(2).toString() : "N/A"));
-        minParticipants.getStyleClass().add("minPart-label");
+        minParticipants.getStyleClass().add("text-label");
 
         TeamDao teamDao = new TeamDao();
         int nPart = teamDao.getNAthletesOnTeam(Integer.parseInt(team.get(7).toString()));
         Label nParticipantes = new Label("Nº de atletas inscritos: " + nPart);
-        nParticipantes.getStyleClass().add("numPart-label");
+        nParticipantes.getStyleClass().add("text-label");
 
         Label maxParticipants = new Label("Max atletas: " + (team.get(3) != null ? team.get(3).toString() : "N/A"));
-        maxParticipants.getStyleClass().add("maxPart-label");
+        maxParticipants.getStyleClass().add("text-label");
 
         Label yearFounded = new Label("Ano de fundação: " + (team.get(1) != null ? team.get(1).toString() : "N/A"));
-        yearFounded.getStyleClass().add("year-label");
+        yearFounded.getStyleClass().add("text-label");
 
         if(nPart > 0){
             ImageView partImageView = new ImageView();
@@ -227,13 +227,13 @@ public class TemsViewController {
 
 
         Label heightLabel = new Label("Altura: " + part.get(1) + " cm");
-        heightLabel.getStyleClass().add("height-label");
+        heightLabel.getStyleClass().add("text-label");
 
         Label weightLabel = new Label("Peso: " + part.get(2) + " kg");
-        weightLabel.getStyleClass().add("weight-label");
+        weightLabel.getStyleClass().add("text-label");
 
         Label dateLabel = new Label("Data de nascimento: " + part.get(3));
-        dateLabel.getStyleClass().add("date-label");
+        dateLabel.getStyleClass().add("text-label");
 
 
 
