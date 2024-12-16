@@ -19,7 +19,8 @@ public class RuleDao {
      */
     public static List<Rule> getRules() throws SQLException {
         List<Rule> rules = new ArrayList<>();
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT * FROM tblRule;");
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery("SELECT * FROM tblRule;");
         if (rs != null) {
             while (rs.next()) {
                 int idRule = rs.getInt("idRule");
@@ -48,7 +49,8 @@ public class RuleDao {
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
             stmt.setInt(1, rule.getIdSport());
@@ -69,12 +71,13 @@ public class RuleDao {
      * @param idRule {int} Id rule
      * @throws SQLException
      */
-    public static void removeRule(int idRule) throws SQLException {
+    public void removeRule(int idRule) throws SQLException {
         String query = "DELETE FROM tblRule WHERE idRule = ?";
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
             stmt.setInt(1, idRule);
             stmt.executeUpdate();
@@ -93,12 +96,13 @@ public class RuleDao {
      * @param rule {Rule} Rule
      * @throws SQLException
      */
-    public static void updateRule(Rule rule) throws SQLException {
+    public void updateRule(Rule rule) throws SQLException {
         String query = "UPDATE tblRule SET idSport = ?, description = ? WHERE idRule = ?";
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
             stmt.setInt(1, rule.getSport().getIdSport());
@@ -121,9 +125,10 @@ public class RuleDao {
      * @return {Rule} Rule
      * @throws SQLException
      */
-    public static Rule getRuleById(int idRule) throws SQLException {
+    public Rule getRuleById(int idRule) throws SQLException {
         String query = "SELECT * FROM tblRule WHERE idRule = ?";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idRule);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idRule);
         if (rs != null && rs.next()) {
             int idSport = rs.getInt("idSport");
             String description = rs.getString("description");
@@ -143,7 +148,8 @@ public class RuleDao {
     public static List<Rule> getRulesBySport(int idSport) throws SQLException {
         List<Rule> rules = new ArrayList<>();
         String query = "SELECT r.idRule, r.description FROM tblRule r WHERE r.idSport = ?";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idSport);
         while (rs.next()) {
             int idRule = rs.getInt("idRule");
             String description = rs.getString("description");
@@ -164,7 +170,8 @@ public class RuleDao {
     public static List<Rule> getRulesBySportV2(int idSport) throws SQLException {
         List<Rule> rules = new ArrayList<>();
         String query = "SELECT r.idRule, r.description FROM tblRule r WHERE r.idSport = ?";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idSport);
         while (rs.next()) {
             int idRule = rs.getInt("idRule");
             String description = rs.getString("description");

@@ -17,9 +17,10 @@ public class AdminDao {
      * @return List<Admin>
      * @throws SQLException
      */
-    public static List<Admin> getAdmins() throws SQLException {
+    public List<Admin> getAdmins() throws SQLException {
         List<Admin> admins = new ArrayList<>();
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT * FROM tblAdmin;");
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery("SELECT * FROM tblAdmin;");
         if (rs != null) {
             while (rs.next()) {
                 int id = rs.getInt("id");
@@ -39,14 +40,15 @@ public class AdminDao {
      * @param admin {Admin} Admin
      * @throws SQLException
      */
-    public static void addAdmin(Admin admin) throws SQLException {
+    public void addAdmin(Admin admin) throws SQLException {
         String query = "INSERT INTO tblAdmin (password) VALUES (?)";
         Connection conn = null;
         PreparedStatement stmt = null;
         PasswordUtils passwordUtils = new PasswordUtils();
         String password = passwordUtils.encriptarPassword(admin.getPassword());
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
             stmt.setString(1, password);
@@ -66,12 +68,13 @@ public class AdminDao {
      * @param id {int} ID
      * @throws SQLException
      */
-    public static void removeAdmin(int id) throws SQLException {
+    public void removeAdmin(int id) throws SQLException {
         String query = "DELETE FROM tblAdmin WHERE id = ?";
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
             stmt.setInt(1, id);
             stmt.executeUpdate();
@@ -90,12 +93,13 @@ public class AdminDao {
      * @param admin {Admin} Admin
      * @throws SQLException
      */
-    public static void updateAdmin(Admin admin) throws SQLException {
+    public void updateAdmin(Admin admin) throws SQLException {
         String query = "UPDATE tblAdmin SET password = ? WHERE id = ?";
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
             stmt.setString(1, admin.getPassword());
@@ -119,7 +123,8 @@ public class AdminDao {
      */
     public Admin getAdminById(int id) throws SQLException {
         String query = "SELECT * FROM tblAdmin WHERE id = ?";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, id);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, id);
         if (rs != null && rs.next()) {
             String password = rs.getString("password");
             return new Admin(id, password);

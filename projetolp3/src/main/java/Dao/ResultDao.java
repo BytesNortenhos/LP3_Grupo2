@@ -20,7 +20,8 @@ public class ResultDao {
      */
     public static List<Result> getResults() throws SQLException {
         List<Result> results = new ArrayList<>();
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT * FROM tblResult;");
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery("SELECT * FROM tblResult;");
         if (rs != null) {
             while (rs.next()) {
                 int idResult = rs.getInt("idResult");
@@ -54,12 +55,13 @@ public class ResultDao {
      * @param result {Result} Result
      * @throws SQLException
      */
-    public static void addResult(Result result) throws SQLException {
+    public void addResult(Result result) throws SQLException {
         String query = "INSERT INTO tblResult (idSport, idAthlete, idTeam, date, result, idLocal) VALUES (?, ?, ?, ?, ?, ?)";
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
             stmt.setInt(1, result.getSport().getIdSport());
@@ -94,7 +96,8 @@ public class ResultDao {
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
             stmt.setInt(1, idSport);
@@ -129,7 +132,8 @@ public class ResultDao {
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
             stmt.setInt(1, idSport);
@@ -164,7 +168,8 @@ public class ResultDao {
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
             stmt.setInt(1, idSport);
@@ -196,7 +201,8 @@ public class ResultDao {
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
             stmt.setInt(1, idResult);
             stmt.executeUpdate();
@@ -216,12 +222,13 @@ public class ResultDao {
      * @param result {Result} Result
      * @throws SQLException
      */
-    public static void updateResult(Result result) throws SQLException {
+    public void updateResult(Result result) throws SQLException {
         String query = "UPDATE tblResult SET idSport = ?, idAthlete = ?, idTeam = ?, date = ?, result = ?, idLocal = ? WHERE idResult = ?";
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
             stmt.setInt(1, result.getSport().getIdSport());
@@ -251,7 +258,8 @@ public class ResultDao {
      */
     public Result getResultById(int idResult) throws SQLException {
         String query = "SELECT * FROM tblResult WHERE idResult = ?";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idResult);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idResult);
         if (rs != null && rs.next()) {
             int idSport = rs.getInt("idSport");
             int idAthlete = rs.getInt("idAthlete");
@@ -280,12 +288,13 @@ public class ResultDao {
      * @throws SQLException
      */
     public List<List> getResultByAthlete(int idAthlete) throws SQLException {
-        String query = "SELECT r.*, s.name as sportName, s.idSport as idSport, s.type as sportType, s.oneGame as one, t.name as teamName, t.idTeam as teamId, l.name as localName FROM tblResult as r " +
+        String query = "SELECT r.*, s.name as sportName, s.scoringMeasure as scoringMeasure, s.metrica as metrica, s.idSport as idSport, s.type as sportType, s.oneGame as one, t.name as teamName, t.idTeam as teamId, l.name as localName FROM tblResult as r " +
                 "LEFT JOIN tblSport as s ON r.idSport = s.idSport " +
                 "LEFT JOIN tblTeam as t ON r.idTeam = t.idTeam " +
                 "LEFT JOIN tblLocal as l on r.idLocal = l.idLocal " +
                 "WHERE r.idAthlete = ?;";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idAthlete);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idAthlete);
         List<List> results = new ArrayList<>();
         if (rs != null) {
             while (rs.next()) {
@@ -300,6 +309,8 @@ public class ResultDao {
                 result.add(rs.getInt("idSport"));
                 result.add(rs.getString("one"));
                 result.add(rs.getString("teamId"));
+                result.add(rs.getString("scoringMeasure"));
+                result.add(rs.getString("metrica"));
                 results.add(result);
             }
         } else {
@@ -322,7 +333,8 @@ public class ResultDao {
                 "       DENSE_RANK() OVER (PARTITION BY idSport, [date] ORDER BY idTeam ASC) AS lugar\n" +
                 "FROM tblResult\n" +
                 "WHERE idSport = ? AND [date] = ?;";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, "%" + date + "%");
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idSport, "%" + date + "%");
         if (rs != null) {
             while (rs.next()) {
                 List<Object> positon = new ArrayList<>();
@@ -341,7 +353,8 @@ public class ResultDao {
                 "       DENSE_RANK() OVER (PARTITION BY idSport, [date] ORDER BY idTeam ASC) AS lugar\n" +
                 "FROM tblResult\n" +
                 "WHERE idSport = ? AND [date] = ?;";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, "%" + date + "%");
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idSport, "%" + date + "%");
         if (rs != null) {
             while (rs.next()) {
                 List<Object> positon = new ArrayList<>();
@@ -367,7 +380,8 @@ public class ResultDao {
                 """;
 
         // Usando CachedRowSet para executar a consulta
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, date); // "%" removido para manter igualdade exata
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idSport, date); // "%" removido para manter igualdade exata
 
         if (rs != null) {
             while (rs.next()) {
@@ -392,7 +406,8 @@ public class ResultDao {
                 """;
 
         // Executa a consulta com os parâmetros
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, date);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idSport, date);
 
         if (rs != null) {
             while (rs.next()) {
@@ -416,7 +431,8 @@ public class ResultDao {
                 FROM tblResult
                 WHERE idSport = ? AND [date] = ?;
                 """;
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, date);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idSport, date);
 
         if (rs != null) {
             while (rs.next()) {
@@ -441,7 +457,8 @@ public class ResultDao {
                 """;
 
         // Executa a consulta com os parâmetros
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, date);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idSport, date);
 
         if (rs != null) {
             while (rs.next()) {
@@ -464,7 +481,8 @@ public class ResultDao {
                 "LEFT JOIN tblGender AS g ON s.idGender = g.idGender " +
                 "LEFT JOIN tblRegistration AS re ON re.year = ? " +
                 "WHERE r.idSport = ? AND g.description = ? AND re.idStatus =4;";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, year, idSport, gender);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, year, idSport, gender);
         List<List> results = new ArrayList<>();
         if (rs != null) {
             while (rs.next()) {
@@ -487,7 +505,8 @@ public class ResultDao {
 
     public List<Result> getResultByAthleteJunit(int idAthlete) throws SQLException{
         String query = "Select * From tblResult Where idAthlete = ?;";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idAthlete);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idAthlete);
         List<Result> results = new ArrayList<>();
         if (rs != null) {
             while (rs.next()) {

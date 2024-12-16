@@ -32,7 +32,8 @@ public class UploadXmlDAO {
         PreparedStatement stmt2 = null;
 
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             PreparedStatement stmtGetSport = conn.prepareStatement("SELECT name FROM tblSport WHERE name IN (?) AND idGender = ?");
             for (Sport sport : sports.getSportList()) {
                 stmtGetSport.setString(1, sport.getName());
@@ -215,7 +216,8 @@ public class UploadXmlDAO {
         PreparedStatement stmt2 = null;
 
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             PreparedStatement stmtGetTeam = conn.prepareStatement("SELECT name FROM tblTeam WHERE name IN (?) AND idGender = ?");
             PreparedStatement stmtGetSport = conn.prepareStatement("SELECT idSport FROM tblSport WHERE name IN (?) AND idGender = ?");
 
@@ -299,7 +301,8 @@ public class UploadXmlDAO {
         PreparedStatement stmt2 = null;
 
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             PreparedStatement stmtGetAthlete = conn.prepareStatement("SELECT name FROM tblAthlete WHERE name IN (?)");
             for (Athlete athlete : athletes.getAthleteList()) {
                 stmtGetAthlete.setString(1, athlete.getName());

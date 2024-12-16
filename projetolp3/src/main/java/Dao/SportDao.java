@@ -19,7 +19,8 @@ public class SportDao {
      */
     public List<Sport> getSports() throws SQLException {
         List<Sport> sports = new ArrayList<>();
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT s.*," +
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery("SELECT s.*," +
                 "g.description AS genderDescription," +
                 "r.year AS olympicYear," +
                 "r.result," +
@@ -65,7 +66,8 @@ public class SportDao {
      */
     public List<List> getSportsToShow() throws SQLException {
         List<List> sports = new ArrayList<>();
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT s.*, " +
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery("SELECT s.*, " +
                 "g.description AS genderDescription " +
                 "FROM tblSport s " +
                 "JOIN tblGender g ON s.idGender = g.idGender;");
@@ -103,7 +105,8 @@ public class SportDao {
                 "JOIN tblGender g ON s.idGender = g.idGender " +
                 "JOIN tblRegistration r ON s.idSport = r.idSport " +
                 "WHERE r.idStatus >= 3 AND r.year = ?;";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, year);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, year);
         if (rs != null) {
             while (rs.next()) {
                 List<String> sport = new ArrayList<>();
@@ -138,7 +141,8 @@ public class SportDao {
                 "AND year = ? " +
                 "AND (idStatus = 3 OR idStatus = 4)" +
                 "AND idTeam IS NOT NULL;";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, year);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idSport, year);
         if (rs != null && rs.next()) {
             return true;
         }
@@ -161,7 +165,8 @@ public class SportDao {
                 "WHERE r.idSport = ? " +
                 "AND r.year = ? " +
                 "AND (r.idStatus = 3 OR r.idStatus = 4);";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, year);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idSport, year);
         if (rs != null) {
             while (rs.next()) {
                 List<String> team = new ArrayList<>();
@@ -192,7 +197,8 @@ public class SportDao {
                 "WHERE r.idSport = ? " +
                 "AND r.year = ? " +
                 "AND (r.idStatus = 3 OR r.idStatus = 4);";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, year);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idSport, year);
         if (rs != null) {
             try {
                 while (rs.next()) {
@@ -222,7 +228,8 @@ public class SportDao {
                 "WHERE idSport = ? " +
                 "AND year = ? " +
                 "AND (idStatus = 3 OR idStatus = 4) ;";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, year);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idSport, year);
         int quantidade = 0;
         if (rs != null && rs.next()) {
             quantidade = rs.getInt("quantidade");
@@ -249,7 +256,8 @@ public class SportDao {
                 "GROUP BY r.idTeam, t.minParticipants " +
                 "HAVING COUNT(r.idTeam) >= t.minParticipants " +
                 ") AS subquery;";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, year);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idSport, year);
         int quantidade = 0;
         if (rs != null && rs.next()) {
             quantidade = rs.getInt("quantidade");
@@ -267,7 +275,8 @@ public class SportDao {
         String query = "SELECT resultMin, resultMax " +
                 "FROM tblSport " +
                 "WHERE idSport = ? AND (resultMin IS NOT NULL AND resultMax IS NOT NULL)";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idSport);
         if (rs != null && rs.next()) {
             return true;
         }
@@ -284,7 +293,8 @@ public class SportDao {
         String query = "SELECT COUNT(*) AS quantidade " +
                 "FROM tblResult " +
                 "WHERE idSport = ?;";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idSport);
         if (rs != null && rs.next()) {
             if (rs.getInt("quantidade") == 0) {
                 return true;
@@ -308,7 +318,8 @@ public class SportDao {
         ResultSet rs = null;
 
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
 
             conn.setAutoCommit(false);
 
@@ -375,7 +386,8 @@ public class SportDao {
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
             stmt.setInt(1, idSport);
             stmt.executeUpdate();
@@ -399,7 +411,8 @@ public class SportDao {
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
             stmt.setString(1, sport.getType());
@@ -441,7 +454,8 @@ public class SportDao {
                 "LEFT JOIN tblOlympicRecord r ON s.idSport = r.idSport " +
                 "WHERE s.idSport = ?";
 
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idSport);
         if (rs != null && rs.next()) {
             int idSportResult = rs.getInt("idSport");
             String type = rs.getString("type");
@@ -486,7 +500,8 @@ public class SportDao {
                     WHERE s.idSport = ?
                 """;
 
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idSport);
         if (rs != null && rs.next()) {
             int idSportResult = rs.getInt("idSport");
             String type = rs.getString("type");
@@ -521,7 +536,8 @@ public class SportDao {
         // Consulta otimizada para pegar somente o nome e id do esporte
         String query = "SELECT idSport, name, type FROM tblSport WHERE name = ?";
 
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, sportName);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, sportName);
         if (rs != null) {
             while (rs.next()) {
                 int idSport = rs.getInt("idSport");
@@ -553,7 +569,8 @@ public class SportDao {
                 "LEFT JOIN tblRegistration r ON s.idSport = r.idSport " +
                 "WHERE t.idSport IS NULL AND r.idSport IS NULL";
 
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query);
 
         if (rs != null) {
             while (rs.next()) {
@@ -591,11 +608,12 @@ public class SportDao {
      * @param sport {Sport} Sport
      * @throws SQLException
      */
-    public static void updateSportV2(Sport sport) throws SQLException {
+    public void updateSportV2(Sport sport) throws SQLException {
         String query = "UPDATE tblSport SET name = ?, description = ?, minParticipants = ? WHERE idSport = ?";
 
         try {
-            Connection conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            Connection conn = connectionsUtlis.dbConnect();
 
             PreparedStatement stmt = conn.prepareStatement(query);
 
@@ -631,7 +649,8 @@ public class SportDao {
         String query = "SELECT type " +
                 "FROM tblSport " +
                 "WHERE idSport = ?;";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idSport);
         if (rs != null && rs.next()) {
             tipo = rs.getString("type");
         }
@@ -649,7 +668,8 @@ public class SportDao {
         String query = "SELECT oneGame " +
                 "FROM tblSport " +
                 "WHERE idSport = ?";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idSport);
         if (rs != null && rs.next()) {
             oneGame = rs.getString("oneGame");
         }
@@ -667,7 +687,8 @@ public class SportDao {
         String query = "SELECT resultMin, resultMax " +
                 "FROM tblSport " +
                 "WHERE idSport = ?";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idSport);
         if (rs != null && rs.next()) {
             int min = rs.getInt("resultMin");
             int max = rs.getInt("resultMax");
@@ -690,12 +711,43 @@ public class SportDao {
                 "WHERE idSport = ? " +
                 "AND year = ? " +
                 "AND (idStatus = 3 OR idStatus = 4);";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idSport, year);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idSport, year);
         int quantidade = 0;
         if (rs != null && rs.next()) {
             quantidade = rs.getInt("quantidade");
         }
         return quantidade;
+    }
+
+    public List<String> getMeasureMetrica(int  idSport) throws SQLException{
+        List<String> measureMetrica = new ArrayList<>();
+
+        String query = "SELECT scoringMeasure, metrica" +
+                "FROM tblSport" +
+                "WHERE idSport = ?";
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idSport);
+        if (rs != null && rs.next()) {
+            measureMetrica.add(rs.getString("scoringMeasure"));
+            measureMetrica.add(rs.getString("metrica"));
+        }
+
+        return measureMetrica;
+    }
+
+    public String getMeasure(int  idSport) throws SQLException{
+        String scoringMeasure = "";
+        String query = "SELECT scoringMeasure" +
+                "FROM tblSport" +
+                "WHERE idSport = ?";
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idSport);
+        if (rs != null && rs.next()) {
+            scoringMeasure = (rs.getString("scoringMeasure"));
+        }
+
+        return scoringMeasure;
     }
 
 }

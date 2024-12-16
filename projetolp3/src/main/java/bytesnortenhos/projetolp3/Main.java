@@ -23,7 +23,7 @@ import java.net.URL;
 import java.sql.SQLException;
 
 //public class Main {
-//    public static void main(String[] args) throws SQLException, ClassNotFoundException {
+//    public void main(String[] args) throws SQLException, ClassNotFoundException {
 //        AthleteDao.getAthletes();
 //    }
 //}

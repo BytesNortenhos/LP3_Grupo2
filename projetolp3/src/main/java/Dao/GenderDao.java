@@ -18,7 +18,8 @@ public class GenderDao {
      */
     public static List<Gender> getGenders() throws SQLException {
         List<Gender> genders = new ArrayList<>();
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery("SELECT * FROM tblGender;");
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery("SELECT * FROM tblGender;");
         if (rs != null) {
             while (rs.next()) {
                 int idGender = rs.getInt("idGender");
@@ -38,12 +39,13 @@ public class GenderDao {
      * @param gender {Gender} Gender
      * @throws SQLException
      */
-    public static void addGender(Gender gender) throws SQLException {
+    public void addGender(Gender gender) throws SQLException {
         String query = "INSERT INTO tblGender (description) VALUES (?)";
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
             stmt.setString(1, gender.getDesc());
@@ -63,12 +65,13 @@ public class GenderDao {
      * @param idGender {int} ID
      * @throws SQLException
      */
-    public static void removeGender(int idGender) throws SQLException {
+    public void removeGender(int idGender) throws SQLException {
         String query = "DELETE FROM tblGender WHERE idGender = ?";
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
             stmt.setInt(1, idGender);
             stmt.executeUpdate();
@@ -87,12 +90,13 @@ public class GenderDao {
      * @param gender {Gender} Gender
      * @throws SQLException
      */
-    public static void updateGender(Gender gender) throws SQLException {
+    public void updateGender(Gender gender) throws SQLException {
         String query = "UPDATE tblGender SET description = ? WHERE idGender = ?";
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
             stmt.setString(1, gender.getDesc());
@@ -116,7 +120,8 @@ public class GenderDao {
      */
     public Gender getGenderById(int idGender) throws SQLException {
         String query = "SELECT * FROM tblGender WHERE idGender = ?";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idGender);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idGender);
         if (rs != null && rs.next()) {
             String description = rs.getString("description");
             return new Gender(idGender, description);

@@ -22,7 +22,8 @@ public class MedalDao {
      */
     public List<Medal> getMedals() throws SQLException {
         List<Medal> medals = new ArrayList<>();
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(
                 "SELECT m.idMedal, m.idAthlete, m.idTeam, m.year," +
                         "mt.idMedalType, mt.descMedalType AS medalTypeDescription " +
                         "FROM tblMedal m " +
@@ -55,7 +56,8 @@ public class MedalDao {
      */
     public int countGoldMedals(int idAthlete) throws SQLException {
     int quantidade = 0;
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(
                 "SELECT COUNT(*) AS quantidade FROM tblMedal WHERE idAthlete = ? AND idMedalType = 1;", idAthlete);
         if (rs != null && rs.next()) {
             quantidade = rs.getInt("quantidade");
@@ -71,7 +73,8 @@ public class MedalDao {
      */
     public int countSilverMedals(int idAthlete) throws SQLException {
         int quantidade = 0;
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(
                 "SELECT COUNT(*) AS quantidade FROM tblMedal WHERE idAthlete = ? AND idMedalType = 2;", idAthlete);
         if (rs != null && rs.next()) {
             quantidade = rs.getInt("quantidade");
@@ -87,7 +90,8 @@ public class MedalDao {
      */
     public int countBronzeMedals(int idAthlete) throws SQLException {
         int quantidade = 0;
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(
                 "SELECT COUNT(*) AS quantidade FROM tblMedal WHERE idAthlete = ? AND idMedalType = 3;", idAthlete);
         if (rs != null && rs.next()) {
             quantidade = rs.getInt("quantidade");
@@ -103,7 +107,8 @@ public class MedalDao {
      */
     public int countCertificate(int idAthlete) throws SQLException {
         int quantidade = 0;
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(
                 "SELECT COUNT(*) AS quantidade FROM tblMedal WHERE idAthlete = ? AND idMedalType = 4;", idAthlete);
         if (rs != null && rs.next()) {
             quantidade = rs.getInt("quantidade");
@@ -116,12 +121,13 @@ public class MedalDao {
      * @param medal {Medal} Medal
      * @throws SQLException
      */
-    public static void addMedal(Medal medal) throws SQLException {
+    public void addMedal(Medal medal) throws SQLException {
         String query = "INSERT INTO tblMedal (idAthlete, idTeam, year, idMedalType) VALUES (?, ?, ?, ?)";
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
             stmt.setInt(1, medal.getAthlete().getIdAthlete());
@@ -149,7 +155,8 @@ public class MedalDao {
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
             stmt.setInt(1, idMedal);
             stmt.executeUpdate();
@@ -168,12 +175,13 @@ public class MedalDao {
      * @param medal {Medal} Medal
      * @throws SQLException
      */
-    public static void updateMedal(Medal medal) throws SQLException {
+    public void updateMedal(Medal medal) throws SQLException {
         String query = "UPDATE tblMedal SET idAthlete = ?, idTeam = ?, year = ?, idMedalType = ? WHERE idMedal = ?";
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
             stmt.setInt(1, medal.getAthlete().getIdAthlete());
@@ -204,7 +212,8 @@ public class MedalDao {
                 "FROM tblMedal m " +
                 "INNER JOIN tblMedalType mt ON m.idMedalType = mt.idMedalType " +
                 "WHERE m.idMedal = ?";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idMedal);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idMedal);
         if (rs != null && rs.next()) {
             int idAthlete = rs.getInt("idAthlete");
             int idTeam = rs.getInt("idTeam");
@@ -231,7 +240,8 @@ public class MedalDao {
                 "FROM tblMedal m " +
                 "INNER JOIN tblMedalType mt ON m.idMedalType = mt.idMedalType " +
                 "WHERE m.idAthlete = ?";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idAthlete);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idAthlete);
 
         if (rs != null) {
             while (rs.next()) {
@@ -261,7 +271,8 @@ public class MedalDao {
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
             stmt.setInt(1, idAthelete);
@@ -290,7 +301,8 @@ public class MedalDao {
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
             stmt.setInt(1, idTeam);
@@ -320,7 +332,8 @@ public class MedalDao {
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
-            conn = ConnectionsUtlis.dbConnect();
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
             stmt = conn.prepareStatement(query);
 
             stmt.setInt(1, idAthlete);
@@ -342,7 +355,8 @@ public class MedalDao {
                 "FROM tblMedal m " +
                 "INNER JOIN tblMedalType mt ON m.idMedalType = mt.idMedalType " +
                 "WHERE m.idTeam = ?";
-        CachedRowSet rs = ConnectionsUtlis.dbExecuteQuery(query, idTeam);
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idTeam);
 
         int totalMedals = 0;
 

@@ -5,6 +5,7 @@ import Models.Medal;
 import Models.Registration;
 import bytesnortenhos.projetolp3.Main;
 import controllers.LoginController;
+import controllers.admin.ConversionController;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -236,20 +237,20 @@ public class HomeControllerAthlete {
         vbox.getChildren().add(scrollPane);
     }
     private VBox createResultItem(List result) throws SQLException {
+        ConversionController conversionController = new ConversionController();
         VBox resultItem = new VBox();
         resultItem.setSpacing(10);
         Label nameLabel = new Label("Modalidade: " + (result.get(1) != null ? result.get(1).toString() : "N/A"));
         nameLabel.getStyleClass().add("name-label");
         Label resultLabel = new Label("");
 
-        if(result.get(2).toString().equals("Individual")){
-            double resultValue = Float.parseFloat(result.get(0).toString());
-            double resultSeconds = resultValue / 1000.0;
-            resultLabel = new Label("Resultado: " + resultSeconds + " segundos");
+        if(result.get(9).toString().equals("Distance")){
+            resultLabel = new Label("Resultado: " + conversionController.centimetrosParaMetros((Double) result.get(0)) + " metros\n" +
+                    "Resultado: " + result.get(0) + " centímetros");
         }
-        else{
-            String resultValue = String.valueOf(result.get(0).toString());
-            resultLabel = new Label("Resultado: " + resultValue + " segundos");
+        if(result.get(9).toString().equals("Time")){
+            resultLabel = new Label("Resultado: " + conversionController.milissegundosParaMinutos(Integer.parseInt(result.get(0).toString())) + " minutos\n" +
+                    "Resultado: " + conversionController.milissegundosParaSegundos(Integer.parseInt(result.get(0).toString())) + " segundos");
         }
         resultLabel.getStyleClass().add("text-label");
 
