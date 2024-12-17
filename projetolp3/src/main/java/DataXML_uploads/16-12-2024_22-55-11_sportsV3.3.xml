@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sports>
+    <sport>
+        <type>Collective</type>
+        <genre>Men</genre>
+        <name>Basket</name>
+        <description>Fast-paced basketball game with 3 players per team, played on a half-court.</description>
+        <minParticipants>4</minParticipants>
+        <scoringMeasure>Points</scoringMeasure>
+        <oneGame>Multiple</oneGame>
+        <olympicRecord>
+            <year>2020</year>
+            <holder>Team USA</holder>
+            <medals>1</medals>
+        </olympicRecord>
+        <winnerOlympic>
+            <year>2020</year>
+            <holder>Team USA</holder>
+            <medal>Gold</medal>
+        </winnerOlympic>
+        <rules>
+            <rule>Game lasts 10 minutes or until one team scores 21 points.</rule>
+            <rule>Shot clock is 12 seconds.</rule>
+            <rule>No quarters; game is continuous.</rule>
+        </rules>
+    </sport>
+</sports>

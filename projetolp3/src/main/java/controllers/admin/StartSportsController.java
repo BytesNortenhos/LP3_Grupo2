@@ -512,6 +512,7 @@ public class StartSportsController {
             }
             if (sportDao.getOneGame(idSport).equals("Multiple")) {
                 System.out.println("Collective Multiple");
+                System.out.println(idSport + " 5");
                 CollectiveMultiple(idSport, IdsParticipants, year, idocal);
             }
         }
@@ -714,7 +715,6 @@ public class StartSportsController {
         List<Integer> scores = new ArrayList<>(Collections.nCopies(IdsParticipants.size(), 0));
         List<List<String>> resultados = new ArrayList<>();
         Random random = new Random();
-
         //Converter Range
         List<Double> range = getRanges(idSport);
 
