@@ -8,6 +8,7 @@ import Dao.*;
 import Models.Team;
 import Utils.XMLUtils;
 import controllers.admin.HomeController;
+import io.github.cdimascio.dotenv.Dotenv;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,6 +22,8 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+
+import static javafx.application.Platform.exit;
 
 //public class Main {
 //    public void main(String[] args) throws SQLException, ClassNotFoundException {
@@ -76,6 +79,18 @@ public class Main extends Application {
      * @throws SQLException, ClassNotFoundException
      */
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
-        launch();
+        Dotenv dotenv = Dotenv.load();
+
+        if(
+            dotenv.get("DB_HOST") == "" ||
+            dotenv.get("DB_NAME") == "" ||
+            dotenv.get("DB_USER") == "" ||
+            dotenv.get("DB_PASS") == ""
+        ) {
+            System.out.println("> Ficheiro .ENV não configurado!");
+            exit();
+        } else {
+            launch();
+        }
     }
 }
