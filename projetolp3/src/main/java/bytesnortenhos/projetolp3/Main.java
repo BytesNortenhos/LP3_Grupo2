@@ -6,6 +6,7 @@ import AuxilierXML.Teams;
 import AuxilierXML.UploadXmlDAO;
 import Dao.*;
 import Models.Team;
+import Utils.ConnectionsUtlis;
 import Utils.XMLUtils;
 import controllers.admin.HomeController;
 import io.github.cdimascio.dotenv.Dotenv;
@@ -90,7 +91,14 @@ public class Main extends Application {
             System.out.println("> Ficheiro .ENV não configurado!");
             exit();
         } else {
-            launch();
+            try {
+                ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+                connectionsUtlis.dbConnect();
+                connectionsUtlis.dbDisconnect();
+                launch();
+            } catch (SQLException e) {
+                exit();
+            }
         }
     }
 }
