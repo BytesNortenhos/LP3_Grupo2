@@ -2,6 +2,7 @@ package Models;
 
 import jakarta.xml.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class Sport {
@@ -14,8 +15,10 @@ public class Sport {
     private String scoringMeasure;
     private String oneGame;
     private int resultMin;
-
     private int resultMax;
+
+    private LocalDateTime dataInicio;
+    private LocalDateTime dataFim;
 
     private OlympicRecord olympicRecord;
     private List<WinnerOlympic> winnerOlympic;
@@ -197,8 +200,93 @@ public class Sport {
         this.scoringMeasure = scoringMeasure;
     }
 
-    public Sport(int i, String type, Gender gender, String name, String description, int minParticipants, String scoringMeasure, String oneGame, int resultMin, int resultMax) {
-        this.idSport = i;
+    /**
+     * Constructor of Sport
+     * @param idSport {int} Sport ID
+     * @param type {String} Type
+     * @param genre {Gender} Genre
+     * @param name {String} Name
+     * @param desc {String} Description
+     * @param minParticipants {int} Number minimum of participants
+     * @param scoringMeasure {String} Measure of scoring
+     * @param oneGame {String} "One Game"
+     * @param olympicRecord {OlympicRecord} Olympic record
+     * @param winnerOlympic {List<WinnerOlympic>} List of olympic winners
+     * @param rules {List<Rule>} List of rules
+     * @param resultMin {int} Minimum result
+     * @param resultMax {int} Maximum result
+     * @param dataInicio {LocalDateTime} Data de início
+     * @param dataFim {LocalDateTime} Data de fim
+     */
+    public Sport(int idSport, String type, Gender genre, String name, String desc, int minParticipants,
+                 String scoringMeasure, String oneGame, OlympicRecord olympicRecord, List<WinnerOlympic> winnerOlympic,
+                 List<Rule> rules, int resultMin, int resultMax, LocalDateTime dataInicio, LocalDateTime dataFim) {
+        this.idSport = idSport;
+        this.type = type;
+        this.genre = genre;
+        this.name = name;
+        this.desc = desc;
+        this.minParticipants = minParticipants;
+        this.scoringMeasure = scoringMeasure;
+        this.oneGame = oneGame;
+        this.olympicRecord = olympicRecord;
+        this.winnerOlympic = winnerOlympic;
+        this.rules = rules;
+        this.resultMin = resultMin;
+        this.resultMax = resultMax;
+        this.dataInicio = dataInicio;
+        this.dataFim = dataFim;
+    }
+
+    /**
+     * Constructor of Sport
+     * @param idSport {int} Sport ID
+     * @param type {String} Type
+     * @param genre {Gender} Genre
+     * @param name {String} Name
+     * @param desc {String} Description
+     * @param minParticipants {int} Number minimum of participants
+     * @param scoringMeasure {String} Measure of scoring
+     * @param oneGame {String} "One Game"
+     * @param olympicRecord {OlympicRecord} Olympic record
+     * @param winnerOlympic {List<WinnerOlympic>} List of olympic winners
+     * @param rules {List<Rule>} List of rules
+     * @param dataInicio {LocalDateTime} Data de início
+     * @param dataFim {LocalDateTime} Data de fim
+     */
+    public Sport(int idSport, String type, Gender genre, String name, String desc, int minParticipants,
+                 String scoringMeasure, String oneGame, OlympicRecord olympicRecord, List<WinnerOlympic> winnerOlympic,
+                 List<Rule> rules, LocalDateTime dataInicio, LocalDateTime dataFim) {
+        this.idSport = idSport;
+        this.type = type;
+        this.genre = genre;
+        this.name = name;
+        this.desc = desc;
+        this.minParticipants = minParticipants;
+        this.scoringMeasure = scoringMeasure;
+        this.oneGame = oneGame;
+        this.olympicRecord = olympicRecord;
+        this.winnerOlympic = winnerOlympic;
+        this.rules = rules;
+        this.dataInicio = dataInicio;
+        this.dataFim = dataFim;
+    }
+
+    /**
+     * Constructor of Sport
+     * @param idSport {int} Sport ID
+     * @param type {String} Type
+     * @param gender {Gender} Gender
+     * @param name {String} Name
+     * @param description {String} Description
+     * @param minParticipants {int} Minimum number of participants
+     * @param scoringMeasure {String} Measure of scoring
+     * @param oneGame {String} "One Game"
+     * @param resultMin {int} Minimum result
+     * @param resultMax {int} Maximum result
+     */
+    public Sport(int idSport, String type, Gender gender, String name, String description, int minParticipants, String scoringMeasure, String oneGame, int resultMin, int resultMax) {
+        this.idSport = idSport;
         this.type = type;
         this.genre = gender;
         this.name = name;
@@ -416,6 +504,38 @@ public class Sport {
      */
     public void setRules(List<Rule> rules) {
         this.rules = rules;
+    }
+
+    /**
+     * Get Data de início
+     * @return LocalDateTime
+     */
+    public LocalDateTime getDataInicio() {
+        return dataInicio;
+    }
+
+    /**
+     * Set Data de início
+     * @param dataInicio {LocalDateTime} Data de início
+     */
+    public void setDataInicio(LocalDateTime dataInicio) {
+        this.dataInicio = dataInicio;
+    }
+
+    /**
+     * Get Data de fim
+     * @return LocalDateTime
+     */
+    public LocalDateTime getDataFim() {
+        return dataFim;
+    }
+
+    /**
+     * Set Data de fim
+     * @param dataFim {LocalDateTime} Data de fim
+     */
+    public void setDataFim(LocalDateTime dataFim) {
+        this.dataFim = dataFim;
     }
 
     /**
