@@ -13,8 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.sql.*;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;
@@ -55,7 +54,7 @@ public class UploadXmlDAO {
                 stmt.setInt(2, (sport.getXmlGenre().equals("Men") ? 1 : 2));
                 stmt.setString(3, sport.getName());
                 stmt.setString(4, sport.getDesc());
-                stmt.setInt(5, sport.getMinParticipants());
+                stmt.setInt(5, (sport.getMinParticipants() < 0 ? 4 : sport.getMinParticipants()));
                 stmt.setString(6, sport.getScoringMeasure());
                 stmt.setString(7, sport.getOneGame());
                 stmt.executeUpdate();
@@ -254,7 +253,8 @@ public class UploadXmlDAO {
                 } else {
                     stmt2.setInt(4, tempSportId);
                 }
-                stmt2.setInt(5, team.getYearFounded());
+
+                stmt2.setInt(5, (team.getYearFounded() > Year.now().getValue() || team.getYearFounded() < 1  ? Year.now().getValue() : team.getYearFounded()));
                 stmt2.executeUpdate();
 
                 ResultSet rs2 = stmt2.getGeneratedKeys();
@@ -316,6 +316,13 @@ public class UploadXmlDAO {
                     continue;
                 }
 
+                LocalDate dateOfBirth = athlete.getDateOfBirth().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                LocalDate today = LocalDate.now();
+                LocalDate minDate = today.minusYears(18);
+                if (dateOfBirth.isAfter(today) || dateOfBirth.isAfter(minDate)) {
+                    dateOfBirth = LocalDate.of(2000, 1, 1);
+                }
+
                 //-> Insert athlete
                 String query = "INSERT INTO tblAthlete (password, name, idCountry, idGender, height, weight, dateOfBirth) VALUES (?, ?, ?, ?, ?, ?, ?)";
                 stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
@@ -324,9 +331,9 @@ public class UploadXmlDAO {
                 stmt.setString(2, athlete.getName());
                 stmt.setString(3, athlete.getXmlCountry());
                 stmt.setInt(4, (athlete.getXmlGenre().equals("Men") ? 1 : 2));
-                stmt.setInt(5, athlete.getHeight());
-                stmt.setFloat(6, athlete.getWeight());
-                stmt.setDate(7, new java.sql.Date(athlete.getDateOfBirth().getTime()));
+                stmt.setInt(5, (athlete.getHeight() < 5 ? 150 : athlete.getHeight()));
+                stmt.setFloat(6, (athlete.getWeight() < 1 ? 60 : athlete.getWeight()));
+                stmt.setDate(7, new java.sql.Date(Date.valueOf(dateOfBirth).getTime()));
                 stmt.executeUpdate();
 
                 ResultSet rs = stmt.getGeneratedKeys();
