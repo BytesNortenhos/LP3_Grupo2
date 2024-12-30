@@ -425,11 +425,6 @@ public class ViewsController {
                         alerta.setTitle("Erro!");
                         alerta.setHeaderText("Os dados do XML não coincidem com a opção escolhida!");
                         alerta.show();
-                    } catch (SQLException e) {
-                        Alert alerta = new Alert(Alert.AlertType.ERROR);
-                        alerta.setTitle("Erro relacionado à Base de Dados!");
-                        alerta.setHeaderText(e.getMessage());
-                        alerta.show();
                     }
                 } else {
                     Alert alerta = new Alert(Alert.AlertType.ERROR);
@@ -520,11 +515,6 @@ public class ViewsController {
                         alerta.setHeaderText("Os dados do XML não coincidem com a opção escolhida!");
 
                         alerta.show();
-                    } catch (SQLException e) {
-                        Alert alerta = new Alert(Alert.AlertType.ERROR);
-                        alerta.setTitle("Erro relacionado à Base de Dados!");
-                        alerta.setHeaderText(e.getMessage());
-                        alerta.show();
                     }
                 } else {
                     Alert alerta = new Alert(Alert.AlertType.ERROR);
@@ -613,11 +603,6 @@ public class ViewsController {
                         Alert alerta = new Alert(Alert.AlertType.ERROR);
                         alerta.setTitle("Erro!");
                         alerta.setHeaderText("Os dados do XML não coincidem com a opção escolhida!");
-                        alerta.show();
-                    } catch (SQLException e) {
-                        Alert alerta = new Alert(Alert.AlertType.ERROR);
-                        alerta.setTitle("Erro relacionado à Base de Dados!");
-                        alerta.setHeaderText(e.getMessage());
                         alerta.show();
                     }
                 } else {
