@@ -2,12 +2,10 @@ package Dao;
 
 import Models.*;
 import Utils.ConnectionsUtlis;
-import java.sql.ResultSet;
+
+import java.sql.*;
 import java.time.LocalDate;
 import javax.sql.rowset.CachedRowSet;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -745,6 +743,20 @@ public class SportDao {
         }
 
         return scoringMeasure;
+    }
+
+    public Date getDataInicio (int idSport) throws SQLException{
+        Date data = null;
+        String query = "SELECT dataInicio " +
+                "FROM tblSport " +
+                "WHERE idSport = ?";
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idSport);
+        if (rs != null && rs.next()) {
+            data = Date.valueOf((rs.getString("dataInicio")));
+        }
+
+        return data;
     }
 
 }
