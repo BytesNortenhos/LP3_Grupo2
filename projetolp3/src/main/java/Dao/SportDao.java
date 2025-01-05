@@ -314,7 +314,7 @@ public class SportDao {
      * @throws SQLException
      */
     public static int addSport(Sport sport) throws SQLException {
-        String querySport = "INSERT INTO tblSport (type, idGender, name, description, minParticipants, scoringMeasure, oneGame, resultMin, resultMax) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String querySport = "INSERT INTO tblSport (type, idGender, name, description, minParticipants, scoringMeasure, oneGame, resultMin, resultMax, idStatus, metrica, dataInicio, dataFim) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         String queryOlympicRecord = "INSERT INTO tblOlympicRecord (idSport, year) VALUES (?, ?)";
         Connection conn = null;
         PreparedStatement stmtSport = null;
@@ -337,6 +337,10 @@ public class SportDao {
             stmtSport.setString(7, sport.getOneGame());
             stmtSport.setInt(8, sport.getResultMin());
             stmtSport.setInt(9, sport.getResultMax());
+            stmtSport.setInt(10, sport.getIdStatus());
+            stmtSport.setString(11, sport.getMetrica());
+            stmtSport.setTimestamp(12, java.sql.Timestamp.valueOf(sport.getDataInicio()));
+            stmtSport.setTimestamp(13, java.sql.Timestamp.valueOf(sport.getDataFim()));
 
             stmtSport.executeUpdate();
 
@@ -471,6 +475,10 @@ public class SportDao {
             String oneGame = rs.getString("oneGame");
             String genderDescription = rs.getString("genderDescription");
             Gender gender = new Gender(idGender, genderDescription);
+            int resultMin = rs.getInt("resultMin");
+            int resultMax = rs.getInt("resultMax");
+            int idStatus = rs.getInt("idStatus");
+            String metrica = rs.getString("metrica");
             LocalDateTime dataInicio = rs.getTimestamp("dataInicio").toLocalDateTime();
             LocalDateTime dataFim = rs.getTimestamp("dataFim").toLocalDateTime();
 
@@ -482,7 +490,7 @@ public class SportDao {
 
             List<Rule> rules = RuleDao.getRulesBySport(idSportResult);
 
-            return new Sport(idSportResult, type, gender, name, description, minParticipants, scoringMeasure, oneGame, olympicRecord, winnerOlympics, rules, dataInicio, dataFim);
+            return new Sport(idSportResult, type, gender, name, description, minParticipants, scoringMeasure, oneGame, resultMin, resultMax, idStatus, metrica, dataInicio, dataFim, olympicRecord, winnerOlympics, rules);
         }
 
         return null;

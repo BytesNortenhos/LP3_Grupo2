@@ -208,7 +208,7 @@ public class MedalDao {
      */
     public static Medal getMedalById(int idMedal) throws SQLException {
         String query = "SELECT m.idMedal, m.idAthlete, m.idTeam, m.year, " +
-                "mt.idMedalType, mt.description AS medalTypeDescription " +
+                "mt.idMedalType, mt.descMedalType AS medalTypeDescription " +
                 "FROM tblMedal m " +
                 "INNER JOIN tblMedalType mt ON m.idMedalType = mt.idMedalType " +
                 "WHERE m.idMedal = ?";

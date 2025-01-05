@@ -15,7 +15,9 @@ public class TeamTest {
 
     @Test
     void testCrudTeam() throws SQLException {
-        try (Connection connection = ConnectionsUtlis.dbConnect()) {
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+
+        try (Connection connection = connectionsUtlis.dbConnect()) {
             // Adicionar um novo Sport
             String type = "Individual";
 
