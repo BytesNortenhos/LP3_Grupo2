@@ -1,49 +1,31 @@
 package controllers.admin;
 
-import AuxilierXML.Athletes;
-import AuxilierXML.Sports;
-import AuxilierXML.Teams;
-import AuxilierXML.UploadXmlDAO;
 import Dao.*;
-import Utils.XMLUtils;
 import bytesnortenhos.projetolp3.Main;
-import controllers.ViewsController;
-import jakarta.xml.bind.JAXBException;
-import jakarta.xml.bind.UnmarshalException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.geometry.Rectangle2D;
-import javafx.scene.Node;
-import javafx.scene.Parent;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
-import javafx.stage.FileChooser;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 
-public class TemsViewController {
+public class TeamsViewController {
 
     @FXML
     private ImageView profileImage;
@@ -134,6 +116,27 @@ public class TemsViewController {
         Label yearFounded = new Label("Ano de fundação: " + (team.get(1) != null ? team.get(1).toString() : "N/A"));
         yearFounded.getStyleClass().add("text-label");
 
+        ImageView resultsImageView = new ImageView();
+        URL iconResuURL = Main.class.getResource("img/iconResults.png");
+        if (iconResuURL != null) {
+            Image image = new Image(iconResuURL.toExternalForm());
+            resultsImageView.setImage(image);
+            resultsImageView.setFitWidth(60);
+            resultsImageView.setFitHeight(60);
+        }
+        Button viewResultsButton = new Button();
+        viewResultsButton.setGraphic(resultsImageView);
+        viewResultsButton.getStyleClass().add("startButton");
+        viewResultsButton.setOnAction(event -> {
+            try {
+                historyPopUp(event, Integer.parseInt(team.getLast().toString()));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
         if(nPart > 0){
             ImageView partImageView = new ImageView();
             URL iconPartURL = Main.class.getResource("img/iconReView.png");
@@ -155,15 +158,18 @@ public class TemsViewController {
                     throw new RuntimeException(e);
                 }
             });
-            requestItem.getChildren().addAll(nameText, sportLabel, genderLabel, countryLabel, minParticipants, nParticipantes, maxParticipants, yearFounded, viewPartButton);
+            HBox buttonContainer = new HBox(10);
+            buttonContainer.getChildren().addAll(viewResultsButton, viewPartButton);
+            buttonContainer.setAlignment(Pos.CENTER_LEFT);
+            buttonContainer.setPadding(new Insets(10));
+            requestItem.getChildren().addAll(nameText, sportLabel, genderLabel, countryLabel, minParticipants, nParticipantes, maxParticipants, yearFounded, buttonContainer);
         }
         else{
-            requestItem.getChildren().addAll(nameText, sportLabel, genderLabel, countryLabel, minParticipants, nParticipantes, maxParticipants, yearFounded);
+            requestItem.getChildren().addAll(nameText, sportLabel, genderLabel, countryLabel, minParticipants, nParticipantes, maxParticipants, yearFounded, viewResultsButton);
         }
         requestItem.setPrefWidth(500);
         return requestItem;
     }
-
     public void partPopUp(ActionEvent event, int idTeam) throws IOException, SQLException {
         AthleteDao athleteDao = new AthleteDao();
         Stage popupStage = new Stage();
@@ -241,4 +247,77 @@ public class TemsViewController {
         return resultItem;
     }
 
+
+    public void historyPopUp(ActionEvent event, int idTeam) throws IOException, SQLException {
+        ResultDao resultDao = new ResultDao();
+        Stage popupStage = new Stage();
+        popupStage.setTitle("Histórico de participações");
+
+        VBox vbox = new VBox(500);
+        vbox.setPadding(new Insets(10));
+        vbox.getStyleClass().add("popup-vbox");
+        List<List> results = resultDao.getResultByTeam(idTeam);
+        displayResults(vbox, results, idTeam);
+
+
+
+        Scene scene = new Scene(vbox, 500, 450);
+        scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+        popupStage.setScene(scene);
+        popupStage.show();
+    }
+    private void displayResults(VBox vbox, List<List> results, int idTeam) throws SQLException {
+        vbox.getChildren().clear();
+        vbox.setSpacing(20);
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.getStyleClass().add("popup-scroll-pane");
+        scrollPane.setFitToWidth(true);
+
+        VBox scrollContent = new VBox();
+        scrollContent.setSpacing(20);
+        scrollContent.setFillWidth(true);
+        scrollContent.getStyleClass().add("popup-scroll-pane");
+        for (List result : results) {
+            VBox resultItem = createResultItem(result, idTeam);
+            scrollContent.getChildren().add(resultItem);
+        }
+
+        scrollPane.setContent(scrollContent);
+        vbox.getChildren().add(scrollPane);
+    }
+    private VBox createResultItem(List result, int idTeam) throws SQLException {
+        VBox resultItem = new VBox();
+        resultItem.setSpacing(10);
+
+        Label resultLabel = new Label();
+
+        Label nameLabel = new Label("Modalidade: " + (result.get(1) != null ? result.get(1).toString() : "N/A"));
+        nameLabel.getStyleClass().add("name-label");
+        if(result.getLast().toString().equals("One")){
+            long resultValue = Long.parseLong(result.getFirst().toString());
+            double resultSeconds = resultValue / 1000.0;
+            resultLabel = new Label("Resultado: " + resultSeconds + " segundos");
+            resultLabel.getStyleClass().add("text-label");
+        }
+        else{
+            resultLabel = new Label("Resultado: " + result.getFirst().toString());
+            resultLabel.getStyleClass().add("text-label");
+        }
+
+        Label typeLabel = new Label("Tipo de modalidade: " + (result.get(2) != null ? result.get(2).toString() : "N/A"));
+        typeLabel.getStyleClass().add("text-label");
+
+        Label dateLabel = new Label("Data: " + (result.get(3) != null ? result.get(3).toString() : "N/A"));
+        dateLabel.getStyleClass().add("text-label");
+
+        Label localLabel = new Label("Local: " + (result.get(4) != null ? result.get(4).toString() : "N/A"));
+        localLabel.getStyleClass().add("text-label");
+
+        Label positionLabel = new Label("Posição: " + (result.get(5) != null ? result.get(5).toString() + "º lugar" : "N/A"));
+        positionLabel.getStyleClass().add("text-label");
+
+
+        resultItem.getChildren().addAll(nameLabel, resultLabel, typeLabel, dateLabel, localLabel, positionLabel);
+        return resultItem;
+    }
 }

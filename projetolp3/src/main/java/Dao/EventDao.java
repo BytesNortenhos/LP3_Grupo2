@@ -25,6 +25,7 @@ public class EventDao {
                 "c.idCountry, c.name AS countryName, c.continent " +
                 "FROM tblEvent e " +
                 "INNER JOIN tblCountry c ON e.idCountry = c.idCountry " +
+                "WHERE e.status=1 " +
                 "ORDER BY e.year DESC;");
         if (rs != null) {
             while (rs.next()) {
@@ -231,4 +232,5 @@ public class EventDao {
             return false;
         }
     }
+
 }

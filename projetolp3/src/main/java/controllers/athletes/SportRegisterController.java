@@ -74,17 +74,10 @@ public class SportRegisterController {
             ObservableList<String> eventsOptions = FXCollections.observableArrayList();
 
             // Obter o ano atual
-            int currentYear = LocalDate.now().getYear();
-
             // Filtrar eventos com ano atual ou posterior
             for (Event event : events) {
-                int eventYear = event.getYear();  // Usando o método getYear() da classe Event
-
-                // Verificar se o evento é no ano atual ou em anos posteriores
-                if (eventYear >= currentYear) {
                     String eventDisplay = event.getYear() + " - " + event.getCountry().getName();
                     eventsOptions.add(eventDisplay);
-                }
             }
 
             // Adicionar os eventos filtrados à ComboBox
