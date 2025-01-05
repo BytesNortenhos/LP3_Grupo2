@@ -459,7 +459,9 @@ public class StartSportsController {
         Label positionLabel = new Label("Posição: " + result.get(9).toString() + "º lugar");
         positionLabel.getStyleClass().add("text-label");
 
-        if (olympicRecordDao.getOlympicRecord((int) result.get(0), (int) result.get(10))) {
+        int idSport = Integer.parseInt((String) result.get(0));
+        int year = Integer.parseInt((String) result.get(10));
+        if (olympicRecordDao.getOlympicRecord(idSport, year)) {
             Label olympicLabel = new Label("Recorde Olímpico!!!");
             olympicLabel.getStyleClass().add("text-label");
             resultItem.getChildren().addAll(nameContainer, resultLabel, positionLabel, olympicLabel);
@@ -510,6 +512,7 @@ public class StartSportsController {
             }
             if (sportDao.getOneGame(idSport).equals("Multiple")) {
                 System.out.println("Collective Multiple");
+                System.out.println(idSport + " 5");
                 CollectiveMultiple(idSport, IdsParticipants, year, idocal);
             }
         }
@@ -712,7 +715,6 @@ public class StartSportsController {
         List<Integer> scores = new ArrayList<>(Collections.nCopies(IdsParticipants.size(), 0));
         List<List<String>> resultados = new ArrayList<>();
         Random random = new Random();
-
         //Converter Range
         List<Double> range = getRanges(idSport);
 
@@ -803,6 +805,7 @@ public class StartSportsController {
 
     public boolean CollectiveMultiple(int idSport, List<Integer> IdsParticipants, int year, int idLocal) throws SQLException {
         List<Integer> scores = new ArrayList<>(Collections.nCopies(IdsParticipants.size(), 0));
+        System.out.println(IdsParticipants.size());
         List<List<String>> resultados = new ArrayList<>();
         Random random = new Random();
 

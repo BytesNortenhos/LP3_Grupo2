@@ -8,6 +8,7 @@ import javax.sql.rowset.CachedRowSet;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,7 +51,10 @@ public class SportDao {
                 int resultMin = rs.getInt("resultMin");
                 int resultMax = rs.getInt("resultMax");
 
-                Sport sport = new Sport(idSport, type, gender, name, description, minParticipants, scoringMeasure, oneGame, olympicRecord, winnerOlympics, rules, resultMin, resultMax);
+                LocalDateTime dataInicio = rs.getTimestamp("dataInicio").toLocalDateTime();
+                LocalDateTime dataFim = rs.getTimestamp("dataFim").toLocalDateTime();
+
+                Sport sport = new Sport(idSport, type, gender, name, description, minParticipants, scoringMeasure, oneGame, olympicRecord, winnerOlympics, rules, resultMin, resultMax, dataInicio, dataFim);
                 sports.add(sport);
             }
         } else {
@@ -467,6 +471,8 @@ public class SportDao {
             String oneGame = rs.getString("oneGame");
             String genderDescription = rs.getString("genderDescription");
             Gender gender = new Gender(idGender, genderDescription);
+            LocalDateTime dataInicio = rs.getTimestamp("dataInicio").toLocalDateTime();
+            LocalDateTime dataFim = rs.getTimestamp("dataFim").toLocalDateTime();
 
             OlympicRecordDao olympicRecordDao = new OlympicRecordDao();
             OlympicRecord olympicRecord = olympicRecordDao.getOlympicRecordById(idSportResult, rs.getInt("olympicYear"));
@@ -476,7 +482,7 @@ public class SportDao {
 
             List<Rule> rules = RuleDao.getRulesBySport(idSportResult);
 
-            return new Sport(idSportResult, type, gender, name, description, minParticipants, scoringMeasure, oneGame, olympicRecord, winnerOlympics, rules);
+            return new Sport(idSportResult, type, gender, name, description, minParticipants, scoringMeasure, oneGame, olympicRecord, winnerOlympics, rules, dataInicio, dataFim);
         }
 
         return null;
@@ -733,10 +739,10 @@ public class SportDao {
         return measureMetrica;
     }
 
-    public String getMeasure(int  idSport) throws SQLException{
+    public String getMeasure(int idSport) throws SQLException{
         String scoringMeasure = "";
-        String query = "SELECT scoringMeasure" +
-                "FROM tblSport" +
+        String query = "SELECT scoringMeasure " +
+                "FROM tblSport " +
                 "WHERE idSport = ?";
         ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
         CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idSport);

@@ -5,6 +5,7 @@ module bytesnortenhos.projetolp3 {
     requires java.sql.rowset;
     requires jakarta.xml.bind;
     requires java.desktop;
+    requires java.dotenv;
 
 
     opens bytesnortenhos.projetolp3 to javafx.fxml;

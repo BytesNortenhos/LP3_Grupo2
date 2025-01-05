@@ -50,7 +50,7 @@ public class EventDao {
      */
     public boolean addEvent(Event event) throws SQLException {
         String checkQuery = "SELECT COUNT(*) FROM tblEvent WHERE year = ?";
-        String insertQuery = "INSERT INTO tblEvent (year, idCountry, Logo) VALUES (?, ?, ?)";
+        String insertQuery = "INSERT INTO tblEvent (year, idCountry, Logo, status) VALUES (?, ?, ?, ?)";
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -71,6 +71,7 @@ public class EventDao {
             stmt.setInt(1, event.getYear());
             stmt.setString(2, event.getCountry().getIdCountry());
             stmt.setString(3, event.getLogo());
+            stmt.setInt(4, event.getStatus());
             stmt.executeUpdate();
 
             return true;
@@ -122,7 +123,7 @@ public class EventDao {
      * @throws SQLException
      */
     public void updateEvent(Event event) throws SQLException {
-        String query = "UPDATE tblEvent SET idCountry = ?, Logo = ? WHERE year = ?";
+        String query = "UPDATE tblEvent SET idCountry = ?, Logo = ?, status = ? WHERE year = ?";
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
@@ -132,7 +133,8 @@ public class EventDao {
 
             stmt.setString(1, event.getCountry().getIdCountry());
             stmt.setString(2, event.getLogo());
-            stmt.setInt(3, event.getYear());
+            stmt.setInt(3, event.getStatus());
+            stmt.setInt(4, event.getYear());
             stmt.executeUpdate();
         } finally {
             if (stmt != null) {
@@ -151,7 +153,7 @@ public class EventDao {
      * @throws SQLException
      */
     public Event getEventByYear(int year) throws SQLException {
-        String query = "SELECT e.year, e.logo, " +
+        String query = "SELECT e.year, e.logo, e.status, " +
                 "c.idCountry, c.name AS countryName, c.continent " +
                 "FROM tblEvent e " +
                 "INNER JOIN tblCountry c ON e.idCountry = c.idCountry " +
