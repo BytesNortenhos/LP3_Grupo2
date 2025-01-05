@@ -411,13 +411,13 @@ public class StartSportsController {
         scrollContent.setFillWidth(true);
         scrollContent.getStyleClass().add("popup-scroll-pane");
 
-        Map<String, List<String>> teamResultsMap = new HashMap<>();
+        /*Map<String, List<String>> teamResultsMap = new HashMap<>();
         for (List result : results) {
             String teamName = result.get(5) != null ? result.get(5).toString() : null;
             String resultText = "Resultado: " + result.get(0).toString();
-            String athleteName = result.get(4) != null ? result.get(4).toString() : "N/A";
+            String position = result.get(9) != null ? result.get(9).toString() : "N/A";
             if (teamName != null) {
-                teamResultsMap.computeIfAbsent(teamName, k -> new ArrayList<>()).add(resultText + " - " + athleteName);
+                teamResultsMap.computeIfAbsent(teamName, k -> new ArrayList<>()).add(resultText + " - " + position);
             } else {
                 VBox resultItem = createResultItem(result);
                 scrollContent.getChildren().add(resultItem);
@@ -428,6 +428,43 @@ public class StartSportsController {
             VBox resultItem = createTeamResultItem(entry.getKey(), entry.getValue());
             scrollContent.getChildren().add(resultItem);
         }
+        scrollPane.setContent(scrollContent);
+        vbox.getChildren().add(scrollPane);*/
+
+        Map<String, Set<String>> teamResultsMap = new LinkedHashMap<>();
+        Map<String, String> teamPositionMap = new HashMap<>();
+
+        for (List result : results) {
+            String teamName = result.get(5) != null ? result.get(5).toString() : null;
+            String resultText = "Resultado: " + result.get(0).toString();
+            String position = result.get(9) != null ? result.get(9).toString() : "N/A";
+
+            if (teamName != null) {
+                teamResultsMap.computeIfAbsent(teamName, k -> new LinkedHashSet<>()).add(resultText);
+                teamPositionMap.put(teamName, position);
+            } else {
+                VBox resultItem = createResultItem(result);
+                scrollContent.getChildren().add(resultItem);
+            }
+        }
+
+        for (Map.Entry<String, Set<String>> entry : teamResultsMap.entrySet()) {
+            String teamName = entry.getKey();
+            Set<String> teamResults = entry.getValue();
+            String teamPosition = teamPositionMap.get(teamName);
+
+            VBox resultItem = new VBox();
+            resultItem.getChildren().add(new Label(teamName));
+
+            for (String resultText : teamResults) {
+                resultItem.getChildren().add(new Label(resultText));
+            }
+
+            resultItem.getChildren().add(new Label("Posição: " + teamPosition));
+
+            scrollContent.getChildren().add(resultItem);
+        }
+
         scrollPane.setContent(scrollContent);
         vbox.getChildren().add(scrollPane);
     }
