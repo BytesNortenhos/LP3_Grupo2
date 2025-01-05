@@ -311,6 +311,7 @@ public class ResultDao {
                 result.add(rs.getString("teamId"));
                 result.add(rs.getString("scoringMeasure"));
                 result.add(rs.getString("metrica"));
+                result.add(rs.getString("position"));
                 results.add(result);
             }
         } else {
