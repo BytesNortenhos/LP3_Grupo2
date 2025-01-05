@@ -17,6 +17,9 @@ public class Sport {
     private int resultMin;
     private int resultMax;
 
+    private int idStatus;
+    private String metrica;
+
     private LocalDateTime dataInicio;
     private LocalDateTime dataFim;
 
@@ -299,6 +302,46 @@ public class Sport {
     }
 
     /**
+     * Constructor of Sport
+     * @param idSport {int} Sport ID
+     * @param type {String} Type
+     * @param genre {Gender} Genre
+     * @param name {String} Name
+     * @param desc {String} Description
+     * @param minParticipants {int} Number minimum of participants
+     * @param scoringMeasure {String} Measure of scoring
+     * @param oneGame {String} "One Game"
+     * @param resultMin {int} Minimum result
+     * @param resultMax {int} Maximum result
+     * @param idStatus {int} Status ID
+     * @param metrica {String} Metric
+     * @param dataInicio {LocalDateTime} Start date
+     * @param dataFim {LocalDateTime} End date
+     * @param olympicRecord {OlympicRecord} Olympic record
+     * @param winnerOlympic {List<WinnerOlympic>} List of olympic winners
+     * @param rules {List<Rule>} List of rules
+     */
+    public Sport(int idSport, String type, Gender genre, String name, String desc, int minParticipants, String scoringMeasure, String oneGame, int resultMin, int resultMax, int idStatus, String metrica, LocalDateTime dataInicio, LocalDateTime dataFim, OlympicRecord olympicRecord, List<WinnerOlympic> winnerOlympic, List<Rule> rules) {
+        this.idSport = idSport;
+        this.type = type;
+        this.genre = genre;
+        this.name = name;
+        this.desc = desc;
+        this.minParticipants = minParticipants;
+        this.scoringMeasure = scoringMeasure;
+        this.oneGame = oneGame;
+        this.resultMin = resultMin;
+        this.resultMax = resultMax;
+        this.idStatus = idStatus;
+        this.metrica = metrica;
+        this.dataInicio = dataInicio;
+        this.dataFim = dataFim;
+        this.olympicRecord = olympicRecord;
+        this.winnerOlympic = winnerOlympic;
+        this.rules = rules;
+    }
+
+    /**
      * Get Sport ID
      * @return int
      */
@@ -504,6 +547,38 @@ public class Sport {
      */
     public void setRules(List<Rule> rules) {
         this.rules = rules;
+    }
+
+    /**
+     * Get Status ID
+     * @return int
+     */
+    public int getIdStatus() {
+        return idStatus;
+    }
+
+    /**
+     * Set Status ID
+     * @param idStatus {int} Status ID
+     */
+    public void setIdStatus(int idStatus) {
+        this.idStatus = idStatus;
+    }
+
+    /**
+     * Get Metric
+     * @return String
+     */
+    public String getMetrica() {
+        return metrica;
+    }
+
+    /**
+     * Set Metric
+     * @param metrica {String} Metric
+     */
+    public void setMetrica(String metrica) {
+        this.metrica = metrica;
     }
 
     /**
