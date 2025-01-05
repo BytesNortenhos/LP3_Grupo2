@@ -51,10 +51,12 @@ public class SportDao {
                 int resultMin = rs.getInt("resultMin");
                 int resultMax = rs.getInt("resultMax");
 
+                int idStatus = rs.getInt("idStatus");
+                String metrica = rs.getString("metrica");
                 LocalDateTime dataInicio = rs.getTimestamp("dataInicio").toLocalDateTime();
                 LocalDateTime dataFim = rs.getTimestamp("dataFim").toLocalDateTime();
 
-                Sport sport = new Sport(idSport, type, gender, name, description, minParticipants, scoringMeasure, oneGame, olympicRecord, winnerOlympics, rules, resultMin, resultMax, dataInicio, dataFim);
+                Sport sport = new Sport(idSport, type, gender, name, description, minParticipants, scoringMeasure, oneGame, olympicRecord, winnerOlympics, rules, resultMin, resultMax, idStatus, metrica, dataInicio, dataFim);
                 sports.add(sport);
             }
         } else {
@@ -314,7 +316,7 @@ public class SportDao {
      * @throws SQLException
      */
     public static int addSport(Sport sport) throws SQLException {
-        String querySport = "INSERT INTO tblSport (type, idGender, name, description, minParticipants, scoringMeasure, oneGame, resultMin, resultMax) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String querySport = "INSERT INTO tblSport (type, idGender, name, description, minParticipants, scoringMeasure, oneGame, resultMin, resultMax, idStatus, metrica, dataInicio, dataFim) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         String queryOlympicRecord = "INSERT INTO tblOlympicRecord (idSport, year) VALUES (?, ?)";
         Connection conn = null;
         PreparedStatement stmtSport = null;
@@ -337,6 +339,10 @@ public class SportDao {
             stmtSport.setString(7, sport.getOneGame());
             stmtSport.setInt(8, sport.getResultMin());
             stmtSport.setInt(9, sport.getResultMax());
+            stmtSport.setInt(10, sport.getIdStatus());
+            stmtSport.setString(11, sport.getMetrica());
+            stmtSport.setTimestamp(12, java.sql.Timestamp.valueOf(sport.getDataInicio()));
+            stmtSport.setTimestamp(13, java.sql.Timestamp.valueOf(sport.getDataFim()));
 
             stmtSport.executeUpdate();
 
@@ -354,7 +360,6 @@ public class SportDao {
 
                 conn.commit();
 
-                System.out.println("Generated Sport ID: " + sportId);
                 return sportId;
             } else {
                 throw new SQLException("Failed to retrieve the generated ID for the sport.");
@@ -411,7 +416,7 @@ public class SportDao {
      * @throws SQLException
      */
     public static void updateSport(Sport sport) throws SQLException {
-        String query = "UPDATE tblSport SET type = ?, idGender = ?, name = ?, description = ?, minParticipants = ?, scoringMeasure = ?, oneGame = ?, resultMin = ?, resultMax = ? WHERE idSport = ?";
+        String query = "UPDATE tblSport SET type = ?, idGender = ?, name = ?, description = ?, minParticipants = ?, scoringMeasure = ?, oneGame = ?, resultMin = ?, resultMax = ?, idStatus = idStatus, metrica = metrica, dataInicio = dataInicio, dataFim = dataFim WHERE idSport = ?";
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
@@ -428,6 +433,10 @@ public class SportDao {
             stmt.setString(7, sport.getOneGame());
             stmt.setInt(8, sport.getResultMin());
             stmt.setInt(9, sport.getResultMax());
+            /*stmt.setInt(10, sport.getIdStatus());
+            stmt.setString(11, sport.getMetrica());
+            stmt.setTimestamp(12, java.sql.Timestamp.valueOf(sport.getDataInicio()));
+            stmt.setTimestamp(13, java.sql.Timestamp.valueOf(sport.getDataFim()));*/
             stmt.setInt(10, sport.getIdSport());
 
             stmt.executeUpdate();
@@ -471,6 +480,10 @@ public class SportDao {
             String oneGame = rs.getString("oneGame");
             String genderDescription = rs.getString("genderDescription");
             Gender gender = new Gender(idGender, genderDescription);
+            int resultMin = rs.getInt("resultMin");
+            int resultMax = rs.getInt("resultMax");
+            int idStatus = rs.getInt("idStatus");
+            String metrica = rs.getString("metrica");
             LocalDateTime dataInicio = rs.getTimestamp("dataInicio").toLocalDateTime();
             LocalDateTime dataFim = rs.getTimestamp("dataFim").toLocalDateTime();
 
@@ -482,7 +495,7 @@ public class SportDao {
 
             List<Rule> rules = RuleDao.getRulesBySport(idSportResult);
 
-            return new Sport(idSportResult, type, gender, name, description, minParticipants, scoringMeasure, oneGame, olympicRecord, winnerOlympics, rules, dataInicio, dataFim);
+            return new Sport(idSportResult, type, gender, name, description, minParticipants, scoringMeasure, oneGame, olympicRecord, winnerOlympics, rules, resultMin, resultMax, idStatus, metrica, dataInicio, dataFim);
         }
 
         return null;

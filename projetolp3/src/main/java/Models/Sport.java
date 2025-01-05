@@ -254,6 +254,46 @@ public class Sport {
      * @param olympicRecord {OlympicRecord} Olympic record
      * @param winnerOlympic {List<WinnerOlympic>} List of olympic winners
      * @param rules {List<Rule>} List of rules
+     * @param resultMin {int} Minimum result
+     * @param resultMax {int} Maximum result
+     * @param idStatus {int} Status ID
+     * @param metrica {String} Metric
+     * @param dataInicio {LocalDateTime} Data de início
+     * @param dataFim {LocalDateTime} Data de fim
+     */
+    public Sport(int idSport, String type, Gender genre, String name, String desc, int minParticipants,
+                 String scoringMeasure, String oneGame, OlympicRecord olympicRecord, List<WinnerOlympic> winnerOlympic,
+                 List<Rule> rules, int resultMin, int resultMax, int idStatus, String metrica, LocalDateTime dataInicio, LocalDateTime dataFim) {
+        this.idSport = idSport;
+        this.type = type;
+        this.genre = genre;
+        this.name = name;
+        this.desc = desc;
+        this.minParticipants = minParticipants;
+        this.scoringMeasure = scoringMeasure;
+        this.oneGame = oneGame;
+        this.olympicRecord = olympicRecord;
+        this.winnerOlympic = winnerOlympic;
+        this.rules = rules;
+        this.resultMin = resultMin;
+        this.resultMax = resultMax;
+        this.dataInicio = dataInicio;
+        this.dataFim = dataFim;
+    }
+
+    /**
+     * Constructor of Sport
+     * @param idSport {int} Sport ID
+     * @param type {String} Type
+     * @param genre {Gender} Genre
+     * @param name {String} Name
+     * @param desc {String} Description
+     * @param minParticipants {int} Number minimum of participants
+     * @param scoringMeasure {String} Measure of scoring
+     * @param oneGame {String} "One Game"
+     * @param olympicRecord {OlympicRecord} Olympic record
+     * @param winnerOlympic {List<WinnerOlympic>} List of olympic winners
+     * @param rules {List<Rule>} List of rules
      * @param dataInicio {LocalDateTime} Data de início
      * @param dataFim {LocalDateTime} Data de fim
      */
