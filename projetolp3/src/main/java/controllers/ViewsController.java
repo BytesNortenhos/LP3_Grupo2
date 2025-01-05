@@ -1,4 +1,5 @@
 package controllers;
+import Dao.RegistrationDao;
 import bytesnortenhos.projetolp3.Main;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -17,10 +18,12 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Scanner;
 
 public class ViewsController {
     @FXML
@@ -97,7 +100,9 @@ public class ViewsController {
                 password = passwordText.getText();
             }
             boolean sucess = loginController.loginVerify(id, password, event);
+            System.out.println(id);
             if (sucess) {
+                teste(id);
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Sucesso!");
                 alert.setHeaderText("Login efetuado com sucesso!");
@@ -113,6 +118,16 @@ public class ViewsController {
                 alerta.show();
             }
         }
+    }
+    public void teste(int id) throws SQLException {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Data Inicio: ");
+        String dataInicio = scanner.nextLine();
+        System.out.print("Data Fim: ");
+        String dataFim = scanner.nextLine();
+        RegistrationDao registrationDao = new RegistrationDao();
+        List<String> sports = registrationDao.getCalendar(id, dataInicio, dataFim);
+        System.out.println(sports);
     }
     public static void roleVerify(ActionEvent event) throws Exception {
         switch (LoginController.role) {

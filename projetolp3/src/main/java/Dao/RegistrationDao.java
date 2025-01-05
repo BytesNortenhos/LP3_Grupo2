@@ -2,16 +2,13 @@ package Dao;
 
 import Models.*;
 import Utils.ConnectionsUtlis;
-import java.util.Map;
-import java.util.HashMap;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.sql.rowset.CachedRowSet;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -665,5 +662,26 @@ public class RegistrationDao {
 
         }
         return registrations;
+    }
+
+    public List<String> getCalendar(int idAthlete, String dataInicio, String dataFim) throws SQLException {
+        List<String> sports = new ArrayList<>();
+        String query = "SELECT s.*\n" +
+                "FROM dbo.tblSport s\n" +
+                "JOIN dbo.tblRegistration r ON s.idSport = r.idSport\n" +
+                "WHERE r.idAthlete = ? \n" +
+                "AND s.dataInicio >= ?\n" +
+                "AND s.dataFim <= ?";
+
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idAthlete, dataInicio, dataFim);
+
+        if (rs != null) {
+            while (rs.next()) {
+                String sport = rs.getString("name");
+                sports.add(sport);
+            }
+        }
+        return sports;
     }
 }
