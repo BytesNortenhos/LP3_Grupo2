@@ -767,7 +767,7 @@ public class SportDao {
         return scoringMeasure;
     }
 
-    public Date getDataInicio (int idSport) throws SQLException{
+    public Date getDataInicio(int idSport) throws SQLException {
         Date data = null;
         String query = "SELECT dataInicio " +
                 "FROM tblSport " +
@@ -775,7 +775,10 @@ public class SportDao {
         ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
         CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idSport);
         if (rs != null && rs.next()) {
-            data = Date.valueOf((rs.getString("dataInicio")));
+            Timestamp timestamp = rs.getTimestamp("dataInicio");
+            if (timestamp != null) {
+                data = new Date(timestamp.getTime());  // Converte Timestamp para Date (sem a hora)
+            }
         }
 
         return data;
