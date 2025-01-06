@@ -411,13 +411,13 @@ public class StartSportsController {
         scrollContent.setFillWidth(true);
         scrollContent.getStyleClass().add("popup-scroll-pane");
 
-        Map<String, List<String>> teamResultsMap = new HashMap<>();
+        /*Map<String, List<String>> teamResultsMap = new HashMap<>();
         for (List result : results) {
             String teamName = result.get(5) != null ? result.get(5).toString() : null;
             String resultText = "Resultado: " + result.get(0).toString();
-            String athleteName = result.get(4) != null ? result.get(4).toString() : "N/A";
+            String position = result.get(9) != null ? result.get(9).toString() : "N/A";
             if (teamName != null) {
-                teamResultsMap.computeIfAbsent(teamName, k -> new ArrayList<>()).add(resultText + " - " + athleteName);
+                teamResultsMap.computeIfAbsent(teamName, k -> new ArrayList<>()).add(resultText + " - " + position);
             } else {
                 VBox resultItem = createResultItem(result);
                 scrollContent.getChildren().add(resultItem);
@@ -428,6 +428,43 @@ public class StartSportsController {
             VBox resultItem = createTeamResultItem(entry.getKey(), entry.getValue());
             scrollContent.getChildren().add(resultItem);
         }
+        scrollPane.setContent(scrollContent);
+        vbox.getChildren().add(scrollPane);*/
+
+        Map<String, Set<String>> teamResultsMap = new LinkedHashMap<>();
+        Map<String, String> teamPositionMap = new HashMap<>();
+
+        for (List result : results) {
+            String teamName = result.get(5) != null ? result.get(5).toString() : null;
+            String resultText = "Resultado: " + result.get(0).toString();
+            String position = result.get(9) != null ? result.get(9).toString() : "N/A";
+
+            if (teamName != null) {
+                teamResultsMap.computeIfAbsent(teamName, k -> new LinkedHashSet<>()).add(resultText);
+                teamPositionMap.put(teamName, position);
+            } else {
+                VBox resultItem = createResultItem(result);
+                scrollContent.getChildren().add(resultItem);
+            }
+        }
+
+        for (Map.Entry<String, Set<String>> entry : teamResultsMap.entrySet()) {
+            String teamName = entry.getKey();
+            Set<String> teamResults = entry.getValue();
+            String teamPosition = teamPositionMap.get(teamName);
+
+            VBox resultItem = new VBox();
+            resultItem.getChildren().add(new Label(teamName));
+
+            for (String resultText : teamResults) {
+                resultItem.getChildren().add(new Label(resultText));
+            }
+
+            resultItem.getChildren().add(new Label("Posição: " + teamPosition));
+
+            scrollContent.getChildren().add(resultItem);
+        }
+
         scrollPane.setContent(scrollContent);
         vbox.getChildren().add(scrollPane);
     }
@@ -492,28 +529,28 @@ public class StartSportsController {
         List<Integer> IdsParticipants;
 
         registrationDao.setStatusRejected(idSport, year);
+        Date data = sportDao.getDataInicio(idSport);
 
         if (sportDao.getType(idSport).equals("Individual")) {
             IdsParticipants = registrationDao.getRegisteredAthletes(idSport, year);
             if (sportDao.getOneGame(idSport).equals("One")) {
                 System.out.println("Individual One");
-                individualOne(idSport, IdsParticipants, year, idocal);
+                individualOne(idSport, IdsParticipants, year, idocal, data);
             }
             if (sportDao.getOneGame(idSport).equals("Multiple")) {
                 System.out.println("Individual Multiple");
-                individualMultiple(idSport, IdsParticipants, year, idocal);
+                individualMultiple(idSport, IdsParticipants, year, idocal, data);
             }
         }
         if (sportDao.getType(idSport).equals("Collective")) {
             IdsParticipants = registrationDao.getRegisteredTeams(idSport, year);
             if (sportDao.getOneGame(idSport).equals("One")) {
                 System.out.println("Collective One");
-                CollectiveOne(idSport, IdsParticipants, year, idocal);
+                CollectiveOne(idSport, IdsParticipants, year, idocal, data);
             }
             if (sportDao.getOneGame(idSport).equals("Multiple")) {
                 System.out.println("Collective Multiple");
-                System.out.println(idSport + " 5");
-                CollectiveMultiple(idSport, IdsParticipants, year, idocal);
+                CollectiveMultiple(idSport, IdsParticipants, year, idocal, data);
             }
         }
 
@@ -549,7 +586,7 @@ public class StartSportsController {
         return ranges;
     }
 
-    public boolean individualOne(int idSport, List<Integer> IdsParticipants, int year, int idLocal) throws SQLException {
+    public boolean individualOne(int idSport, List<Integer> IdsParticipants, int year, int idLocal, Date data) throws SQLException {
         List<Integer> resultados = new ArrayList<>();
         Random random = new Random();
 
@@ -592,8 +629,7 @@ public class StartSportsController {
             int idAthlete = IdsParticipants.get(i);
             int resultadoInserir = resultados.get(i);
             int position = i + 1;
-            java.sql.Date date = new java.sql.Date(System.currentTimeMillis());
-            resultDao.addResultAthlete(idSport, idAthlete, date, String.valueOf(resultadoInserir), idLocal, position);
+            resultDao.addResultAthlete(idSport, idAthlete, (java.sql.Date) data, String.valueOf(resultadoInserir), idLocal, position);
         }
 
         //Atribuir Medalhas
@@ -618,7 +654,7 @@ public class StartSportsController {
         return true;
     }
 
-    public boolean CollectiveOne(int idSport, List<Integer> IdsParticipants, int year, int idLocal) throws SQLException {
+    public boolean CollectiveOne(int idSport, List<Integer> IdsParticipants, int year, int idLocal, Date data) throws SQLException {
         List<Integer> resultados = new ArrayList<>();
         Random random = new Random();
 
@@ -661,12 +697,10 @@ public class StartSportsController {
             int idTeam = IdsParticipants.get(i);
             int resultadoInserir = resultados.get(i);
             int position = i + 1;
-            java.sql.Date date = new java.sql.Date(System.currentTimeMillis());
-            //resultDao.addResultTeam(idSport, idTeam, date, resultadoInserir, idLocal);
             athletes.clear();
             athletes = registrationDao.getAthletesByTeam(idTeam, idSport, year);
             for (int j = 0; j < athletes.size(); j++) {
-                resultDao.addResultAthleteTeam(idSport, athletes.get(j), idTeam, date, String.valueOf(resultadoInserir), idLocal, position);
+                resultDao.addResultAthleteTeam(idSport, athletes.get(j), idTeam, (java.sql.Date) data, String.valueOf(resultadoInserir), idLocal, position);
             }
         }
 
@@ -711,7 +745,7 @@ public class StartSportsController {
         return true;
     }
 
-    public boolean individualMultiple(int idSport, List<Integer> IdsParticipants, int year, int idLocal) throws SQLException {
+    public boolean individualMultiple(int idSport, List<Integer> IdsParticipants, int year, int idLocal, Date data) throws SQLException {
         List<Integer> scores = new ArrayList<>(Collections.nCopies(IdsParticipants.size(), 0));
         List<List<String>> resultados = new ArrayList<>();
         Random random = new Random();
@@ -768,12 +802,11 @@ public class StartSportsController {
 
 
         //Atribuir Resultados
-        java.sql.Date date = new java.sql.Date(System.currentTimeMillis());
         for (int i = 0; i < resultados.size(); i++) {
             int position = i + 1;
             for (String resultado : resultados.get(i)) {
-                resultDao.addResultAthlete(idSport, IdsParticipants.get(i), date, resultado, idLocal, position);
-                System.out.println("DAO: " + idSport + " " + IdsParticipants.get(i) + " " + date + " " + resultado + position);
+                resultDao.addResultAthlete(idSport, IdsParticipants.get(i), (java.sql.Date) data, resultado, idLocal, position);
+                System.out.println("DAO: " + idSport + " " + IdsParticipants.get(i) + " " + data + " " + resultado + position);
             }
         }
 
@@ -803,7 +836,7 @@ public class StartSportsController {
     }
 
 
-    public boolean CollectiveMultiple(int idSport, List<Integer> IdsParticipants, int year, int idLocal) throws SQLException {
+    public boolean CollectiveMultiple(int idSport, List<Integer> IdsParticipants, int year, int idLocal, Date data) throws SQLException {
         List<Integer> scores = new ArrayList<>(Collections.nCopies(IdsParticipants.size(), 0));
         System.out.println(IdsParticipants.size());
         List<List<String>> resultados = new ArrayList<>();
@@ -865,14 +898,13 @@ public class StartSportsController {
         List<Integer> athletes = new ArrayList<>();
         for (int i = 0; i < resultados.size(); i++) {
             int idTeam = IdsParticipants.get(i);
-            java.sql.Date date = new java.sql.Date(System.currentTimeMillis());
             athletes.clear();
             athletes = registrationDao.getAthletesByTeam(idTeam, idSport, year);
             int position = i + 1;
             for (int j = 0; j < athletes.size(); j++) {
                 for (String resultado : resultados.get(i)) {
-                    resultDao.addResultAthleteTeam(idSport, athletes.get(j), idTeam, date, resultado, idLocal, position);
-                    System.out.println("DAO: " + idSport + " " + athletes.get(j) + " " + idTeam + " " + date + " " + resultado);
+                    resultDao.addResultAthleteTeam(idSport, athletes.get(j), idTeam, (java.sql.Date) data, resultado, idLocal, position);
+                    System.out.println("DAO: " + idSport + " " + athletes.get(j) + " " + idTeam + " " + data + " " + resultado);
                 }
             }
         }

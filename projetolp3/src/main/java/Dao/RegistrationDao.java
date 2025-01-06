@@ -2,16 +2,13 @@ package Dao;
 
 import Models.*;
 import Utils.ConnectionsUtlis;
-import java.util.Map;
-import java.util.HashMap;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.sql.rowset.CachedRowSet;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -681,5 +678,31 @@ public class RegistrationDao {
         else {
             return false;
         }
+    }
+
+    public List<List> getCalendar(int idAthlete, String dataInicio, String dataFim) throws SQLException {
+        List<List> sports = new ArrayList<>();
+        String query = "SELECT s.*, r.idStatus AS status\n" +
+                "FROM dbo.tblSport s\n" +
+                "JOIN dbo.tblRegistration r ON s.idSport = r.idSport\n" +
+                "WHERE r.idAthlete = ? \n" +
+                "AND s.dataInicio >= ?\n" +
+                "AND s.dataFim <= ?";
+
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idAthlete, dataInicio, dataFim);
+
+        if (rs != null) {
+            while (rs.next()) {
+                List<String> sport = new ArrayList<>();
+                sport.add(rs.getString("idSport"));
+                sport.add(rs.getString("name"));
+                sport.add(rs.getString("dataInicio"));
+                sport.add(rs.getString("dataFim"));
+                sport.add(rs.getString("status"));
+                sports.add(sport);
+            }
+        }
+        return sports;
     }
 }
