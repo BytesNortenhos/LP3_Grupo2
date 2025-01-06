@@ -417,7 +417,7 @@ public class SportDao {
      * @throws SQLException
      */
     public static void updateSport(Sport sport) throws SQLException {
-        String query = "UPDATE tblSport SET type = ?, idGender = ?, name = ?, description = ?, minParticipants = ?, scoringMeasure = ?, oneGame = ?, resultMin = ?, resultMax = ?, idStatus = idStatus, metrica = metrica, dataInicio = dataInicio, dataFim = dataFim WHERE idSport = ?";
+        String query = "UPDATE tblSport SET type = ?, idGender = ?, name = ?, description = ?, minParticipants = ?, scoringMeasure = ?, oneGame = ?, resultMin = ?, resultMax = ? WHERE idSport = ?";
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
@@ -496,7 +496,7 @@ public class SportDao {
 
             List<Rule> rules = RuleDao.getRulesBySport(idSportResult);
 
-            return new Sport(idSportResult, type, gender, name, description, minParticipants, scoringMeasure, oneGame, olympicRecord, winnerOlympics, rules, resultMin, resultMax, idStatus, metrica, dataInicio, dataFim);
+            return new Sport(idSportResult, type, gender, name, description, minParticipants, scoringMeasure, oneGame, resultMin, resultMax, idStatus, metrica, dataInicio, dataFim, olympicRecord, winnerOlympics, rules);
         }
 
         return null;

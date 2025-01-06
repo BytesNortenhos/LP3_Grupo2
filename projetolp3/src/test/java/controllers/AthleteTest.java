@@ -19,7 +19,9 @@ public class AthleteTest {
 
     @Test
     void testCrudAthlete() throws SQLException {
-        try (Connection connection = ConnectionsUtlis.dbConnect()) {
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+
+        try (Connection connection = connectionsUtlis.dbConnect()) {
             // Configuração dos dados
             String password = "Teste123";
             String name = "Joao Kobi";

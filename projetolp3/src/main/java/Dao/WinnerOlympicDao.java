@@ -149,7 +149,7 @@ public class WinnerOlympicDao {
             int idAthlete = rs.getInt("idAthlete");
             int idTeam = rs.getInt("idTeam");
             int result = rs.getInt("result");
-            int idMedal = rs.getInt("medalId");
+            int idMedal = rs.getInt("idMedal");
             SportDao sportDao = new SportDao();
             Sport sport = sportDao.getSportById(idSport);
             AthleteDao athleteDao = new AthleteDao();

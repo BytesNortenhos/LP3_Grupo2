@@ -63,4 +63,6 @@ public class WinnerOlympic extends RecordOrWinner {
     public void setMedal(Medal medal) {
         this.medal = medal;
     }
+
+
 }
