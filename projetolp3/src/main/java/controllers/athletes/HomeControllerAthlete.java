@@ -269,6 +269,9 @@ public class HomeControllerAthlete {
         Label localLabel = new Label("Local: " + (result.get(5) != null ? result.get(5).toString() : "N/A"));
         localLabel.getStyleClass().add("text-label");
 
+        Label positionLabel = new Label("Posição: " + (result.get(11) != null ? result.get(11).toString() + "º lugar" : "N/A"));
+        positionLabel.getStyleClass().add("text-label");
+
         /*int pos = 0;
         ResultDao resultDao = new ResultDao();
         List<List> positions = new ArrayList<>();
@@ -300,7 +303,7 @@ public class HomeControllerAthlete {
         Label postionLabel = new Label("Posição: " + pos + "º lugar");
         postionLabel.getStyleClass().add("local-label");*/
 
-        resultItem.getChildren().addAll(nameLabel, resultLabel, typeLabel, dateLabel, localLabel/*, postionLabel*/);
+        resultItem.getChildren().addAll(nameLabel, resultLabel, typeLabel, dateLabel, localLabel, positionLabel);
         return resultItem;
     }
 

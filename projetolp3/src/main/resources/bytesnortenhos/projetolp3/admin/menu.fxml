@@ -36,6 +36,7 @@
             <items>
                 <MenuItem text="Adicionar evento" onAction="#showAddEvent"/>
                 <MenuItem text="Visualizar eventos" onAction="#showViewEvent"/>
+                <MenuItem text="Iniciar evento" onAction="#showStartEvent"/>
             </items>
         </SplitMenuButton>
         <SplitMenuButton fx:id="sportSplitButton" styleClass="dropdownButton" text="Gerir modalidade">

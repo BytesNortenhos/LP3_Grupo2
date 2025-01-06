@@ -25,6 +25,7 @@ public class EventDao {
                 "c.idCountry, c.name AS countryName, c.continent " +
                 "FROM tblEvent e " +
                 "INNER JOIN tblCountry c ON e.idCountry = c.idCountry " +
+                "WHERE e.status=1 " +
                 "ORDER BY e.year DESC;");
         if (rs != null) {
             while (rs.next()) {
@@ -231,4 +232,54 @@ public class EventDao {
             return false;
         }
     }
+
+    public int getActualYear() throws SQLException {
+        String query = "SELECT year FROM tblEvent WHERE status = 1";
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query);
+        if (rs != null && rs.next()) {
+            return rs.getInt(1);
+        } else {
+            return 0;
+        }
+    }
+    public List<Integer> getEventsToStart() throws SQLException {
+        List<Integer> years = new ArrayList<>();
+        String query = "SELECT year FROM tblEvent WHERE status = 0";
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query);
+        if (rs != null) {
+            while (rs.next()) {
+                years.add(rs.getInt("year"));
+            }
+        }
+        return years;
+    }
+
+    public void startNewEvent(int currentEvent, int selectedEvent) throws SQLException {
+        String query1 = "UPDATE tblEvent SET status = 2 WHERE year = ?";
+        String query2 = "UPDATE tblEvent SET status = 1 WHERE year = ?";
+        Connection conn = null;
+        PreparedStatement stmt1 = null;
+        PreparedStatement stmt2 = null;
+        try {
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
+            stmt1 = conn.prepareStatement(query1);
+            stmt2 = conn.prepareStatement(query2);
+            stmt1.setInt(1, currentEvent);
+            stmt1.executeUpdate();
+            stmt2.setInt(1, selectedEvent);
+            stmt2.executeUpdate();
+        } finally {
+            if (stmt1 != null && stmt2 != null) {
+                stmt1.close();
+                stmt2.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+    }
+
 }

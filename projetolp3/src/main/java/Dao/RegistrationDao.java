@@ -666,4 +666,20 @@ public class RegistrationDao {
         }
         return registrations;
     }
+
+    public boolean verifyIfRegistrations(int currentYear) throws SQLException{
+        int count = 0;
+        String query = "SELECT COUNT(*) FROM tblRegistration WHERE year = ? AND idStatus = 1 OR idStatus = 3";
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, currentYear);
+        if (rs != null && rs.next()) {
+            count = rs.getInt(1);
+        }
+        if(count > 0){
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
 }

@@ -51,7 +51,7 @@ public class EventAddController {
     private String logoPath = "";
 
     @FXML
-    public void initialize() {
+    public void initialize() throws SQLException {
         List<Country> countries = null;
         try {
             countries = CountryDao.getCountries();
@@ -59,8 +59,8 @@ public class EventAddController {
             throw new RuntimeException(e);
         }
         countryComboBox.getItems().addAll(countries);
-
-        int currentYear = java.time.LocalDate.now().getYear();
+        EventDao eventDao = new EventDao();
+        int currentYear = eventDao.getActualYear() + 1;
         for (int i = currentYear; i <= currentYear + 100; i++) {
             yearComboBox.getItems().add(i);
         }

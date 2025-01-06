@@ -286,8 +286,11 @@ public class AthletesViewController {
         Label localLabel = new Label("Local: " + (result.get(5) != null ? result.get(5).toString() : "N/A"));
         localLabel.getStyleClass().add("text-label");
 
+        Label positionLabel = new Label("Posição: " + (result.get(11) != null ? result.get(11).toString() + "º lugar" : "N/A"));
+        positionLabel.getStyleClass().add("text-label");
 
-        resultItem.getChildren().addAll(nameLabel, resultLabel, typeLabel, dateLabel, localLabel);
+
+        resultItem.getChildren().addAll(nameLabel, resultLabel, typeLabel, dateLabel, localLabel, positionLabel);
         return resultItem;
     }
 

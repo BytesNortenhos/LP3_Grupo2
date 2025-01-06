@@ -311,6 +311,7 @@ public class ResultDao {
                 result.add(rs.getString("teamId"));
                 result.add(rs.getString("scoringMeasure"));
                 result.add(rs.getString("metrica"));
+                result.add(rs.getString("position"));
                 results.add(result);
             }
         } else {
@@ -520,6 +521,34 @@ public class ResultDao {
                 int position = rs.getInt("position");
 
                 Result result = new Result(id, sport, athlete, null, date, Result, local, position);
+                results.add(result);
+            }
+        } else {
+            System.out.println("ResultSet is null. No results found.");
+        }
+        return results;
+    }
+    public List<List> getResultByTeam(int idTeam) throws SQLException {
+        String query = "SELECT DISTINCT r.result, " +
+                "r.position, r.date ,s.name as sportName, s.type as sportType, s.oneGame as oneGame, t.name as teamName, l.name as localName FROM tblResult as r " +
+                "LEFT JOIN tblSport as s ON r.idSport = s.idSport " +
+                "LEFT JOIN tblAthlete as a ON r.idAthlete = a.idAthlete " +
+                "LEFT JOIN tblTeam as t ON r.idTeam = t.idTeam " +
+                "LEFT JOIN tblLocal as l on r.idLocal = l.idLocal " +
+                "WHERE r.idTeam = ?;";
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idTeam);
+        List<List> results = new ArrayList<>();
+        if (rs != null) {
+            while (rs.next()) {
+                List<Object> result = new ArrayList<>();
+                result.add(rs.getString("result"));
+                result.add(rs.getString("sportName"));
+                result.add(rs.getString("sportType"));
+                result.add(rs.getDate("date"));
+                result.add(rs.getString("localName"));
+                result.add(rs.getString("position"));
+                result.add(rs.getString("oneGame"));
                 results.add(result);
             }
         } else {
