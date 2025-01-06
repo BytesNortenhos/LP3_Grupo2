@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SplitMenuButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<BorderPane fx:id="parent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="background" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.admin.EventStartController">
+    <top>
+        <fx:include source="menu.fxml" fx:id="menubar" />
+    </top>
+
+    <center>
+        <VBox spacing="10" alignment="CENTER">
+            <Label styleClass="loginText" text="INICIAR EVENTO" />
+            <ComboBox fx:id="yearComboBox" styleClass="registerDropBig" promptText="Escolha o ano do evento"/>
+            <Button styleClass="buttonEntrar" text="Iniciar evento" onAction="#startEvent" />
+        </VBox>
+    </center>
+</BorderPane>
