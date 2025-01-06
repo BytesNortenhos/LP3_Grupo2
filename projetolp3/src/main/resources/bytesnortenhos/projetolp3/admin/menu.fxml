@@ -23,6 +23,8 @@
                 <MenuItem text="Carregar equipas" onAction="#loadTeams"/>
                 <MenuItem text="Carregar modalidades" onAction="#loadSports"/>
                 <MenuItem text="Carregar atletas" onAction="#loadAthletes"/>
+                <MenuItem text="Histórico XML" onAction="#showHistoricXML"/>
+
             </items>
         </SplitMenuButton>
         <SplitMenuButton fx:id="locationSplitButton" styleClass="dropdownButton" text="Gerir locais">

@@ -22,6 +22,8 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -33,8 +35,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Objects;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.*;
 
 public class ViewsController {
     private static Stage stage;
@@ -64,6 +70,7 @@ public class ViewsController {
     private SplitMenuButton xmlSplitButton;
     @FXML
     private SplitMenuButton locationSplitButton;
+    private static final String UPLOAD_DIRECTORY = "src/main/java/DataXML_uploads";
 
 
 
@@ -637,4 +644,209 @@ public class ViewsController {
             alerta.show();
         }
     }
-}
+    @FXML
+    private void showHistoricXML() {
+        File uploadDir = new File(UPLOAD_DIRECTORY);
+        if (uploadDir.exists() && uploadDir.isDirectory()) {
+            List<File> allXmlFiles = getAllXmlFiles(uploadDir);
+            List<File> allXsdFiles = getAllXsdFiles(uploadDir);
+
+            allXmlFiles.sort((file1, file2) -> Long.compare(file2.lastModified(), file1.lastModified()));
+
+            VBox vbox = new VBox();
+
+            DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy_HH-mm-ss");
+            DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+
+            for (File file : allXmlFiles) {
+                if (file.getName().endsWith(".xml") && !file.getName().contains("xsd")) {
+                    String fileName = file.getName();
+                    int firstUnderscore = fileName.indexOf('_');
+                    int lastUnderscore = fileName.lastIndexOf('_');
+                    if (firstUnderscore != -1 && lastUnderscore != -1 && firstUnderscore != lastUnderscore) {
+                        String dateTimePart = fileName.substring(0, lastUnderscore);
+                        String restOfName = fileName.substring(lastUnderscore + 1);
+                        try {
+                            LocalDateTime dateTime = LocalDateTime.parse(dateTimePart, inputFormatter);
+                            String formattedDateTime = dateTime.format(outputFormatter);
+                            String displayName = formattedDateTime + " - " + restOfName;
+
+                            Button previewButton = new Button("Pré-visualizar " + displayName);
+                            previewButton.setOnAction(event -> previewAndInstallFile(file, allXmlFiles, allXsdFiles));
+
+                            vbox.getChildren().add(previewButton);
+                        } catch (DateTimeParseException e) {
+                        }
+                    }
+                }
+            }
+
+            ScrollPane scrollPane = new ScrollPane(vbox);
+            scrollPane.setFitToWidth(true);
+            scrollPane.setPrefHeight(400);
+
+            Stage stage = new Stage();
+            stage.setTitle("Histórico de XML");
+
+            Scene scene = new Scene(scrollPane, 650, 450);
+            stage.setScene(scene);
+            stage.show();
+        } else {
+            showError("Diretório não encontrado", "A pasta de uploads não foi encontrada.");
+        }
+    }
+
+    private String formatFileName(String fileName) {
+        String datePart = extractDateFromFile(fileName);
+        String formattedDate = formatDateString(datePart);
+        String namePart = fileName.substring(fileName.indexOf('_') + 1);
+        return formattedDate + " - " + namePart;
+    }
+
+    private int compareFileDate(File file1, File file2) {
+        String datePart1 = extractDateFromFile(file1.getName());
+        String datePart2 = extractDateFromFile(file2.getName());
+        return datePart2.compareTo(datePart1);
+    }
+
+    private String formatDateString(String dateString) {
+        try {
+            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyyMMdd");
+            Date date = inputFormat.parse(dateString);
+            SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy");
+            return outputFormat.format(date);
+        } catch (ParseException e) {
+            return dateString;
+        }
+    }
+
+    private String extractDateFromFile(String fileName) {
+        int underscoreIndex = fileName.indexOf('_');
+        if (underscoreIndex != -1) {
+            return fileName.substring(0, underscoreIndex);
+        }
+        return "";
+    }
+
+    private List<File> getAllXmlFiles(File uploadDir) {
+        List<File> xmlFiles = new ArrayList<>();
+        for (File file : Objects.requireNonNull(uploadDir.listFiles())) {
+            if (file.getName().endsWith(".xml") && !file.getName().contains("xsd")) {
+                xmlFiles.add(file);
+            }
+        }
+        return xmlFiles;
+    }
+
+    private List<File> getAllXsdFiles(File uploadDir) {
+        List<File> xsdFiles = new ArrayList<>();
+        for (File file : Objects.requireNonNull(uploadDir.listFiles())) {
+            if (file.getName().contains("xsd")) {
+                xsdFiles.add(file);
+            }
+        }
+        return xsdFiles;
+    }
+
+    private void previewAndInstallFile(File xmlFile, List<File> allXmlFiles, List<File> allXsdFiles) {
+        if (xmlFile.getName().endsWith(".xml")) {
+            try {
+                XMLUtils xmlUtils = new XMLUtils();
+                String content;
+
+                if (xmlFile.getName().contains("teams")) {
+                    Teams teams = xmlUtils.getTeamsDataXML(xmlFile.getAbsolutePath());
+                    content = teams.toString();
+                } else if (xmlFile.getName().contains("sports")) {
+                    Sports sports = xmlUtils.getSportsDataXML(xmlFile.getAbsolutePath());
+                    content = sports.toString();
+                } else if (xmlFile.getName().contains("athletes")) {
+                    Athletes athletes = xmlUtils.getAthletesDataXML(xmlFile.getAbsolutePath());
+                    content = athletes.toString();
+                } else {
+                    content = Files.readString(xmlFile.toPath());
+                }
+
+                if (showPreviewContent(content)) {
+                    File xsdFile = findMatchingXsd(xmlFile, allXsdFiles);
+                    if (xsdFile != null) {
+                        installFiles(xmlFile, xsdFile);
+                    } else {
+                        showError("XSD não encontrado", "Não foi encontrado um arquivo XSD correspondente.");
+                    }
+                }
+            } catch (JAXBException | IOException e) {
+                showError("Erro", "Falha ao pré-visualizar o arquivo XML.");
+            }
+        }
+    }
+
+    private File findMatchingXsd(File xmlFile, List<File> allXsdFiles) {
+        String xmlName = xmlFile.getName();
+        String datePart = xmlName.substring(0, xmlName.lastIndexOf('_'));
+
+        for (File file : allXsdFiles) {
+            if (file.getName().contains(datePart) && file.getName().contains("xsd")) {
+                return file;
+            }
+        }
+        return null;
+    }
+
+    private void installFiles(File xmlFile, File xsdFile) {
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        directoryChooser.setTitle("Escolha o diretório de instalação");
+
+        File selectedDirectory = directoryChooser.showDialog(null);
+        if (selectedDirectory != null) {
+            try {
+                File destinationXml = new File(selectedDirectory, xmlFile.getName());
+                Files.copy(xmlFile.toPath(), destinationXml.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+                File destinationXsd = new File(selectedDirectory, xsdFile.getName());
+                Files.copy(xsdFile.toPath(), destinationXsd.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+                showInfo("Sucesso", "Arquivos instalados com sucesso:\n" +
+                        "- " + xmlFile.getName() + "\n" +
+                        "- " + xsdFile.getName());
+            } catch (IOException e) {
+                showError("Erro", "Não foi possível instalar os arquivos.");
+            }
+        } else {
+            showInfo("Cancelado", "O caminho de instalação foi cancelado.");
+        }
+    }
+
+    public boolean showPreviewContent(String content) {
+        Alert dialog = new Alert(Alert.AlertType.CONFIRMATION);
+        dialog.setTitle("Pré-visualização de Conteúdo Para Download");
+        dialog.setHeaderText("Conteúdo do Arquivo XML:");
+        dialog.setContentText(null);
+
+        TextArea textArea = new TextArea(content);
+        textArea.setEditable(false);
+        textArea.setWrapText(true);
+        textArea.setPrefSize(600, 400);
+
+        dialog.getDialogPane().setContent(textArea);
+
+        ButtonType installButton = new ButtonType("Instalar XML & XSD", ButtonBar.ButtonData.OK_DONE);
+        ButtonType closeButton = new ButtonType("Fechar", ButtonBar.ButtonData.CANCEL_CLOSE);
+        dialog.getButtonTypes().setAll(installButton, closeButton);
+
+        return dialog.showAndWait().filter(response -> response == installButton).isPresent();
+    }
+
+    private void showInfo(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(message);
+        alert.showAndWait();
+    }
+
+    private void showError(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(message);
+        alert.showAndWait();
+    }}
