@@ -664,9 +664,9 @@ public class RegistrationDao {
         return registrations;
     }
 
-    public List<String> getCalendar(int idAthlete, String dataInicio, String dataFim) throws SQLException {
-        List<String> sports = new ArrayList<>();
-        String query = "SELECT s.*\n" +
+    public List<List> getCalendar(int idAthlete, String dataInicio, String dataFim) throws SQLException {
+        List<List> sports = new ArrayList<>();
+        String query = "SELECT s.*, r.idStatus AS status\n" +
                 "FROM dbo.tblSport s\n" +
                 "JOIN dbo.tblRegistration r ON s.idSport = r.idSport\n" +
                 "WHERE r.idAthlete = ? \n" +
@@ -678,7 +678,12 @@ public class RegistrationDao {
 
         if (rs != null) {
             while (rs.next()) {
-                String sport = rs.getString("name");
+                List<String> sport = new ArrayList<>();
+                sport.add(rs.getString("idSport"));
+                sport.add(rs.getString("name"));
+                sport.add(rs.getString("dataInicio"));
+                sport.add(rs.getString("dataFim"));
+                sport.add(rs.getString("status"));
                 sports.add(sport);
             }
         }
