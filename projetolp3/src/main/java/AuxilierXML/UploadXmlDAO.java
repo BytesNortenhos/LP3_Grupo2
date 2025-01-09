@@ -460,7 +460,7 @@ public class UploadXmlDAO {
      * Save XML and XSD files
      * @param pathXML {String} Path of XML file
      * @param pathXSD {String} Path of XSD file
-     * @return boolean
+     * @return ErrorHandler
      */
     public ErrorHandler saveXML(String pathXML, String pathXSD) {
         String pathSave = "src/main/java/DataXML_uploads/";
@@ -473,12 +473,34 @@ public class UploadXmlDAO {
         String formattedDateTime = currentDateTime.format(formatter);
 
         try {
-            Files.copy(fileXML.toPath(), Path.of(pathSave, formattedDateTime + "_" + fileXML.getName()), StandardCopyOption.REPLACE_EXISTING);
-            Files.copy(fileXSD.toPath(), Path.of(pathSave, formattedDateTime + "_" + fileXSD.getName()), StandardCopyOption.REPLACE_EXISTING);
+            // Process XML file name
+            String newXmlFileName = replaceOrAddDate(fileXML.getName(), formattedDateTime);
+            Files.copy(fileXML.toPath(), Path.of(pathSave, newXmlFileName), StandardCopyOption.REPLACE_EXISTING);
+
+            // Process XSD file name
+            String newXsdFileName = replaceOrAddDate(fileXSD.getName(), formattedDateTime);
+            Files.copy(fileXSD.toPath(), Path.of(pathSave, newXsdFileName), StandardCopyOption.REPLACE_EXISTING);
+
         } catch (IOException e) {
             return new ErrorHandler(false, e.getMessage());
         }
 
         return new ErrorHandler(true, "");
     }
-}
+
+    /**
+     * Replace the date in the file name or add it if not present.
+     * @param fileName {String} Original file name
+     * @param newDate {String} New date to insert
+     * @return String Updated file name
+     */
+    private String replaceOrAddDate(String fileName, String newDate) {
+        String datePattern = "\\d{2}-\\d{2}-\\d{4}_\\d{2}-\\d{2}-\\d{2}";
+
+        if (fileName.matches("^" + datePattern + ".*")) {
+
+            return fileName.replaceFirst(datePattern, newDate);
+        } else {
+            return newDate + "_" + fileName;
+        }
+    }}
