@@ -87,7 +87,7 @@ public class CalendarController {
 
     private void showDayEvents() throws SQLException {
         RegistrationDao registrationDao = new RegistrationDao();
-        List<List> calendars = registrationDao.getCalendar(LoginController.idAthlete);
+        List<List> calendars = registrationDao.getCalendarAthlete(LoginController.idAthlete);
         System.out.println(calendars.getFirst().getFirst());
     }
 
