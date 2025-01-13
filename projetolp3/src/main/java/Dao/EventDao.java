@@ -25,7 +25,7 @@ public class EventDao {
                 "c.idCountry, c.name AS countryName, c.continent " +
                 "FROM tblEvent e " +
                 "INNER JOIN tblCountry c ON e.idCountry = c.idCountry " +
-                "WHERE e.status=1 " +
+                "WHERE e.status=0 OR e.status=1 " +
                 "ORDER BY e.year DESC;");
         if (rs != null) {
             while (rs.next()) {
@@ -234,6 +234,16 @@ public class EventDao {
     }
 
     public int getActualYear() throws SQLException {
+        String query = "SELECT year FROM tblEvent ORDER BY year DESC";
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query);
+        if (rs != null && rs.next()) {
+            return rs.getInt(1);
+        } else {
+            return 0;
+        }
+    }
+    public int getActualYearToStart() throws SQLException {
         String query = "SELECT year FROM tblEvent WHERE status = 1";
         ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
         CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query);
