@@ -680,17 +680,39 @@ public class RegistrationDao {
         }
     }
 
-    public List<List> getCalendar(int idAthlete, String dataInicio, String dataFim) throws SQLException {
+    public List<List> getCalendarAthlete(int idAthlete) throws SQLException {
         List<List> sports = new ArrayList<>();
         String query = "SELECT s.*, r.idStatus AS status\n" +
                 "FROM dbo.tblSport s\n" +
                 "JOIN dbo.tblRegistration r ON s.idSport = r.idSport\n" +
-                "WHERE r.idAthlete = ? \n" +
-                "AND s.dataInicio >= ?\n" +
-                "AND s.dataFim <= ?";
+                "WHERE r.idAthlete = ?";
 
         ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
-        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idAthlete, dataInicio, dataFim);
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idAthlete);
+
+        if (rs != null) {
+            while (rs.next()) {
+                List<String> sport = new ArrayList<>();
+                sport.add(rs.getString("idSport"));
+                sport.add(rs.getString("name"));
+                sport.add(rs.getString("dataInicio"));
+                sport.add(rs.getString("dataFim"));
+                sport.add(rs.getString("status"));
+                sports.add(sport);
+            }
+        }
+        return sports;
+    }
+
+    public List<List> getCalendarAdmin(int year) throws SQLException {
+        List<List> sports = new ArrayList<>();
+        String query = "SELECT DISTINCT s.*, r.idStatus AS status\n" +
+                "FROM dbo.tblSport s\n" +
+                "JOIN dbo.tblRegistration r ON s.idSport = r.idSport\n" +
+                "WHERE r.year = ?";
+
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, year);
 
         if (rs != null) {
             while (rs.next()) {

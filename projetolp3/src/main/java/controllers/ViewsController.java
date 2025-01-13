@@ -106,7 +106,7 @@ public class ViewsController {
             boolean sucess = loginController.loginVerify(id, password, event);
             System.out.println(id);
             if (sucess) {
-//                teste(id);
+                //teste(id);
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Sucesso!");
                 alert.setHeaderText("Login efetuado com sucesso!");
@@ -125,19 +125,20 @@ public class ViewsController {
 
     public void teste(int id) throws SQLException {
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Data Inicio: ");
+        /*System.out.print("Data Inicio: ");
         String dataInicio = scanner.nextLine();
         System.out.print("Data Fim: ");
-        String dataFim = scanner.nextLine();
+        String dataFim = scanner.nextLine();*/
         RegistrationDao registrationDao = new RegistrationDao();
-        List<List> sports = registrationDao.getCalendar(id, dataInicio, dataFim);
-        for (List sport : sports) {
+        List<List> sports = registrationDao.getCalendarAthlete(id);
+        System.out.println();
+        /*for (List sport : sports) {
             System.out.println(sport.get(0));
             System.out.println(sport.get(1));
             System.out.println(sport.get(2));
             System.out.println(sport.get(3));
             System.out.println(sport.get(4));
-        }
+        }*/
         System.out.println("Terminado: ");
         for (List sport : sports) {
             if (sport.get(4).equals("4")){
@@ -146,8 +147,30 @@ public class ViewsController {
                 System.out.println(sport.get(3));
             }
         }
+        System.out.println();
         System.out.println("Por começar: ");
         for (List sport : sports) {
+            if (sport.get(4).equals("3")){
+                System.out.println(sport.get(1));
+                System.out.println(sport.get(2));
+                System.out.println(sport.get(3));
+            }
+        }
+        System.out.print("Ano: ");
+        int ano = scanner.nextInt();
+        List<List> sportsA = registrationDao.getCalendarAdmin(ano);
+        System.out.println();
+        System.out.println("Terminado: ");
+        for (List sport : sportsA) {
+            if (sport.get(4).equals("4")){
+                System.out.println(sport.get(1));
+                System.out.println(sport.get(2));
+                System.out.println(sport.get(3));
+            }
+        }
+        System.out.println();
+        System.out.println("Por começar: ");
+        for (List sport : sportsA) {
             if (sport.get(4).equals("3")){
                 System.out.println(sport.get(1));
                 System.out.println(sport.get(2));
