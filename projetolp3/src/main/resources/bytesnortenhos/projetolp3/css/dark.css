@@ -89,7 +89,7 @@
     -fx-prompt-text-fill: #1E1E1E;
     -fx-border-color: #9B9898;
 }
-.buttonReg:hover, .iconMoonNav:hover, .iconHomeNav:hover, #buttonRegSelect, .iconLogoutNav:hover{
+.buttonReg:hover, .iconMoonNav:hover, .iconHomeNav:hover, #buttonRegSelect, .iconLogoutNav:hover, .navButton:hover{
     -fx-background-color: #9B9898;
 }
 .labelHome{
@@ -194,6 +194,14 @@
 .scroll-pane .scroll-bar:vertical .thumb{
     -fx-background-color: #F7EED8;
 }
+.navButton{
+    -fx-font-size: 22px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #1E1E1E;
+    -fx-cursor: hand;
+    -fx-background-color: transparent;
+    -fx-min-height: 70px;
+}
 .dropdownButton {
     -fx-min-width: 200px;
     -fx-font-size: 22px;
@@ -202,6 +210,7 @@
     -fx-cursor: hand;
     -fx-background-color: transparent;
 }
+
 /* Background for the SplitMenuButton */
 .dropdownButton .split-menu-button {
     -fx-background-color: transparent;
@@ -496,4 +505,7 @@
     -fx-min-width: 140px;
     -fx-max-width: 140px;
     -fx-pref-width: 140px;
+}
+
+.calendarGrid{
 }

@@ -32,7 +32,9 @@ public class RegistrationDao {
     LEFT JOIN tblTeam t ON r.idTeam = t.idTeam
     LEFT JOIN tblSport s ON r.idSport = s.idSport
     LEFT JOIN tblRegistrationStatus rs ON r.idStatus = rs.idStatus 
-    WHERE r.idStatus = 1
+    LEFT JOIN tblEvent e ON r.year = e.year
+    WHERE r.idStatus = 1 
+    AND e.status = 1
     """;
 
         ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
@@ -664,20 +666,16 @@ public class RegistrationDao {
         return registrations;
     }
 
-    public boolean verifyIfRegistrations(int currentYear) throws SQLException{
+    public boolean verifyIfRegistrations(int currentYear) throws SQLException {
         int count = 0;
-        String query = "SELECT COUNT(*) FROM tblRegistration WHERE year = ? AND idStatus = 1 OR idStatus = 3";
+        String query = "SELECT COUNT(*) FROM tblRegistration WHERE year = ? AND (idStatus = 1 OR idStatus = 3)";
         ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
         CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, currentYear);
+        System.out.println("Query: " + query + " | Parameter: " + currentYear);
         if (rs != null && rs.next()) {
             count = rs.getInt(1);
         }
-        if(count > 0){
-            return true;
-        }
-        else {
-            return false;
-        }
+        return count > 0;
     }
 
     public List<List> getCalendarAthlete(int idAthlete) throws SQLException {

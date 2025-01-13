@@ -39,9 +39,7 @@ import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class HomeControllerAthlete {
@@ -228,8 +226,42 @@ public class HomeControllerAthlete {
         scrollContent.setSpacing(20);
         scrollContent.setFillWidth(true);
         scrollContent.getStyleClass().add("popup-scroll-pane");
+        Map<String, Set<String>> teamResultsMap = new LinkedHashMap<>();
+        Map<String, String> teamPositionMap = new HashMap<>();
+
         for (List result : results) {
-            VBox resultItem = createResultItem(result);
+            String teamName = result.get(3) != null ? result.get(3).toString() : null;
+            String resultText = "Resultado: " + result.get(0).toString();
+            String position = result.get(11) != null ? result.get(11).toString() : "N/A";
+
+            if (teamName != null) {
+                teamResultsMap.computeIfAbsent(teamName, k -> new LinkedHashSet<>()).add(resultText);
+                teamPositionMap.put(teamName, position);
+            } else {
+                VBox resultItem = createResultItem(result);
+                scrollContent.getChildren().add(resultItem);
+            }
+        }
+
+        for (Map.Entry<String, Set<String>> entry : teamResultsMap.entrySet()) {
+            String teamName = entry.getKey();
+            Set<String> teamResults = entry.getValue();
+            String teamPosition = teamPositionMap.get(teamName);
+
+            VBox resultItem = new VBox();
+            Label teamLabel = new Label(teamName);
+            teamLabel.getStyleClass().add("name-label");
+            resultItem.getChildren().add(teamLabel);
+
+            for (String resultText : teamResults) {
+                Label resultLabel = new Label(resultText);
+                resultLabel.getStyleClass().add("text-label");
+                resultItem.getChildren().add(resultLabel);
+            }
+            Label positionLabel = new Label("Posição: " + teamPosition + "º lugar");
+            positionLabel.getStyleClass().add("text-label");
+            resultItem.getChildren().add(positionLabel);
+
             scrollContent.getChildren().add(resultItem);
         }
 

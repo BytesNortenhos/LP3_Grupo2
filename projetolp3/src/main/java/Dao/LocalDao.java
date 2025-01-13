@@ -28,7 +28,8 @@ public class LocalDao {
                 c.idCountry, c.name AS countryName, c.continent
                 FROM tblLocal l
                 LEFT JOIN tblEvent e ON l.event = e.year
-                LEFT JOIN tblCountry c ON e.idCountry = c.idCountry;
+                LEFT JOIN tblCountry c ON e.idCountry = c.idCountry
+                WHERE e.status = 0 OR e.status = 1;
         """);
         if (rs != null) {
             while (rs.next()) {

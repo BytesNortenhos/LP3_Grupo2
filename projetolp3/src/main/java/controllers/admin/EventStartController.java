@@ -25,7 +25,7 @@ public class EventStartController {
 
     public void startEvent() throws SQLException {
         EventDao eventDao = new EventDao();
-        int currentEvent = eventDao.getActualYear();
+        int currentEvent = eventDao.getActualYearToStart();
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Iniciar evento");
         alert.setHeaderText("Ao iniciar um novo evento irá encerrar permanentemente o evento atual!");
