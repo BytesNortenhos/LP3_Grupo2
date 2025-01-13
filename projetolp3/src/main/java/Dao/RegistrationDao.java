@@ -678,17 +678,15 @@ public class RegistrationDao {
         return count > 0;
     }
 
-    public List<List> getCalendar(int idAthlete, String dataInicio, String dataFim) throws SQLException {
+    public List<List> getCalendar(int idAthlete) throws SQLException {
         List<List> sports = new ArrayList<>();
         String query = "SELECT s.*, r.idStatus AS status\n" +
                 "FROM dbo.tblSport s\n" +
                 "JOIN dbo.tblRegistration r ON s.idSport = r.idSport\n" +
-                "WHERE r.idAthlete = ? \n" +
-                "AND s.dataInicio >= ?\n" +
-                "AND s.dataFim <= ?";
+                "WHERE r.idAthlete = ?";
 
         ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
-        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idAthlete, dataInicio, dataFim);
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idAthlete);
 
         if (rs != null) {
             while (rs.next()) {
