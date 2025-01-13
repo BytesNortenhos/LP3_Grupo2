@@ -795,7 +795,7 @@ public class ViewsController {
 
     private void installFiles(File xmlFile, File xsdFile) {
         DirectoryChooser directoryChooser = new DirectoryChooser();
-        directoryChooser.setTitle("Escolha o diretório de instalação");
+        directoryChooser.setTitle("Escolha o diretório");
 
         File selectedDirectory = directoryChooser.showDialog(null);
         if (selectedDirectory != null) {
@@ -819,7 +819,7 @@ public class ViewsController {
 
     public boolean showPreviewContent(String content) {
         Alert dialog = new Alert(Alert.AlertType.CONFIRMATION);
-        dialog.setTitle("Pré-visualização de Conteúdo Para Download");
+        dialog.setTitle("Pré-visualização de Conteúdo Para Transferência");
         dialog.setHeaderText("Conteúdo do Arquivo XML:");
         dialog.setContentText(null);
 
