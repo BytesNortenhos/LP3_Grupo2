@@ -454,13 +454,18 @@ public class StartSportsController {
             String teamPosition = teamPositionMap.get(teamName);
 
             VBox resultItem = new VBox();
-            resultItem.getChildren().add(new Label(teamName));
+            Label teamLabel = new Label(teamName);
+            teamLabel.getStyleClass().add("name-label");
+            resultItem.getChildren().add(teamLabel);
 
             for (String resultText : teamResults) {
-                resultItem.getChildren().add(new Label(resultText));
+                Label resultLabel = new Label(resultText);
+                resultLabel.getStyleClass().add("text-label");
+                resultItem.getChildren().add(resultLabel);
             }
-
-            resultItem.getChildren().add(new Label("Posição: " + teamPosition));
+            Label positionLabel = new Label("Posição: " + teamPosition + "º lugar");
+            positionLabel.getStyleClass().add("text-label");
+            resultItem.getChildren().add(positionLabel);
 
             scrollContent.getChildren().add(resultItem);
         }

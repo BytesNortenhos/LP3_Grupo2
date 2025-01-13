@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<teams>
+    <team>
+        <name>Australia Opals</name>
+        <country>AUS</country>
+        <genre>Women</genre>
+        <sport>Basketball</sport>
+        <foundationYear>1984</foundationYear>
+        <olympicParticipations>
+            <participation>
+                <year>2000</year>
+                <result>Silver</result>
+            </participation>
+            <participation>
+                <year>2004</year>
+                <result>Silver</result>
+            </participation>
+            <participation>
+                <year>2008</year>
+                <result>Silver</result>
+            </participation>
+        </olympicParticipations>
+    </team>
+    <team>
+        <name>Kenya National Team</name>
+        <country>KEN</country>
+        <genre>Men</genre>
+        <sport>Cycling</sport>
+        <foundationYear>1973</foundationYear>
+        <olympicParticipations>
+            <participation>
+                <year>2016</year>
+                <result>Diploma</result>
+            </participation>
+            <participation>
+                <year>2020</year>
+                <result>Diploma</result>
+            </participation>
+        </olympicParticipations>
+    </team>
+    <team>
+        <name>Portugal National Team</name>
+        <country>PRT</country>
+        <genre>Men</genre>
+        <sport>Cycling</sport>
+        <foundationYear>2024</foundationYear>
+    </team>
+</teams>
