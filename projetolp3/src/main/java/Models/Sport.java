@@ -460,6 +460,17 @@ public class Sport {
     }
 
     /**
+     * Constructs a `Sport` object with the sport's ID and name.
+     *
+     * @param idSport The unique identifier for the sport.
+     * @param name The name of the sport.
+     */
+    public Sport(int idSport, String name) {
+        this.idSport = idSport;
+        this.name = name;
+    }
+
+    /**
      * Get Sport ID
      * @return int
      */

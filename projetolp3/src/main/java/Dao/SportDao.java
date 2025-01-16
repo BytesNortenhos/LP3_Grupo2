@@ -783,7 +783,31 @@ public class SportDao {
 
         return data;
     }
+    /**
+     * Retrieves all active sports (idStatus = 1) from the database.
+     *
+     * @return A list of {@link Sport} objects representing the available sports.
+     * @throws SQLException If there is an error accessing the database.
+     */
+    public List<Sport> getAvailableSports() throws SQLException {
+        List<Sport> sports = new ArrayList<>();
 
-}
+        String query = "SELECT idSport, name " +
+                "FROM tblSport " +
+                "WHERE idStatus = 1";
 
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query);
 
+        if (rs != null) {
+            while (rs.next()) {
+                int idSport = rs.getInt("idSport");
+                String name = rs.getString("name");
+
+                Sport sport = new Sport(idSport, name);
+                sports.add(sport);
+            }
+        }
+
+        return sports;
+    }  }

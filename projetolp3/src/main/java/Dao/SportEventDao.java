@@ -6,7 +6,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SportEventDao {
     /**
@@ -147,9 +149,14 @@ public class SportEventDao {
         String query = "SELECT * FROM tblSportEvent WHERE year = ?";
         ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
         CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, year);
-        if (rs != null && rs.next()) {
-            sportEvents.add(new SportEvent(rs.getInt("idSport"), rs.getInt("year")));
+        if (rs != null) {
+            while (rs.next()) {
+                int idSport = rs.getInt("idSport");
+                int yearFromDb = rs.getInt("year");
+                sportEvents.add(new SportEvent(idSport, yearFromDb));
+            }
         }
         return sportEvents;
-    }
-}
+    }}
+
+
