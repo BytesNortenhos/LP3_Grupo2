@@ -291,6 +291,60 @@ public class SportDao {
     }
 
     /**
+     * Verify metrica
+     * @param idSport {int} Id sport
+     * @return boolean
+     * @throws SQLException
+     */
+    public boolean verifyMetrica(int idSport) throws SQLException {
+        String query = "SELECT metrica " +
+                "FROM tblSport " +
+                "WHERE idSport = ?";
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idSport);
+        if (rs != null && rs.next()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Verify dates
+     * @param idSport {int} Id sport
+     * @return boolean
+     * @throws SQLException
+     */
+    public boolean verifyDates(int idSport) throws SQLException {
+        String query = "SELECT dataInicio, dataFim " +
+                "FROM tblSport " +
+                "WHERE idSport = ? AND (dataInicio IS NOT NULL AND dataFim IS NOT NULL)";
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idSport);
+        if (rs != null && rs.next()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Verify local
+     * @param idSport {int} Id sport
+     * @return boolean
+     * @throws SQLException
+     */
+    public boolean verifyLocal(int idSport) throws SQLException {
+        String query = "SELECT idlocal " +
+                "FROM tblSport " +
+                "WHERE idSport = ?";
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idSport);
+        if (rs != null && rs.next()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Booted sport
      * @param idSport {int} Id sport
      * @return boolean

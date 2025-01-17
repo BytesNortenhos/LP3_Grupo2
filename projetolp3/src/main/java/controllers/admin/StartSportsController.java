@@ -253,26 +253,44 @@ public class StartSportsController {
             try {
                 int idLocal = 0;
                 if (sportDao.verifyRanges(idSport)) {
-                    for (Local local : locals) {
-                        if (local.getName().equals(localComboBox.getValue())) {
-                            idLocal = local.getIdLocal();
+                    if (sportDao.verifyMetrica(idSport)) {
+                        if (sportDao.verifyDates(idSport)) {
+                            if (sportDao.verifyLocal(idSport)) {
+                                for (Local local : locals) {
+                                    if (local.getName().equals(localComboBox.getValue())) {
+                                        idLocal = local.getIdLocal();
+                                    }
+                                }
+                                if (sportStart(idSport, year, idLocal)) {
+                                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                                    alert.setTitle("Sucesso!");
+                                    alert.setHeaderText("Modalidade inicada com sucesso!");
+                                    List<List> sports = getSports(year);
+                                    displaySports(sports, year);
+                                    Optional<ButtonType> result = alert.showAndWait();
+                                }
+                            } else {
+                                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                                alert.setTitle("Aviso!");
+                                alert.setHeaderText("Modalidade não tem local registado!");
+                                Optional<ButtonType> result = alert.showAndWait();
+                            }
+                        } else {
+                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                            alert.setTitle("Aviso!");
+                            alert.setHeaderText("Modalidade não tem datas registadas!");
+                            Optional<ButtonType> result = alert.showAndWait();
                         }
-                    }
-                    if (sportStart(idSport, year, idLocal)) {
+                    } else {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                        alert.setTitle("Sucesso!");
-                        alert.setHeaderText("Modalidade inicada com sucesso!");
-                        List<List> sports = getSports(year);
-                        displaySports(sports, year);
+                        alert.setTitle("Aviso!");
+                        alert.setHeaderText("Modalidade não tem metrica registada!");
                         Optional<ButtonType> result = alert.showAndWait();
-//                           if (result.isPresent() && result.get() == ButtonType.OK) {
-//                               Platform.runLater(() -> startSportsContainer.getChildren().remove(requestItem));
-//                           }
                     }
                 } else {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Aviso!");
-                    alert.setHeaderText("Modalidade não pode ser iniciada sem resultados registados!");
+                    alert.setHeaderText("Modalidade não tem resultado minimo e máximo registado!");
                     Optional<ButtonType> result = alert.showAndWait();
                 }
             } catch (SQLException e) {
