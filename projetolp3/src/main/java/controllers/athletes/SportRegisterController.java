@@ -55,7 +55,7 @@ public class SportRegisterController {
             }
 
             for (List sport : sports) {
-                    sportsOptions.add(sport.get(3).toString());
+                sportsOptions.add(sport.get(3).toString());
             }
 
             sportsDrop.setItems(sportsOptions);
@@ -76,8 +76,8 @@ public class SportRegisterController {
             // Obter o ano atual
             // Filtrar eventos com ano atual ou posterior
             for (Event event : events) {
-                    String eventDisplay = event.getYear() + " - " + event.getCountry().getName();
-                    eventsOptions.add(eventDisplay);
+                String eventDisplay = event.getYear() + " - " + event.getCountry().getName();
+                eventsOptions.add(eventDisplay);
             }
 
             // Adicionar os eventos filtrados à ComboBox
@@ -89,7 +89,7 @@ public class SportRegisterController {
     }
 
     @FXML
-    private void registerSport(ActionEvent event)  throws IOException{
+    private void registerSport(ActionEvent event) throws IOException {
         int idStatus = 0;
         try {
 
@@ -100,7 +100,6 @@ public class SportRegisterController {
             }
 
 
-
             int athleteId = LoginController.idAthlete;
             AthleteDao athleteDao = new AthleteDao();
             Athlete athlete = athleteDao.getAthleteById(athleteId);
@@ -109,9 +108,9 @@ public class SportRegisterController {
                 System.out.println("Atleta não encontrado.");
                 return;
             }
-            if(selectedSport.getType().equals("Individual")) {
+            if (selectedSport.getType().equals("Individual")) {
                 idStatus = 3;
-            }else{
+            } else {
                 idStatus = 1;
             }
 
@@ -133,13 +132,12 @@ public class SportRegisterController {
             Registration registration = new Registration(0, athlete, selectedSport, status, year);
 
             RegistrationDao registrationDao = new RegistrationDao();
-            if(registrationDao.addRegistrationSolo(registration) == -1){
+            if (registrationDao.addRegistrationSolo(registration) == -1) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Erro!");
                 alert.setHeaderText("Já está inscrito nesta modalidade!");
                 alert.showAndWait();
-            }
-            else{
+            } else {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Sucesso!");
                 alert.setHeaderText("Inscrição realizada com sucesso na modalidade " + selectedSport.getName() + "!");
@@ -149,7 +147,6 @@ public class SportRegisterController {
                     viewsController.returnHomeMenu(event);
                 }
             }
-
 
 
         } catch (SQLException e) {

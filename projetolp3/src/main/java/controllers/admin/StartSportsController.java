@@ -187,7 +187,15 @@ public class StartSportsController {
                 requestItem.getChildren().addAll(nameLabel, typeLabel, genderLabel, minPart, numPart, buttonContainer);
                 startButton.setOnAction(event -> {
                     try {
-                        showPopUpLocal(event, year, idSport, mPart);
+                        int idLocal = 0;
+                        if (sportStart(idSport, year, idLocal)) {
+                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                            alert.setTitle("Sucesso!");
+                            alert.setHeaderText("Modalidade inicada com sucesso!");
+                            List<List> sports = getSports(year);
+                            displaySports(sports, year);
+                            Optional<ButtonType> result = alert.showAndWait();
+                        }
                     } catch (SQLException e) {
                         throw new RuntimeException(e);
                     }
@@ -221,89 +229,6 @@ public class StartSportsController {
 
         requestItem.setPrefWidth(500); // Ensure this width allows two items per line
         return requestItem;
-    }
-
-    public void showPopUpLocal(ActionEvent event, int year, int idSport, int mPart) throws SQLException {
-        Stage popupStage = new Stage();
-        popupStage.setTitle("Escolher local");
-
-
-        VBox vbox = new VBox(600);
-        vbox.setPadding(new Insets(10));
-        vbox.getStyleClass().add("popup-vbox");
-
-        vbox.setSpacing(20);
-        vbox.getChildren().clear();
-
-        Label titleLabel = new Label("Selecione o local pretendido:");
-        titleLabel.getStyleClass().add("name-label");
-
-        ComboBox<String> localComboBox = new ComboBox<>();
-
-        LocalDao localDao = new LocalDao();
-        List<Local> locals = localDao.getLocalsByYear(year);
-        for (Local local : locals) {
-            localComboBox.getItems().add(local.getName());
-        }
-        localComboBox.getStyleClass().add("registerDrop");
-
-        Button confirmButton = new Button("Confirmar");
-        confirmButton.getStyleClass().add("startButton");
-        confirmButton.setOnAction(event1 -> {
-            try {
-                int idLocal = 0;
-                if (sportDao.verifyRanges(idSport)) {
-                    if (sportDao.verifyMetrica(idSport)) {
-                        if (sportDao.verifyDates(idSport)) {
-                            if (sportDao.verifyLocal(idSport)) {
-                                for (Local local : locals) {
-                                    if (local.getName().equals(localComboBox.getValue())) {
-                                        idLocal = local.getIdLocal();
-                                    }
-                                }
-                                if (sportStart(idSport, year, idLocal)) {
-                                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                                    alert.setTitle("Sucesso!");
-                                    alert.setHeaderText("Modalidade inicada com sucesso!");
-                                    List<List> sports = getSports(year);
-                                    displaySports(sports, year);
-                                    Optional<ButtonType> result = alert.showAndWait();
-                                }
-                            } else {
-                                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                                alert.setTitle("Aviso!");
-                                alert.setHeaderText("Modalidade não tem local registado!");
-                                Optional<ButtonType> result = alert.showAndWait();
-                            }
-                        } else {
-                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                            alert.setTitle("Aviso!");
-                            alert.setHeaderText("Modalidade não tem datas registadas!");
-                            Optional<ButtonType> result = alert.showAndWait();
-                        }
-                    } else {
-                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                        alert.setTitle("Aviso!");
-                        alert.setHeaderText("Modalidade não tem metrica registada!");
-                        Optional<ButtonType> result = alert.showAndWait();
-                    }
-                } else {
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Aviso!");
-                    alert.setHeaderText("Modalidade não tem resultado minimo e máximo registado!");
-                    Optional<ButtonType> result = alert.showAndWait();
-                }
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        });
-
-        vbox.getChildren().addAll(titleLabel, localComboBox, confirmButton);
-
-        Scene scene = new Scene(vbox, 600, 450);
-        scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
-        popupStage.setScene(scene);
-        popupStage.show();
     }
 
     public void showRegistedAthletes(int idSport, int year) throws SQLException {
