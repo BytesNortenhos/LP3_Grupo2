@@ -701,16 +701,17 @@ public class RegistrationDao {
         }
         return sports;
     }
-
-    public List<List> getCalendarAdmin(int year) throws SQLException {
+    public List<List> getEventsDayAthlete(int idAthlete, int idSport) throws SQLException {
         List<List> sports = new ArrayList<>();
-        String query = "SELECT DISTINCT s.*, r.idStatus AS status\n" +
-                "FROM dbo.tblSport s\n" +
-                "JOIN dbo.tblRegistration r ON s.idSport = r.idSport\n" +
-                "WHERE r.year = ?";
+        String query = "SELECT s.*, r.idStatus AS status, l.name AS localName, l.address AS localAddress, l.city AS localCity  " +
+                "FROM tblSport s " +
+                "JOIN tblRegistration r ON s.idSport = r.idSport " +
+                "JOIN tblLocal l ON l.idLocal = s.idLocal " +
+                "WHERE r.idAthlete = ? " +
+                "AND s.idSport = ?";
 
         ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
-        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, year);
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idAthlete, idSport);
 
         if (rs != null) {
             while (rs.next()) {
@@ -720,6 +721,59 @@ public class RegistrationDao {
                 sport.add(rs.getString("dataInicio"));
                 sport.add(rs.getString("dataFim"));
                 sport.add(rs.getString("status"));
+                sport.add(rs.getString("localName"));
+                sport.add(rs.getString("localAddress"));
+                sport.add(rs.getString("localCity"));
+                sports.add(sport);
+            }
+        }
+        return sports;
+    }
+
+    public List<List> getCalendarAdmin() throws SQLException {
+        List<List> sports = new ArrayList<>();
+        String query = "SELECT DISTINCT s.*, r.idStatus AS status\n" +
+                "FROM dbo.tblSport s\n" +
+                "JOIN dbo.tblRegistration r ON s.idSport = r.idSport";
+
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query);
+
+        if (rs != null) {
+            while (rs.next()) {
+                List<String> sport = new ArrayList<>();
+                sport.add(rs.getString("idSport"));
+                sport.add(rs.getString("name"));
+                sport.add(rs.getString("dataInicio"));
+                sport.add(rs.getString("dataFim"));
+                sport.add(rs.getString("status"));
+                sports.add(sport);
+            }
+        }
+        return sports;
+    }
+    public List<List> getEventsDayAdmin(int idSport) throws SQLException {
+        List<List> sports = new ArrayList<>();
+        String query = "SELECT DISTINCT s.*, r.idStatus AS status, l.name AS localName, l.address AS localAddress, l.city AS localCity  " +
+                "FROM tblSport s " +
+                "JOIN tblRegistration r ON s.idSport = r.idSport " +
+                "JOIN tblLocal l ON l.idLocal = s.idLocal " +
+                "WHERE s.idSport = ?";
+
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idSport);
+
+        if (rs != null) {
+            while (rs.next()) {
+                List<String> sport = new ArrayList<>();
+                sport.add(rs.getString("idSport"));
+                sport.add(rs.getString("name"));
+                sport.add(rs.getString("dataInicio"));
+                sport.add(rs.getString("dataFim"));
+                sport.add(rs.getString("status"));
+                sport.add(rs.getString("localName"));
+                sport.add(rs.getString("localAddress"));
+                sport.add(rs.getString("localCity"));
                 sports.add(sport);
             }
         }

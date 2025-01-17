@@ -1,7 +1,6 @@
-package controllers.athletes;
+package controllers.admin;
 
 import Dao.RegistrationDao;
-import Dao.ResultDao;
 import bytesnortenhos.projetolp3.Main;
 import controllers.LoginController;
 import javafx.fxml.FXML;
@@ -118,7 +117,7 @@ public class CalendarController {
 
     private void loadDaysEvents() throws SQLException {
         RegistrationDao registrationDao = new RegistrationDao();
-        List<List> calendars = registrationDao.getCalendarAthlete(LoginController.idAthlete);
+        List<List> calendars = registrationDao.getCalendarAdmin();
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -164,6 +163,7 @@ public class CalendarController {
         popupStage.show();
     }
     private void displayEvents(VBox vbox, List<Integer> selectedDay) throws SQLException {
+        System.out.println(selectedDay);
         vbox.getChildren().clear();
         vbox.setSpacing(20);
 
@@ -179,7 +179,7 @@ public class CalendarController {
         RegistrationDao registrationDao = new RegistrationDao();
 
         for (int idSport : selectedDay) {
-            List<List> calendars = registrationDao.getEventsDayAthlete(LoginController.idAthlete, idSport);
+            List<List> calendars = registrationDao.getEventsDayAdmin(idSport);
 
             for (List event : calendars) {
                 Label eventLabel = new Label(String.valueOf(event.get(1)));
