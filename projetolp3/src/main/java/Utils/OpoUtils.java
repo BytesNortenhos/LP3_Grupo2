@@ -90,4 +90,28 @@ public class OpoUtils {
             return new ErrorHandler(false, "Erro: " + e.getMessage());
         }
     }
+
+    public ErrorHandler getGames() {
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("https://services.inapa.com/opo/api/game/"))
+                .header("Authorization", authHeader)
+                .header("Content-Type", "application/json")
+                .GET()
+                .build();
+
+        try {
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if(response.statusCode() != 200) return new ErrorHandler(false, "Erro: " + response.body());
+            Gson gson = new Gson();
+            Type type = new TypeToken<Map<String, Object>>() {}.getType();
+            Map<String, Object> responseJson = gson.fromJson(response.body(), type);
+
+            List<Map<String, Object>> games = (List<Map<String, Object>>) responseJson.get("Clients");
+            return new ErrorHandler(true, "Games obtidos com sucesso.", games);
+        } catch (IOException | InterruptedException | JsonSyntaxException | IllegalStateException e) {
+            return new ErrorHandler(false, "Erro: " + e.getMessage());
+        }
+    }
 }
