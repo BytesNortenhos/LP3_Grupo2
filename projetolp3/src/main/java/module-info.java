@@ -6,6 +6,8 @@ module bytesnortenhos.projetolp3 {
     requires jakarta.xml.bind;
     requires java.desktop;
     requires java.dotenv;
+    requires java.net.http;
+    requires com.google.gson;
 
 
     opens bytesnortenhos.projetolp3 to javafx.fxml;
