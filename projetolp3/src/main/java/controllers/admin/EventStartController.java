@@ -6,6 +6,8 @@ import Dao.SportDao;
 import Dao.SportEventDao;
 import Models.Sport;
 import Models.SportEvent;
+import Utils.ErrorHandler;
+import Utils.OpoUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -164,7 +166,12 @@ public class EventStartController {
         SportEventDao sportEventDao = new SportEventDao();
         for (int idSport : selectedSports) {
             SportEvent sportEvent = new SportEvent(idSport, nextYear);
-            sportEventDao.addSportEvent(sportEvent);
+            int insertedId = sportEventDao.addSportEvent(sportEvent);
+            if(insertedId == -1 || insertedId == 0) { System.out.println("> Erro ao obter id adicionado."); continue; }
+
+            OpoUtils opoUtils = new OpoUtils();
+            ErrorHandler errorHandler = opoUtils.addNovaProva(idSport, insertedId);
+            if(!errorHandler.isSuccessful()) System.out.println("> Erro ao adicionar prova: " + errorHandler.getMessage());
         }
     }
 

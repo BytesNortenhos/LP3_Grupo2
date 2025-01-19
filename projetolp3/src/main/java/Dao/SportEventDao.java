@@ -4,6 +4,7 @@ import Utils.ConnectionsUtlis;
 import javax.sql.rowset.CachedRowSet;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,8 +26,9 @@ public class SportEventDao {
             while (rs.next()) {
                 int idSport = rs.getInt("idSport");
                 int year = rs.getInt("year");
+                String guidApi = rs.getString("guidApi");
 
-                SportEvent sportEvent = new SportEvent(idSport, year);
+                SportEvent sportEvent = new SportEvent(idSport, year, guidApi);
                 sportEvents.add(sportEvent);
             }
         } else {
@@ -41,23 +43,46 @@ public class SportEventDao {
      * @param sportEvent {SportEvent} Sport Event
      * @throws SQLException
      */
-    public void addSportEvent(SportEvent sportEvent) throws SQLException {
-        String query = "INSERT INTO tblSportEvent (idSport,year) VALUES (?,?)";
+    public int addSportEvent(SportEvent sportEvent) throws SQLException {
+        String insertQuery = "INSERT INTO tblSportEvent (idSport, year) VALUES (?, ?)";
+        String maxIdQuery = "SELECT MAX(id) AS max_id FROM tblSportEvent";
         Connection conn = null;
-        PreparedStatement stmt = null;
+        PreparedStatement insertStmt = null;
+        PreparedStatement maxIdStmt = null;
         try {
             ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
             conn = connectionsUtlis.dbConnect();
-            stmt = conn.prepareStatement(query);
+            conn.setAutoCommit(false); // Start transaction
 
-            stmt.setInt(1, sportEvent.getIdSport());
-            stmt.setInt(2, sportEvent.getYear());
-            stmt.executeUpdate();
+            insertStmt = conn.prepareStatement(insertQuery);
+            insertStmt.setInt(1, sportEvent.getIdSport());
+            insertStmt.setInt(2, sportEvent.getYear());
+            insertStmt.executeUpdate();
+
+            maxIdStmt = conn.prepareStatement(maxIdQuery);
+            ResultSet rs = maxIdStmt.executeQuery();
+            if (rs.next()) {
+                int maxId = rs.getInt("max_id");
+                conn.commit(); // Commit transaction
+                return maxId;
+            } else {
+                conn.rollback(); // Rollback transaction if no id obtained
+                throw new SQLException("Creating sport event failed, no id obtained.");
+            }
+        } catch (SQLException e) {
+            if (conn != null) {
+                conn.rollback(); // Rollback transaction on error
+            }
+            throw e;
         } finally {
-            if (stmt != null) {
-                stmt.close();
+            if (insertStmt != null) {
+                insertStmt.close();
+            }
+            if (maxIdStmt != null) {
+                maxIdStmt.close();
             }
             if (conn != null) {
+                conn.setAutoCommit(true); // Reset auto-commit
                 conn.close();
             }
         }
@@ -132,7 +157,7 @@ public class SportEventDao {
         ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
         CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idSport);
         if (rs != null && rs.next()) {
-            sportEvents.add(new SportEvent(rs.getInt("idSport"), rs.getInt("year")));
+            sportEvents.add(new SportEvent(rs.getInt("idSport"), rs.getInt("year"), rs.getString("guidApi")));
         }
         return sportEvents;
     }
@@ -153,10 +178,36 @@ public class SportEventDao {
             while (rs.next()) {
                 int idSport = rs.getInt("idSport");
                 int yearFromDb = rs.getInt("year");
-                sportEvents.add(new SportEvent(idSport, yearFromDb));
+                String guidApi = rs.getString("guidApi");
+                sportEvents.add(new SportEvent(idSport, yearFromDb, guidApi));
             }
         }
         return sportEvents;
-    }}
+    }
 
+    public boolean updateGuidApi(String guidApi, int eventId) throws SQLException {
+        String query = "UPDATE tblSportEvent SET guidApi = ? WHERE id = ?";
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        try {
+            ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+            conn = connectionsUtlis.dbConnect();
+            stmt = conn.prepareStatement(query);
+            stmt.setString(1, guidApi);
+            stmt.setInt(2, eventId);
+            stmt.executeUpdate();
 
+            return true;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return false;
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+    }
+}

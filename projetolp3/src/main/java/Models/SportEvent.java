@@ -3,6 +3,7 @@ package Models;
 public class SportEvent {
     private int idSport;
     private int year;
+    private String guidApi;
 
     /**
      * Constructor of SportEvent
@@ -13,6 +14,19 @@ public class SportEvent {
     public SportEvent(int idSport, int year) {
         this.idSport = idSport;
         this.year = year;
+    }
+
+    /**
+     * Constructor of SportEvent
+     *
+     * @param idSport {int} Sport ID
+     * @param year    {int} Year
+     * @param guidApi {String} GUID API
+     */
+    public SportEvent(int idSport, int year, String guidApi) {
+        this.idSport = idSport;
+        this.year = year;
+        this.guidApi = guidApi;
     }
 
     /**
@@ -49,6 +63,22 @@ public class SportEvent {
      */
     public void setYear(int year) {
         this.year = year;
+    }
+
+    /**
+     * Get GUID API
+     * @return String
+     */
+    public String getGuidApi() {
+        return guidApi;
+    }
+
+    /**
+     * Set GUID API
+     * @param guidApi {String} GUID API
+     */
+    public void setGuidApi(String guidApi) {
+        this.guidApi = guidApi;
     }
 }
 

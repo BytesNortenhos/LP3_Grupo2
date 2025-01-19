@@ -503,6 +503,40 @@ public class SportDao {
     }
 
     /**
+     * Get sport for API
+     * @param idSport {int} Id sport
+     * @return {String} Sport with Location Info
+     * @throws SQLException
+     */
+    public String getSportForAPI(int idSport) throws SQLException {
+        String query = "SELECT\n" +
+                "    S.dataInicio AS StartDate,\n" +
+                "    S.dataFim AS EndDate,\n" +
+                "    L.name AS Location,\n" +
+                "    S.name AS Sport,\n" +
+                "    L.capacity AS Capacity\n" +
+                "FROM\n" +
+                "    tblSport S\n" +
+                "    INNER JOIN tblLocal L ON S.idLocal = L.idLocal\n" +
+                "WHERE\n" +
+                "    S.idSport = ?";
+
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idSport);
+        if (rs != null && rs.next()) {
+            String startDate = rs.getString("StartDate");
+            String endDate = rs.getString("EndDate");
+            String location = rs.getString("Location");
+            String sport = rs.getString("Sport");
+            int capacity = rs.getInt("Capacity");
+
+            return startDate + "," + endDate + "," + location + "," + sport + "," + capacity;
+        }
+
+        return "";
+    }
+
+    /**
      * Get sport by id V2
      * @param idSport {int} Id sport
      * @return {Sport} Sport
