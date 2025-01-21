@@ -40,6 +40,7 @@
                 <MenuItem text="Visualizar eventos" onAction="#showViewEvent"/>
                 <MenuItem text="Iniciar evento" onAction="#showStartEvent"/>
                 <MenuItem text="Calendário de eventos" onAction="#showCalendar"/>
+                <MenuItem text="Gerir espectadores" onAction="#showSpectators"/>
             </items>
         </SplitMenuButton>
         <SplitMenuButton fx:id="sportSplitButton" styleClass="dropdownButton" text="Gerir modalidade">
