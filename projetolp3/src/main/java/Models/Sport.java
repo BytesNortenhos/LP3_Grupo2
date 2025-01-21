@@ -2,7 +2,9 @@ package Models;
 
 import jakarta.xml.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 public class Sport {
@@ -27,6 +29,7 @@ public class Sport {
     private List<WinnerOlympic> winnerOlympic;
     private List<Rule> rules;
 
+    private int idLocal;
     private int idGender; // Atributo para armazenar apenas o id do gênero
 
     /**
@@ -44,8 +47,8 @@ public class Sport {
      * @param rules {List<Rule>} List of rules
      */
     public Sport(int idSport, String type, Gender genre, String name, String desc, int minParticipants,
-                 String scoringMeasure, String oneGame, OlympicRecord olympicRecord, List<WinnerOlympic> winnerOlympic,
-                 List<Rule> rules) {
+                 String scoringMeasure, String oneGame, String metric, LocalDateTime startDate, LocalDateTime endDate, OlympicRecord olympicRecord, List<WinnerOlympic> winnerOlympic,
+                 List<Rule> rules, int idLocal, int resultMin, int resultMax) {
         this.idSport = idSport;
         this.type = type;
         this.genre = genre;
@@ -54,9 +57,15 @@ public class Sport {
         this.minParticipants = minParticipants;
         this.scoringMeasure = scoringMeasure;
         this.oneGame = oneGame;
+        this.metrica = metric;
+        this.dataInicio = startDate;
+        this.dataFim = endDate;
         this.olympicRecord = olympicRecord;
         this.winnerOlympic = winnerOlympic;
         this.rules = rules;
+        this.idLocal = idLocal;
+        this.resultMin = resultMin;
+        this.resultMax = resultMax;
     }
 
     /**
@@ -695,5 +704,12 @@ public class Sport {
     public String toString() {
         return String.format("Sport: {ID: %d, Type: %s, Gender: %s, Name: %s}",
                 idSport, type, (genre != null ? genre.getDesc() : "Unknown"), name);
+    }
+    public int getIdLocal() {
+        return idLocal;
+    }
+
+    public void setIdLocal(int idLocal) {
+        this.idLocal = idLocal;
     }
 }

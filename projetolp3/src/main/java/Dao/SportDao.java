@@ -317,7 +317,7 @@ public class SportDao {
      * @throws SQLException
      */
     public static int addSport(Sport sport) throws SQLException {
-        String querySport = "INSERT INTO tblSport (type, idGender, name, description, minParticipants, scoringMeasure, oneGame, resultMin, resultMax, idStatus, metrica, dataInicio, dataFim) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String querySport = "INSERT INTO tblSport (type, idGender, name, description, minParticipants, scoringMeasure, oneGame, resultMin, resultMax, idStatus, metrica, dataInicio, dataFim, idLocal) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         String queryOlympicRecord = "INSERT INTO tblOlympicRecord (idSport, year) VALUES (?, ?)";
         Connection conn = null;
         PreparedStatement stmtSport = null;
@@ -344,6 +344,7 @@ public class SportDao {
             stmtSport.setString(11, sport.getMetrica());
             stmtSport.setTimestamp(12, java.sql.Timestamp.valueOf(sport.getDataInicio()));
             stmtSport.setTimestamp(13, java.sql.Timestamp.valueOf(sport.getDataFim()));
+            stmtSport.setInt(14, sport.getIdLocal());
 
             stmtSport.executeUpdate();
 

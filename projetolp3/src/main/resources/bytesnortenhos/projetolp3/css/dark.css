@@ -507,5 +507,56 @@
     -fx-pref-width: 140px;
 }
 
-.calendarGrid{
+.dataPicker {
+    -fx-background-color: transparent !important;
+    -fx-border-color: #F7EED8;
+    -fx-border-radius: 5;
+    -fx-min-width: 170px;
+    -fx-max-width: 170px;
+}
+
+.dataPicker .text-field {
+    -fx-control-inner-background: #3A3A38 ;
+    -fx-border-color: #F7EED8;
+    -fx-border-radius: 5;
+}
+.dataPicker .arrow-button {
+    -fx-background-color: transparent;
+    -fx-background-radius: 0;
+    -fx-border-color: #F7EED8;
+}
+
+.dataPicker .arrow-button:hover {
+    -fx-background-color: #F7EED8;
+}
+.dataPicker .date-picker-popup .month-year-pane {
+    -fx-background-color: #F7EED8;
+    -fx-text-fill: #3A3A38;
+}
+
+.dataPicker .cell {
+    -fx-background-color: #3A3A38;
+    -fx-text-fill: #F7EED8;
+}
+
+.dataPicker .cell:hover {
+    -fx-background-color: #F7EED8;
+    -fx-text-fill: #121215;
+}
+
+.dataPicker .cell:focused {
+    -fx-background-color: #F7EED8;
+    -fx-text-fill: #3A3A38;
+}
+
+.dataPicker-popup  {
+    -fx-border-color: transparent;
+    -fx-background-color: #3A3A38;
+}
+.dataPicker .week-number-cell,
+.dataPicker .week-number-cell:even,
+.dataPicker .week-number-cell:odd {
+    -fx-background-color: #F7EED8;
+    -fx-text-fill: #3A3A38;
+    -fx-border-color: #9B9898;
 }

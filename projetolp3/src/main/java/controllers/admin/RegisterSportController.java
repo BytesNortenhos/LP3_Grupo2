@@ -1,52 +1,23 @@
 package controllers.admin;
 
-import AuxilierXML.Athletes;
-import AuxilierXML.Sports;
-import AuxilierXML.Teams;
-import AuxilierXML.UploadXmlDAO;
-import Dao.EventDao;
-import Dao.GenderDao;
-import Dao.RuleDao;
+import Dao.*;
 import Models.Gender;
-import Dao.SportDao;
+import Models.Local;
 import Models.Rule;
 import Models.Sport;
-import Utils.XMLUtils;
-import bytesnortenhos.projetolp3.Main;
-import controllers.ViewsController;
-import jakarta.xml.bind.JAXBException;
-import jakarta.xml.bind.UnmarshalException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.geometry.Rectangle2D;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
-import javafx.stage.FileChooser;
-import javafx.stage.Screen;
-import javafx.stage.Stage;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class RegisterSportController {
     @FXML
-    private TextArea rulesTextArea;
+    private TextField rulesTextArea;
 
     @FXML
     private TextField minText;
@@ -56,7 +27,6 @@ public class RegisterSportController {
     @FXML
     private TextField descText;
 
-
     private List<String> rules = new ArrayList<>();
 
     @FXML
@@ -64,15 +34,26 @@ public class RegisterSportController {
     @FXML
     private ComboBox<String> typeDrop;
     @FXML
+    private ComboBox<String> oneGameDrop;
+    @FXML
     private ComboBox<String> scoringDrop;
     @FXML
-    private ComboBox<String> oneGameDrop;
+    private ComboBox<String> metricDrop;
+    @FXML
+    private DatePicker startDataPicker;
+    @FXML
+    private DatePicker endDataPicker;
+    @FXML
+    private ComboBox<LocalWrapper> localDrop;
+    @FXML
+    private TextField scoreMinText;
+    @FXML
+    private TextField scoreMaxText;
 
     public void initialize() {
         loadGenders();
-
+        loadLocals();
         loadTypes();
-        loadScoringMeasures();
         loadOneGameOptions();
     }
 
@@ -92,10 +73,47 @@ public class RegisterSportController {
             e.printStackTrace();
         }
     }
+    public class LocalWrapper {
+        private final int idLocal;
+        private final String name;
+
+        public LocalWrapper(int idLocal, String name) {
+            this.idLocal = idLocal;
+            this.name = name;
+        }
+
+        public int getIdLocal() {
+            return idLocal;
+        }
+
+        @Override
+        public String toString() {
+            return name;
+        }
+    }
+    private void loadLocals() {
+        try {
+            localDrop.getItems().clear();
+            EventDao eventDao = new EventDao();
+            int year = eventDao.getActualYear();
+            LocalDao localDao = new LocalDao();
+            List<Local> locals = localDao.getLocalsByYear(year);
+            ObservableList<LocalWrapper> localOptions = FXCollections.observableArrayList();
+
+            for (Local local : locals) {
+                localOptions.add(new LocalWrapper(local.getIdLocal(), local.getName()));
+            }
+
+            localDrop.setItems(localOptions);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     @FXML
     private void registerSport() {
         try {
+            LocalWrapper selectedLocal = (LocalWrapper) localDrop.getValue();
             String name = nameText.getText();
             String type = typeDrop.getValue();
             String description = descText.getText();
@@ -103,9 +121,15 @@ public class RegisterSportController {
             String scoringMeasure = scoringDrop.getValue();
             String oneGame = oneGameDrop.getValue();
             String selectedGenderDesc = genderDrop.getValue();
+            String metric = metricDrop.getValue();
+            LocalDateTime startData = startDataPicker.getValue().atStartOfDay();
+            LocalDateTime endData = endDataPicker.getValue().atStartOfDay();
+            int idLocal = selectedLocal.getIdLocal();
+            String scoreMin = scoreMinText.getText();
+            String scoreMax = scoreMaxText.getText();
 
             if (name.isEmpty() || type == null || selectedGenderDesc == null || description.isEmpty() || minParticipantsText.isEmpty() ||
-                    scoringMeasure == null || oneGame == null) {
+                    scoringMeasure == null || oneGame == null || metric == null || idLocal == 0 || scoreMin.isEmpty() || scoreMax.isEmpty()) {
                 showAlert("Erro de Validação", "Por favor, preencha todos os campos obrigatórios!", Alert.AlertType.ERROR);
                 return;
             }
@@ -131,6 +155,28 @@ public class RegisterSportController {
                 showAlert("Erro de Validação", "Formato inválido para o número mínimo de participantes!", Alert.AlertType.ERROR);
                 return;
             }
+            int minScroring;
+            try {
+                minScroring = Integer.parseInt(scoreMin);
+                if (minScroring < 0) {
+                    showAlert("Erro de Validação", "O número mínimo de resultado deve ser pelo menos 0!", Alert.AlertType.ERROR);
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                showAlert("Erro de Validação", "Formato inválido para o número mínimo de resultado!", Alert.AlertType.ERROR);
+                return;
+            }
+            int maxScroring;
+            try {
+                maxScroring = Integer.parseInt(scoreMax);
+                if (maxScroring <= minScroring) {
+                    showAlert("Erro de Validação", "O número máximo de resultado deve ser maior que o número mínimo!", Alert.AlertType.ERROR);
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                showAlert("Erro de Validação", "Formato inválido para o número máximo de resultado!", Alert.AlertType.ERROR);
+                return;
+            }
 
             int genderId = selectedGenderDesc.equals("Masculino") ? 1 : 2;
             Gender selectedGender = new Gender(genderId, selectedGenderDesc);
@@ -144,9 +190,15 @@ public class RegisterSportController {
                     minParticipants,
                     scoringMeasure,
                     oneGame,
+                    metric,
+                    startData,
+                    endData,
                     null,
                     null,
-                    null
+                    null,
+                    idLocal,
+                    minScroring,
+                    maxScroring
             );
 
             int sportId = SportDao.addSport(newSport);
@@ -226,12 +278,21 @@ public class RegisterSportController {
         ObservableList<String> types = FXCollections.observableArrayList("Individual", "Collective");
         typeDrop.setItems(types);
     }
-    private void loadScoringMeasures() {
-        ObservableList<String> scoringMeasures = FXCollections.observableArrayList("Points", "Time");
-        scoringDrop.setItems(scoringMeasures);
-    }
     private void loadOneGameOptions() {
         ObservableList<String> gameOptions = FXCollections.observableArrayList("One", "Multiple");
         oneGameDrop.setItems(gameOptions);
+    }
+
+    @FXML
+    private void getMetricDrop() {
+        String scoreType = scoringDrop.getValue();
+        if (scoreType.equals("Time")) {
+           metricDrop.setItems(FXCollections.observableArrayList("Milisegundos", "Segundos", "Minutos"));
+        } if(scoreType.equals("Points")) {
+            metricDrop.setItems(FXCollections.observableArrayList("Pontos"));
+        }
+        if (scoreType.equals("Distance")){
+            metricDrop.setItems(FXCollections.observableArrayList("Centímetros", "Metros", "Kilómetros"));
+        }
     }
 }

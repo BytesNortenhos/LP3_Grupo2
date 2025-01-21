@@ -27,10 +27,9 @@
         <VBox alignment="CENTER">
             <Label styleClass="loginText" text="REGISTAR MODALIDADES" />
             <ImageView fx:id="iconSports" styleClass="iconOlympic" fitWidth="72" fitHeight="72" preserveRatio="true" />
-            <TextField styleClass="userNameText" fx:id="nameText"  promptText="Nome da modalidade" />
-            <TextField styleClass="userNameText" fx:id="descText" style="-fx-translate-y: -60px;"  promptText="Descrição da modalidade" />
-            <HBox style="-fx-translate-y: -40px; -fx-max-width: 350px">
-                <ComboBox fx:id="genderDrop" styleClass="registerDrop" promptText="Género" />
+            <TextField styleClass="userNameText" style="-fx-translate-y: -100px;" fx:id="nameText"  promptText="Nome da modalidade" />
+            <HBox style="-fx-translate-y: -80px; -fx-max-width: 350px">
+            <TextField styleClass="userNameText" style="-fx-translate-y: 0; -fx-min-width: 170px; -fx-max-width: 170px;" fx:id="descText" promptText="Descrição da modalidade" />
                 <ComboBox fx:id="typeDrop" styleClass="registerDrop" promptText="Tipo" style="-fx-translate-x: 10px">
                     <items>
                         <FXCollections fx:factory="observableArrayList">
@@ -40,32 +39,50 @@
                     </items>
                 </ComboBox>
             </HBox>
+            <HBox style="-fx-translate-y: -60px; -fx-max-width: 350px">
+                <ComboBox fx:id="genderDrop" styleClass="registerDrop" promptText="Género" />
+                <ComboBox fx:id="localDrop" styleClass="registerDrop" promptText="Local" style="-fx-translate-x: 10px"/>
+            </HBox>
+            <HBox style="-fx-translate-y: -40px; -fx-max-width: 350px;">
+            <TextField styleClass="registerTextSmall" fx:id="scoreMinText"  promptText="Resultado mínimo" />
+                <TextField styleClass="registerTextSmall" fx:id="scoreMaxText"  promptText="Resultado máximo" style="-fx-translate-x: 10px"/>
+            </HBox>
             <HBox style="-fx-translate-y: -20px; -fx-max-width: 350px;">
                 <TextField styleClass="registerTextSmall" fx:id="minText"  promptText="Minímo de participantes" />
-                <ComboBox fx:id="scoringDrop" styleClass="registerDrop" promptText="Tipo de pontos" style="-fx-translate-x: 10px">
+                <ComboBox fx:id="oneGameDrop" styleClass="registerDrop"  promptText="Número de jogos" style="-fx-translate-x: 10px">
                     <items>
                         <FXCollections fx:factory="observableArrayList">
-                            <String fx:value="Points" />
-                            <String fx:value="Time" />
+                            <String fx:value="One" />
+                            <String fx:value="Multiple" />
                         </FXCollections>
                     </items>
                 </ComboBox>
             </HBox>
-            <ComboBox fx:id="oneGameDrop" styleClass="registerDropBig"  promptText="Número de jogos">
-                <items>
-                    <FXCollections fx:factory="observableArrayList">
-                        <String fx:value="One" />
-                        <String fx:value="Multiple" />
-                    </FXCollections>
-                </items>
-            </ComboBox>
+            <HBox style="-fx-translate-y: 0px; -fx-max-width: 350px;">
+                <ComboBox fx:id="scoringDrop" styleClass="registerDrop" onAction="#getMetricDrop" promptText="Tipo de pontos">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="Points" />
+                            <String fx:value="Time" />
+                            <String fx:value="Distance" />
+                        </FXCollections>
+                    </items>
+                </ComboBox>
+                <ComboBox fx:id="metricDrop" styleClass="registerDrop"  promptText="Métrica" style="-fx-translate-x: 10px">
+                    <items>
+                    </items>
+                </ComboBox>
+            </HBox>
+            <HBox style="-fx-translate-y: 20px; -fx-max-width: 350px;">
+                <DatePicker fx:id="startDataPicker" styleClass="dataPicker"  promptText="Data de início">
+                </DatePicker>
+                <DatePicker fx:id="endDataPicker" styleClass="dataPicker"  promptText="Data de fim" style="-fx-translate-x: 10px">
+                </DatePicker>
+            </HBox>
+            <TextField fx:id="rulesTextArea" styleClass="userNameText" promptText="Insira as regras da modalidade" style="-fx-translate-y: 40px;"/>
+            <Button styleClass="buttonEntrar" style="-fx-translate-y: 60px;" onAction="#addRule">Adicionar Regra</Button>
 
-            <!-- Campo para Regras -->
-            <Label styleClass="loginText2" text="Regras da modalidade" />
-            <TextArea fx:id="rulesTextArea" styleClass="userNameText" promptText="Insira as regras da modalidade" wrapText="true" prefHeight="100.0" style="-fx-translate-y: 20px;"/>
-            <Button styleClass="buttonEntrar" style="-fx-translate-y: 20px;" onAction="#addRule">Adicionar Regra</Button>
-
-            <Button styleClass="buttonEntrar"  style="-fx-translate-y: 20px;" onAction="#registerSport">Registar</Button>
+            <Button styleClass="buttonEntrar"  style="-fx-translate-y: 80px;" onAction="#registerSport">Registar</Button>
         </VBox>
     </center>
 </BorderPane>
