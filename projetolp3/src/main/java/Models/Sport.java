@@ -4,7 +4,6 @@ import jakarta.xml.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 public class Sport {
@@ -425,6 +424,59 @@ public class Sport {
     }
 
     /**
+     * Constructor of Sport
+     * @param idSport {int} Sport ID
+     * @param type {String} Type
+     * @param genre {Gender} Genre
+     * @param name {String} Name
+     * @param desc {String} Description
+     * @param minParticipants {int} Number minimum of participants
+     * @param scoringMeasure {String} Measure of scoring
+     * @param oneGame {String} "One Game"
+     * @param resultMin {int} Minimum result
+     * @param resultMax {int} Maximum result
+     * @param idStatus {int} Status ID
+     * @param metrica {String} Metric
+     * @param dataInicio {LocalDateTime} Start date
+     * @param dataFim {LocalDateTime} End date
+     * @param olympicRecord {OlympicRecord} Olympic record
+     * @param winnerOlympic {List<WinnerOlympic>} List of olympic winners
+     * @param rules {List<Rule>} List of rules
+     * @param idLocal {int} Local ID
+     */
+    public Sport(int idSport, String type, Gender genre, String name, String desc, int minParticipants, String scoringMeasure, String oneGame, int resultMin, int resultMax, int idStatus, String metrica, LocalDateTime dataInicio, LocalDateTime dataFim, OlympicRecord olympicRecord, List<WinnerOlympic> winnerOlympic, List<Rule> rules, int idLocal) {
+        this.idSport = idSport;
+        this.type = type;
+        this.genre = genre;
+        this.name = name;
+        this.desc = desc;
+        this.minParticipants = minParticipants;
+        this.scoringMeasure = scoringMeasure;
+        this.oneGame = oneGame;
+        this.resultMin = resultMin;
+        this.resultMax = resultMax;
+        this.idStatus = idStatus;
+        this.metrica = metrica;
+        this.dataInicio = dataInicio;
+        this.dataFim = dataFim;
+        this.olympicRecord = olympicRecord;
+        this.winnerOlympic = winnerOlympic;
+        this.rules = rules;
+        this.idLocal = idLocal;
+    }
+
+    /**
+     * Constructs a `Sport` object with the sport's ID and name.
+     *
+     * @param idSport The unique identifier for the sport.
+     * @param name The name of the sport.
+     */
+    public Sport(int idSport, String name) {
+        this.idSport = idSport;
+        this.name = name;
+    }
+
+    /**
      * Get Sport ID
      * @return int
      */
@@ -705,10 +757,35 @@ public class Sport {
         return String.format("Sport: {ID: %d, Type: %s, Gender: %s, Name: %s}",
                 idSport, type, (genre != null ? genre.getDesc() : "Unknown"), name);
     }
+
+    /**
+     * Get Gender ID
+     * @return int
+     */
+    public int getIdGender() {
+        return idGender;
+    }
+
+    /**
+     * Set Gender ID
+     * @param idGender {int} Gender ID
+     */
+    public void setIdGender(int idGender) {
+        this.idGender = idGender;
+    }
+
+    /**
+     * Get Local ID
+     * @return int
+     */
     public int getIdLocal() {
         return idLocal;
     }
 
+    /**
+     * Set Local ID
+     * @param idLocal {int} Local ID
+     */
     public void setIdLocal(int idLocal) {
         this.idLocal = idLocal;
     }

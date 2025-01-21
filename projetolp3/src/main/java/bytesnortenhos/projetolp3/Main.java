@@ -7,6 +7,8 @@ import AuxilierXML.UploadXmlDAO;
 import Dao.*;
 import Models.Team;
 import Utils.ConnectionsUtlis;
+import Utils.ErrorHandler;
+import Utils.OpoUtils;
 import Utils.XMLUtils;
 import controllers.admin.HomeController;
 import io.github.cdimascio.dotenv.Dotenv;
@@ -86,7 +88,9 @@ public class Main extends Application {
             dotenv.get("DB_HOST") == "" ||
             dotenv.get("DB_NAME") == "" ||
             dotenv.get("DB_USER") == "" ||
-            dotenv.get("DB_PASS") == ""
+            dotenv.get("DB_PASS") == "" ||
+            dotenv.get("API_USERNAME") == "" ||
+            dotenv.get("API_PASSWORD") == ""
         ) {
             System.out.println("> Ficheiro .ENV não configurado!");
             exit();
