@@ -187,7 +187,15 @@ public class StartSportsController {
                 requestItem.getChildren().addAll(nameLabel, typeLabel, genderLabel, minPart, numPart, buttonContainer);
                 startButton.setOnAction(event -> {
                     try {
-                        showPopUpLocal(event, year, idSport, mPart);
+                        int idLocal = 0;
+                        if (sportStart(idSport, year, idLocal)) {
+                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                            alert.setTitle("Sucesso!");
+                            alert.setHeaderText("Modalidade inicada com sucesso!");
+                            List<List> sports = getSports(year);
+                            displaySports(sports, year);
+                            Optional<ButtonType> result = alert.showAndWait();
+                        }
                     } catch (SQLException e) {
                         throw new RuntimeException(e);
                     }
@@ -221,71 +229,6 @@ public class StartSportsController {
 
         requestItem.setPrefWidth(500); // Ensure this width allows two items per line
         return requestItem;
-    }
-
-    public void showPopUpLocal(ActionEvent event, int year, int idSport, int mPart) throws SQLException {
-        Stage popupStage = new Stage();
-        popupStage.setTitle("Escolher local");
-
-
-        VBox vbox = new VBox(600);
-        vbox.setPadding(new Insets(10));
-        vbox.getStyleClass().add("popup-vbox");
-
-        vbox.setSpacing(20);
-        vbox.getChildren().clear();
-
-        Label titleLabel = new Label("Selecione o local pretendido:");
-        titleLabel.getStyleClass().add("name-label");
-
-        ComboBox<String> localComboBox = new ComboBox<>();
-
-        LocalDao localDao = new LocalDao();
-        List<Local> locals = localDao.getLocalsByYear(year);
-        for (Local local : locals) {
-            localComboBox.getItems().add(local.getName());
-        }
-        localComboBox.getStyleClass().add("registerDrop");
-
-        Button confirmButton = new Button("Confirmar");
-        confirmButton.getStyleClass().add("startButton");
-        confirmButton.setOnAction(event1 -> {
-            try {
-                int idLocal = 0;
-                if (sportDao.verifyRanges(idSport)) {
-                    for (Local local : locals) {
-                        if (local.getName().equals(localComboBox.getValue())) {
-                            idLocal = local.getIdLocal();
-                        }
-                    }
-                    if (sportStart(idSport, year, idLocal)) {
-                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                        alert.setTitle("Sucesso!");
-                        alert.setHeaderText("Modalidade inicada com sucesso!");
-                        List<List> sports = getSports(year);
-                        displaySports(sports, year);
-                        Optional<ButtonType> result = alert.showAndWait();
-//                           if (result.isPresent() && result.get() == ButtonType.OK) {
-//                               Platform.runLater(() -> startSportsContainer.getChildren().remove(requestItem));
-//                           }
-                    }
-                } else {
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Aviso!");
-                    alert.setHeaderText("Modalidade não pode ser iniciada sem resultados registados!");
-                    Optional<ButtonType> result = alert.showAndWait();
-                }
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        });
-
-        vbox.getChildren().addAll(titleLabel, localComboBox, confirmButton);
-
-        Scene scene = new Scene(vbox, 600, 450);
-        scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
-        popupStage.setScene(scene);
-        popupStage.show();
     }
 
     public void showRegistedAthletes(int idSport, int year) throws SQLException {

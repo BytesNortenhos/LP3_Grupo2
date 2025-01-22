@@ -106,7 +106,6 @@ public class ViewsController {
             boolean sucess = loginController.loginVerify(id, password, event);
             System.out.println(id);
             if (sucess) {
-                //teste(id);
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Sucesso!");
                 alert.setHeaderText("Login efetuado com sucesso!");
