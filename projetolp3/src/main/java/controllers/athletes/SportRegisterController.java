@@ -23,8 +23,12 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -132,19 +136,32 @@ public class SportRegisterController {
             Registration registration = new Registration(0, athlete, selectedSport, status, year);
 
             RegistrationDao registrationDao = new RegistrationDao();
-            if (registrationDao.addRegistrationSolo(registration) == -1) {
+            if (registrationDao.isRegistrationExists(registration)) {
+                System.out.println("ja ta inscrito");
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Erro!");
                 alert.setHeaderText("Já está inscrito nesta modalidade!");
                 alert.showAndWait();
             } else {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Sucesso!");
-                alert.setHeaderText("Inscrição realizada com sucesso na modalidade " + selectedSport.getName() + "!");
-                Optional<ButtonType> result = alert.showAndWait();
-                if (result.isPresent() && result.get() == ButtonType.OK) {
-                    ViewsController viewsController = new ViewsController();
-                    viewsController.returnHomeMenu(event);
+                System.out.println("vai verificar datas");
+                if (verifyDates(athlete.getIdAthlete(), selectedSport.getIdSport()) == 0) {
+                    System.out.println("aprovou datas");
+                    registrationDao.insertRegistration(registration);
+                    System.out.println("inseriu registo");
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Sucesso!");
+                    alert.setHeaderText("Inscrição realizada com sucesso na modalidade " + selectedSport.getName() + "!");
+                    Optional<ButtonType> result = alert.showAndWait();
+                    if (result.isPresent() && result.get() == ButtonType.OK) {
+                        ViewsController viewsController = new ViewsController();
+                        viewsController.returnHomeMenu(event);
+                    }
+                } else {
+                    System.out.println("reprovou datas");
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Erro!");
+                    alert.setHeaderText("A data da modalidade não concilia com as restantes!");
+                    alert.showAndWait();
                 }
             }
 
@@ -198,5 +215,46 @@ public class SportRegisterController {
             }
         }
         return null;
+    }
+
+    public int verifyDates(int athleteId, int selectedSportId) throws SQLException {
+        RegistrationDao registrationDao = new RegistrationDao();
+        SportDao sportDao = new SportDao();
+        List<List<LocalDateTime>> intervals = new ArrayList<>();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.[S]");
+        int aux = 0;
+
+        List<List> sports = registrationDao.getRegistrationByAthlete(athleteId);
+        List<String> datas = sportDao.getDatas(selectedSportId);
+        LocalDateTime selectedSportStart = LocalDateTime.parse(datas.get(0), formatter);
+        LocalDateTime selectedSportEnd = LocalDateTime.parse(datas.get(1), formatter);
+
+        for (List<String> sport : sports) {
+            LocalDateTime sportStart = LocalDateTime.parse(sport.get(1), formatter);
+            LocalDateTime sportEnd = LocalDateTime.parse(sport.get(2), formatter);
+            intervals.add(List.of(sportStart, sportEnd));
+        }
+
+
+        boolean conflicts = false;
+        for (List<LocalDateTime> interval : intervals) {
+            if (overlaps(interval.get(0), interval.get(1), selectedSportStart, selectedSportEnd)) {
+                conflicts = true;
+                System.out.println("O intervalo fornecido entra em conflito com: " + interval);
+                aux = 1;
+            }
+        }
+
+        if (!conflicts) {
+            System.out.println("O intervalo fornecido não entra em conflito com os intervalos existentes.");
+        }
+
+        return aux;
+
+
+    }
+
+    public static boolean overlaps(LocalDateTime start1, LocalDateTime end1, LocalDateTime start2, LocalDateTime end2) {
+        return !start1.minusHours(2).isAfter(end2) && !end1.plusHours(2).isBefore(start2);
     }
 }

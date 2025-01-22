@@ -260,6 +260,64 @@ public class RegistrationDao {
         }
     }
 
+    /**
+     * Check if a registration already exists
+     * @param registration {Registration} Registration
+     * @return {boolean} True if the registration exists, false otherwise
+     * @throws SQLException
+     */
+    public boolean isRegistrationExists(Registration registration) throws SQLException {
+        String checkQuery = "SELECT COUNT(*) FROM tblRegistration WHERE idAthlete = ? AND idSport = ? AND idStatus = 3 AND year = ?";
+
+        try (Connection conn = new ConnectionsUtlis().dbConnect();
+             PreparedStatement checkStmt = conn.prepareStatement(checkQuery)) {
+
+            checkStmt.setInt(1, registration.getAthlete().getIdAthlete());
+            checkStmt.setInt(2, registration.getSport().getIdSport());
+            checkStmt.setInt(3, registration.getYear());
+
+            try (ResultSet rs = checkStmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Add a new registration
+     * @param registration {Registration} Registration
+     * @return {int} Generated ID
+     * @throws SQLException
+     */
+    public int insertRegistration(Registration registration) throws SQLException {
+        String insertQuery = "INSERT INTO tblRegistration (idAthlete, idSport, idStatus, year) VALUES (?, ?, ?, ?)";
+
+        try (Connection conn = new ConnectionsUtlis().dbConnect();
+             PreparedStatement insertStmt = conn.prepareStatement(insertQuery, PreparedStatement.RETURN_GENERATED_KEYS)) {
+
+            insertStmt.setInt(1, registration.getAthlete().getIdAthlete());
+            insertStmt.setInt(2, registration.getSport().getIdSport());
+            insertStmt.setInt(3, registration.getStatus().getIdStatus());
+            insertStmt.setInt(4, registration.getYear());
+
+            int affectedRows = insertStmt.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("Insertion failed, no rows affected.");
+            }
+
+            try (ResultSet generatedKeys = insertStmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    return generatedKeys.getInt(1);
+                } else {
+                    throw new SQLException("Insertion failed, no ID obtained.");
+                }
+            }
+        }
+    }
+
 
 
     /**
@@ -720,6 +778,26 @@ public class RegistrationDao {
                 sport.add(rs.getString("dataInicio"));
                 sport.add(rs.getString("dataFim"));
                 sport.add(rs.getString("status"));
+                sports.add(sport);
+            }
+        }
+        return sports;
+    }
+
+    public List<List> getRegistrationByAthlete(int athleteId) throws SQLException{
+        List<List> sports = new ArrayList<>();
+        String query = "SELECT s.idSport as idSport, s.dataInicio as dataInicio, s.dataFim as dataFim " +
+                "FROM tblRegistration r " +
+                "JOIN tblSport s ON r.idSport = s.idSport " +
+                "WHERE r.idAthlete = ? AND r.idStatus != 1;";
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, athleteId);
+        if (rs != null) {
+            while (rs.next()) {
+                List<String> sport = new ArrayList<>();
+                sport.add(rs.getString("idSport"));
+                sport.add(rs.getString("dataInicio"));
+                sport.add(rs.getString("dataFim"));
                 sports.add(sport);
             }
         }

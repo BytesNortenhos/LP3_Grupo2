@@ -838,6 +838,23 @@ public class SportDao {
         return data;
     }
 
+    public List<String> getDatas (int idSport) throws SQLException{
+        List<String> datas = new ArrayList<>();
+        String query = "SELECT dataInicio, dataFim " +
+                "FROM tblSport " +
+                "WHERE idSport = ?";
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idSport);
+        if (rs != null && rs.next()) {
+            String dataInicio = rs.getString("dataInicio");
+            String dataFim = rs.getString("dataFim");
+            datas.add(dataInicio);
+            datas.add(dataFim);
+        }
+
+        return datas;
+    }
+
 }
 
 
