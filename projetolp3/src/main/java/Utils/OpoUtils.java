@@ -131,7 +131,7 @@ public class OpoUtils {
             Type type = new TypeToken<Map<String, Object>>() {}.getType();
             Map<String, Object> responseJson = gson.fromJson(response.body(), type);
 
-            List<Map<String, Object>> games = (List<Map<String, Object>>) responseJson.get("Clients");
+            List<Map<String, Object>> games = (List<Map<String, Object>>) responseJson.get("Games");
             return new ErrorHandler(true, "Games obtidos com sucesso.", games);
         } catch (IOException | InterruptedException | JsonSyntaxException | IllegalStateException e) {
             return new ErrorHandler(false, "Erro: " + e.getMessage());

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitMenuButton?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+
+<?import javafx.scene.control.ComboBox?>
+<BorderPane fx:id="parent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="background" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.admin.TicketsController">
+        <top>
+        <fx:include source="menu.fxml" fx:id="menubar" />
+    </top>
+    <center>
+        <VBox>
+            <Label styleClass="labelHome">Gerir bilhetes</Label>
+            <Label styleClass="textWelcome">Nesta área poderá visualizar todos os jogos</Label>
+            <Label styleClass="textWelcome">e os respectivos bilhetes.</Label>
+            <ScrollPane fitToWidth="true" pannable="true" styleClass="scrollStyle">
+                <FlowPane fx:id="showGamesContainer" alignment="CENTER" hgap="20" vgap="20" prefWrapLength="1040" prefHeight="600">
+                    <Label fx:id="noGamesLabel" text="Não existe registo de jogos!" visible="false" />
+                    <!-- Requests will be dynamically added here -->
+                </FlowPane>
+            </ScrollPane>
+        </VBox>
+    </center>
+</BorderPane>
