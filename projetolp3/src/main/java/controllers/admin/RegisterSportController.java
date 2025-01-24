@@ -61,11 +61,17 @@ public class RegisterSportController {
         try {
             genderDrop.getItems().clear();
 
+
             List<Gender> genders = GenderDao.getGenders();
             ObservableList<String> genderOptions = FXCollections.observableArrayList();
 
             for (Gender gender : genders) {
-                genderOptions.add(gender.getDesc());
+
+                if (gender.getDesc().equalsIgnoreCase("male")) {
+                    genderOptions.add("Masculino");
+                } else if (gender.getDesc().equalsIgnoreCase("female")) {
+                    genderOptions.add("Feminino");
+                }
             }
 
             genderDrop.setItems(genderOptions);
@@ -73,6 +79,8 @@ public class RegisterSportController {
             e.printStackTrace();
         }
     }
+
+
     public class LocalWrapper {
         private final int idLocal;
         private final String name;
@@ -113,36 +121,59 @@ public class RegisterSportController {
     @FXML
     private void registerSport() {
         try {
-            LocalWrapper selectedLocal = (LocalWrapper) localDrop.getValue();
+
+            String selectedGenderDesc = genderDrop.getValue();
+
+
+            if (selectedGenderDesc == null || selectedGenderDesc.isEmpty()) {
+                showAlert("Erro de Validação", "Por favor, selecione um gênero!", Alert.AlertType.ERROR);
+                return;
+            }
+
+            String genderDbValue;
+            if (selectedGenderDesc.equals("Masculino")) {
+                genderDbValue = "male";
+            } else if (selectedGenderDesc.equals("Feminino")) {
+                genderDbValue = "female";
+            } else {
+                showAlert("Erro de Validação", "Gênero inválido selecionado!", Alert.AlertType.ERROR);
+                return;
+            }
+
+            int genderId = genderDbValue.equals("male") ? 1 : 2;
+
+            LocalWrapper selectedLocal = localDrop.getValue();
+            if (selectedLocal == null) {
+                showAlert("Erro de Validação", "Por favor, selecione um local!", Alert.AlertType.ERROR);
+                return;
+            }
+
+
+
+            Gender selectedGender = new Gender(genderId, genderDbValue);
+
+
+
             String name = nameText.getText();
             String type = typeDrop.getValue();
             String description = descText.getText();
             String minParticipantsText = minText.getText();
             String scoringMeasure = scoringDrop.getValue();
             String oneGame = oneGameDrop.getValue();
-            String selectedGenderDesc = genderDrop.getValue();
             String metric = metricDrop.getValue();
-            LocalDateTime startData = startDataPicker.getValue().atStartOfDay();
-            LocalDateTime endData = endDataPicker.getValue().atStartOfDay();
-            int idLocal = selectedLocal.getIdLocal();
+            LocalDateTime startData = startDataPicker.getValue() != null ? startDataPicker.getValue().atStartOfDay() : null;
+            LocalDateTime endData = endDataPicker.getValue() != null ? endDataPicker.getValue().atStartOfDay() : null;
             String scoreMin = scoreMinText.getText();
             String scoreMax = scoreMaxText.getText();
 
-            if (name.isEmpty() || type == null || selectedGenderDesc == null || description.isEmpty() || minParticipantsText.isEmpty() ||
-                    scoringMeasure == null || oneGame == null || metric == null || idLocal == 0 || scoreMin.isEmpty() || scoreMax.isEmpty()) {
+            // Validações de campos obrigatórios
+            if (name.isEmpty() || type == null || description.isEmpty() || minParticipantsText.isEmpty() ||
+                    scoringMeasure == null || oneGame == null || metric == null || startData == null || endData == null ||
+                    scoreMin.isEmpty() || scoreMax.isEmpty() || selectedLocal == null) {
                 showAlert("Erro de Validação", "Por favor, preencha todos os campos obrigatórios!", Alert.AlertType.ERROR);
                 return;
             }
 
-            if (name.length() > 50) {
-                showAlert("Erro de Validação", "O nome da modalidade não pode ter mais de 50 caracteres!", Alert.AlertType.ERROR);
-                return;
-            }
-
-            if (description.length() > 200) {
-                showAlert("Erro de Validação", "A descrição da modalidade não pode ter mais de 200 caracteres!", Alert.AlertType.ERROR);
-                return;
-            }
 
             int minParticipants;
             try {
@@ -155,31 +186,22 @@ public class RegisterSportController {
                 showAlert("Erro de Validação", "Formato inválido para o número mínimo de participantes!", Alert.AlertType.ERROR);
                 return;
             }
-            int minScroring;
+
+
+            int minScoring;
+            int maxScoring;
             try {
-                minScroring = Integer.parseInt(scoreMin);
-                if (minScroring < 0) {
-                    showAlert("Erro de Validação", "O número mínimo de resultado deve ser pelo menos 0!", Alert.AlertType.ERROR);
+                minScoring = Integer.parseInt(scoreMin);
+                maxScoring = Integer.parseInt(scoreMax);
+                if (minScoring < 0 || maxScoring <= minScoring) {
+                    showAlert("Erro de Validação", "O número máximo de resultado deve ser maior que o mínimo!", Alert.AlertType.ERROR);
                     return;
                 }
             } catch (NumberFormatException e) {
-                showAlert("Erro de Validação", "Formato inválido para o número mínimo de resultado!", Alert.AlertType.ERROR);
-                return;
-            }
-            int maxScroring;
-            try {
-                maxScroring = Integer.parseInt(scoreMax);
-                if (maxScroring <= minScroring) {
-                    showAlert("Erro de Validação", "O número máximo de resultado deve ser maior que o número mínimo!", Alert.AlertType.ERROR);
-                    return;
-                }
-            } catch (NumberFormatException e) {
-                showAlert("Erro de Validação", "Formato inválido para o número máximo de resultado!", Alert.AlertType.ERROR);
+                showAlert("Erro de Validação", "Formato inválido para os valores de pontuação!", Alert.AlertType.ERROR);
                 return;
             }
 
-            int genderId = selectedGenderDesc.equals("Masculino") ? 1 : 2;
-            Gender selectedGender = new Gender(genderId, selectedGenderDesc);
 
             Sport newSport = new Sport(
                     0,
@@ -196,12 +218,14 @@ public class RegisterSportController {
                     null,
                     null,
                     null,
-                    idLocal,
-                    minScroring,
-                    maxScroring
+                    selectedLocal.getIdLocal(),
+                    minScoring,
+                    maxScoring
             );
 
+
             int sportId = SportDao.addSport(newSport);
+
 
             if (rules.isEmpty()) {
                 showAlert("Erro de Validação", "Por favor, adicione pelo menos uma regra!", Alert.AlertType.ERROR);
@@ -218,23 +242,25 @@ public class RegisterSportController {
                     showAlert("Erro de Validação", "A descrição da regra não pode ter mais de 200 caracteres!", Alert.AlertType.ERROR);
                     return;
                 }
-            }
 
-            for (String ruleDesc : rules) {
                 Rule newRule = new Rule(0, sportId, ruleDesc);
                 RuleDao.addRule(newRule);
             }
+
 
             rules.clear();
             showAlert("Sucesso", "Modalidade e regras registradas com sucesso!", Alert.AlertType.INFORMATION);
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
             showAlert("Erro na BD", "Ocorreu um erro ao acessar a BD: " + e.getMessage(), Alert.AlertType.ERROR);
         } catch (Exception e) {
+            e.printStackTrace();
             showAlert("Erro", "Ocorreu um erro inesperado: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
+
+
 
 
     @FXML
