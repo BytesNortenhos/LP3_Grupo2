@@ -2,7 +2,6 @@
   <artifact type="jar" name="projetolp3:jar">
     <output-path>$PROJECT_DIR$/out/artifacts/projetolp3_jar</output-path>
     <root id="archive" name="projetolp3.jar">
-      <element id="module-output" name="projetolp3" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/microsoft/sqlserver/mssql-jdbc/11.2.2.jre17/mssql-jdbc-11.2.2.jre17.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/glassfish/jaxb/txw2/3.0.1/txw2-3.0.1.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/glassfish/jaxb/jaxb-core/3.0.1/jaxb-core-3.0.1.jar" path-in-jar="/" />
