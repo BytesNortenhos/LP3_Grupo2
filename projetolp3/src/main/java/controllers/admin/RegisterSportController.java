@@ -287,7 +287,7 @@ public class RegisterSportController {
     private void getMetricDrop() {
         String scoreType = scoringDrop.getValue();
         if (scoreType.equals("Time")) {
-           metricDrop.setItems(FXCollections.observableArrayList("Milisegundos", "Segundos", "Minutos"));
+           metricDrop.setItems(FXCollections.observableArrayList("Milisegundos", "Segundos", "Minutos", "Horas"));
         } if(scoreType.equals("Points")) {
             metricDrop.setItems(FXCollections.observableArrayList("Pontos"));
         }

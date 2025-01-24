@@ -512,12 +512,24 @@ public class StartSportsController {
         List<String> measureMetrica = sportDao.getMeasureMetrica(idSport);
         List<Double> ranges = new ArrayList<>();
         if (measureMetrica.get(0).equals("Distance")) {
+            if (measureMetrica.get(1).equals("Kilómetros")){
+                ranges.add(conversionController.kilometrosParaCentimetros(range.getFirst()));
+                ranges.add(conversionController.kilometrosParaCentimetros(range.getLast()));
+            }
             if (measureMetrica.get(1).equals("Metros")) {
                 ranges.add(conversionController.metrosParaCentimetros(range.getFirst()));
                 ranges.add(conversionController.metrosParaCentimetros(range.getLast()));
             }
+            if (measureMetrica.get(1).equals("Centímetros")) {
+                ranges.add(Double.valueOf(range.getFirst()));
+                ranges.add(Double.valueOf(range.getLast()));
+            }
         }
         if (measureMetrica.get(0).equals("Time")) {
+            if (measureMetrica.get(1).equals("Horas")){
+                ranges.add(conversionController.horasParaMilissegundos(range.getFirst()));
+                ranges.add(conversionController.horasParaMilissegundos(range.getLast()));
+            }
             if (measureMetrica.get(1).equals("Minutos")) {
                 ranges.add(conversionController.minutosParaMilissegundos(range.getFirst()));
                 ranges.add(conversionController.minutosParaMilissegundos(range.getLast()));
@@ -526,10 +538,16 @@ public class StartSportsController {
                 ranges.add(conversionController.segundosParaMilissegundos(range.getFirst()));
                 ranges.add(conversionController.segundosParaMilissegundos(range.getLast()));
             }
+            if (measureMetrica.get(1).equals("Milisegundos")) {
+                ranges.add(Double.valueOf(range.getFirst()));
+                ranges.add(Double.valueOf(range.getLast()));
+            }
         }
         if (measureMetrica.get(0).equals("Points")) {
-            ranges.add(Double.valueOf(range.getFirst()));
-            ranges.add(Double.valueOf(range.getLast()));
+            if (measureMetrica.get(1).equals("Pontos")) {
+                ranges.add(Double.valueOf(range.getFirst()));
+                ranges.add(Double.valueOf(range.getLast()));
+            }
         }
         return ranges;
     }
