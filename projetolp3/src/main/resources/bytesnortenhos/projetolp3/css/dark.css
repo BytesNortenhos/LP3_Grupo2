@@ -513,12 +513,14 @@
     -fx-border-radius: 5;
     -fx-min-width: 170px;
     -fx-max-width: 170px;
+    -fx-text-fill: #F7EED8;
 }
 
 .dataPicker .text-field {
     -fx-control-inner-background: #3A3A38 ;
     -fx-border-color: #F7EED8;
     -fx-border-radius: 5;
+    -fx-text-fill: #F7EED8;
 }
 .dataPicker .arrow-button {
     -fx-background-color: transparent;
@@ -559,4 +561,34 @@
     -fx-background-color: #F7EED8;
     -fx-text-fill: #3A3A38;
     -fx-border-color: #9B9898;
+}
+
+.spinner {
+    -fx-border-color: gray;
+    -fx-border-width: 2px;
+    -fx-border-radius: 5;
+}
+
+.spinner .text-field {
+    -fx-text-fill: #F7EED8; /* Light text color */
+    -fx-background-color: #3A3A38;
+}
+
+.spinner .increment-arrow-button,
+.spinner .decrement-arrow-button {
+    -fx-background-color: #3A3A38;
+    -fx-border-color: #3A3A38;
+}
+
+.spinner .increment-arrow-button:hover,
+.spinner .decrement-arrow-button:hover {
+    -fx-background-color: #bdbcb7;
+}
+
+.textSmall{
+    -fx-font-size: 17px;
+    -fx-text-fill: #F7EED8;
+    -fx-font-family: 'Inter';
+    -fx-font-style: normal;
+    -fx-font-weight: 400;
 }

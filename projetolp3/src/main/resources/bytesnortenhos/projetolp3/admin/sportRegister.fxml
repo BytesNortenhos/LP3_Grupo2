@@ -19,6 +19,8 @@
 <?import java.lang.String?>
 <?import javafx.scene.control.DatePicker?>
 
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.text.Text?>
 <BorderPane fx:id="parent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="background" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.admin.RegisterSportController">
         <top>
         <fx:include source="menu.fxml" fx:id="menubar" />
@@ -79,10 +81,28 @@
                 <DatePicker fx:id="endDataPicker" styleClass="dataPicker"  promptText="Data de fim" style="-fx-translate-x: 10px">
                 </DatePicker>
             </HBox>
-            <TextField fx:id="rulesTextArea" styleClass="userNameText" promptText="Insira as regras da modalidade" style="-fx-translate-y: 40px;"/>
-            <Button styleClass="buttonEntrar" style="-fx-translate-y: 60px;" onAction="#addRule">Adicionar Regra</Button>
+            <HBox style="-fx-translate-y: 30px; -fx-max-width: 350px;">
+                <VBox>
+                    <Label styleClass="textSmall" text="Hora de início:"/>
+                    <HBox>
+                        <Spinner fx:id="startHourSpinner" styleClass="spinner" prefWidth="80"/>
+                        <Spinner fx:id="startMinuteSpinner" styleClass="spinner" prefWidth="80" translateX="10"/>
+                    </HBox>
+                </VBox>
+                <VBox>
+                    <Label styleClass="textSmall" text="Hora de fim:" translateX="20"/>
+                    <HBox>
+                        <Spinner fx:id="endHourSpinner" styleClass="spinner" prefWidth="80" translateX="20"/>
+                        <Spinner fx:id="endMinuteSpinner" styleClass="spinner" prefWidth="80" translateX="30"/>
+                    </HBox>
+                </VBox>
+            </HBox>
+            <TextField fx:id="rulesTextArea" styleClass="userNameText" promptText="Insira as regras da modalidade" style="-fx-translate-y: 50px;"/>
 
-            <Button styleClass="buttonEntrar"  style="-fx-translate-y: 80px;" onAction="#registerSport">Registar</Button>
+            <HBox style="-fx-translate-y: 60px; -fx-max-width: 350px;" >
+                <Button styleClass="buttonEntrar" onAction="#addRule">Adicionar Regra</Button>
+                <Button styleClass="buttonEntrar"  onAction="#registerSport" translateX="35">Registar</Button>
+            </HBox>
         </VBox>
     </center>
 </BorderPane>
