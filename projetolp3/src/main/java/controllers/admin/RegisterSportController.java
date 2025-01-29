@@ -12,10 +12,21 @@ import javafx.scene.control.*;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 public class RegisterSportController {
+
+    @FXML
+    private Spinner<Integer> startHourSpinner;
+    @FXML
+    private Spinner<Integer> startMinuteSpinner;
+    @FXML
+    private Spinner<Integer> endHourSpinner;
+    @FXML
+    private Spinner<Integer> endMinuteSpinner;
     @FXML
     private TextField rulesTextArea;
 
@@ -55,6 +66,15 @@ public class RegisterSportController {
         loadLocals();
         loadTypes();
         loadOneGameOptions();
+        SpinnerValueFactory<Integer> hourFactoryStart = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 23, 0);
+        SpinnerValueFactory<Integer> hourFactoryEnd = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 23, 0);
+        startHourSpinner.setValueFactory(hourFactoryStart);
+        endHourSpinner.setValueFactory(hourFactoryEnd);
+
+        SpinnerValueFactory<Integer> minuteFactoryStart = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 59, 0);
+        SpinnerValueFactory<Integer> minuteFactoryEnd = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 59, 0);
+        startMinuteSpinner.setValueFactory(minuteFactoryStart);
+        endMinuteSpinner.setValueFactory(minuteFactoryEnd);
     }
 
     private void loadGenders() {
@@ -122,11 +142,15 @@ public class RegisterSportController {
             String oneGame = oneGameDrop.getValue();
             String selectedGenderDesc = genderDrop.getValue();
             String metric = metricDrop.getValue();
-            LocalDateTime startData = startDataPicker.getValue().atStartOfDay();
-            LocalDateTime endData = endDataPicker.getValue().atStartOfDay();
             int idLocal = selectedLocal.getIdLocal();
             String scoreMin = scoreMinText.getText();
             String scoreMax = scoreMaxText.getText();
+            String startTime = String.format("%02d:%02d", startHourSpinner.getValue(), startMinuteSpinner.getValue());
+            LocalTime parsedStartTime = LocalTime.parse(startTime);
+            LocalDateTime startData = startDataPicker.getValue().atTime(parsedStartTime);
+            String endTime = String.format("%02d:%02d", endHourSpinner.getValue(), endMinuteSpinner.getValue());
+            LocalTime parsedEndTime = LocalTime.parse(endTime);
+            LocalDateTime endData = endDataPicker.getValue().atTime(parsedEndTime);
 
             if (name.isEmpty() || type == null || selectedGenderDesc == null || description.isEmpty() || minParticipantsText.isEmpty() ||
                     scoringMeasure == null || oneGame == null || metric == null || idLocal == 0 || scoreMin.isEmpty() || scoreMax.isEmpty()) {
