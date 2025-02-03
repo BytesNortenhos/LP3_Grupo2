@@ -52,7 +52,7 @@ public class SportEventDao {
         try {
             ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
             conn = connectionsUtlis.dbConnect();
-            conn.setAutoCommit(false); // Start transaction
+            conn.setAutoCommit(false);
 
             insertStmt = conn.prepareStatement(insertQuery);
             insertStmt.setInt(1, sportEvent.getIdSport());
@@ -63,15 +63,15 @@ public class SportEventDao {
             ResultSet rs = maxIdStmt.executeQuery();
             if (rs.next()) {
                 int maxId = rs.getInt("max_id");
-                conn.commit(); // Commit transaction
+                conn.commit();
                 return maxId;
             } else {
-                conn.rollback(); // Rollback transaction if no id obtained
-                throw new SQLException("Creating sport event failed, no id obtained.");
+                conn.rollback();
+                throw new SQLException("Erro ao obter ID adicionado.");
             }
         } catch (SQLException e) {
             if (conn != null) {
-                conn.rollback(); // Rollback transaction on error
+                conn.rollback();
             }
             throw e;
         } finally {
@@ -82,7 +82,7 @@ public class SportEventDao {
                 maxIdStmt.close();
             }
             if (conn != null) {
-                conn.setAutoCommit(true); // Reset auto-commit
+                conn.setAutoCommit(true);
                 conn.close();
             }
         }

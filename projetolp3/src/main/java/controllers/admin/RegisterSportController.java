@@ -1,10 +1,9 @@
 package controllers.admin;
 
 import Dao.*;
-import Models.Gender;
-import Models.Local;
-import Models.Rule;
-import Models.Sport;
+import Models.*;
+import Utils.ErrorHandler;
+import Utils.OpoUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -253,6 +252,7 @@ public class RegisterSportController {
                     maxScoring
             );
 
+            newSport.setIdStatus(1);
             int sportId = SportDao.addSport(newSport);
 
             if (rules.isEmpty()) {
@@ -279,6 +279,17 @@ public class RegisterSportController {
 
             rules.clear();
             showAlert("Sucesso", "Modalidade e regras registradas com sucesso!", Alert.AlertType.INFORMATION);
+
+            SportEventDao sportEventDao = new SportEventDao();
+            SportEvent sportEvent = new SportEvent(sportId, endData.getYear());
+            int insertedId = sportEventDao.addSportEvent(sportEvent);
+            if(insertedId == -1 || insertedId == 0) {
+                System.out.println("> Erro ao obter id adicionado.");
+            } else {
+                OpoUtils opoUtils = new OpoUtils();
+                ErrorHandler errorHandler = opoUtils.addNovaProva(sportId, insertedId);
+                if(!errorHandler.isSuccessful()) System.out.println("> Erro ao adicionar prova: " + errorHandler.getMessage());
+            }
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
