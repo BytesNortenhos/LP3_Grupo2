@@ -2,6 +2,7 @@ package Models;
 
 import jakarta.xml.bind.annotation.*;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -789,4 +790,5 @@ public class Sport {
     public void setIdLocal(int idLocal) {
         this.idLocal = idLocal;
     }
+
 }

@@ -917,4 +917,22 @@ public class SportDao {
 
         return datas;
     }
+    public boolean dataIsUsing(LocalDateTime startData, LocalDateTime endData, int idLocal) throws SQLException {
+        String query = "SELECT idSport " +
+                "FROM tblSport " +
+                "WHERE idLocal = ? " +
+                "  AND ( " +
+                "    (dataInicio <= ? AND dataFim >= ?) OR " +
+                "    (dataInicio BETWEEN ? AND ?) OR " +
+                "    (dataFim BETWEEN ? AND ?) " +
+                "  )";
+
+        ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
+        CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idLocal, endData, startData, startData, endData, startData, endData);
+
+        if (rs != null && rs.next()) {
+            return true;
+        }
+        return false;
+    }
 }

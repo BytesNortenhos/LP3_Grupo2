@@ -181,11 +181,23 @@ public class RegisterSportController {
             LocalTime parsedEndTime = LocalTime.parse(endTime);
             endData = endDataPicker.getValue().atTime(parsedEndTime);
 
+            SportDao sportDao = new SportDao();
+            if(sportDao.dataIsUsing(startData, endData, idLocal)){
+                showAlert("Erro de Validação", "O local já está a ser utilizado nesse horário!", Alert.AlertType.ERROR);
+                return;
+            }
+
             if (name.isEmpty() || type == null || selectedGenderDesc == null || description.isEmpty() || minParticipantsText.isEmpty() ||
                     scoringMeasure == null || oneGame == null || metric == null || idLocal == 0 || scoreMin.isEmpty() || scoreMax.isEmpty()) {
                 showAlert("Erro de Validação", "Por favor, preencha todos os campos obrigatórios!", Alert.AlertType.ERROR);
                 return;
             }
+
+            if(startData.isAfter(endData) || startData.isEqual(endData)){
+                showAlert("Erro de Validação", "A data de início não pode ser depois da data de fim!", Alert.AlertType.ERROR);
+                return;
+            }
+
 
             if (name.length() > 50) {
                 showAlert("Erro de Validação", "O nome da modalidade não pode ter mais de 50 caracteres!", Alert.AlertType.ERROR);
