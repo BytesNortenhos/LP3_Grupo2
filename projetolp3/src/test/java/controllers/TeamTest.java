@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -15,6 +16,7 @@ public class TeamTest {
 
     @Test
     void testCrudTeam() throws SQLException {
+        LocalDao ld = new LocalDao();
         ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
 
         try (Connection connection = connectionsUtlis.dbConnect()) {
@@ -32,8 +34,16 @@ public class TeamTest {
             String oneGame = "One";
             int resultMin = 1000;
             int resultMax = 2000;
+            int idStatus = 1;
+            String metrica = "Minutos";
+            LocalDateTime dataInicio = LocalDateTime.of(2024, 1, 5, 15, 30);
+            LocalDateTime dataFim = LocalDateTime.of(2024, 1, 5, 17, 30);
 
-            Sport sportAdd = new Sport(0, type, gender, name, description, minParticipants, scoringMeasure, oneGame, resultMin, resultMax);
+            Local local = ld.getLocals().stream()
+                    .filter(l -> l.getIdLocal() == 3)
+                    .findFirst().orElse(null);
+
+            Sport sportAdd = new Sport(0, type, gender, name, description, minParticipants, scoringMeasure, oneGame, resultMin, resultMax, idStatus, metrica, dataInicio, dataFim, local.getIdLocal());
 
             sportAdd.setIdSport(SportDao.addSport(sportAdd));
             System.out.println("Sport inserido com sucesso");

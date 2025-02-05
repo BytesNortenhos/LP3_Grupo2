@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class IniciarModalidadesTest {
     @Test
     void testIniciarModalidadesIndividual() throws SQLException {
+        LocalDao ld = new LocalDao();
         //Criar o Sport
         String type = "Individual";
 
@@ -34,12 +35,16 @@ public class IniciarModalidadesTest {
         String oneGame = "One";
         int resultMin = 1000;
         int resultMax = 2000;
-        int idStatus = 0;
+        int idStatus = 1;
         String metrica = "Minutos";
         LocalDateTime dataInicio = LocalDateTime.of(2025, 1, 5, 15, 30);
         LocalDateTime dataFim = LocalDateTime.of(2025, 1, 5, 17, 30);
 
-        Sport sportAdd = new Sport(0, type, gender, name, description, minParticipants, scoringMeasure, oneGame, resultMin, resultMax, idStatus, metrica, dataInicio, dataFim);
+        Local local = ld.getLocals().stream()
+                .filter(l -> l.getIdLocal() == 3)
+                .findFirst().orElse(null);
+
+        Sport sportAdd = new Sport(0, type, gender, name, description, minParticipants, scoringMeasure, oneGame, resultMin, resultMax, idStatus, metrica, dataInicio, dataFim, local.getIdLocal());
 
         sportAdd.setIdSport(SportDao.addSport(sportAdd));
 
@@ -202,6 +207,7 @@ public class IniciarModalidadesTest {
 
     @Test
     void testIniciarModalidadesCollective() throws SQLException {
+        LocalDao ld = new LocalDao();
         //Criar o Sport
         String type = "Collective";
 
@@ -221,7 +227,11 @@ public class IniciarModalidadesTest {
         LocalDateTime dataInicio = LocalDateTime.of(2025, 1, 5, 15, 30);
         LocalDateTime dataFim = LocalDateTime.of(2025, 1, 5, 17, 30);
 
-        Sport sportAdd = new Sport(0, type, gender, name, description, minParticipants, scoringMeasure, oneGame, resultMin, resultMax, idStatus, metrica, dataInicio, dataFim);
+        Local local = ld.getLocals().stream()
+                .filter(l -> l.getIdLocal() == 3)
+                .findFirst().orElse(null);
+
+        Sport sportAdd = new Sport(0, type, gender, name, description, minParticipants, scoringMeasure, oneGame, resultMin, resultMax, idStatus, metrica, dataInicio, dataFim, local.getIdLocal());
 
         sportAdd.setIdSport(SportDao.addSport(sportAdd));
 
@@ -451,6 +461,7 @@ public class IniciarModalidadesTest {
 
     @Test
     void testIniciarModalidadesMultipleGamesTeam() throws SQLException {
+        LocalDao ld = new LocalDao();
         //Criar o Sport
         String type = "Collective";
 
@@ -470,7 +481,11 @@ public class IniciarModalidadesTest {
         LocalDateTime dataInicio = LocalDateTime.of(2025, 1, 5, 15, 30);
         LocalDateTime dataFim = LocalDateTime.of(2025, 1, 5, 17, 30);
 
-        Sport sportAdd = new Sport(0, type, gender, name, description, minParticipants, scoringMeasure, oneGame, resultMin, resultMax, idStatus, metrica, dataInicio, dataFim);
+        Local local = ld.getLocals().stream()
+                .filter(l -> l.getIdLocal() == 3)
+                .findFirst().orElse(null);
+
+        Sport sportAdd = new Sport(0, type, gender, name, description, minParticipants, scoringMeasure, oneGame, resultMin, resultMax, idStatus, metrica, dataInicio, dataFim, local.getIdLocal());
 
         sportAdd.setIdSport(SportDao.addSport(sportAdd));
 
@@ -705,6 +720,7 @@ public class IniciarModalidadesTest {
 
     @Test
     void testIniciarModalidadesIndividualMultipleGames() throws SQLException {
+        LocalDao ld = new LocalDao();
         //Criar o Sport
         String type = "Individual";
 
@@ -719,12 +735,16 @@ public class IniciarModalidadesTest {
         String oneGame = "Multiple";
         int resultMin = 3000;
         int resultMax = 6000;
-        int idStatus = 0;
+        int idStatus = 1;
         String metrica = "Minutos";
         LocalDateTime dataInicio = LocalDateTime.of(2025, 1, 5, 15, 30);
         LocalDateTime dataFim = LocalDateTime.of(2025, 1, 5, 17, 30);
 
-        Sport sportAdd = new Sport(0, type, gender, name, description, minParticipants, scoringMeasure, oneGame, resultMin, resultMax, idStatus, metrica, dataInicio, dataFim);
+        Local local = ld.getLocals().stream()
+                .filter(l -> l.getIdLocal() == 3)
+                .findFirst().orElse(null);
+
+        Sport sportAdd = new Sport(0, type, gender, name, description, minParticipants, scoringMeasure, oneGame, resultMin, resultMax, idStatus, metrica, dataInicio, dataFim, local.getIdLocal());
 
         sportAdd.setIdSport(SportDao.addSport(sportAdd));
 

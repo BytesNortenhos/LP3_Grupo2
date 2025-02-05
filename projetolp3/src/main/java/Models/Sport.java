@@ -424,6 +424,24 @@ public class Sport {
         this.dataFim = dataFim;
     }
 
+    public Sport(int idSport, String type, Gender genre, String name, String desc, int minParticipants, String scoringMeasure, String oneGame, int resultMin, int resultMax, int idStatus, String metrica, LocalDateTime dataInicio, LocalDateTime dataFim, int idLocal) {
+        this.idSport = idSport;
+        this.type = type;
+        this.genre = genre;
+        this.name = name;
+        this.desc = desc;
+        this.minParticipants = minParticipants;
+        this.scoringMeasure = scoringMeasure;
+        this.oneGame = oneGame;
+        this.resultMin = resultMin;
+        this.resultMax = resultMax;
+        this.idStatus = idStatus;
+        this.metrica = metrica;
+        this.dataInicio = dataInicio;
+        this.dataFim = dataFim;
+        this.idLocal = idLocal;
+    }
+
     /**
      * Constructor of Sport
      * @param idSport {int} Sport ID
