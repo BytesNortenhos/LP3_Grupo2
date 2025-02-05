@@ -741,7 +741,8 @@ public class RegistrationDao {
         String query = "SELECT s.*, r.idStatus AS status\n" +
                 "FROM dbo.tblSport s\n" +
                 "JOIN dbo.tblRegistration r ON s.idSport = r.idSport\n" +
-                "WHERE r.idAthlete = ?";
+                "WHERE r.idAthlete = ? " +
+                "AND r.idStatus = 3;";
 
         ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
         CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, idAthlete);
@@ -843,7 +844,7 @@ public class RegistrationDao {
         String query = "SELECT s.idSport as idSport, s.dataInicio as dataInicio, s.dataFim as dataFim " +
                 "FROM tblRegistration r " +
                 "JOIN tblSport s ON r.idSport = s.idSport " +
-                "WHERE r.idAthlete = ? AND r.idStatus != 1;";
+                "WHERE r.idAthlete = ? AND r.idStatus = 3;";
         ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
         CachedRowSet rs = connectionsUtlis.dbExecuteQuery(query, athleteId);
         if (rs != null) {

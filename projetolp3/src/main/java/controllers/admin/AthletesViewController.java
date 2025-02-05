@@ -240,7 +240,7 @@ public class AthletesViewController {
                 teamResultsMap.computeIfAbsent(teamName, k -> new LinkedHashSet<>()).add(resultText);
                 teamPositionMap.put(teamName, position);
             } else {
-                VBox resultItem = createResultItem(results, idAthlete);
+                VBox resultItem = createResultItem(result, idAthlete);
                 scrollContent.getChildren().add(resultItem);
             }
         }
@@ -273,7 +273,6 @@ public class AthletesViewController {
     private VBox createResultItem(List result, int idAthlete) throws SQLException {
         VBox resultItem = new VBox();
         resultItem.setSpacing(10);
-
         Label resultLabel = new Label();
 
         Label nameLabel = new Label("Modalidade: " + (result.get(1) != null ? result.get(1).toString() : "N/A"));

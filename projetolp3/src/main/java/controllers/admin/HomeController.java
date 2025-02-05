@@ -223,7 +223,7 @@ public class HomeController {
             g = "Women's";
         }
         String name = request.getAthlete().getCountry().getName() + " " + g + " " + request.getSport().getName() + " Team";
-        teamDao.addTeam(new Team(0, name, request.getAthlete().getCountry(), request.getAthlete().getGenre(), request.getSport(), 2024, minParticipants, maxParticipants));
+        teamDao.addTeam(new Team(0, name, request.getAthlete().getCountry(), request.getAthlete().getGenre(), request.getSport(), 2025, minParticipants, maxParticipants));
         RegistrationDao registrationDao = new RegistrationDao();
         RegistrationDao.updateRegistrationStatus(request.getIdRegistration(), 3, registrationDao.getIdTeam(request.getAthlete().getCountry().getIdCountry(), request.getSport().getIdSport()));
         Alert alerta = new Alert(Alert.AlertType.INFORMATION);

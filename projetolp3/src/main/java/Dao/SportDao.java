@@ -74,10 +74,12 @@ public class SportDao {
     public List<List> getSportsToShow() throws SQLException {
         List<List> sports = new ArrayList<>();
         ConnectionsUtlis connectionsUtlis = new ConnectionsUtlis();
-        CachedRowSet rs = connectionsUtlis.dbExecuteQuery("SELECT s.*, " +
-                "g.description AS genderDescription " +
-                "FROM tblSport s " +
-                "JOIN tblGender g ON s.idGender = g.idGender;");
+            CachedRowSet rs = connectionsUtlis.dbExecuteQuery("SELECT s.*, " +
+                    "g.description AS genderDescription " +
+                    "FROM tblSport s " +
+                    "JOIN tblGender g ON s.idGender = g.idGender " +
+                    "JOIN tblSportEvent sp on s.idSport = sp.idSport " +
+                    "WHERE sp.year = (SELECT MAX(year) FROM tblSportEvent);");
         if (rs != null) {
             while (rs.next()) {
                 List<String> sport = new ArrayList<>();
@@ -105,7 +107,7 @@ public class SportDao {
      */
     public List<List> getSportsToStart(int year) throws SQLException {
         List<List> sports = new ArrayList<>();
-        String query = "SELECT DISTINCT s.idSport, s.type, s.idGender, s.name, s.description," +
+        String query = "SELECT DISTINCT s.idSport, s.type, s.idGender, s.name, s.description, s.idLocal, " +
                 " s.minParticipants, s.scoringMeasure, s.oneGame, r.idStatus, " +
                 "g.description AS genderDescription " +
                 "FROM tblSport s " +
@@ -126,6 +128,7 @@ public class SportDao {
                 sport.add(rs.getString("scoringMeasure"));
                 sport.add(rs.getString("oneGame"));
                 sport.add(rs.getString("idStatus"));
+                sport.add(rs.getString("idLocal"));
                 sports.add(sport);
             }
         } else {

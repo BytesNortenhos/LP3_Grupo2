@@ -96,6 +96,7 @@ public class StartSportsController {
         int nPart = 0;
         int idSport = Integer.parseInt(sport.get(0).toString());
         int mPart = Integer.parseInt(sport.get(5).toString());
+        int idLocal = Integer.parseInt(sport.get(9).toString());
         Label minPart = new Label();
         Label numPart = new Label();
         Label nameLabel = new Label(sport.get(3).toString());
@@ -164,7 +165,6 @@ public class StartSportsController {
                 requestItem.getChildren().addAll(nameLabel, typeLabel, genderLabel, minPart, numPart, buttonContainer);
                 startButton.setOnAction(event -> {
                     try {
-                        int idLocal = 0;
                         if (sportStart(idSport, year, idLocal)) {
                             Alert alert = new Alert(Alert.AlertType.INFORMATION);
                             alert.setTitle("Sucesso!");
@@ -530,6 +530,7 @@ public class StartSportsController {
     }
 
     public boolean individualOne(int idSport, List<Integer> IdsParticipants, int year, int idLocal, Date data) throws SQLException {
+        System.out.println("Individual One");
         List<Integer> resultados = new ArrayList<>();
         Random random = new Random();
 

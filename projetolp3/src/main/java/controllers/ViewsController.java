@@ -100,7 +100,6 @@ public class ViewsController {
                 password = passwordText.getText();
             }
             boolean sucess = loginController.loginVerify(id, password, event);
-            System.out.println(id);
             if (sucess) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Sucesso!");
