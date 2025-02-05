@@ -1,35 +1,19 @@
 package controllers.athletes;
 
 import Dao.*;
-import Models.Medal;
-import Models.Registration;
-import bytesnortenhos.projetolp3.Main;
+import bytesnortenhos.projetolp3.App;
 import controllers.LoginController;
 import controllers.admin.ConversionController;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.ScrollEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-import javax.swing.text.View;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -37,10 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.Period;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class HomeControllerAthlete {
     @FXML
@@ -116,7 +97,7 @@ public class HomeControllerAthlete {
     @FXML
     public void updateImage(ActionEvent event) throws SQLException, IOException {
         String pathSave = "src/main/resources/bytesnortenhos/projetolp3/ImagesAthlete/";
-        String pathSaveTemp = Main.class.getResource("ImagesAthlete").toExternalForm().replace("file:", "");
+        String pathSaveTemp = App.class.getResource("ImagesAthlete").toExternalForm().replace("file:", "");
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource Files");
         String pathToSave = "ImagesAthlete/";
@@ -211,7 +192,7 @@ public class HomeControllerAthlete {
 
 
         Scene scene = new Scene(vbox, 500, 450);
-        scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+        scene.getStylesheets().add(((URL) App.class.getResource("css/dark.css")).toExternalForm());
         popupStage.setScene(scene);
         popupStage.show();
     }

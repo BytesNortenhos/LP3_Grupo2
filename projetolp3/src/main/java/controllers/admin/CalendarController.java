@@ -1,8 +1,7 @@
 package controllers.admin;
 
 import Dao.RegistrationDao;
-import bytesnortenhos.projetolp3.Main;
-import controllers.LoginController;
+import bytesnortenhos.projetolp3.App;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -158,7 +157,7 @@ public class CalendarController {
 
 
         Scene scene = new Scene(vbox, 500, 450);
-        scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+        scene.getStylesheets().add(((URL) App.class.getResource("css/dark.css")).toExternalForm());
         popupStage.setScene(scene);
         popupStage.show();
     }

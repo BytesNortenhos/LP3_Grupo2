@@ -5,10 +5,8 @@ import AuxilierXML.Sports;
 import AuxilierXML.Teams;
 import AuxilierXML.UploadXmlDAO;
 import Utils.ErrorHandler;
-import Dao.EventDao;
-import Models.Registration;
 import Utils.XMLUtils;
-import bytesnortenhos.projetolp3.Main;
+import bytesnortenhos.projetolp3.App;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.UnmarshalException;
 import javafx.event.ActionEvent;
@@ -32,9 +30,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -54,8 +50,8 @@ public class ViewsController {
     private ImageView iconHomeNav;
     @FXML
     private ImageView iconLogoutNav;
-    URL cssDarkURL = Main.class.getResource("css/dark.css");
-    URL cssLightURL = Main.class.getResource("css/light.css");
+    URL cssDarkURL = App.class.getResource("css/dark.css");
+    URL cssLightURL = App.class.getResource("css/light.css");
     String cssDark = ((URL) cssDarkURL).toExternalForm();
     String cssLight = ((URL) cssLightURL).toExternalForm();
     @FXML
@@ -84,15 +80,15 @@ public class ViewsController {
         locationSplitButton.setOnMouseClicked(mouseEvent -> locationSplitButton.show());
     }
     public void loadIcons(){
-        URL iconMoonNavURL = Main.class.getResource("img/iconMoon.png");
+        URL iconMoonNavURL = App.class.getResource("img/iconMoon.png");
         Image image = new Image(iconMoonNavURL.toExternalForm());
         if(iconModeNav != null) iconModeNav.setImage(image);
 
-        URL iconHomeNavURL = Main.class.getResource("img/iconOlympic.png");
+        URL iconHomeNavURL = App.class.getResource("img/iconOlympic.png");
         image = new Image(iconHomeNavURL.toExternalForm());
         if(iconHomeNav != null) iconHomeNav.setImage(image);
 
-        URL iconLogoutNavURL = Main.class.getResource("img/iconLogoutDark.png");
+        URL iconLogoutNavURL = App.class.getResource("img/iconLogoutDark.png");
         image = new Image(iconLogoutNavURL.toExternalForm());
         if(iconLogoutNav != null) iconLogoutNav.setImage(image);
 
@@ -111,7 +107,7 @@ public class ViewsController {
     public void setLightMode(){
         parent.getStylesheets().remove(cssDark);
         parent.getStylesheets().add(cssLight);
-        URL iconMoonURL = Main.class.getResource("img/iconMoonLight.png");
+        URL iconMoonURL = App.class.getResource("img/iconMoonLight.png");
         String iconMoonStr = ((URL) iconMoonURL).toExternalForm();
         Image image = new Image(iconMoonStr);
         iconModeNav.setImage(image);
@@ -120,7 +116,7 @@ public class ViewsController {
     public void setDarkMode(){
         parent.getStylesheets().remove(String.valueOf(cssLight));
         parent.getStylesheets().add(String.valueOf(cssDark));
-        URL iconMoonURL = Main.class.getResource("img/iconMoon.png");
+        URL iconMoonURL = App.class.getResource("img/iconMoon.png");
         String iconMoonStr = ((URL) iconMoonURL).toExternalForm();
         Image image = new Image(iconMoonStr);
         iconModeNav.setImage(image);
@@ -134,9 +130,9 @@ public class ViewsController {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
         if (isDarkMode) {
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+            scene.getStylesheets().add(((URL) App.class.getResource("css/dark.css")).toExternalForm());
         } else {
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
+            scene.getStylesheets().add(((URL) App.class.getResource("css/light.css")).toExternalForm());
         }
         stage.setScene(scene);
         stage.show();
@@ -147,9 +143,9 @@ public class ViewsController {
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
         scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
         if(isDarkMode){
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+            scene.getStylesheets().add(((URL) App.class.getResource("css/dark.css")).toExternalForm());
         }else{
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
+            scene.getStylesheets().add(((URL) App.class.getResource("css/light.css")).toExternalForm());
         }
         stage.setScene(scene);
         stage.show();
@@ -160,9 +156,9 @@ public class ViewsController {
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
         scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
         if(isDarkMode){
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+            scene.getStylesheets().add(((URL) App.class.getResource("css/dark.css")).toExternalForm());
         }else{
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
+            scene.getStylesheets().add(((URL) App.class.getResource("css/light.css")).toExternalForm());
         }
         stage.setScene(scene);
         stage.show();
@@ -174,9 +170,9 @@ public class ViewsController {
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
         scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
         if(isDarkMode){
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+            scene.getStylesheets().add(((URL) App.class.getResource("css/dark.css")).toExternalForm());
         }else{
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
+            scene.getStylesheets().add(((URL) App.class.getResource("css/light.css")).toExternalForm());
         }
         stage.setScene(scene);
         stage.show();
@@ -187,9 +183,9 @@ public class ViewsController {
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
         scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
         if(isDarkMode){
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+            scene.getStylesheets().add(((URL) App.class.getResource("css/dark.css")).toExternalForm());
         }else{
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
+            scene.getStylesheets().add(((URL) App.class.getResource("css/light.css")).toExternalForm());
         }
         stage.setScene(scene);
         stage.show();
@@ -200,9 +196,9 @@ public class ViewsController {
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
         scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
         if(isDarkMode){
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+            scene.getStylesheets().add(((URL) App.class.getResource("css/dark.css")).toExternalForm());
         }else{
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
+            scene.getStylesheets().add(((URL) App.class.getResource("css/light.css")).toExternalForm());
         }
         stage.setScene(scene);
         stage.show();
@@ -215,9 +211,9 @@ public class ViewsController {
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
         if(isDarkMode){
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+            scene.getStylesheets().add(((URL) App.class.getResource("css/dark.css")).toExternalForm());
         }else{
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
+            scene.getStylesheets().add(((URL) App.class.getResource("css/light.css")).toExternalForm());
         }
         stage.setScene(scene);
         stage.show();
@@ -228,9 +224,9 @@ public class ViewsController {
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
         scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
         if(isDarkMode){
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+            scene.getStylesheets().add(((URL) App.class.getResource("css/dark.css")).toExternalForm());
         }else{
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
+            scene.getStylesheets().add(((URL) App.class.getResource("css/light.css")).toExternalForm());
         }
         stage.setScene(scene);
         stage.show();
@@ -241,9 +237,9 @@ public class ViewsController {
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
         scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
         if(isDarkMode){
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+            scene.getStylesheets().add(((URL) App.class.getResource("css/dark.css")).toExternalForm());
         }else{
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
+            scene.getStylesheets().add(((URL) App.class.getResource("css/light.css")).toExternalForm());
         }
         stage.setScene(scene);
         stage.show();
@@ -254,9 +250,9 @@ public class ViewsController {
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
         scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
         if(isDarkMode){
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+            scene.getStylesheets().add(((URL) App.class.getResource("css/dark.css")).toExternalForm());
         }else{
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
+            scene.getStylesheets().add(((URL) App.class.getResource("css/light.css")).toExternalForm());
         }
         stage.setScene(scene);
         stage.show();
@@ -268,9 +264,9 @@ public class ViewsController {
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
         scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
         if(isDarkMode){
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+            scene.getStylesheets().add(((URL) App.class.getResource("css/dark.css")).toExternalForm());
         }else{
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
+            scene.getStylesheets().add(((URL) App.class.getResource("css/light.css")).toExternalForm());
         }
         stage.setScene(scene);
         stage.show();
@@ -284,9 +280,9 @@ public class ViewsController {
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
         scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
         if(isDarkMode){
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+            scene.getStylesheets().add(((URL) App.class.getResource("css/dark.css")).toExternalForm());
         }else{
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
+            scene.getStylesheets().add(((URL) App.class.getResource("css/light.css")).toExternalForm());
         }
         stage.setScene(scene);
         stage.show();
@@ -297,9 +293,9 @@ public class ViewsController {
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
         scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
         if(isDarkMode){
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+            scene.getStylesheets().add(((URL) App.class.getResource("css/dark.css")).toExternalForm());
         }else{
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
+            scene.getStylesheets().add(((URL) App.class.getResource("css/light.css")).toExternalForm());
         }
         stage.setScene(scene);
         stage.show();
@@ -310,9 +306,9 @@ public class ViewsController {
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
         scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
         if(isDarkMode){
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+            scene.getStylesheets().add(((URL) App.class.getResource("css/dark.css")).toExternalForm());
         }else{
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
+            scene.getStylesheets().add(((URL) App.class.getResource("css/light.css")).toExternalForm());
         }
         stage.setScene(scene);
         stage.show();
@@ -324,9 +320,9 @@ public class ViewsController {
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
         scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
         if(isDarkMode){
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+            scene.getStylesheets().add(((URL) App.class.getResource("css/dark.css")).toExternalForm());
         }else{
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
+            scene.getStylesheets().add(((URL) App.class.getResource("css/light.css")).toExternalForm());
         }
         stage.setScene(scene);
         stage.show();
@@ -338,9 +334,9 @@ public class ViewsController {
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
         scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
         if(isDarkMode){
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+            scene.getStylesheets().add(((URL) App.class.getResource("css/dark.css")).toExternalForm());
         }else{
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
+            scene.getStylesheets().add(((URL) App.class.getResource("css/light.css")).toExternalForm());
         }
         stage.setScene(scene);
         stage.show();
@@ -352,9 +348,9 @@ public class ViewsController {
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
         scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
         if(isDarkMode){
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+            scene.getStylesheets().add(((URL) App.class.getResource("css/dark.css")).toExternalForm());
         }else{
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
+            scene.getStylesheets().add(((URL) App.class.getResource("css/light.css")).toExternalForm());
         }
         stage.setScene(scene);
         stage.show();
@@ -366,9 +362,9 @@ public class ViewsController {
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
         scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
         if(isDarkMode){
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+            scene.getStylesheets().add(((URL) App.class.getResource("css/dark.css")).toExternalForm());
         }else{
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
+            scene.getStylesheets().add(((URL) App.class.getResource("css/light.css")).toExternalForm());
         }
         stage.setScene(scene);
         stage.show();
@@ -380,9 +376,9 @@ public class ViewsController {
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
         scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
         if(isDarkMode){
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+            scene.getStylesheets().add(((URL) App.class.getResource("css/dark.css")).toExternalForm());
         }else{
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
+            scene.getStylesheets().add(((URL) App.class.getResource("css/light.css")).toExternalForm());
         }
         stage.setScene(scene);
         stage.show();

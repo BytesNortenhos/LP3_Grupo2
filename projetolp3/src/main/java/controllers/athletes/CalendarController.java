@@ -1,8 +1,7 @@
 package controllers.athletes;
 
 import Dao.RegistrationDao;
-import Dao.ResultDao;
-import bytesnortenhos.projetolp3.Main;
+import bytesnortenhos.projetolp3.App;
 import controllers.LoginController;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -159,7 +158,7 @@ public class CalendarController {
 
 
         Scene scene = new Scene(vbox, 500, 450);
-        scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+        scene.getStylesheets().add(((URL) App.class.getResource("css/dark.css")).toExternalForm());
         popupStage.setScene(scene);
         popupStage.show();
     }

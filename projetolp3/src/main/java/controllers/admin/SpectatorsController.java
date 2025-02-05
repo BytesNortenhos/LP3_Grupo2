@@ -2,7 +2,7 @@ package controllers.admin;
 
 import Utils.ErrorHandler;
 import Utils.OpoUtils;
-import bytesnortenhos.projetolp3.Main;
+import bytesnortenhos.projetolp3.App;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -11,7 +11,6 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
-import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.Map;
@@ -79,7 +78,7 @@ public class SpectatorsController {
         emailLabel.getStyleClass().add("text-label");
 
         ImageView banImageView = new ImageView();
-        URL iconBanURL = Main.class.getResource("img/iconBan.png");
+        URL iconBanURL = App.class.getResource("img/iconBan.png");
         if (iconBanURL != null) {
             Image image = new Image(iconBanURL.toExternalForm());
             banImageView.setImage(image);

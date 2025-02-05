@@ -1,24 +1,11 @@
 package controllers.admin;
 
-import AuxilierXML.Athletes;
-import AuxilierXML.Sports;
-import AuxilierXML.Teams;
-import AuxilierXML.UploadXmlDAO;
 import Dao.*;
 import Models.*;
-import Utils.XMLUtils;
-import bytesnortenhos.projetolp3.Main;
-import controllers.LoginController;
-import jakarta.xml.bind.JAXBException;
-import jakarta.xml.bind.UnmarshalException;
-import javafx.event.ActionEvent;
+import bytesnortenhos.projetolp3.App;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
@@ -26,28 +13,15 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.layout.BorderPane;
-import javafx.stage.FileChooser;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.application.Platform;
 
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.Period;
 
-import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class HomeController {
     @FXML
@@ -115,7 +89,7 @@ public class HomeController {
         countryLabel.getStyleClass().add("text-label");
 
         ImageView acceptImageView = new ImageView();
-        URL iconAcceptURL = Main.class.getResource("img/iconAccept.png");
+        URL iconAcceptURL = App.class.getResource("img/iconAccept.png");
         if (iconAcceptURL != null) {
             String iconAcceptStr = iconAcceptURL.toExternalForm();
             Image image = new Image(iconAcceptStr);
@@ -128,7 +102,7 @@ public class HomeController {
         acceptButton.getStyleClass().add("acceptButton");
 
         ImageView rejectImageView = new ImageView();
-        URL iconRejectURL = Main.class.getResource("img/iconReject.png");
+        URL iconRejectURL = App.class.getResource("img/iconReject.png");
         if (iconRejectURL != null) {
             String iconRejectStr = iconRejectURL.toExternalForm();
             Image image = new Image(iconRejectStr);
@@ -236,7 +210,7 @@ public class HomeController {
         vbox.getChildren().addAll( minParticipantsLabel, minParticipantsField, maxParticipantsLabel, maxParticipantsField, submitButton);
 
         Scene scene = new Scene(vbox, 300, 250);
-        scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+        scene.getStylesheets().add(((URL) App.class.getResource("css/dark.css")).toExternalForm());
         popupStage.setScene(scene);
         popupStage.show();
     }

@@ -1,7 +1,7 @@
 package controllers.admin;
 
 import Dao.*;
-import bytesnortenhos.projetolp3.Main;
+import bytesnortenhos.projetolp3.App;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -117,7 +117,7 @@ public class TeamsViewController {
         yearFounded.getStyleClass().add("text-label");
 
         ImageView resultsImageView = new ImageView();
-        URL iconResuURL = Main.class.getResource("img/iconResults.png");
+        URL iconResuURL = App.class.getResource("img/iconResults.png");
         if (iconResuURL != null) {
             Image image = new Image(iconResuURL.toExternalForm());
             resultsImageView.setImage(image);
@@ -139,7 +139,7 @@ public class TeamsViewController {
 
         if(nPart > 0){
             ImageView partImageView = new ImageView();
-            URL iconPartURL = Main.class.getResource("img/iconReView.png");
+            URL iconPartURL = App.class.getResource("img/iconReView.png");
             if (iconPartURL != null) {
                 Image image = new Image(iconPartURL.toExternalForm());
                 partImageView.setImage(image);
@@ -185,7 +185,7 @@ public class TeamsViewController {
 
 
         Scene scene = new Scene(vbox, 500, 450);
-        scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+        scene.getStylesheets().add(((URL) App.class.getResource("css/dark.css")).toExternalForm());
         popupStage.setScene(scene);
         popupStage.show();
     }
@@ -216,7 +216,7 @@ public class TeamsViewController {
 
         HBox nameContainer = new HBox(10);
         profileImage = new ImageView();
-        URL iconImageURL = Main.class.getResource(part.get(4).toString());
+        URL iconImageURL = App.class.getResource(part.get(4).toString());
         if (iconImageURL != null) {
             Image images = new Image(iconImageURL.toExternalForm());
             profileImage.setImage(images);
@@ -262,7 +262,7 @@ public class TeamsViewController {
 
 
         Scene scene = new Scene(vbox, 500, 450);
-        scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+        scene.getStylesheets().add(((URL) App.class.getResource("css/dark.css")).toExternalForm());
         popupStage.setScene(scene);
         popupStage.show();
     }

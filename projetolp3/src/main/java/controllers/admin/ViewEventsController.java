@@ -3,11 +3,10 @@ package controllers.admin;
 import Dao.*;
 import Models.Event;
 import Models.Local;
-import bytesnortenhos.projetolp3.Main;
+import bytesnortenhos.projetolp3.App;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -86,7 +85,7 @@ public class ViewEventsController {
         HBox nameContainer = new HBox(10);
         String logoPath = events.getLogo();
         ImageView profileImage = new ImageView();
-        URL iconImageURL = Main.class.getResource(logoPath);
+        URL iconImageURL = App.class.getResource(logoPath);
         if (iconImageURL != null) {
             Image images = new Image(iconImageURL.toExternalForm());
             profileImage.setImage(images);
@@ -112,7 +111,7 @@ public class ViewEventsController {
 
         HBox iconsContainer = new HBox(10);
         ImageView editImageView = new ImageView();
-        URL iconEditImageURL = Main.class.getResource("img/iconEdit.png");
+        URL iconEditImageURL = App.class.getResource("img/iconEdit.png");
         if (iconEditImageURL != null) {
             Image image = new Image(iconEditImageURL.toExternalForm());
             editImageView.setImage(image);
@@ -131,7 +130,7 @@ public class ViewEventsController {
         });
 
         ImageView localsImageView = new ImageView();
-        URL iconLocalsImageURL = Main.class.getResource("img/iconLocalsView.png");
+        URL iconLocalsImageURL = App.class.getResource("img/iconLocalsView.png");
         if (iconLocalsImageURL != null) {
             Image image = new Image(iconLocalsImageURL.toExternalForm());
             localsImageView.setImage(image);
@@ -158,7 +157,7 @@ public class ViewEventsController {
 
     public void updateImageEvent(ActionEvent event, int year) throws SQLException {
         String pathSave = "src/main/resources/bytesnortenhos/projetolp3/ImagesEvent/";
-        String pathSaveTemp =  Main.class.getResource("ImagesEvent").toExternalForm().replace("file:", "");
+        String pathSaveTemp =  App.class.getResource("ImagesEvent").toExternalForm().replace("file:", "");
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource Files");
         String pathToSave = "ImagesEvent/";
@@ -246,7 +245,7 @@ public class ViewEventsController {
         displayResults(vbox, locals);
 
         Scene scene = new Scene(vbox, 500, 450);
-        scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+        scene.getStylesheets().add(((URL) App.class.getResource("css/dark.css")).toExternalForm());
         popupStage.setScene(scene);
         popupStage.show();
     }

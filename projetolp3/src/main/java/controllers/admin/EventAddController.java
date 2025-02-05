@@ -3,44 +3,23 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
-import AuxilierXML.Athletes;
-import AuxilierXML.Sports;
-import AuxilierXML.Teams;
-import AuxilierXML.UploadXmlDAO;
-import Dao.AthleteDao;
 import Dao.CountryDao;
 import Dao.EventDao;
 import Models.Country;
 import Models.Event;
-import Utils.XMLUtils;
-import bytesnortenhos.projetolp3.Main;
-import controllers.athletes.ViewsController;
-import jakarta.xml.bind.JAXBException;
-import jakarta.xml.bind.UnmarshalException;
+import bytesnortenhos.projetolp3.App;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.util.StringConverter;
 import javafx.scene.control.Alert.AlertType;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 
 public class EventAddController {
     @FXML
@@ -71,7 +50,7 @@ public class EventAddController {
     @FXML
     public void updateImageEvent(ActionEvent event) throws SQLException, IOException {
         String pathSave = "src/main/resources/bytesnortenhos/projetolp3/ImagesEvent/";
-        String pathSaveTemp = Main.class.getResource("ImagesEvent").toExternalForm().replace("file:", "");
+        String pathSaveTemp = App.class.getResource("ImagesEvent").toExternalForm().replace("file:", "");
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource Files");
         String pathToSave = "ImagesEvent/";

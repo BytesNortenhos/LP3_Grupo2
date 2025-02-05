@@ -1,40 +1,26 @@
 package controllers.admin;
 
-import AuxilierXML.Athletes;
-import AuxilierXML.Sports;
-import AuxilierXML.Teams;
-import AuxilierXML.UploadXmlDAO;
 import Dao.AthleteDao;
 import Dao.CountryDao;
-import Dao.EventDao;
 import Dao.ResultDao;
 import Models.Athlete;
-import Utils.XMLUtils;
-import bytesnortenhos.projetolp3.Main;
-import controllers.ViewsController;
-import jakarta.xml.bind.JAXBException;
-import jakarta.xml.bind.UnmarshalException;
+import bytesnortenhos.projetolp3.App;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -114,7 +100,7 @@ public class AthletesViewController {
 
         HBox nameContainer = new HBox(10);
         profileImage = new ImageView();
-        URL iconImageURL = Main.class.getResource(athlete.get(7).toString());
+        URL iconImageURL = App.class.getResource(athlete.get(7).toString());
         if (iconImageURL != null) {
             Image images = new Image(iconImageURL.toExternalForm());
             profileImage.setImage(images);
@@ -142,7 +128,7 @@ public class AthletesViewController {
         birthLabel.getStyleClass().add("text-label");
 
         ImageView resultsImageView = new ImageView();
-        URL iconResuURL = Main.class.getResource("img/iconResults.png");
+        URL iconResuURL = App.class.getResource("img/iconResults.png");
         if (iconResuURL != null) {
             Image image = new Image(iconResuURL.toExternalForm());
             resultsImageView.setImage(image);
@@ -164,7 +150,7 @@ public class AthletesViewController {
 
 
         ImageView editIconView = new ImageView();
-        URL iconEditURL = Main.class.getResource("img/iconEdit.png");
+        URL iconEditURL = App.class.getResource("img/iconEdit.png");
         if (iconEditURL != null) {
             Image image = new Image(iconEditURL.toExternalForm());
             editIconView.setImage(image);
@@ -185,7 +171,7 @@ public class AthletesViewController {
         });
 
         ImageView editImageView = new ImageView();
-        URL iconEditImageURL = Main.class.getResource("img/iconImageEdit.png");
+        URL iconEditImageURL = App.class.getResource("img/iconImageEdit.png");
         if (iconEditImageURL != null) {
             Image image = new Image(iconEditImageURL.toExternalForm());
             editImageView.setImage(image);
@@ -227,7 +213,7 @@ public class AthletesViewController {
 
 
         Scene scene = new Scene(vbox, 500, 450);
-        scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+        scene.getStylesheets().add(((URL) App.class.getResource("css/dark.css")).toExternalForm());
         popupStage.setScene(scene);
         popupStage.show();
     }
@@ -406,14 +392,14 @@ public class AthletesViewController {
         vbox.getChildren().addAll(titleLabel, weightLabel, weightField, heightLabel, heightField, submitButton);
 
         Scene scene = new Scene(vbox, 500, 450);
-        scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+        scene.getStylesheets().add(((URL) App.class.getResource("css/dark.css")).toExternalForm());
         popupStage.setScene(scene);
         popupStage.show();
     }
 
     private void updateImageAthlete(ActionEvent event, int idAthlete) throws SQLException {
         String pathSave = "src/main/resources/bytesnortenhos/projetolp3/ImagesAthlete/";
-        String pathSaveTemp =  Main.class.getResource("ImagesAthlete").toExternalForm().replace("file:", "");
+        String pathSaveTemp =  App.class.getResource("ImagesAthlete").toExternalForm().replace("file:", "");
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource Files");
         String pathToSave = "ImagesAthlete/";

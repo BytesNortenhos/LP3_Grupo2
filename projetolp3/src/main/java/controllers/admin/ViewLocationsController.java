@@ -2,19 +2,12 @@ package controllers.admin;
 
 import Dao.LocalDao;
 import Models.Local;
-import bytesnortenhos.projetolp3.Main;
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
 import javafx.scene.control.Label;
-import bytesnortenhos.projetolp3.Main;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Circle;
 
-import java.net.URL;
 import java.sql.SQLException;
 import java.util.List;
 

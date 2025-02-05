@@ -3,34 +3,19 @@ package controllers.athletes;
 import Dao.*;
 import Models.*;
 import Models.Athlete;
-import bytesnortenhos.projetolp3.Main;
 import controllers.LoginController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.geometry.Rectangle2D;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
-import javafx.stage.Screen;
-import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.net.URL;
-import java.sql.Date;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 public class SportRegisterController {

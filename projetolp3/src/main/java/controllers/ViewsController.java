@@ -1,7 +1,6 @@
 package controllers;
 
-import Dao.RegistrationDao;
-import bytesnortenhos.projetolp3.Main;
+import bytesnortenhos.projetolp3.App;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -20,11 +19,8 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.net.URL;
-import java.sql.SQLException;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Scanner;
 
 public class ViewsController {
     @FXML
@@ -42,8 +38,8 @@ public class ViewsController {
     private static boolean isDarkMode = true;
 
     public static String gender = "";
-    URL cssDarkURL = Main.class.getResource("css/dark.css");
-    URL cssLightURL = Main.class.getResource("css/light.css");
+    URL cssDarkURL = App.class.getResource("css/dark.css");
+    URL cssLightURL = App.class.getResource("css/light.css");
     String cssDark = ((URL) cssDarkURL).toExternalForm();
     String cssLight = ((URL) cssLightURL).toExternalForm();
 
@@ -54,11 +50,11 @@ public class ViewsController {
     }
 
     public void initialize() {
-        URL iconOlympicURL = Main.class.getResource("img/iconOlympic.png");
+        URL iconOlympicURL = App.class.getResource("img/iconOlympic.png");
         String iconOlympicStr = ((URL) iconOlympicURL).toExternalForm();
         Image image = new Image(iconOlympicStr);
         if (iconOlympic != null) iconOlympic.setImage(image);
-        URL iconMoonURL = Main.class.getResource("img/iconMoonLight.png");
+        URL iconMoonURL = App.class.getResource("img/iconMoonLight.png");
         String iconMoonStr = ((URL) iconMoonURL).toExternalForm();
         image = new Image(iconMoonStr);
         if (iconMode != null) iconMode.setImage(image);
@@ -77,7 +73,7 @@ public class ViewsController {
     public void setLightMode() {
         parent.getStylesheets().remove(cssDark);
         parent.getStylesheets().add(cssLight);
-        URL iconMoonURL = Main.class.getResource("img/iconMoon.png");
+        URL iconMoonURL = App.class.getResource("img/iconMoon.png");
         String iconMoonStr = ((URL) iconMoonURL).toExternalForm();
         Image image = new Image(iconMoonStr);
         iconMode.setImage(image);
@@ -86,7 +82,7 @@ public class ViewsController {
     public void setDarkMode() {
         parent.getStylesheets().remove(String.valueOf(cssLight));
         parent.getStylesheets().add(String.valueOf(cssDark));
-        URL iconMoonURL = Main.class.getResource("img/iconMoonLight.png");
+        URL iconMoonURL = App.class.getResource("img/iconMoonLight.png");
         String iconMoonStr = ((URL) iconMoonURL).toExternalForm();
         Image image = new Image(iconMoonStr);
         iconMode.setImage(image);
@@ -156,9 +152,9 @@ public class ViewsController {
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
         if (isDarkMode) {
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+            scene.getStylesheets().add(((URL) App.class.getResource("css/dark.css")).toExternalForm());
         } else {
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
+            scene.getStylesheets().add(((URL) App.class.getResource("css/light.css")).toExternalForm());
         }
         stage.setScene(scene);
         stage.show();
@@ -170,9 +166,9 @@ public class ViewsController {
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
         if (isDarkMode) {
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+            scene.getStylesheets().add(((URL) App.class.getResource("css/dark.css")).toExternalForm());
         } else {
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/light.css")).toExternalForm());
+            scene.getStylesheets().add(((URL) App.class.getResource("css/light.css")).toExternalForm());
         }
         stage.setScene(scene);
         stage.show();

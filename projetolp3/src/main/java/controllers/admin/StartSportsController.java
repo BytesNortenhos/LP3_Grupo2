@@ -1,50 +1,27 @@
 package controllers.admin;
 
-import AuxilierXML.Athletes;
-import AuxilierXML.Sports;
-import AuxilierXML.Teams;
-import AuxilierXML.UploadXmlDAO;
 import Dao.*;
 import Models.*;
-import Utils.XMLUtils;
-import bytesnortenhos.projetolp3.Main;
-import controllers.ViewsController;
-import jakarta.xml.bind.JAXBException;
-import jakarta.xml.bind.UnmarshalException;
-import javafx.application.Platform;
+import bytesnortenhos.projetolp3.App;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
-import javafx.stage.FileChooser;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-import java.io.File;
 import java.io.IOException;
-import java.lang.foreign.MemoryLayout;
-import java.net.Inet4Address;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
-import java.time.Year;
 import java.util.*;
 
 public class StartSportsController {
@@ -150,7 +127,7 @@ public class StartSportsController {
         }
 
         ImageView athletesImageView = new ImageView();
-        URL iconAttURL = Main.class.getResource("img/iconReView.png");
+        URL iconAttURL = App.class.getResource("img/iconReView.png");
         if (iconAttURL != null) {
             Image image = new Image(iconAttURL.toExternalForm());
             athletesImageView.setImage(image);
@@ -170,7 +147,7 @@ public class StartSportsController {
         if (sport.get(8).toString().equals("3")) {
             if (nPart >= mPart) {
                 ImageView startImageView = new ImageView();
-                URL iconStartURL = Main.class.getResource("img/iconStart.png");
+                URL iconStartURL = App.class.getResource("img/iconStart.png");
                 if (iconStartURL != null) {
                     Image image = new Image(iconStartURL.toExternalForm());
                     startImageView.setImage(image);
@@ -205,7 +182,7 @@ public class StartSportsController {
             }
         } else {
             ImageView viewImageView = new ImageView();
-            URL iconViewURL = Main.class.getResource("img/iconView.png");
+            URL iconViewURL = App.class.getResource("img/iconView.png");
             if (iconViewURL != null) {
                 Image image = new Image(iconViewURL.toExternalForm());
                 viewImageView.setImage(image);
@@ -246,14 +223,14 @@ public class StartSportsController {
             List<List> results = sportDao.getTeamsAndthletes(idSport, year);
             displayTeams(vbox, results);
             Scene scene = new Scene(vbox, 600, 450);
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+            scene.getStylesheets().add(((URL) App.class.getResource("css/dark.css")).toExternalForm());
             popupStage.setScene(scene);
             popupStage.show();
         } else {
             List<Athlete> results = sportDao.getAthletesBySport(idSport, year);
             displayAthletes(vbox, results);
             Scene scene = new Scene(vbox, 600, 450);
-            scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+            scene.getStylesheets().add(((URL) App.class.getResource("css/dark.css")).toExternalForm());
             popupStage.setScene(scene);
             popupStage.show();
         }
@@ -337,7 +314,7 @@ public class StartSportsController {
 
 
         Scene scene = new Scene(vbox, 500, 450);
-        scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+        scene.getStylesheets().add(((URL) App.class.getResource("css/dark.css")).toExternalForm());
         popupStage.setScene(scene);
         popupStage.show();
     }
@@ -423,7 +400,7 @@ public class StartSportsController {
 
         HBox nameContainer = new HBox(10);
         ImageView profileImage = new ImageView();
-        URL iconImageURL = Main.class.getResource(result.get(8).toString());
+        URL iconImageURL = App.class.getResource(result.get(8).toString());
         if (iconImageURL != null) {
             Image images = new Image(iconImageURL.toExternalForm());
             profileImage.setImage(images);

@@ -1,9 +1,8 @@
 package controllers.admin;
 
-import Dao.ResultDao;
 import Utils.ErrorHandler;
 import Utils.OpoUtils;
-import bytesnortenhos.projetolp3.Main;
+import bytesnortenhos.projetolp3.App;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -19,7 +18,6 @@ import javafx.stage.Stage;
 
 import java.net.URL;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.Map;
 
 public class TicketsController {
@@ -102,7 +100,7 @@ public class TicketsController {
 
         if (tickets.isSuccessful()) {
             ImageView viewTicketsImageView = new ImageView();
-            URL iconTicketsURL = Main.class.getResource("img/iconTickets.png");
+            URL iconTicketsURL = App.class.getResource("img/iconTickets.png");
             if (iconTicketsURL != null) {
                 Image image = new Image(iconTicketsURL.toExternalForm());
                 viewTicketsImageView.setImage(image);
@@ -138,7 +136,7 @@ public class TicketsController {
 
 
         Scene scene = new Scene(vbox, 500, 450);
-        scene.getStylesheets().add(((URL) Main.class.getResource("css/dark.css")).toExternalForm());
+        scene.getStylesheets().add(((URL) App.class.getResource("css/dark.css")).toExternalForm());
         popupStage.setScene(scene);
         popupStage.show();
     }
