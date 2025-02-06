@@ -1,0 +1,41 @@
+{
+  "name": "lp3_grupo2_cliente",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm run dev",
+    "dev": "concurrently \"npm run watch-css\" \"nodemon src/index.js\"",
+    "tailwind:css": "postcss src/styles/tailwind.css -o src/styles/style.css",
+    "build-css": "tailwindcss build -i src/styles/tailwind.css -o src/styles/style.css",
+    "watch-css": "tailwindcss build -i src/styles/tailwind.css -o src/styles/style.css --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "autoprefixer": "^10.4.20",
+    "daisyui": "^4.12.23",
+    "postcss": "^8.5.1",
+    "tailwindcss": "^3.4.17"
+  },
+  "nodemonConfig": {
+    "ext": "js,json,ejs,html"
+  },
+  "dependencies": {
+    "@tailwindcss/typography": "^0.5.16",
+    "axios": "^1.7.9",
+    "concurrently": "^9.1.2",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^16.4.7",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "express-session": "^1.18.1",
+    "nodemon": "^3.1.9",
+    "passport": "^0.7.0",
+    "passport-local": "^1.0.0",
+    "path": "^0.12.7",
+    "resend": "^4.1.1",
+    "serve-favicon": "^2.5.0"
+  }
+}

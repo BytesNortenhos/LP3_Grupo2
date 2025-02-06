@@ -1,0 +1,137 @@
+<html lang="pt"  class="m-0 p-0">
+    <%- include('head.ejs', { additionalScripts: [] }) %>
+
+    <nav class="font-default">
+        <div class="navbar bg-base-200">
+            <div class="flex-1"></div>
+            <div class="flex-none">
+                <div class="dropdown dropdown-end">
+                    <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
+                        <div class="indicator">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd" /></svg>  
+                        </div>
+                    </div>
+                    <ul tabindex="0" class="menu menu-sm dropdown-content bg-base-200 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+                        <li><span onclick="mdlChangePassword.showModal()" class="cursor-pointer text-base">Alterar Password</span></li>
+                        <li><a id="deleteAccount" href="/eliminar-conta" class="cursor-pointer text-base">Eliminar Conta</a></li>
+                        <li><a href="/logout" class="cursor-pointer text-base">Terminar Sessão</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <body class="font-default">
+        <div class="blocker max-w-screen-sm m-auto">
+            <% if (alert === true) { %>
+                <div class="alertZone m-auto mt-4">
+                    <%- include('alert', {type: type, message: message}); %>
+                </div>
+            <% } %>
+            <div id="content" class="content m-4">
+                
+                <h1 class="text-center text-3xl font-bold p-4"><span class="underline underline-offset-4">Jogos Disponíveis</span>:</h1>
+
+                <% if(games.stateRequest === 99) { %>
+                    <p class="m-auto text-center font-bold py-4">Ocorreu um erro ao carregar os jogos!</p>
+                <% } else { %>
+                    <% if (games.data.length === 0) { %>
+                        <p class="m-auto text-center font-bold py-4">Não existem jogos!</p>
+                    <% } else { %>
+                        <% for(let i = 0; i < games.data.length; i++) { %>
+
+                            <!-- Ignoro estes games porque não consigo eliminar tickets, e neste momento, irá acabar por dar erro! -->
+                            <% if(games.data[i].Id === '2b66525d-bc44-4e54-b6f4-9c7eb35bd91b' || games.data[i].Id === '57461ca1-9e20-4cf8-a0d4-4a2f23647963') continue; %>
+                            
+                            <div id="cardProblem" class="card bg-base-100 border-2 border-neutral w-full mb-4">
+                                <input class="identifier" type="text" value="" disabled hidden>
+                                <div class="card-body p-4">
+                                    <span class="text-left break-words"><kbd class="kbd kbd-sm">➜</kbd> <%= games.data[i].Sport %></span>
+                                    <span class="text-left break-words"><kbd class="kbd kbd-sm">➜</kbd> <%= games.data[i].Location %> (<%= games.data[i].Capacity %> lugares)</span>
+                                    <span class="text-left break-words"><kbd class="kbd kbd-sm">➜</kbd> <%= games.data[i].StartDate.replace("T", " (") %>) até <%= games.data[i].EndDate.replace("T", " (") %>)</span>
+                                    <div class="card-actions">
+                                        <a href="<% if(games.data[i].Active) { %> /comprar-bilhete/<%= games.data[i].Id  %> <% } else { %> # <% } %>" class="w-full grow">
+                                            <button class="btn btn-neutral btn-square font-bold w-full grow">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="swap-on h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M2.25 2.25a.75.75 0 0 0 0 1.5h1.386c.17 0 .318.114.362.278l2.558 9.592a3.752 3.752 0 0 0-2.806 3.63c0 .414.336.75.75.75h15.75a.75.75 0 0 0 0-1.5H5.378A2.25 2.25 0 0 1 7.5 15h11.218a.75.75 0 0 0 .674-.421 60.358 60.358 0 0 0 2.96-7.228.75.75 0 0 0-.525-.965A60.864 60.864 0 0 0 5.68 4.509l-.232-.867A1.875 1.875 0 0 0 3.636 2.25H2.25ZM3.75 20.25a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0ZM16.5 20.25a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Z" /></svg>
+                                                <span class="hidden min-[330px]:contents font-bold">Comprar Bilhete</span>
+                                            </button>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        <% } %>
+                    <% } %>
+                <% } %>
+
+                <h1 class="text-center text-3xl font-bold pt-4"><span class="underline underline-offset-4">Tickets Comprados</span>:</h1>
+
+                <% if(tickets.stateRequest === 99) { %>
+                    <p class="m-auto text-center font-bold py-4">Ocorreu um erro ao carregar os tickets!</p>
+                <% } else { %>
+                    <% if (tickets.data.length === 0) { %>
+                        <p class="m-auto text-center font-bold py-4">Não existem tickets!</p>
+                    <% } else { %>
+                        <% for(let i = 0; i < tickets.data.length; i++) { %>
+                            <div id="cardProblem" class="card bg-base-100 border-2 border-neutral w-full my-4">
+                                <input class="identifier" type="text" value="" disabled hidden>
+                                <div class="card-body p-4">
+                                    <span class="text-left break-words"><kbd class="kbd kbd-sm">➜</kbd> <%= tickets.data[i].Location %> (Lugar: <%= tickets.data[i].Seat %>)</span>
+                                    <span class="text-left break-words"><kbd class="kbd kbd-sm">➜</kbd> <%= tickets.data[i].StartDate.replace("T", " (") %>) até <%= tickets.data[i].EndDate.replace("T", " (") %>)</span>
+                                    <div class="card-actions">
+                                        <button onclick="mdlTicket<%=i%>.showModal()" class="btn btn-neutral btn-square font-bold w-full grow">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="swap-on h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M3 4.875C3 3.839 3.84 3 4.875 3h4.5c1.036 0 1.875.84 1.875 1.875v4.5c0 1.036-.84 1.875-1.875 1.875h-4.5A1.875 1.875 0 0 1 3 9.375v-4.5ZM4.875 4.5a.375.375 0 0 0-.375.375v4.5c0 .207.168.375.375.375h4.5a.375.375 0 0 0 .375-.375v-4.5a.375.375 0 0 0-.375-.375h-4.5Zm7.875.375c0-1.036.84-1.875 1.875-1.875h4.5C20.16 3 21 3.84 21 4.875v4.5c0 1.036-.84 1.875-1.875 1.875h-4.5a1.875 1.875 0 0 1-1.875-1.875v-4.5Zm1.875-.375a.375.375 0 0 0-.375.375v4.5c0 .207.168.375.375.375h4.5a.375.375 0 0 0 .375-.375v-4.5a.375.375 0 0 0-.375-.375h-4.5ZM6 6.75A.75.75 0 0 1 6.75 6h.75a.75.75 0 0 1 .75.75v.75a.75.75 0 0 1-.75.75h-.75A.75.75 0 0 1 6 7.5v-.75Zm9.75 0A.75.75 0 0 1 16.5 6h.75a.75.75 0 0 1 .75.75v.75a.75.75 0 0 1-.75.75h-.75a.75.75 0 0 1-.75-.75v-.75ZM3 14.625c0-1.036.84-1.875 1.875-1.875h4.5c1.036 0 1.875.84 1.875 1.875v4.5c0 1.035-.84 1.875-1.875 1.875h-4.5A1.875 1.875 0 0 1 3 19.125v-4.5Zm1.875-.375a.375.375 0 0 0-.375.375v4.5c0 .207.168.375.375.375h4.5a.375.375 0 0 0 .375-.375v-4.5a.375.375 0 0 0-.375-.375h-4.5Zm7.875-.75a.75.75 0 0 1 .75-.75h.75a.75.75 0 0 1 .75.75v.75a.75.75 0 0 1-.75.75h-.75a.75.75 0 0 1-.75-.75v-.75Zm6 0a.75.75 0 0 1 .75-.75h.75a.75.75 0 0 1 .75.75v.75a.75.75 0 0 1-.75.75h-.75a.75.75 0 0 1-.75-.75v-.75ZM6 16.5a.75.75 0 0 1 .75-.75h.75a.75.75 0 0 1 .75.75v.75a.75.75 0 0 1-.75.75h-.75a.75.75 0 0 1-.75-.75v-.75Zm9.75 0a.75.75 0 0 1 .75-.75h.75a.75.75 0 0 1 .75.75v.75a.75.75 0 0 1-.75.75h-.75a.75.75 0 0 1-.75-.75v-.75Zm-3 3a.75.75 0 0 1 .75-.75h.75a.75.75 0 0 1 .75.75v.75a.75.75 0 0 1-.75.75h-.75a.75.75 0 0 1-.75-.75v-.75Zm6 0a.75.75 0 0 1 .75-.75h.75a.75.75 0 0 1 .75.75v.75a.75.75 0 0 1-.75.75h-.75a.75.75 0 0 1-.75-.75v-.75Z" clip-rule="evenodd" /></svg>
+                                            <span class="hidden min-[330px]:contents font-bold">Ver Ticket</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <dialog id="mdlTicket<%=i%>" class="modal modal-bottom sm:modal-middle">
+                                <div class="modal-box">
+                                    <h2 class="text-2xl font-bold">Ticket do Jogo</h3>
+                                    <div class="py-2 text-base">
+                                        <p>Para entrar e conseguir ver o jogo, apresente o seguinte QrCode na entrada:</p>
+                                    </div>
+                                    <div class="modal-action w-full text-center">
+                                        <div class="w-full">
+                                            <img src="<%= tickets.data[i].TicketQR %>" alt="QrCode Ticket" class="m-auto bg-base-200 p-4 rounded-2xl" height="216" width="216">
+                                        </div>
+                                    </div>
+                                    <form class="w-full pt-4" method="dialog">
+                                        <button class="btn text-base w-full">Fechar</button>
+                                    </form>
+                                </div>
+                            </dialog>
+                        <% } %>
+                    <% } %>
+                <% } %>
+            </div>
+        </div>
+    </body>
+
+
+    <script>
+        let textDeleteAccount = document.getElementById('deleteAccount');
+        textDeleteAccount.addEventListener('click', () => { if (!confirm("Tem certeza que deseja eliminar a conta? Esta ação não pode ser desfeita.")) { event.preventDefault(); } });
+    </script>
+
+    <dialog id="mdlChangePassword" class="modal modal-bottom sm:modal-middle">
+        <div class="modal-box">
+            <h2 class="text-2xl font-bold">Alterar Password</h3>
+            <div class="py-2 text-base">
+                <p>Para alterar a sua palavra-passe, digite a nova no campo abaixo:</p>
+            </div>
+            <div class="modal-action w-full text-center">
+                <form action="/alterar-password" method="post">
+                    <div class="join w-full">
+                        <input class="input input-bordered join-item max-[350px]:w-[50%] w-full !rounded-s-lg" type="password" name="inpValue" placeholder="Nova palavra-passe" required />
+                        <button class="btn join-item btn-success btn-outline text-base border-2 font-bold" type="submit">Alterar</button>
+                    </div>
+                </form>
+                <form method="dialog">
+                    <button class="btn text-base">Fechar</button>
+                </form>
+            </div>
+        </div>
+    </dialog>
+</html>
